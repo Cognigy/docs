@@ -1,0 +1,91 @@
+---
+title: "Getting Started with AI Agents"
+sidebarTitle: "Getting Started"
+hidden: false
+"seo": {
+  "metatags": {
+    "description": "This guide provides a step-by-step approach to setting up your first AI Agent in Cognigy.AI. It covers the essentials to get started quickly, ensuring a seamless experience."
+  }
+}
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/overview/build-your-ai-agent-workforce.png" style={{ width: 'auto' }} />
+</Frame>
+
+## What are Agentic AI Agents?
+
+An [Agentic AI Agent](/ai/agents/overview) is advanced conversational intelligence powered by a Large Language Model
+(LLM),
+designed to operate autonomously while adapting dynamically in real time to context, persona, and instructions.
+Unlike traditional intent- or rule-based systems,
+these AI Agents go beyond scripted responses — demonstrating flexibility,
+problem-solving capabilities, and proactive decision-making.
+
+In this guide, you will create a Logistics AI Agent to answer general questions and assist with parcel inquiries.
+
+<Steps>
+  <Step title="Set Up Prerequisites">
+    Configure the necessary LLMs for language and embeddings, for example, OpenAI GPT-4o and ada-002, to enable your AI Agent.
+  </Step>
+  <Step title="Create Your AI Agent Persona">
+    Go to **Build > AI Agents**, set the name, for example, `Peter Parcel`, description, avatar, and speaking style. Optionally, assign knowledge and configure security. Click **Create** to test.
+    <Frame>
+        <video
+          autoPlay
+          loop
+          controls
+          playsInline
+          className="w-full aspect-video rounded-xl" class="image-center"
+          src="https://docscognigyassets.blob.core.windows.net/assets/create-new-ai-agent.mov"
+        ></video>
+     </Frame>
+  </Step>
+  <Step title="Assign a Job">
+    On the **Jobs** tab, define the job title, for example, `Delivery Manager`, description, and instructions.
+     <Frame>
+          <img class="image-center" src="/_assets/ai/overview/ai-agent-job-configuration.webp" />
+     </Frame>
+  </Step>
+  <Step title="Enhance with Knowledge">
+    Upload documents in Knowledge AI, then assign the knowledge to your AI Agent in its configuration to improve company-specific responses.
+  </Step>
+<Step title="Add Tools">
+   In the **Tools** section, click **Add Tool > Regular Tool**. Set Tool ID (for example, `track_parcel`) and parameters (for example, `tracking_code`).
+    <Frame>
+        <img class="image-center" src="/_assets/ai/overview/ai-agent-tool-action.webp" />
+     </Frame>
+  </Step>
+  <Step title="Configure Memory">
+    Configure memory settings to personalize interactions and retain user details.
+    To configure short-term memory, in the **Memory Handling** section, set **Long-Term Memory Injection** to **Inject full Contact Profile**.
+     <Frame>
+         <img class="image-center" src="/_assets/ai/overview/ai-agent-memory.webp" />
+     </Frame>
+  </Step>
+  <Step title="Enable Image Recognition">
+    In the **Image Handling** section, activate **Process Images**. Enable **Attachment Upload** in the Webchat v3 Endpoint settings. Ensure a storage provider like AWS or Azure is set.
+
+  </Step>
+  <Step title="Explore the Flow">
+    Open **Advanced Editor** to view and edit all Nodes controlling AI Agent responses.
+     <Frame>
+        <img class="image-center" src="/_assets/ai/overview/flow-editor.webp" />
+     </Frame>
+  </Step>
+  <Step title="Deploy Your AI Agent">
+    [Cognigy.AI Endpoints](/ai/agents/deploy/endpoint-reference/overview) allow AI Agents to interact with external users via chat and voice channels.
+
+    Deploy an AI Agent via Webchat:
+
+    1. Go to **Deploy > Endpoints**.
+    2. Add a new Endpoint and link it to the Flow.
+    3. Click **Open Demo Webchat** to test the AI Agent.
+  </Step>
+</Steps>
+
+## What's Next?
+
+1. Try [creating AI Agents tailored to your business needs](/ai/agents/develop/manage-ai-agents#create-from-scratch) or [hire one from the Job Market](/ai/agents/develop/manage-ai-agents#hire-from-the-job-market).
+2. [Add the AI Agent to your Flow](/ai/agents/develop/projects-and-flows/overview) and [create a set of tools](/ai/agents/develop/node-reference/ai/ai-agent) for your AI Agent to operate.
+3. For a deeper dive into Agentic AI, visit the [Cognigy Help Center](https://support.cognigy.com/hc/en-us/articles/17346581840796-Getting-Started-with-AI-Agents).
