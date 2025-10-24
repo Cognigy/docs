@@ -1,0 +1,35 @@
+---
+title: think (Deprecated)
+seo:
+  metatags:
+    description: think restarts Flow execution with a simulated input.
+keywords: ['think', 'execution control functions']
+---
+
+<Warn>
+    The `think` function is deprecated. Use `thinkV2` instead.
+</Warn>
+
+## Syntax
+
+`think(text, data)`
+
+## Description
+
+Restarts Flow execution with a simulated input.  
+
+**Parameters:**
+
+- `text`: `string` — simulated input text.
+- `data`: `Record<string, unknown>` — simulated input data.
+
+**Returns:** `void`
+
+## Example
+
+```js
+think("I want to book a flight", {
+  userLocation: "Berlin",
+  destination: "Paris"
+});
+```

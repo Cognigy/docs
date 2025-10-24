@@ -1,0 +1,21 @@
+---
+title: "Remove From Context"
+slug: "remove-from-context"
+hidden: false
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/logic/remove-from-context.png" style={{ width: 'auto' }}/>
+</Frame>
+
+## Description
+
+This Node removes information from the [Context](/ai/agents/develop/ai-agent-memory/context) object.
+
+## Parameters
+
+| Parameter | Type          | Description                                                                                                                |
+|-----------|---------------|----------------------------------------------------------------------------------------------------------------------------|
+| Key       | CognigyScript | The key you want to remove. This can be a key nested with dot, for example, `my.first.key`.                                |
+| Value     | CognigyScript | The value to remove from the array if `Mode = Array` is chosen.                                                            |
+| Mode      | Select        | <ul><li>Simple removes the key completely</li><li>Array removes the value from the array stored at `context.key`</li></ul> |
