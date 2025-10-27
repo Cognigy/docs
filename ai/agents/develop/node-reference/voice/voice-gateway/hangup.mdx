@@ -1,0 +1,23 @@
+---
+title: "Hang Up"
+slug: "hang-up"
+hidden: false
+keywords: [' Voice Gateway', ' Hangup']
+---
+
+<a href="/release-notes/4.99"><img noZoom src="https://img.shields.io/badge/Updated in-v4.99-blue.svg" /></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/vg/hang-up.png" style={{ width: 'auto' }} />
+  <figcaption>Voice Gateway Hang Up Node</figcaption>
+</Frame>
+
+## Description
+
+The Hang Up Node instructs Voice Gateway to end the call.
+
+| Parameter               | Type   | Description                                                                                                                                                                                                                                              |
+|-------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Reason for hang up      | Text   | The reason for hanging up, which is shown in logs                                                                                                                                                                                                        |
+| Enable Immediate Hangup | Toggle | When this setting is enabled, the ongoing call will be terminated immediately, bypassing any active operations that are currently awaiting execution. A typical use case is to automatically end an outbound call when an answering machine is detected. |
