@@ -1,0 +1,42 @@
+---
+title: "Resolve Tool Action"
+slug: "resolve-tool-action"
+hidden: false
+"seo": {
+  "metatags": {
+    "description": "The Resolve Tool Action Node sends a response to a tool call to the AI Agent after completing a tool action."
+  }
+}
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/ai/resolve-tool-action.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Resolve Tool Action Node sends an answer as the response to a tool call to the AI Agent after completing a [tool](/ai/agents/develop/node-reference/ai/ai-agent).
+
+When the AI Agent calls a tool to perform an action, the tool is executed. Once the action is completed, the Resolve Tool Action Node sends a response back to the AI Agent, indicating the result of that action. This approach helps the AI Agent process and make decisions based on the results of the tools' actions.
+
+<Note>
+  Sending the result is optional. If the tool action is not resolved, the tool call is discarded after reaching the end of the branch and you may need to manually return to the AI Agent by using a [Go To](/ai/agents/develop/node-reference/logic/go-to) Node.
+</Note>
+
+## Parameters
+
+| Parameter   | Type          | Description                                                                                                                                      |
+|-------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| Answer Text | CognigyScript | Specify the text that is sent to the AI Agent in response to the tool call to inform about the success, failure, or other details of the tool.   |
+
+### Debug Settings
+
+| Parameter     | Type   | Description                                                                     |
+|---------------|--------|---------------------------------------------------------------------------------|
+| Debug Message | Toggle | Enable sending a debug message that displays the tool name and the answer text. |
+
+## More Information
+
+- [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent)
+- [AI Agent Handover](/ai/agents/develop/node-reference/ai/ai-agent-handover)
+- [Agentic AI](/ai/agents/overview)

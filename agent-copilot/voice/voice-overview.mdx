@@ -1,0 +1,26 @@
+---
+title: "Agent Copilot for Voice"
+slug: "voice-agent-assist"
+hidden: false
+---
+
+This feature provides an Agent Copilot workspace for integration into contact center voice deployments.
+
+To set up Agent Copilot for Voice, you'll need a Main Flow capable of transferring the call to a human agent, as well as an Agent Copilot workspace Flow. The Workspace Flow will be executed through the Voice Copilot Endpoint, which receives the transcription of the audio stream.
+
+Before transferring the call to a human agent, add a Transfer Node to route the call to the contact center via SIP headers.
+
+The voice configuration contains the following parts:
+
+- [Transfer Node](/agent-copilot/voice/transfer-node)
+- [Voice Copilot Endpoint](/ai/agents/deploy/endpoint-reference/voice-copilot)
+
+## More Information
+
+- [Agent Copilot Workspace](/agent-copilot/overview)
+- [Getting started with Agent Copilot](/agent-copilot/getting-started)
+- [Agent Copilot Configuration](/agent-copilot/configuration)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Agent Copilot Embedding](/agent-copilot/embedding)
+- [Agent Copilot for Chat](/agent-copilot/chat)
+- [Integration with Contact Centers](/agent-copilot/contact-center-integration)
