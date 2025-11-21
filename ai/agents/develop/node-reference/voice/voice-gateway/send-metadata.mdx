@@ -1,0 +1,29 @@
+---
+title: Send Metadata
+hidden: false
+keywords:
+  - ' Voice Gateway'
+  - ' Send Metadata'
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/vg/send-metadata.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Send Metadata Node will send metadata via SIP INFO messages to the connected SIP trunk.
+
+## Parameters
+
+| Parameter | Type | Description                                                   |
+|-----------|------|---------------------------------------------------------------|
+| Metadata  | JSON | The metadata to send via SIP INFO. See below for an example.  |
+
+### JSON Example
+
+```json
+{
+  "myParamName": "myParamValue"
+}
+```
