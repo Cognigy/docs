@@ -1,0 +1,37 @@
+---
+title: Deactivate Profile
+hidden: false
+seo:
+  metatags:
+    description: >-
+      The Deactivate Profile Node is used to deactivate a specific Contact
+      Profile if the end user requests it.
+---
+
+import AiNodeReferenceAnalyticsProfileNodeUseCase from '/snippets/ai/node-reference/analytics/profile-node-use-case.mdx'
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/analytics/deactivate-profile.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node deactivates a [specific Contact Profile](/ai/agents/analyze/contact-profiles#working-with-contact-profiles) if the end user requests it.
+After deactivation of the Contact Profile, the existing data is kept, but no new data is collected.
+
+If you want to delete all stored profile data, activate the **Delete Data** parameter in the Node settings.
+
+## Parameters
+
+| Parameter   | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                |
+|-------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Delete Data | Boolean | This parameter is inactive by default. If enabled, this Node will deactivate the Contact Profile and delete stored data including all analytics data and transcripts will be removed from the system. This operation is not revertible. The Contact Profile won't get deleted so that it is still possible to reactivate the Profile via the Activate Profile Node or the Data collection inactive toggle. |
+
+<AiNodeReferenceAnalyticsProfileNodeUseCase/>
+
+## More Information
+
+- [Activate Profile](/ai/agents/develop/node-reference/analytics/activate-profile)
+- [Update Profile](/ai/agents/develop/node-reference/analytics/update-profile)
+- [Delete Profile](/ai/agents/develop/node-reference/analytics/delete-profile)
+- [Merge Profile](/ai/agents/develop/node-reference/analytics/merge-profile)

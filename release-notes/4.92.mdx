@@ -1,0 +1,216 @@
+---
+title: '4.92'
+hidden: false
+---
+
+<Warning>
+  On February 15, 2024, Google deprecated Gemini 1.0 Pro. The shutdown date for this model is April 9, 2025. Google recommends migrating to [Gemini 1.5 Pro and Gemini 1.5 Flash](https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/gemini-1.0-pro) before April 9, 2025. 
+  We strongly recommend carrying out this migration since Gemini 1.0 Pro support will be removed from future Cognigy.AI versions.
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+## 4.92.4
+
+### Cognigy Voice Gateway
+
+**Released** January 28, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where selecting Norwegian or Universal Locale caused errors in the Synthesizer (Text-to-Speech) and Recognizer (Speech-to-Text), affecting the voice AI Agent's ability to process speech and respond
+
+## 4.92.3
+
+### Cognigy.AI
+
+**Released** January 16, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where old Projects did not include the Memories field in the Contact Profile schema
+
+## 4.92.2
+
+### Cognigy Voice Gateway
+
+**Released** January 10, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where outbound calls remained silent when a Node with Set Activity Parameters enabled and with the default speech provider was triggered
+
+## 4.92.1
+
+### Cognigy Voice Gateway
+
+**Released** January 8, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where outbound calls could fail when you selected a speech provider without a label (`None`)
+
+## 4.92.0
+
+### Cognigy.AI
+
+**Released** January 7, 2025
+
+#### Features
+
+##### New LLMs for AI Agents
+
+This release extends the list of supported Large Language Model providers and models that can be used for Cognigy Agentic AI Agents.
+
+We have enhanced our existing [Google Gemini](/ai/agents/develop/gen-ai-and-llms/providers/google-gemini) integration by adding [support](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) for Google's latest models: `gemini-1.5-pro` and `gemini-1.5-flash`.
+
+Additionally, we have extended our [AWS Bedrock](/ai/agents/develop/gen-ai-and-llms/providers/amazon-bedrock)  integration to fully support AWS's new `Nova` model series.
+
+Cognigy's Agentic AI Agents can leverage the power of those new models, including all features such as `tool calling` and `streaming`.
+
+##### Pinning your most important Projects
+
+This release introduces the ability to [pin Projects](/ai/overview/user-interface/main-page), allowing you to better organize your view when logging in to Cognigy.AI. The list of pinned Projects will be stored in the user profile, and we plan to expand the range of Cognigy.AI resources that can be pinned in the future.
+
+##### Download for Knowledge Sources in CTXT
+
+This release introduces the capability to download content stored in Knowledge Sources in the [Cognigy TXT (CTXT) format](/ai/agents/develop/knowledge-ai/knowledge-source/overview#download-knowledge-sources-as-ctxt). This feature enables customers to share content from our Knowledge AI product more easily across teams and Projects. The exporter preserves the structure of Knowledge Chunks, ensuring that re-imported files maintain the original Chunk organization.
+
+#### Improvements
+- Increased the button limit from 6 to 15 in the [Text with Buttons](/ai/agents/develop/node-reference/basic/say) output type
+- Blocked inactive users from using SSO login
+- Updated the links on the Get Started cards on the [Projects page](/ai/agents/develop/projects-and-flows/projects)
+- Implemented the [prevention of user impersonation](/ai/administer/access/management-ui#block-user-impersonation) in the [Management UI](/ai/administer/access/management-ui)
+- Added the capability to [track total token usage](/ai/agents/develop/gen-ai-and-llms/llm-session-token-counter). This capability allows users to monitor their LLM token usage per session
+- Added a [Temperature](/ai/agents/develop/node-reference/ai/ai-agent) slider to the Advanced section of the AI Agent Node
+- Added the [Hide References to External Resources in Transcripts](/ai/agents/deploy/endpoints/data-protection-and-analytics) setting to remove tags that can reference third-party APIs (`<a>`, `<img>`) from inputs to protect users
+- Reduced application loading times by splitting the JS bundle into chunks with lazy loading
+- Redesigned and resized the AI Agent wizard
+- Added dynamic highlighting of the Flow Chart during execution, updating every 300 ms when a user tests a Flow via the Interaction Panel. Previously, this highlighting appeared only after the execution was complete
+- Added the Generate Search Prompt parameter to the Grounding Knowledge section in the [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent). This parameter is enabled by default and allows you to generate a context-aware search prompt before executing the knowledge search
+
+#### Bug Fixes
+
+- Fixed the issue where old Projects didn't have the `privacy_policy` field in the Contact Profile schema
+- Fixed the issue where a Playbook with `$` in the payload would fail to run
+- Fixed the issue where the loading indicator was displayed continuously in the AI Agent wizard when Flow creation failed
+- Fixed the issue where long Project names weren't clipped properly in the Project list
+- Fixed the issue where the pop-up asking to configure a new LLM appeared even though a Project already had an LLM configured
+- Fixed the issue where AI Agent outputs with a tool call would only be displayed in streaming mode
+- Fixed the issue where buffered outputs sometimes caused the transcript steps to appear in the wrong order
+- Fixed the issue where one-time download URLs for the exported Snapshot, Package, Lexicon, and Trainer records were accessible to unauthorized clients
+- Fixed the issue where navigation during Project creation was inconsistent
+- Fixed the issue where AI Agent nodes didn’t display an error status in the UI when they failed
+- Fixed the issue where question text preprocessing containing specific characters could result in an error
+- Fixed the issue where the `handoverEscalation` analytics data was wrong
+- Fixed the issue where the Node Editor didn’t update when switching locales
+- Fixed the issue where the AI Agent Node didn't receive an error status indication in the UI when failing
+
+### Cognigy Voice Gateway
+
+**Released** January 7, 2025
+
+#### Improvements
+
+- Added the capability to set `recognizer`, `fillerNoise`, and `synthesizer` via the [Advanced Session Parameters](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) in the Set Session Config Node and via the Set Activity Parameters in the Say or Question Nodes
+- Added Third Party-Call-Control (3PCC) support for `INVITE` without Session Description Protocol (SDP)
+- Added the capability to define the `user` parameter in the `Contact` header via the `SIP From User` carrier:
+    - `<[scheme]:[user]@[host][port];[transport]>` - `"Cognigy Bot" <sip:+4912345@18.198.97.129:5061;transport=tls>`  
+      By default, this capability is disabled. To enable it, set `FEAT_COMPATIBILITY_RFC3261={{ .Values.sbcOutbound.registerRfc3261 }}`
+
+#### Bug Fixes
+
+- Fixed the issue where the `sttSpeechContexts` property led to a schema violation
+- Fixed the issue where the Call in Progress event didn't work for outbound calls
+- Fixed the issue where setting a vendor with no label in the Activity Parameters of a Say Node, followed by a Wait for Input Node, generated an incorrect configuration. The Wait for Input label overwrote the configuration of the Say Node
+- Fixed the issue where the `handoverEscalation` analytics data was wrong
+- Fixed the issue where the fallback transfer by dial or refer didn't hang up when the user line was busy or the user rejects the call
+- Fixed the issue where gather tasks weren't executed if another gather task was running in the background
+- Fixed the issue where labels with the `""` value (empty string) caused an error in the recognizer
+- Fixed the issue where the bucket credentials for an account weren't displayed in the Voice Gateway Self-Service Portal
+
+### Cognigy Webchat
+
+**Released** January 7, 2025
+
+#### Improvements
+
+- Added support for images to the [Text with Quick Replies](/ai/agents/develop/node-reference/basic/say) output type. This improvement applies to Webchat v3
+- Updated Webchat v3 to [v3.9.0](https://github.com/Cognigy/Webchat/releases/tag/v3.9.0)
+
+### Cognigy Live Agent
+
+**Released** January 7, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the unread notification count was incorrect in real time
+
+### Cognigy Insights
+
+**Released** January 7, 2025
+
+#### Improvements
+
+- Allowed the use of `apikey` as a request header for the OData API
+
+#### Bug Fixes
+
+- Fixed the issue where a Transcript conversation could render malicious HTML tags
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot
+
+##### Traefik: Enable High Availability (HA) by Default
+
+- **For dedicated and shared SaaS installations:**
+To ensure HA, Traefik pods are deployed in 3 Availability Zones (AZ) (Cognigy.AI recommended setup) by default, one pod for each AZ.
+
+- **For on-premises installations:**
+Traefik HA default settings require that you run your cluster with 3 AZs (Cognigy.AI recommended setup), and the Helm Release spawns HA replicas across the 3 AZs. If you deploy your cluster without AZs, override the zonal `podAntiAffinity` key in the `values.yaml` file, as follows:
+
+    ```yaml
+    traefik:
+      deployment:
+        # podLabels:
+        #   uniquezone: "set"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution: []
+    ```
+
+    In the `values.yaml` file, you can remove the `.traefik.deployment.podLabels.uniquezone` key or comment it out as shown previously.
+   
+#### Cognigy Voice Gateway
+
+- Add the `FEAT_COMPATIBILITY_RFC3261` feature flag to the deployment of `sbc-outbound`. When enabled, the `SIP 'Contact' user` header will be set to the same value as the `SIP 'From' user` header of a carrier. This feature can be enabled by setting `{{ .Values.sbcOutbound.registerRfc3261 }}` to `true`. By default, `{{ .Values.sbcOutbound.registerRfc3261 }}` is `false`
+- Added the possibility to select Deepgram as an STT vendor and renamed `ENABLE_TTS_DEEPGRAM` flag to `ENABLE_DEEPGRAM` with the `.Values.webapp.enableDeepgram` value 
+
+##### Traefik: Enable High Availability (HA) by Default
+
+- **For dedicated and shared SaaS installations:**
+To ensure HA, Traefik pods are deployed in 3 Availability Zones (AZ) (Cognigy.AI recommended setup) by default, one pod for each AZ.
+
+- **For on-premises installations:**
+Traefik HA default settings require that you run your cluster with 3 AZs (Cognigy.AI recommended setup), and the Helm Release spawns HA replicas across the 3 AZs. If you deploy your cluster without AZs, override the zonal `podAntiAffinity` key in the `values.yaml` file, as follows:
+
+    ```yaml
+    traefik:
+      deployment:
+        # podLabels:
+        #   uniquezone: "set"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution: []
+    ```
+
+    In the `values.yaml` file, you can remove the `.traefik.deployment.podLabels.uniquezone` key or comment it out as shown previously.
+  
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
