@@ -1,0 +1,13 @@
+<Warning>
+  In Cognigy.AI 2025.25.0, transformers will start using the `axios` library for handling HTTP requests internally instead of `request-promise`. This change occurs to improve security and maintainability. The following HTTP request options will still be supported:
+  
+  - **URL configuration** — `uri`, `url`  
+  - **Request method** — `method`  
+  - **Request headers and configuration** — `headers`  
+  - **Request body** — `form`, `json`  
+  - **Query parameters** — `qs`, `qsStringifyOptions`  
+  - **Authentication** — `auth`  
+  - **Connection and network** — `proxy`, `maxRedirects`, `gzip`, `encoding`
+  
+  If you use other HTTP request options, review your transformer code to ensure it is compatible with the `axios` library before the release of Cognigy.AI 2025.25.0.
+</Warning>
