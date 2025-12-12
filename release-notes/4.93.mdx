@@ -1,0 +1,134 @@
+---
+title: '4.93'
+hidden: false
+---
+
+<Warning>
+  - [AudioCodes Nodes](/ai/agents/develop/node-reference/voice/audiocodes/overview) and [Generic Voice Nodes](/ai/agents/develop/node-reference/voice/generic/overview) will be deprecated at the end of February 2025. After this time, you won't be able to create new Nodes, but you can still edit or clone existing ones.
+    Flows with these Nodes will continue to work after the deprecation date.
+  - On February 15, 2024, Google deprecated Gemini 1.0 Pro. The shutdown date for this model is April 9, 2025. Google recommends migrating to [Gemini 1.5 Pro and Gemini 1.5 Flash](https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/gemini-1.0-pro) before April 9, 2025.
+    We strongly recommend carrying out this migration since Gemini 1.0 Pro support will be removed from future Cognigy.AI versions.
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 4.93.3
+
+### Cognigy.AI
+
+**Released** January 30, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the Cognigy.AI user interface didn't load in different environments after the v4.93.2 update
+
+## 4.93.2
+
+### Cognigy Voice Gateway
+
+**Released** January 29, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where selecting Norwegian or Universal Locale caused errors in the Synthesizer (Text-to-Speech) and Recognizer (Speech-to-Text), affecting the voice AI Agent's ability to process speech and respond
+
+## 4.93.1
+
+### Cognigy.AI
+
+**Released** January 28, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where logging in to the Voice Gateway Self-Service Portal with the Cognigy.AI account wasn't working
+- Fixed the issue where the Timeout parameter in the LLM Prompt and Search Extract Output Nodes didn't work for Microsoft Azure OpenAI models
+
+### Live Agent
+
+**Released** January 28, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where users with `Supervisor` and `Administrator` roles could see labels from multiple accounts at once. Now, these users only see labels from the account they are currently in, even if they have access to other accounts
+
+## 4.93.0
+
+### Cognigy.AI
+
+**Released** January 21, 2025
+
+#### Features
+
+##### New LLM Embedding for Knowledge AI
+
+With this release, we introduce support for the powerful [`amazon.titan-embed-text-v2:0`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) embedding model by Amazon Bedrock. This model is now available for Cognigy Knowledge AI and hidden behind the `FEATURE_ENABLE_AWS_BEDROCK_EMBEDDING_LLM_WHITELIST` feature flag.
+
+#### Improvements
+
+- Extended the list of English utterances allowed for the Resolve Phonetic Counters option in the Answer Preprocessing section of the Question Node
+- Improved English and German speech recognition for voice and chat AI Agents
+
+#### Bug Fixes
+
+- Fixed the issue where the user session was terminated even if the password change for the user was unsuccessful
+- Fixed the issue where `UNSUPPORTED_STRUCTURED_DATA` messages weren't correctly filtered while using the feature flag for it
+- Fixed the issue where users were unable to log in to Live Agent
+- Fixed the issue where the Say Node would omit the passed variables
+- Fixed the issue where Agent AI Node failed
+- Fixed the issue where users with `admin` rights could set a password for a user created through SSO
+- Fixed the issue preventing the Stops option in the Advanced section of the LLM Prompt Node from working with Azure OpenAI models
+
+### Cognigy Voice Gateway
+
+**Released** January 21, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where validation of an incorrect `say` verb would trigger an empty call instead of ignoring the error and logging it
+- Fixed the issue in the Set Session Config Node where the model specified in the Recognizer (STT) section was incorrectly applied to the Synthesize (TTS) settings instead of the Recognizer (STT) settings
+
+### Cognigy Webchat
+
+**Released** January 21, 2025
+
+#### Improvements
+
+- Added the [Watermark URL](/webchat/v3/configuration#watermark) parameter to the Watermark section in the Webchat v3 Endpoint
+- Moved the [Webchat Plugins](/webchat/v3/configuration#webchat-plugins) settings to the Demo Webchat Settings section in the Webchat v3 Endpoint
+- Updated Webchat v3 to [v3.10.0](https://github.com/Cognigy/Webchat/releases/tag/v3.10.0)
+
+#### Bug Fixes
+
+- Fixed the Webchat v3 issue where Quick Replies in Chat options started a new session. Now, clicking Quick Replies posts back to the current session
+
+### Cognigy Live Agent
+
+**Released** January 21, 2025
+
+#### Bug Fixes
+
+- Fixed the issue with the [File Upload](/live-agent/conversation/send-reply#request-file-uploads) plugin where files sent by the end user were uploaded but displayed as Unknown File in the conversation chat
+- Fixed the issue where the automatic reassignment of conversations did not trigger sound notifications or activity messages
+- Fixed the issue where the German localization didn't render the Reply section correctly
+
+### Cognigy Insights
+
+**Released** January 21, 2025
+
+#### Improvements
+
+- Added the [Goals Performance (in numbers)](/insights/reports/goals) chart to the Goals dashboard
+- Shortened the [default date range](/insights/global-filters) in the Insights global filters from `30 days` to `7 days`
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)

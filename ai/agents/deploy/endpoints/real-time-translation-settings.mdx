@@ -1,0 +1,45 @@
+---
+title: Real-Time Translation Settings
+hidden: false
+seo:
+  metatags:
+    description: >-
+      The Real-Time Translation Settings section allows you to configure the
+      Real-Time Translation feature, which enables real-time translation of user
+      input and AI Agent output.
+keywords:
+  - real time translation
+  - language detection
+  - machine translation providers
+  - translation settings
+---
+
+import AddMachineTranslationProvider from '/snippets/ai/settings/add-machine-translation-provider.mdx'
+
+In the _Real-Time Translation Settings_ section, you can configure the [Real-Time Translation](/ai/platform-features/translation-and-localization/real-time-translation) feature. Before using this feature, you need to add a machine translation provider.
+
+## Add a Machine Translation Provider
+
+<AddMachineTranslationProvider />
+
+## Real-Time Translation Settings
+
+<a href="/release-notes/4.63"><Badge className="version-badge" color="blue">Updated in 4.63</Badge></a>
+
+| Parameter                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Providers                              |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| Enable Translation                         | Activate real-time translation for the Endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Microsoft, Google, DeepL Translate Pro |
+| User Input Language                        | Select the language of the user input or the **Auto-Detect** option. This option detects the language of the user automatically in their first messages.                                                                                                                                                                                                                                                                                                                                                            | Microsoft, Google, DeepL Translate Pro |
+| Flow Language                              | Select the AI Agent's language.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Microsoft, Google, DeepL Translate Pro |
+| Set user input language on execution count | This setting applies if you've selected the **Auto-Detect** option in the **User Input Language** list. Set the number of user inputs the AI Agent uses to determine the language of the user. After this number of user inputs, the AI Agent stops trying to detect the user language.                                                                                                                                                                                                                             | Microsoft, Google, DeepL Translate Pro |
+| Glossary ID Output                         | Enter the glossary ID for the AI Agent's output translations. To ensure that the translations work correctly, the source and target languages of the glossary must match the selected language in the **Flow Language** and **User Input Language** fields.                                                                                                                                                                                                                                                         | DeepL Translate Pro                    |
+| Glossary ID Input                          | Enter the glossary ID for user input translations. To ensure that the glossary works correctly, the source and target languages of the glossary must match the selected language in the **Flow Language** and **User Input Language** fields. If you've selected **Auto-Detect** in the **User Input Language** field, the glossary isn't used for input translations.                                                                                                                                              | DeepL Translate Pro                    |
+| Formality                                  | Select the level of formality for the translated text. This setting applies only to the following target languages: <ul><li>DE (German)</li><li>FR (French)</li><li>IT (Italian)</li><li>ES (Spanish)</li><li>NL (Dutch)</li><li>PL (Polish)</li><li>PT-BR (Portuguese)</li><li>PT-PT (Portuguese)</li><li>JA (Japanese)</li><li>RU (Russian)</li></ul>                                                                                                                                                             | DeepL Translate Pro                    |
+| No-Translation Marker                      | Enter the marker for excluding text segments from translation. Any text enclosed in the no-translation marker isn't translated. By default, the no-translation marker is `**`. In this case, if you enter, for example, `Willkommen, **Moin**!` in the **Text** field of a Say Node and the detected user language is English, the AI Agent outputs `Welcome, Moin!` to the user. `Moin` isn't translated as `Good Morning`. This setting can be useful, for example, to avoid translating product and brand names. | Microsoft, Google, DeepL Translate Pro |
+| Always remove No-Translation Markers       | When you activate this setting, the AI Agent always removes the no-translation markers before outputting any text, even if you deactivate real-time translation.                                                                                                                                                                                                                                                                                                                                                    | Microsoft, Google, DeepL Translate Pro |
+| Prevent payloads from being translated     | When you activate this setting, user inputs received via payload aren't translated.                                                                                                                                                                                                                                                                                                                                                                                                                                 | Microsoft, Google, DeepL Translate Pro |
+
+## More Information
+
+- [Real-Time Translation](/ai/platform-features/translation-and-localization/real-time-translation)
+- [Automatic Translation](/ai/platform-features/translation-and-localization/auto-translation)

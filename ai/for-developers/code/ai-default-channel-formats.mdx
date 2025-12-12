@@ -1,0 +1,529 @@
+---
+title: AI Default Channel Formats
+hidden: false
+---
+
+You can send JSON-formatted output directly against your [Endpoints](/ai/agents/deploy/endpoints/overview) for it to be output to the respective channels.
+
+The [AI Default Channel](/ai/agents/develop/node-reference/basic/say#default-cognigy-ai-channel) is special in a way that content from the Default Channel is automatically converted into the correct payloads for all other channels.
+
+Using the [Code](/ai/for-developers/code/overview) Node, you can also send JSON-formatted output to the Endpoints for the AI Default Channel, and it will handle the conversion into the appropriate content. The required payload formats are described below. 
+
+## Payload Formats
+
+<AccordionGroup>
+  <Accordion title="Text">
+
+    Sends text to the Endpoint.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output("Your text", null);
+        ```
+      </Tab>
+      <Tab title="Say Node">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/say-in-node.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/say-in-webchat.png" style={{ width: 'auto' }} />
+        </Frame>
+     </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Text with Quick Replies">
+
+    Sends text and a number of quick reply buttons.
+
+    <Tabs>
+    <Tab title="JSON Format">
+      ```js
+      api.output(null, {
+        "type": "quickReplies",
+        "_cognigy": {
+          "_default": {
+            "_quickReplies": {
+              "type": "quick_replies",
+              "text": "Quick Reply Text",
+              "quickReplies": [
+                {
+                  "id": 111,
+                  "contentType": "postback",
+                  "payload": "Postback 1",
+                  "title": "Button 1",
+                  "imageUrl": "https://www.cognigy.com/hubfs/Cognigy.svg"
+                },
+                {
+                  "id": 112,
+                  "contentType": "phone_number",
+                  "payload": "+49123456",
+                  "title": "Button 2"
+                },
+                {
+                  "id": 112,
+                  "contentType": "trigger_intent",
+                  "payload": "",
+                  "title": "Button 3",
+                  "intentName": "Intent Name"
+                }
+              ]
+            }
+          }
+        }
+      });
+      ```
+    </Tab>
+    <Tab title="Say Node">
+      <Frame>
+        <img class="image-center" src="/_assets/ai/develop/node-reference/say-node-quick-replies.png" style={{ width: 'auto' }} />
+        <figcaption>Quick Replies in Say Node</figcaption>
+      </Frame>
+
+      <Frame>
+        <img class="image-center" src="/_assets/ai/develop/node-reference/say-node-text-with-quick-reply.png" style={{ width: 'auto' }} />
+        <figcaption>Quick Reply Detailed Settings</figcaption>
+      </Frame>
+    </Tab>
+    <Tab title="Webchat">
+      <Frame>
+        <img class="image-center" src="/_assets/ai/develop/node-reference/webchat-quick-reply-buttons.png" style={{ width: 'auto' }} />
+      </Frame>
+    </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Gallery">
+
+    Outputs a carousel of cards.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output(null, {
+          "type": "gallery",
+          "_cognigy": {
+            "_default": {
+              "_gallery": {
+                "type": "carousel",
+                "items": [
+                  {
+                    "id": 111,
+                    "title": "Cognigy.AI",
+                    "subtitle": "Cognigy.AI is a conversational AI platform.",
+                    "imageUrl": "https://www.cognigy.com/hubfs/AI%20Copy%205.svg",
+                    "buttons": [
+                      {
+                        "id": 112,
+                        "payload": "Postback 1",
+                        "type": "postback",
+                        "title": "Button 1"
+                      },
+                      {
+                        "id": 113,
+                        "payload": "",
+                        "type": "web_url",
+                        "title": "URL Button",
+                        "url": "https://www.cognigy.com/products/cognigy-ai"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 121,
+                    "title": "Cognigy.VG",
+                    "subtitle": "Cognigy Voice Gateway connects your AI to your contact center",
+                    "imageUrl": "https://www.cognigy.com/hubfs/cognigy-vg-logo.svg",
+                    "buttons": [
+                      {
+                        "id": 122,
+                        "payload": "",
+                        "type": "web_url",
+                        "title": "Click me",
+                        "url": "https://www.cognigy.com/products/voice-gateway"
+                      }
+                    ]
+                  }
+                ],
+                "fallbackText": "Fallback text for voice channels"
+              }
+            }
+          }
+        });
+        ```
+      </Tab>
+      <Tab title="Say Node">
+        <div style={ {display: 'flex', justifyContent: 'space-between'} }>
+          <Frame style={ {width: '30%'} }>
+            <img class="image-center" src="/_assets/ai/develop/node-reference/gallery-say-node.png" style={{ width: 'auto' }} />
+            <figcaption>Gallery in Say Node</figcaption>
+          </Frame>
+
+          <Frame style={ {width: '50%'} }>
+            <img class="image-center" src="/_assets/ai/develop/node-reference/gallery-button-settings.png" style={{ width: 'auto' }} />
+            <figcaption>Gallery Button Settings</figcaption>
+          </Frame>
+        </div>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/gallery-web-chat.png" style={{ width: 'auto' }} />
+          <figcaption>Gallery in Webchat</figcaption>
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Text with Buttons">
+
+    Outputs text with a list of buttons.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output(null, {
+          "type": "buttons",
+          "_cognigy": {
+            "_default": {
+              "_buttons": {
+                "type": "buttons",
+                "text": "Text with Buttons",
+                "buttons": [
+                  {
+                    "id": 111,
+                    "payload": "Postback Value",
+                    "type": "postback",
+                    "title": "Postback Value Button"
+                  },
+                  {
+                    "id": 112,
+                    "payload": "",
+                    "type": "web_url",
+                    "title": "URL Button",
+                    "url": "https:\\\\google.com"
+                  },
+                  {
+                    "id": 113,
+                    "payload": "+491234567",
+                    "type": "phone_number",
+                    "title": "Phone Number Button"
+                  },
+                  {
+                    "id": 114,
+                    "payload": "",
+                    "type": "trigger_intent",
+                    "title": "Intent Button",
+                    "intentName": "Intent Name"
+                  }
+                ]
+              }
+            }
+          }
+        });
+        ```
+
+      </Tab>
+      <Tab title="Say Node">
+        <div style={ {display: 'flex', justifyContent: 'space-between'} }>
+          <Frame style={ {width: '30%'} }>
+            <img class="image-center" src="/_assets/ai/develop/node-reference/buttons-in-editor-ai.png" style={{ width: 'auto' }} />
+            <figcaption>Text with Buttons in Say Node</figcaption>
+          </Frame>
+
+          <Frame style={ {width: '50%'} }>
+            <img class="image-center" src="/_assets/ai/develop/node-reference/text-with-buttons.png" style={{ width: 'auto' }} />
+            <figcaption>Text with Buttons Detailed Settings</figcaption>
+          </Frame>
+        </div>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/test-with-buttons-in-web-chat.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="List">
+
+    Outputs a list.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output(null, {
+          "type": "list",
+          "_cognigy": {
+            "_default": {
+              "_list": {
+                "type": "list",
+                "items": [
+                  {
+                    "title": "List Item 1",
+                    "subtitle": "Subtitle",
+                    "imageUrl": "https://www.cognigy.com/hubfs/Cognigy.svg",
+                    "defaultActionUrl": "",
+                    "imageAltText": "Alternate Text",
+                    "buttons": [
+                      {
+                        "type": "postback",
+                        "payload": "Postback Value",
+                        "title": "Postback Button"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "List Item 2",
+                    "subtitle": "",
+                    "imageUrl": "",
+                    "defaultActionUrl": "",
+                    "buttons": [
+                      {
+                        "type": "web_url",
+                        "payload": "",
+                        "title": "URL Button",
+                        "url": "https:\\\\www.google.com"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "List Item 3",
+                    "subtitle": "",
+                    "imageUrl": "",
+                    "defaultActionUrl": "",
+                    "buttons": [
+                      {
+                        "type": "phone_number",
+                        "payload": "+491234567",
+                        "title": "Phone Number Button"
+                      }
+                    ]
+                  },
+                  {
+                    "title": "List Item 4",
+                    "subtitle": "",
+                    "imageUrl": "",
+                    "defaultActionUrl": "",
+                    "buttons": [
+                      {
+                        "type": "trigger_intent",
+                        "payload": "",
+                        "title": "Intent Button",
+                        "intentName": "Intent Name"
+                      }
+                    ]
+                  }
+                ],
+                "button": {
+                  "type": "postback",
+                  "condition": "",
+                  "payload": "Postback value",
+                  "title": "Separate Button from List"
+                }
+              }
+            }
+          }
+        });
+        ```
+      </Tab>
+      <Tab title="Say Node">
+        <div style={ {display: 'flex', justifyContent: 'space-between'} }>
+          <Frame style={ {width: '50%'} }>
+            <img class="image-center" src="/_assets/ai/develop/node-reference/edit-node-list.svg" style={{ width: 'auto' }} />
+            <figcaption>List in Say Node</figcaption>
+          </Frame>
+
+          <Frame style={ {width: '50%'} }>
+            <img class="image-center" src="/_assets/ai/develop/node-reference/say-list-option-order.svg" style={{ width: 'auto' }} />
+            <figcaption>List Say Node settings</figcaption>
+          </Frame>
+        </div>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/webchat-say-node-list-items.svg" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Audio">
+
+    Outputs audio from a URL.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output(null, {
+          "type": "audio",
+          "_cognigy": {
+            "_default": {
+              "_audio": {
+                "type": "audio",
+                "audioUrl": "https://audio.test/test.wav"
+              }
+            }
+          }
+        });
+        ```
+      </Tab>
+      <Tab title="Say Node">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/audio-and-details-in-say-node.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/audio_in_webchat.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Image">
+
+    Outputs image from a URL.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output(null, {
+          "type": "image",
+          "_cognigy": {
+            "_default": {
+              "_image": {
+                "type": "image",
+                "imageUrl": "https://testURL.test/image.jpeg"
+              }
+            }
+          }
+        });
+        ```
+      </Tab>
+      <Tab title="Say Node">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/image.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/image-in-webchat.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Video">
+
+    Outputs video from a URL.
+
+      <Tabs>
+        <Tab title="JSON Format">
+          ```js
+          api.output(null, {
+            "type": "video",
+            "_cognigy": {
+              "_default": {
+                "_video": {
+                  "type": "video",
+                  "videoUrl": "https://www.youtube.com/watch?v=iGc3fekZQOw"
+                }
+              }
+            }
+          });
+            ```
+      </Tab>
+      <Tab title="Say Node">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/video-in-say-node.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/video_in_web_chat.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Adaptive Card">
+
+    Outputs an adaptive card.
+
+    <Tabs>
+      <Tab title="JSON Format">
+        ```js
+        api.output(null, {
+          "type": "adaptiveCard",
+          "_cognigy": {
+            "_default": {
+              "_adaptiveCard": {
+                "type": "adaptiveCard",
+                "adaptiveCard": {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "type": "AdaptiveCard",
+                  "body": [
+                    {
+                      "type": "TextBlock",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "text": "Publish Adaptive Card Schema"
+                    },
+                    {
+                      "type": "ColumnSet",
+                      "columns": [
+                        {
+                          "type": "Column",
+                          "items": [
+                            {
+                              "type": "Image",
+                              "style": "Person",
+                              "url": "https://pbs.twimg.com/profile_images/3647943215/d7f12830b3c17a5a9e4afcc370e3a37e_400x400.jpeg",
+                              "size": "Small"
+                            }
+                          ],
+                          "width": "auto"
+                        },
+                        {
+                          "type": "Column",
+                          "items": [
+                            {
+                              "type": "TextBlock",
+                              "weight": "Bolder",
+                              "text": "Matt Hidinger",
+                              "wrap": true
+                            },
+                            {
+                              "type": "TextBlock",
+                              "spacing": "None",
+                              "text": "Created Tue, Feb 14, 2017",
+                              "isSubtle": true,
+                              "wrap": true
+                            }
+                          ],
+                          "width": "stretch"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": "Publish Adaptive Card Schema easily.",
+                      "wrap": true
+                    },
+                    {
+                      "type": "Action.OpenUrl",
+                      "title": "View",
+                      "url": "https://adaptivecards.io"
+                    }
+                  ],
+                  "actions": [],
+                  "version": "1.5"
+                }
+              }
+            }
+          }
+        });
+        ```
+      </Tab>
+      <Tab title="Webchat">
+        <Frame>
+          <img class="image-center" src="/_assets/ai/develop/node-reference/adaptive-card.png" style={{ width: 'auto' }} />
+        </Frame>
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>

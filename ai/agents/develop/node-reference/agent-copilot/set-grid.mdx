@@ -1,0 +1,36 @@
+---
+title: 'Copilot: Set Grid'
+hidden: false
+---
+
+<a href="/release-notes/4.69"><Badge className="version-badge" color="blue">Updated in 4.69</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/agent-copilot/set-grid.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Copilot: Set Grid Node updates the existing Agent Copilot workspace grid in the Agent Copilot Configuration, created via an [API POST request](https://api-trial.cognigy.ai/openapi#post-/v2.0/agentassistconfigs). Additionally, this Node can be used instead of the Agent Copilot Configuration to preview, edit, and modify the grid.
+
+To edit the grid configuration, open the Node Editor and modify the default Agent Copilot Grid Configuration in JSON, then check the preview below to confirm the configuration is correct.
+
+Multiple Nodes can be utilized within a single Agent Copilot Flow, enabling you to modify the grid according to your specific requirements.
+
+## Parameters
+
+| Parameter                  | Type          | Description                                                                                                                                                                                                                                                                                                                          |
+|----------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Agent Copilot Grid Configuration | JSON          | Updates the Agent Copilot workspace grid configuration. By default, there is a grid example in the code editor. You can view a grid with Tile IDs in the Node editor.                                                                                                                                                                   |
+| Background Selector        | Select        | Customizes the background color of the Agent Copilot workspace. You can select one of the following options:<ul><li>**Default** — the default white colour.</li><li>**Solid Background Color** — specify the color in RGB or Hex format.</li><li>**Custom Image** — specify an image URL.</li></ul>                                     |
+| Color (RGB/Hex)            | CognigyScript | This field appears if the **Solid Background Color** option is selected.<br/><br/>Enter the color in one of the following formats:<ul><li>**RGB**. For example, green can be represented as `rgb(34, 85, 85)`.</li><li>**Hex**. For example, red can be represented as `#FF3333`.</li></ul>The color will be rendered under the field. |
+| Image URL                  | CognigyScript | This field appears if the **Custom Image** option is selected.<br/><br/>Provide the image URL for your custom background. The image will be rendered under the field.                                                                                                                                                                  |
+
+## More Information
+
+- [Set HTML file](/ai/agents/develop/node-reference/agent-copilot/set-html-tile)
+- [Set Adaptive card tile](/ai/agents/develop/node-reference/agent-copilot/set-adaptive-card-tile)
+- [Set IFrame tile](/ai/agents/develop/node-reference/agent-copilot/set-iframe-tile)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Agent Copilot](/agent-copilot/overview)

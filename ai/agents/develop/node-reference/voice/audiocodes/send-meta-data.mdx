@@ -1,0 +1,27 @@
+---
+title: Send Metadata
+hidden: false
+---
+
+import AiNodeReferenceVoiceAcAndGenericNodeDeprecation from '/snippets/ai/node-reference/voice/ac-and-generic-node-deprecation.mdx'
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/audiocodes/send-metadata.png" style={{ width: 'auto' }} />
+  <figcaption>AudioCodes Metadata</figcaption>
+</Frame>
+
+## Description
+
+<AiNodeReferenceVoiceAcAndGenericNodeDeprecation/>
+
+The Send Metadata Node will send metadata via SIP INFO messages to the connected SIP trunk.
+
+| Parameter | Type | Description                                                   |
+|-----------|------|---------------------------------------------------------------|
+| Metadata | JSON | The metadata to send via SIP INFO. See below for an example. |
+
+```json
+{
+  "myParamName": "myParamValue"
+}
+``` 
