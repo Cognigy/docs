@@ -1,0 +1,140 @@
+---
+title: MongoDB
+hidden: false
+seo:
+  metatags:
+    description: >-
+      The MongoDB Nodes allow you to execute a range of operations on your
+      MongoDB database, such as find, update, and remove operations.
+---
+
+<a href="/release-notes/4.88"><Badge className="version-badge" color="blue">Updated in 4.88</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/services/mongo-db-find.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The MongoDB Nodes let you execute a range of operations on your [MongoDB](https://www.mongodb.com/docs/).
+
+## Restrictions
+
+- MongoDB Nodes are compatible with MongoDB 3.6 or later versions.
+
+## Nodes
+
+### Find
+
+| Parameter          | Type          | Description                                                                                                               |
+|--------------------|---------------|---------------------------------------------------------------------------------------------------------------------------|
+| MongoDB Connection | List          | Select MongoDB database connection. To create a new connection, click ![plus](/_assets/icons/plus-simple.svg). |
+| Collection         | CognigyScript | The name of the MongoDB collection.                                                                                       |
+| Query              | JSON          | The MongoDB query. [MongoDB Documentation: Find](https://docs.mongodb.com/manual/reference/method/db.collection.find/)    |
+
+<AccordionGroup>
+  <Accordion title="Result Storage">
+
+    | Parameter                 | Type          | Description                                                                                                                         |
+    |---------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
+    | Where to store the result | List          | <ul><li>**Input** — stores the result in the Input object.</li><li>**Context** — stores the result in the Context object.</li></ul> |
+    | Input Key to store Result | CognigyScript | Enter the key where the result should be stored.                                                                                    |
+  </Accordion>
+
+  <Accordion title="Advanced">
+
+    | Parameter     | Type          | Description                                                                                                                                                            |
+    |---------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Projection    | JSON          | Read the MongoDB documentation for more information on Projection. [MongoDB Documentation: Projection](https://docs.mongodb.com/manual/reference/operator/projection/) |
+    | Options       | JSON          | Read the MongoDB documentation for configurable options. [MongoDB Documentation](https://docs.mongodb.com/manual)                                                      |
+    | Index         | CognigyScript | Refer to the MongoDB documentation on Indexes. [MongoDB Documentation: Indexes](https://docs.mongodb.com/manual/indexes/)                                              |
+    | Stop on Error | Toggle        | Lets you configure whether to stop flow execution when an error occurs or not.                                                                                         |
+  </Accordion>
+
+  <Accordion title="Caching">
+
+    | Parameter                               | Type   | Description                                                     |
+    |-----------------------------------------|--------|-----------------------------------------------------------------|
+    | Cache Response from MongoDB Operation   | Toggle | Whether to cache the MongoDB responses to optimize performance. |
+    | The expiration time of the cache (in s) | Number | The expiration time in seconds of the cache.                    |
+  </Accordion>
+</AccordionGroup>
+
+### Find One
+
+| Parameter          | Type          | Description                                                                                                                  |
+|--------------------|---------------|------------------------------------------------------------------------------------------------------------------------------|
+| MongoDB Connection | List          | Select MongoDB database connection. To create a new connection, click ![plus](/_assets/icons/plus-simple.svg).    |
+| Collection         | CognigyScript | The name of the MongoDB collection.                                                                                          |
+| Query              | JSON          | The MongoDB query. [MongoDB Documentation: FindOne](https://docs.mongodb.com/manual/reference/method/db.collection.findOne/) |
+
+<AccordionGroup>
+  <Accordion title="Result Storage">
+
+    | Parameter                 | Type          | Description                                                                                                                         |
+    |---------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
+    | Where to store the result | List          | <ul><li>**Input** — stores the result in the Input object.</li><li>**Context** — stores the result in the Context object.</li></ul> |
+    | Input Key to store Result | CognigyScript | Enter the key where the result should be stored.                                                                                    |
+  </Accordion>
+
+  <Accordion title="Advanced">
+
+    | Parameter     | Type   | Description                                                                                                                                                            |
+    |---------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Projection    | JSON   | Read the MongoDB documentation for more information on Projection. [MongoDB Documentation: Projection](https://docs.mongodb.com/manual/reference/operator/projection/) |
+    | Options       | JSON   | Read the MongoDB documentation for configurable options. [MongoDB Documentation](https://docs.mongodb.com/manual)                                                      |
+    | Stop on Error | Toggle | Lets you configure whether to stop flow execution when an error occurs or not.                                                                                         |
+  </Accordion>
+
+  <Accordion title="Caching">
+
+    | Parameter                               | Type   | Description                                                     |
+    |-----------------------------------------|--------|-----------------------------------------------------------------|
+    | Cache Response from MongoDB Operation   | Toggle | Whether to cache the MongoDB responses to optimize performance. |
+    | The expiration time of the cache (in s) | Number | The expiration time in seconds of the cache.                    |
+  </Accordion>
+</AccordionGroup>
+
+### Update One
+
+| Parameter          | Type          | Description                                                                                                                                             |
+|--------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MongoDB Connection | List          | Select MongoDB database connection. To create a new connection, click ![plus](/_assets/icons/plus-simple.svg).                               |
+| Collection         | CognigyScript | The name of the MongoDB collection.                                                                                                                     |
+| Update             | JSON          | The MongoDB update payload in JSON format.[MongoDB Documentation: UpdateOne](https://docs.mongodb.com/manual/reference/method/db.collection.updateOne/) |
+
+<AccordionGroup>
+  <Accordion title="Result Storage">
+
+    | Parameter                 | Type          | Description                                                                                                                         |
+    |---------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
+    | Where to store the result | List          | <ul><li>**Input** — stores the result in the Input object.</li><li>**Context** — stores the result in the Context object.</li></ul> |
+    | Input Key to store Result | CognigyScript | Enter the key where the result should be stored.                                                                                    |
+  </Accordion>
+
+  <Accordion title="Advanced">
+
+    | Parameter     | Type   | Description                                                                                                                                                                       |
+    |---------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Use Operators | Toggle | If enabled, then you can use operators like `$push` in the update query. If not, then we will automatically $set everything that you write in the update query into the database. |
+    | Options       | JSON   | Read the MongoDB documentation for configurable options. [MongoDB Documentation](https://docs.mongodb.com/manual)                                                                 |
+    | Stop on Error | Toggle | Lets you configure whether to stop flow execution when an error occurs or not.                                                                                                    |
+  </Accordion>
+</AccordionGroup>
+
+### Update Many
+
+ [MongoDB Documentation: UpdateMany](https://docs.mongodb.com/manual/reference/method/db.collection.updateMany/)
+
+### Insert
+
+ [MongoDB Documentation:  Insert](https://docs.mongodb.com/manual/reference/method/db.collection.insert/)
+
+### Remove
+
+ [MongoDB Documentation: Remove](https://docs.mongodb.com/manual/reference/method/db.collection.remove/)
+
+### MongoDB Aggregate
+
+ [MongoDB Documentation: Aggregate](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/)
