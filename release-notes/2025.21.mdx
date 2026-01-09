@@ -1,0 +1,111 @@
+---
+title: "2025.21"
+sidebarTitle: "2025.21"
+hidden: false
+---
+
+<Note>
+  Qdrant has been updated from v1.13.4 to v1.15.4. For more information, refer to the [Infrastructure](#qdrant-upgrade-from-v1134-to-v1154) section.
+</Note>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2025.21.3
+
+### Cognigy Live Agent
+
+**Released** October 24, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where data couldn't be saved or read properly when a custom namespace for a Redis connection pool is used
+
+## 2025.21.2
+
+### Cognigy Live Agent
+
+**Released** October 23, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the database migration job failed during the installation of a newly set-up Live Agent
+
+## 2025.21.1
+
+### Cognigy.AI
+
+**Released** October 15, 2025
+
+#### Bug Fixes
+
+- Fixed the release rollout process by deactivating a background job
+
+### Cognigy Live Agent
+
+**Released** October 15, 2025
+
+#### Bug Fixes
+
+- Fixed the connection issue that prevented Live Agent from starting
+
+## 2025.21.0
+
+### Cognigy.AI
+
+**Released** October 14, 2025
+
+#### Features
+
+#### Knowledge Connectors
+
+- Introduced [Knowledge Connectors](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-connectors) in Knowledge AI. This feature allows you to ingest knowledge from external sources, such as databases, APIs, or document libraries, and use it directly in your Flows. You can use prebuilt Knowledge Connectors from the Marketplace, such as Confluence and Diffbot, or create custom ones using the Extension framework.
+
+#### Improvements
+
+- Allowed arbitrary custom URLs for [Azure OpenAI LLMs](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai), so the URL is no longer restricted to Azure OpenAI's domain
+
+#### Bug Fixes
+
+- Fixed the issue where `console.log` statements in the NLU connector code logged to the system log instead of the app log
+- Fixed `items` in the `GET /v2.0/conversations/{sessionId}` response to be an array instead of an object
+- Fixed the issue preventing the export of manual Knowledge Sources from the UI
+- Fixed the issue where Knowledge Source file names weren't properly decoded
+- Fixed the issue where some Knowledge Chunks were created without metadata when processing files with Azure Document Intelligence
+- Fixed the issue where the time zone wasn't considered when calculating the UTC offset in date Slots
+- Fixed the issue where the Azure Bot Services endpoint displayed empty messages in the Microsoft Teams chat
+- Fixed the issue where the `getConversationCounter` v3 API returned incorrect counts for sessions over 50 conversations. Data will be available the day after the v2025.21.0 upgrade, once records are corrected
+
+### Cognigy Voice Gateway
+
+**Released** October 14, 2025
+
+#### Improvements
+
+- Removed the [`CALL_RECONNECTED`](/voice-gateway/references/events/overview) event, which was previously sent to the Flow after a WebSocket reconnection. This change prevents it from registering as user input and causing unintended behavior
+
+### Cognigy Live Agent
+
+**Released** October 14, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the deletion process failed for conversations older than two years
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot
+
+##### Qdrant Upgrade from v1.13.4 to v1.15.4
+
+For Cognigy SaaS where the Knowledge AI feature is enabled and Qdrant is deployed, upgrading Cognigy.AI to version 2025.21.0 will automatically upgrade Qdrant to v1.15.4.
+
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

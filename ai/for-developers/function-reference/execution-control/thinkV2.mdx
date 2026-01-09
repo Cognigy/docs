@@ -1,0 +1,32 @@
+---
+title: thinkV2
+seo:
+  metatags:
+    description: Restarts Flow execution with a simulated input using defined text
+      and data.
+keywords: ['thinkV2', 'execution control functions']
+---
+
+## Syntax
+
+`thinkV2(text, data)`
+
+## Description
+
+Restarts Flow execution with a simulated input using the provided text and data.
+
+**Parameters:**
+
+- `text`: `string` — simulated input text.
+- `data`: `Record<string, unknown>` — simulated input data.
+
+**Returns:** `void`
+
+## Example
+
+```js
+thinkV2("Check order status", {
+  orderId: "A12345",
+  customerType: "premium"
+});
+```

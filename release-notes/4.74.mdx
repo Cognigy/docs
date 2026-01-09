@@ -1,0 +1,144 @@
+---
+title: '4.74'
+
+---
+
+import ReleaseNotesCognigyJourneysRemoval from '/snippets/release-notes/cognigy-journeys-removal.mdx'
+import ReleaseNotesUpdateForSocketioWebchatEndpoints from '/snippets/release-notes/update-for-socket.io-webchat-endpoints.mdx'
+import ReleaseNotesWeaviateToQdrant from '/snippets/release-notes/weaviate-to-qdrant.mdx'
+
+<ReleaseNotesUpdateForSocketioWebchatEndpoints/>
+
+<ReleaseNotesCognigyJourneysRemoval/>
+
+<ReleaseNotesWeaviateToQdrant/>
+
+## 4.74.4
+
+### Cognigy.AI
+
+**Released** May 17, 2024
+
+#### Improvements
+
+- Added the ability to [forward Genesys bot messages to the end user](/ai/escalate/handover-reference/genesys-cloud-open-messaging) while using the Genesys Cloud Open Messaging handover provider. These messages will be injected into the chat. To enable this feature for on-premises installations, use the `GENESYS_CLOUD_OM_HANDLE_BOT_MESSAGE: "true"` feature flag
+
+## 4.74.3
+
+### Cognigy Insights
+
+**Released** April 24, 2024
+
+#### Bug Fixes
+
+- Implemented internal logging to monitor important security-related actions within the OData Endpoint
+
+## 4.74.2
+
+### Infrastructure
+
+#### Cognigy Voice Gateway
+
+- Added the `FEATURE_ENABLE_HANDOVER_SETTINGS_FOR_VG2` environment variable to control visibility of Handover settings in the Voice Gateway Endpoint. It is enabled by default.
+
+## 4.74.1
+
+### Cognigy.AI
+
+**Released** April 19, 2024
+
+#### Bug Fixes
+
+- Fixed the issue that caused an exception when using the `Skip if the result is already in Context of a Slot Filler` toggle
+
+### Cognigy Live Agent
+
+**Released** April 23, 2024
+
+#### Bug Fixes
+
+- Fixed the issue where the activity message shows the wrong assignee based on availability
+
+### Cognigy Voice Gateway
+
+**Released** May 7, 2024
+
+#### Bug Fixes
+
+- Fixed the issue where enabling Barge In could cause incorrect transcriptions to arrive later in a call
+- Removed trailing silence trimming from Microsoft TTS to fix delays during calls. This trimming is no longer needed in recent versions and might cause issues
+- Fixed the issue where Voice Gateway integrations would not behave correctly when the `FEATURE_DISABLE_RESET_FLOW` feature flag was enabled
+
+### Infrastructure
+
+#### Cognigy Voice Gateway
+
+- Disabled the environment variable `VG_TTS_TRIM_SILENCE` by default: `.Values.featureServer.trimTts: false`
+
+## 4.74.0
+
+### Cognigy.AI
+
+**Released** April 16, 2024
+
+#### Improvements
+
+- Improved user experience for [creating LLMs](/ai/agents/develop/gen-ai-and-llms/llms#model-types) and also enabled custom models for the LLM providers
+- Added support for [`text-embedding-3-large`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature), which can be hosted on either OpenAI or Microsoft Azure. Now, you can use [these embeddings for NLU training and scoring](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- Enhanced by redesigning the Salesforce conversation polling for better stability
+- Expanded the German localization in the product
+- Made the API version field required for Azure OpenAI when creating models
+- Improved by maintaining the connection open when the conversation disconnects for Genesys Cloud Guest Chat
+
+#### Bug Fixes
+
+- Fixed the issue where the updated chunk metadata value was not being displayed until the page was refreshed
+- Fixed the issue by updating the regular expression to handle cases where a user enters a US Social Security Number (SSN) with more than 9 digits
+- Fixed the issue of inconsistent handover and associated problems caused by the enabled internal cache
+- Fixed the issue where users could create text intent records with empty strings
+- Fixed the issue where the Genesys Cloud Chat handover would fail, causing a service restart due to an uncontrolled exception while creating messages with an empty body
+
+### Cognigy Insights
+
+**Released** April 16, 2024
+
+#### Bug Fixes
+
+- Fixed the issue where OData was returning numbers instead of strings in the LiveAgentEscalations collection
+
+### Cognigy Live Agent
+
+**Released** April 16, 2024
+
+#### Improvements
+
+- Added performance improvements to conversations and calculations for the Reports
+- Improved Live Agent performance in high-load scenarios by reducing WebSocket traffic
+
+#### Bug Fixes
+
+- Fixed the issue where the Supervisor Overview Report always showed 0 conversations in the Created or Queued statuses
+- Fixed the issue that caused the account's auto-resolve setting to display an activity message for resolved conversations multiple times. This behavior occurred specifically under a high load
+
+### Cognigy Voice Gateway
+
+**Released** April 16, 2024
+
+#### Bug Fixes
+
+- Disabled the `pre cache audio` feature due to potential issues it may cause
+- Fixed the issue where users with the Service Provider role could create and delete resources of another Service Provider. Now, users with the Service Provider role can only create and delete resources within their own project in the Voice Gateway Self-Service Portal
+
+### Infrastructure
+
+#### Cognigy Voice Gateway
+
+- Changed the default value of `.Values.featureServer.preCacheAudio` to `false`
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
