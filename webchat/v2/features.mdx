@@ -1,0 +1,98 @@
+---
+title: 'Webchat v2: Key Features'
+sidebarTitle: Key Features
+
+---
+
+import WebchatDeprecationWebchatV2 from '/snippets/webchat/deprecation-webchat-v2.mdx'
+
+<WebchatDeprecationWebchatV2/>
+
+Cognigy Webchat v2 offers several key features aimed at enhancing user interaction and navigation within conversations.
+
+## Chat UI
+
+When you use message Nodes such as [Say](/ai/agents/develop/node-reference/basic/say), [Question](/ai/agents/develop/node-reference/basic/question), or [Optional Question](/ai/agents/develop/node-reference/basic/optional-question) Nodes, the following output types can be used within these nodes to display different message formats in the chat.
+
+### Quick Replies
+
+With Quick Replies, you can guide users through conversations by offering example phrases for replies. When users click a Quick Reply, they'll send a pre-configured message defined by you, facilitating smoother interactions.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/quick-replies.png" style={{ width: 'auto' }} />
+</Frame>
+
+### Gallery
+
+To present structured content interactively, use the Gallery. It allows you to showcase one or more items with an image, a title, a subtitle, and optional buttons containing links or pre-configured messages.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/gallery.png" style={{ width: 'auto' }} />
+</Frame>
+
+### List
+
+The List feature enables you to present 2-4 list options to users, 
+ideal for scenarios where users need to view all options at once. It's a preferred alternative to the Gallery for such cases.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/list.png" style={{ width: 'auto' }} />
+</Frame>
+
+### Audio
+
+The Audio feature enables you to send of audio files. Users will see a web player and can play the file instantly.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/audio.png" style={{ width: 'auto' }} />
+</Frame>
+
+### Image
+
+The Image feature enables you to send of image files. Users will view the image in a fixed aspect ratio.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/image.png" style={{ width: 'auto' }} />
+</Frame>
+
+### Video
+
+The Video feature enables you to send of video files. Users will see a web player and can play the file instantly.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/video.png" style={{ width: 'auto' }} />
+</Frame>
+
+### Text with Buttons
+
+If you require navigation options for users without the need for rich structuring, as the Gallery, you can use the Text with Buttons.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/button-template.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Date Picker
+
+Whenever your AI Agent prompts for a date input via the Webchat, users can select the date using an interactive Date Picker.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/date-picker-selection-date.png" style={{ width: 'auto' }} />
+</Frame>
+
+After clicking the Date Picker button, a full-screen overlay will appear in the Webchat, allowing the user to choose a date within the constraints defined by the AI Agent.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/date-picker.png" style={{ width: 'auto' }} />
+</Frame>
+
+To use a Date Picker, add the [Date Picker](/ai/agents/develop/node-reference/data/datepicker) Node within your Flow.
+
+## Persistent Menu
+
+If your bot contains a broad and deep set of features, it may be helpful for users to be able to use a menu for navigation. The Persistent Menu solves this issue by providing a set of pre-defined messages (like Quick Replies) that can be accessed from the input bar at any point in the conversation.
+
+<Frame>
+  <img class="image-center" src="/_assets/webchat/v2/persistent-menu.png" style={{ width: 'auto' }} />
+</Frame>
+
+To configure the Persistent Menu, use the [Persistent Menu](/webchat/v2/configuration#persistent-menu) settings.

@@ -1,0 +1,86 @@
+---
+title: NiCE CXone
+hidden: false
+keywords:
+  - ' nice'
+  - ' nice cxone'
+  - ' nice cxone endpoint'
+seo:
+  metatags:
+    description: >-
+      The NiCE CXone Endpoint enables you to connect your AI Agent to the NICE
+      CXone platform.
+---
+
+<a href="/release-notes/4.82"><Badge className="version-badge" color="blue">Updated in 4.82</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/deploy/endpoint-reference/nice.svg"/>
+</Frame>
+
+The NiCE CXone Endpoint enables you to connect your AI Agent to the [NiCE CXone](https://www.nice.com) platform.
+
+## Prerequisites
+
+- Registered an account on the [NiCE CXone](https://cxone.niceincontact.com/) platform.
+- Gained access to the [Virtual Agent Hub](https://help.nice-incontact.com/content/aiassistantsandbots/virtualagenthub/virtualagenthub.htm) in NiCE CXone.
+- Created a Cognigy.AI Flow.
+
+## Generic Endpoint Settings
+
+Learn about the generic Endpoint settings available for this Endpoint on the following pages:
+
+- [Endpoints Overview](/ai/agents/deploy/endpoints/overview)
+- [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer Functions](/ai/for-developers/transformers/overview)
+
+## Specific Endpoint Settings
+
+<Accordion title="NiCE CXone Setup">
+  | Parameter    | Description                                                                                                                                                              |
+  |--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | Verify Token | A verification token for connecting the NiCE CXone Endpoint to the CXone Virtual Agent Hub. This token is generated on the Cognigy.AI side and unique for each Endpoint. |
+</Accordion>
+## How to Set Up
+
+### Setup on the Cognigy.AI Side
+
+<Accordion title="Configure a NiCE CXone Endpoint">
+  1. Go to **Deploy > Endpoints**. 
+  2. On the **Endpoints** page, click **+ New Endpoint**. 
+  3. In the **New Endpoint** section, do the following:
+      1. Select the **NiCE CXone** Endpoint type.
+      2. Add a unique name.
+      3. Select a relevant Flow from the list. Save changes.
+  5. In the **Configuration Information** section, copy the Endpoint URL and save it for later use in NiCE CXone.
+  6. Activate the **Enable Endpoint** setting.
+  7. In the **NiCE CXone Setup** section, copy the token from the **Verify Token** field and save it for later use in NiCE CXone.
+</Accordion>
+### Setup on the NiCE CXone Side
+
+<Accordion title="Create an App in NiCE CXone">
+  1. Go to the [NiCE CXone](https://cxone.niceincontact.com/) platform.
+  2. In the upper-left corner, click the **Applications** app selector.
+  3. Go to **Others > Automation & AI**. A new window opens.
+  4. In the left-side **CXone Mpower Hubs** menu, select **Virtual Agent Hub**. The **Virtual Agents** panel appears. Click **Add Bot**.
+  5. At **Step 1: General Information**, do the following:
+      1. Enter a unique name in the **Virtual Agent (Bot) Name** field.
+      2. In the **Select Bot Provider** field, choose the **Cognigy Bot** card. If this card is not present, contact NICE support to activate this feature for your account.
+  6. At **Step 2: Configuration**, fill in the following fields:
+      - **URL** — enter the Endpoint URL that you saved and copied previously.
+      - **Verify Token** — enter the Verify Token that you saved and copied previously.
+  7. At **Step 3: Voice**, in the **Voice Integration Options** section, activate the **Text Only** option. With this option, you can only use chat AI Agents.
+  8. At **Step 4: Transcript**, leave the **Transcript** field with the **Nothing** value.
+  9. At **Step 5: Test + Add**, test the bot by sending a welcome message to the chat. If you receive a response from the Cognigy.AI Agent, the connection is established correctly.
+  10. Click **Add** to complete the virtual agent configuration.
+
+  For further integration,
+  you will need [NiCE CXone Desktop Studio](https://help.nice-incontact.com/content/studio/fundamentals/fundamentals.htm) and the [channel](https://help.nice-incontact.com/content/acd/channels/acdchannels.htm?tocpath=ACD%7CACD%7CACD%20Channels%7C_____0)
+  through which end users will communicate with the Cognigy.AI Agent.
+  This logic is configured on the NiCE CXone side.
+
+  For more information, read the following articles in the NiCE CXone documentation:
+
+  - [Cognigy in NiCE CXone](https://help.nice-incontact.com/content/aiassistantsandbots/virtualagenthub/cognigy.htm)
+  - [Integrate Cognigy with NiCE CXone](https://help.nice-incontact.com/content/aiassistantsandbots/virtualagenthub/integratecognigy.htm?tocpath=Virtual%20Agent%20Hub%7CVirtual%20Agent%20Hub%7CVirtual%20Agent%20Integrations%7CCognigy%7C_____1)
+</Accordion>

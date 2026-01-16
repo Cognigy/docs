@@ -1,0 +1,220 @@
+---
+title: "Simulator"
+keywords: ['simulator', 'simulations', 'simulate conversations', 'test AI Agents']
+"seo": {
+  "metatags": {
+    "description": "Cognigy.AI Simulator is an LLM-powered tool in Cognigy.AI that allows users to model and test full conversational scenarios for LLM-based AI Agents."
+  }
+}
+---
+
+<a href="/release-notes/2025.25"><Badge className="version-badge" color="blue">Updated in 2025.25</Badge></a>
+
+_Simulator_ is an LLM-powered tool in Cognigy.AI that allows users to model and test full conversational scenarios for LLM-based AI Agents.
+
+Use the Simulator to mimic real-world user interactions and evaluate the performance, behavior, and reliability of AI Agents in controlled environments.
+In contrast to Playbooks, which follow predefined test paths, the Simulator uses Generative AI to create dynamic, realistic conversations.
+
+The Simulator contains the following components:
+
+- **Scenarios** — define personas, missions, and success criteria for testing AI Agents.
+- **Simulations** — execute scenarios to evaluate the performance of AI Agents.
+- **Simulation Runs** — represent different variations of the same scenario within a single simulation. A simulation can contain multiple runs, each providing unique test outcomes for analysis.
+
+The Simulator is primarily designed for testing LLM-based AI Agents, but can be used with any Flow, with some restrictions.
+
+<Frame>
+ <img class="image-center" src="/_assets/ai/analyze/simulator.webp" alt="Simulator" style={{ width: 'auto' }} />
+</Frame>
+
+## Key Benefits
+
+- **Realistic End-to-End Testing**. Simulate full conversations, from greetings to resolutions. Use multiple personas to test how your AI Agent handles different user types and scenarios at the same time.
+- **Simulations Across Multiple Interfaces**. Run simulations via the Simulator or the Interaction Panel and view all simulated conversations in the Transcript Explorer, Simulator, or Interaction Panel for quick outcome review.
+- **Early Issue Detection and Optimization**. Detect gaps, edge cases, and quality issues before deployment to improve reliability and deliver a better user experience.
+- **Faster, Automated QA**. Automatically test AI Agents across environments, ensuring high coverage and consistent quality.
+
+## Prerequisites
+
+- To use the Simulator, you need to configure LLMs for the following:
+   - Creating scenarios — from the **Design-Time LLM Features** list, select the platform-provided LLM or another model of your choice that [supports design-time features](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+   - Running simulations — the model must [support the AI Agent Node feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+- If you want to generate scenarios automatically, ensure that your Project includes a Flow with an [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent).
+
+## Restrictions
+
+- You can't run simulations using Snapshots in the Interaction Panel.
+- The following features aren't supported:
+    - Voice interactions. The Simulator only supports text-based conversations.
+    - Buttons and Adaptive Cards.
+    - Handovers to human agents. The Interaction Panel will show the message `Agent Handover is not supported in the Interaction Panel, please use the Webchat or another channel`.
+
+## Limitations
+
+- The maximum number of scenarios per Project is 100.
+- The maximum number of runs per simulation is 150.
+- The maximum number of success criteria per scenario is 5.
+
+## How the Simulator Works
+
+<Frame>
+  <img src="/_assets/ai/test/simulator/workflow.webp" style={{ width: 'auto' }}/>
+</Frame>
+
+1. **Create a scenario**. Set the persona, mission, and success criteria.
+2. **Simulate**. Start the simulation and let the AI Agent interact with the persona you created. Run the simulation multiple times to gather more accurate insights.
+3. **Evaluate**. View key metrics on the Simulation dashboard, such as complete success rate, average sentiment, and number of turns. You can then adjust the Flow logic, training data, or system prompts based on the results. Rerun simulations to verify improvements.
+
+## Working with Simulations
+
+<AccordionGroup>
+  <Accordion title="1. Create a Scenario">
+
+  You can create a scenario automatically or manually in the Simulator interface, or from transcripts in the [Transcript Explorer](/insights/explorers/transcript).
+
+  To create a scenario, follow these steps:
+
+  <Tabs>
+    <Tab title="Automatically">
+      1. In your Project, go to **Test > Simulator** and click **+ New Scenario**.
+      2. In the **Generate from AI Agent** section, click **Generate**.
+      3. Fill in the following fields:
+          - **Flow** – select a Flow containing an AI Agent on which the scenario will be based. Ensure the Flow is already configured.
+          - **AI Agent Job Node** – select the AI Agent Node to be analyzed for scenario creation. The AI Agent Job Node must be already configured in the Flow.
+      4. Click **Generate**. Cognigy.AI generates a scenario based on the AI Agent Job Node configuration. Review the generated scenario and adjust it if necessary.
+      5. Select the generated persona description, mission, and success criteria. If necessary, edit them manually or automatically by clicking the **Regenerate text** button on the right-hand side of each field.
+    </Tab>
+    <Tab title="Manually">
+      1. In your Project, go to **Test > Simulator** and click **+ New Scenario**.
+      2. Fill in the following fields:
+          - **Name** – enter the name of the simulation. The name should reflect the test scenario and focus area. Example: `Menu Exploration – Exotic Dish Focus`.
+          - **Persona Name** – enter the name of the persona to simulate. The name should reflect the user's role and context. Example: `Alex – The Curious Foodie`.
+          - **Persona Description** – enter the description of the persona. To simulate user behavior, define key attributes: customer segment, demographics, familiarity with technology and AI, and interaction style. Example: `An adventurous diner who loves trying new and exotic dishes. Asks detailed questions about ingredients, preparation methods, and flavor profiles`.
+          - **Mission** – enter the description of the persona's goal, which should be achieved within the simulation. This goal can involve testing the AI's ability to handle specific customer inquiries or tasks. Example: `Explore exotic menu options and get detailed recommendations for trying new dishes based on preferences`.
+      2. In the **Success Criteria** section, add metrics to evaluate the simulation's success:
+          - **Add Goal** – select a goal from the list of available goals. If you don't have any goals, you can [create a new one](/ai/agents/analyze/goals-and-tasks/goals). The goal should reflect the simulation's desired outcome. Example: `Receive personalized recommendations for exotic dishes`.
+          - **Add AI Judge** – generate or enter the action-oriented criteria to help determine whether the simulation was successful. They can include numeric results, for example, 90% accuracy, or specific objectives the AI Agent should achieve. Examples: `The Agent recommends exotic dishes based on user preferences, achieving 90% accuracy in matching user preferences.`, `Answers questions about ingredients`.
+      3. In the **Maximum Turns** slider, set the maximum number of back-and-forth messages (turns) allowed in a simulated conversation. Each turn consists of one user input and one AI Agent response. The default value is 15.
+    </Tab>
+    <Tab title="From Transcripts">
+      1. In your Project, go to **Insights** and select **Transcript Explorer** in the left-side menu.
+      2. Select a session transcript from the list.
+      3. In the upper-right corner of the **Session Transcript** window, click ![vertical ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg) to open a selection menu.
+      4. Select **Create Scenario**. You will be redirected to the Simulator interface, where the Scenario will be created based on the selected transcript. The persona for the scenario will be generated from scratch. Click **Create**.
+    </Tab>
+  </Tabs>
+  </Accordion>
+  <Accordion title="2. Simulate">
+      1. Once your scenario is created, you can start a simulation to test your AI Agent. Click the created scenario from the list to start a simulation.
+      2. In the **Start Simulation** window, configure your simulation run:
+          - **Simulation Name** – enter the name of the simulation run. The name should reflect the test scenario and focus area. Example: `Menu Exploration – Exotic Dish Focus`.
+          - **Snapshot** – select the Snapshot to run the simulation on. Use this option to test a Flow from a specific version rather than the current one.
+          - **Flow** – select the Flow to run the simulation on.
+          - **Locale** – select the locale for the simulation.
+          - **LLM** – select the model that manages the simulation.
+          - **Number of Simulation Runs** – set the number of simulation runs. Set how many times the simulation will run. The default value is 10. Use multiple runs to test different sentiments and conversation variations.
+      3. _(Optional)_ In the **Advanced Settings** section, configure additional parameters:
+          - **AI Agent Output Timeout** – set the maximum time the AI Agent has to respond to each user input during the simulation. The default value is 60,000 milliseconds. The minimum value is 20,000 milliseconds.
+          - **Custom Data Payload** – define a custom JSON that is injected into every input message during a simulation. This parameter enables context-aware testing, for example, testing different user types, A/B scenarios, or personalized Flows, without changing the Flow itself. Examples of custom data payloads:
+           ```json
+          { "userId": "u1001", "role": "admin" }      // different user types
+          { "testGroup": "A", "featureFlag": true }   // A/B testing
+          { "userName": "Emma", "preferredLanguage": "fr" } // personalized greeting
+          ```
+      4. Click **Start Simulation**. Once the simulation run starts, you'll be redirected to the Simulation dashboard to view the real-time results.
+  </Accordion>
+  <Accordion title="3. Evaluate">
+      After starting a simulation, you'll be redirected to the Simulation dashboard, where you can monitor the progress and view the results once the simulation is complete.
+
+      The Simulation dashboard provides an overview of key metrics, including:
+
+      | **Chart**             | **Description**                                                                                                                                                                     |
+      | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+      | Complete Success Rate | Shows the percentage of successful simulation runs, based on how often they meet the specified criteria. A higher success rate indicates better overall performance.                |
+      | Success Criteria Met  | Shows the percentage of success criteria met across all runs in the simulation.                                                                                                     |
+      | Average Sentiment     | Shows the average sentiment across simulation runs.                                                                                                                                 |
+      | Average Turns         | Shows the average number of back-and-forth messages (turns) it took to complete a simulated conversation. Each turn consists of one user input and one AI Agent response.           |
+      | Turn Distribution     | Shows the frequency of turn ranges. The horizontal axis represents intervals, and the vertical axis shows the count for each interval.                                              |
+      | Success Criteria      | Shows how well the simulation met each key success metric.                                                                                                                          |
+      | Simulation Results    | Shows how many simulation results failed compared to successful results.                                                                                                            |
+
+      Go to the **Runs** table and locate runs where **Complete Success Rate** is `Failed`. Click a run to view the simulated conversation. Hover over the `Failed` status to see a tooltip explaining why the success criterion failed.
+      Click a bar or a slice on the charts to filter related data and identify patterns in failed runs.
+
+      You can also view the simulated conversation in the [Transcript Explorer](/insights/explorers/transcript) by toggling on **Interaction Panel / Playbooks / Simulations** in the Endpoint filters.
+
+  </Accordion>
+</AccordionGroup>
+
+## Example
+
+This example shows how to create scenarios and run simulations using a sample AI Agent Flow. We'll work with Sophie (Restaurant Guide) from the [Job Market](/ai/agents/overview#job-market). Sophie assists users with dinner planning and restaurant recommendations.
+
+1. Set up a Flow that uses the AI Agent (Sophie - Restaurant Guide).
+2. Set up three simulations with different personas to test various use cases:
+
+    <AccordionGroup>
+      <Accordion title="Persona 1. 🧑‍🍳 Alex – The Curious Foodie">
+        | **Parameter**           | **Value**                                                                                                                                                                                                               |
+        |-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Scenario Name           | Menu Exploration – Exotic Dish Focus                                                                                                                                                                                    |
+        | Persona Name            | Alex – The Curious Foodie                                                                                                                                                                                               |
+        | Persona                 | An adventurous foodie in their late 20s who loves discovering new and exotic dishes. Tech-savvy and curious, Alex uses mobile apps and AI chat tools to explore unique menu items and expand their culinary experience. |
+        | Mission                 | Test the AI Agent's ability to recommend exotic dishes and assist Alex in placing an order or booking a table.                                                                                                          |
+        | AI Judge | <ul><li>Accurately handle free-text menu queries</li><li>Suggest complementary drinks after exotic dishes are added</li><li>Recognize and add at least one manually named exotic dish</li></ul>                                        |
+      </Accordion>
+
+      <Accordion title="Persona 2. 👨 Jordan – The Corporate Guest">
+        | **Parameter**           | **Value**                                                                                                                                                                                                            |
+        |-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Scenario Name           | Quick Reservation – Dietary Notes                                                                                                                                                                                    |
+        | Persona Name            | Jordan – The Corporate Guest                                                                                                                                                                                         |
+        | Persona                 | Marketing manager at a nearby company, 35 years old, with limited lunch breaks. Tech-savvy, uses AI tools frequently, and expects fast, concise communication. Prefers professional tone and minimal back-and-forth. |
+        | Mission                 | Test how well the AI Agent handles quick lunch queries and reservation requests under time constraints.                                                                                                              |
+        | AI Judge                | <ul><li>Reservation completed with dietary requirements noted</li><li>Minimal back-and-forth (1–2 exchanges)</li><li>Confirmation provided in under 30 seconds</li></ul>                                             |
+      </Accordion>
+
+      <Accordion title="Persona 3. 👩 Maya – The Tourist Planner">
+        | **Parameter**           | **Value**                                                                                                                                                                                                                                        |
+        |-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Scenario Name           | Family-Friendly Group Dinner                                                                                                                                                                                                                     |
+        | Persona Name            | Maya – The Tourist Planner                                                                                                                                                                                                                       |
+        | Persona                 | A woman in her early 40s visiting from out of town, organizing a dinner for a group of 6, including kids. Familiar with basic chat tools, occasionally uses AI assistants. Communicates politely and needs detailed answers to plan confidently. |
+        | Mission                 | Evaluate how well the AI Agent handles group reservations and provides family-friendly recommendations.                                                                                                                                          |
+        | AI Judge                | <ul><li>Group reservation successfully created</li><li>At least one child-friendly menu item suggested</li><li>Additional info (for example, parking, high chairs) proactively offered</li></ul>                                                 |
+      </Accordion>
+    </AccordionGroup>
+
+3. Run simulations with the following settings:
+
+    | **Parameter**  | **Value**                                                                                         |
+    |----------------|---------------------------------------------------------------------------------------------------|
+    | Snapshot       | No Snapshot                                                                                       |
+    | Flow           | Main-Dining Concierge                                                                             |
+    | Locale         | en-US                                                                                             |
+    | LLM            | Default. Make sure the default model supports Generative AI capabilities such as text completion. |
+    | Number of Runs | 10                                                                                                |
+
+4. Check the results on the Simulation dashboard. Open each simulation run to review the outcomes. Pay attention to failed runs. For example, look at the simulation for the persona **Maya – The Tourist Planner**.
+
+  | Metric                | Value    | What It Means                                         | Action Steps                                                                                                                    |
+  | --------------------- | -------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+  | Complete Success Rate | 40%      | Simulation runs met 40% of all criteria fully.        | Check the Flow for misunderstandings of user requests or missed information.                                                    |
+  | Success Criteria Met  | 67%      | Simulation runs met 67% of each criterion partially.  | Review which specific success criteria failed, then adjust the Flow logic or refine the success criteria definitions as needed. |
+  | Average Sentiment     | Positive | Users show positive feelings.                         | No action is needed.                                                                                                            |
+  | Average Turns         | 9        | Average number of exchanges in the conversation.      | Track conversation length and ensure each turn effectively advances the conversation.                                           |
+
+## Troubleshooting
+
+| **Issue**                      | **Description**                                                  | **How to Resolve**                                                                                                      |
+|--------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| Simulation doesn't run         | The simulation fails to start or shows an error.                 | Ensure all required fields (Flow, Locale, LLM, Number of Runs) are completed. Check system status on the **Logs** page. |
+| Inaccurate result              | The output doesn't match the expected behavior or test scenario. | Check your Flow version and Snapshot. Use the latest and most relevant setup for testing.                               |
+| AI Agent responses not aligned | The AI Agent gives irrelevant, vague, or incorrect replies.      | Review persona and mission definitions. Ensure the LLM supports the expected output style.                              |
+
+## More Information
+
+- [Simulations in the Interaction Panel](/ai/agents/test/interaction-panel/simulation)
+- [Transcript Explorer](/insights/explorers/transcript)
+- [Contact Profiles](/ai/agents/analyze/contact-profiles)
+- [Agentic AI](/ai/agents/overview)

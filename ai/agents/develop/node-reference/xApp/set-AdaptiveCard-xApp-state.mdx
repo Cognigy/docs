@@ -1,0 +1,176 @@
+---
+title: 'xApp: Show Adaptive Card'
+keywords: ['xApp', 'Adaptive Card', 'custom node', 'node reference']
+---
+
+import AiXappCustomNode from '/snippets/ai/xApp/custom-node.mdx'
+import AiXappOverlay from '/snippets/ai/xApp/overlay.mdx'
+import AiXappWaitingBehavior from '/snippets/ai/xApp/waiting-behavior.mdx'
+
+<a href="/release-notes/4.75"><Badge className="version-badge" color="blue">Updated in 4.75</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/xApp/set-AdaptiveCard-xApp-state.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+An xApp page can be built by providing an adaptive card in JSON format.
+
+To submit data back to the Flow, include an action of type `Submit` within the adaptive card.
+
+To view submitted data, use the Interaction panel. You can access submitted data in the `data` object by clicking **INFO > Input**, or in the chat by adding a Say Node and specifying <code>Submit payload: &lcub;&lcub;JSON.stringify(input.data)&rcub;&rcub;</code> or <code>Submit payload: &lcub;&lcub;JSON.stringify(ci.data)&rcub;&rcub;</code>.
+
+<AiXappCustomNode/>
+
+## Parameters
+
+<AccordionGroup>
+  <Accordion title="AdaptiveCard Definition">
+
+    The [Adaptive Card Designer](https://adaptivecards.io/designer) can help you define an adaptive card. Copy the JSON card payload and paste it into the form.
+  </Accordion>
+
+  <Accordion title="Style Overrides">
+
+    To override the background and interaction element colors, use CSS color codes.
+
+    <AiXappWaitingBehavior/>
+
+    <AiXappOverlay/>
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+### Display Dynamic Values in Adaptive Cards
+
+In adaptive cards, you can use data from the [Input](/ai/agents/develop/ai-agent-memory/input), [Context](/ai/agents/develop/ai-agent-memory/context), and [Profile](/ai/agents/develop/ai-agent-memory/profile) objects.
+To display values dynamically, use [CognigyScript](/ai/platform-features/cognigyscript) to reference them.
+
+<AccordionGroup>
+  <Accordion title="Example 1: Display a Single Value">
+    To display the user's first name by retrieving it from the Profile object, include this JSON in your adaptive card:
+
+    ```json
+    {
+      "type": "TextBlock",
+      "text": "Hello, {{cp.firstName}}!"
+    }
+    ```
+
+    If the user's first name is Alice, the xApp will display:
+
+    ```text
+    Hello, Alice!
+    ```
+  </Accordion>
+
+  <Accordion title="Example 2: Display an Array">
+
+    Assume that you have the following array stored under `cart` in the Context object:
+
+    ```json
+    {
+      "cart": [
+        { "name": "Apple", "price": 1.2 },
+        { "name": "Banana", "price": 0.8 },
+        { "name": "Orange", "price": 1.5 }
+      ]
+    }
+    ```
+    <Tabs>
+      <Tab title="The Entry from the Array">
+        To access a specific entry from the array, use its index.
+
+        Adaptive Card JSON:
+
+        ```json
+        {
+          "type": "TextBlock",
+          "text": "Item: {{cc.cart[0].name}}, Price: {{cc.cart[0].price}}"
+        }
+        ```
+
+        Output:
+
+        ```text
+        Item: Apple, Price: 1.2
+        ```
+      </Tab>
+
+      <Tab title="All Entries from the Array">
+        In the Flow editor, place the Code Node above the xApp: Show Adaptive Card Node to format the array into a string:
+
+        ```javascript
+        const cart = cc.cart || [];
+
+        cc.cartFormatted = cart
+          .map(item => `- ${item.name}: $${item.price}`)
+          .join('\n');
+        ```
+
+       The string is stored under `cartFormatted` in the Context object.
+
+       Adaptive card JSON:
+
+        ```json
+        {
+          "type": "AdaptiveCard",
+          "version": "1.5",
+          "body": [
+            { "type": "TextBlock", "text": "Your shopping cart:" },
+            { "type": "TextBlock", "wrap": true, "text": "{{cc.cartFormatted}}" }
+          ]
+        }
+        ```
+
+        Output:
+
+        ```text
+        Your shopping cart:
+        - Apple: $1.2
+        - Banana: $0.8
+        - Orange: $1.5
+        ```
+      </Tab>
+
+      <Tab title="Quick Debug with JSON.stringify">
+        If you want to view the array for debugging, use `JSON.stringify` in the adaptive card.
+
+        Adaptive card JSON:
+
+        ```json
+        {
+          "type": "AdaptiveCard",
+          "version": "1.5",
+          "body": [
+            { "type": "TextBlock", "text": "Cart contents:" },
+            { "type": "TextBlock", "wrap": true, "text": "{{JSON.stringify(cc.cart)}}" }
+          ]
+        }
+        ```
+
+        Output:
+
+        ```text
+        [
+          {"name":"Apple","price":1.2},
+          {"name":"Banana","price":0.8},
+          {"name":"Orange","price":1.5}
+        ]
+        ```
+      </Tab>
+    </Tabs>
+
+  </Accordion>
+</AccordionGroup>
+
+
+## More Information
+
+- [xApps](/xApps/overview)
+- [xApp Nodes](/ai/agents/develop/node-reference/xApp/overview)
+- [xApp: Init Session](/ai/agents/develop/node-reference/xApp/init-xApp-session)
+- [xApp: Get Session PIN](/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN)
+- [xApp: Show HTML](/ai/agents/develop/node-reference/xApp/set-html-xApp-state)

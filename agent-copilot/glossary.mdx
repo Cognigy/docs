@@ -1,0 +1,71 @@
+---
+title: "Agent Copilot Glossary"
+sidebarTitle: "Glossary"
+slug: "glossary"
+hidden: false
+"seo": {
+  "metatags": {
+    "description": "Agent Copilot Glossary provides a reference for users, administrators, and anyone involved in the operation or understanding of Agent Copilot features and practices."
+  }
+}
+---
+
+Agent Copilot terms listed in alphabetical order. All terms in the glossary are provided for informational purposes.
+
+## A
+
+**Agent Copilot**
+
+A Cognigy product that offers a variety of features in a [workspace](#w) and empowers human agents to provide faster and more accurate customer support. You can customize the Agent Copilot workspace with [widgets](#w) that display the most relevant information for chat and voice use cases. When embedded into your contact center's desktop, Agent Copilot enhances the overall efficiency of your contact center. For more information, read the [Agent Copilot](/agent-copilot/overview) documentation.
+
+**Agent Copilot Flow**
+
+A Flow separate from the AI Agent Flow to which you add [Agent Copilot Nodes](#a). The Agent Copilot Flow controls the [workspace](#w) arrangement on the contact center side and the [widgets](#w) in the workspace. The Copilot: Set Grid Node is required in this Flow to set the workspace layout. Other Agent Copilot Nodes provide functionality to the widgets in the workspace. For more information, read the [Agent Copilot Configuration](/agent-copilot/configure/overview) documentation.
+
+**Agent Copilot Nodes**
+
+Nodes that allow you to configure and control the [Agent Copilot](#a) [workspace](#w) from a Flow. Agent Copilot Nodes include configuration Nodes, [plug-and-play widgets](#p), and customization Nodes that provide advanced capabilities to the [widgets](#w) in the workspace. For more information, read the [Agent Copilot Nodes](/agent-copilot/configure/nodes) documentation.
+
+## E
+
+**Embedded Deployment**
+
+A deployment method where [Agent Copilot](#a) is integrated directly into the contact center's agent desktop interface, providing human agents with real-time assistance within their existing workflow. For more information, read the [Agent Copilot Embedding](/agent-copilot/deploy/embedding) documentation.
+
+## G
+
+**Grid**
+
+A JSON object that defines the layout structure of the [Agent Copilot](#a) [workspace](#w). The grid specifies the number of columns and rows, the gap between [tiles](#t), and the position and size of each tile through [tile IDs](#t). You configure the grid using the Copilot: Set Grid Node or via the Cognigy.AI API. For more information, read the [Configure the Workspace](/agent-copilot/configure/workspace) documentation.
+
+## P
+
+**Plug-and-Play Widgets**
+
+Pre-built [Agent Copilot Nodes](#a) that require minimal configuration to integrate into the [Agent Copilot](#a) [workspace](#w). Examples include the Identity Tile, Next Action Tile, Sentiment Tile, and Transcript Tile. These [widgets](#w) provide ready-to-use functionality for common use cases. For more information, read the [Agent Copilot Nodes](/agent-copilot/configure/nodes) documentation.
+
+## S
+
+**Standalone Deployment**
+
+A deployment method where [Agent Copilot](#a) operates as an independent application rather than being embedded into a contact center platform. For more information, read the [Standalone Agent Copilot](/agent-copilot/deploy/standalone) documentation.
+
+## T
+
+**Tile**
+
+A configuration object in the [Agent Copilot](#a) [grid](#g) that represents a visual component in the Agent Copilot [workspace](#w). Each tile corresponds to an [Agent Copilot Node](#a) in the [Agent Copilot Flow](#a) and must have a unique [tile ID](#t). Tiles can display content such as HTML, adaptive cards, iframes, or specialized [widgets](#w) like sentiment analysis or knowledge retrieval. For more information, read the [Configure the Workspace](/agent-copilot/configure/workspace) documentation.
+
+**Tile ID**
+
+A unique identifier assigned to each [tile](#t) in the [Agent Copilot](#a) [workspace](#w). The tile ID is used in the [grid](#g) configuration to define the tile's position and size, and it must match the tile ID specified in the corresponding [Agent Copilot Node](#a). For example, `transcript`, `knowledge`, or `next-action`. For more information, read the [Tile ID](/agent-copilot/configure/workspace#tile-id) documentation.
+
+## W
+
+**Widget**
+
+A visual component in the [Agent Copilot](#a) [workspace](#w) that displays information or provides interactive functionality to human agents. Widgets are created using [Agent Copilot Nodes](#a) and are arranged within [tiles](#t) in the [grid](#g). Examples include sentiment analysis widgets, knowledge retrieval widgets, and next action suggestion widgets. Also referred to as a tile. For more information, read the [Agent Copilot](/agent-copilot/overview) documentation.
+
+**Workspace**
+
+The customizable interface that displays [Agent Copilot](#a) on the contact center side. The workspace contains [widgets](#w) arranged in a [grid](#g) layout that show the most relevant information for chat and voice use cases. You can configure the workspace layout, widget size, and arrangement to optimize the human agent's workflow. For more information, read the [Configure the Workspace](/agent-copilot/configure/workspace) documentation.
