@@ -1,0 +1,28 @@
+---
+title: Connections
+hidden: false
+---
+
+_Connections_ are configurations that empower AI Agents to securely interact with external services, systems, or APIs. These configurations involve the encryption, storage, and management of credentials for seamless communication between Cognigy and external resources.
+
+In contrast to other resources in Cognigy.AI, you can't create a Connection from scratch on the Connections page. You create Connections while adding a Node that requires credentials or adding a provider for [LLM](/ai/agents/develop/gen-ai-and-llms/providers/all-providers), [translation](/ai/platform-features/translation-and-localization/auto-translation), [voice](/ai/agents/test/voice-preview), [handover](/ai/escalate/handovers), or [file storage](/ai/agents/deploy/endpoints/file-storage).
+
+## Working with Connections
+
+<Tabs>
+  <Tab title="GUI">
+        You can view, edit, and delete Connections in **Build > Connections**. Also, you can copy their Reference ID or export Connections as a [Package](/ai/platform-features/packages).
+  </Tab>
+  <Tab title="API">
+        You can view, edit, and delete Connections using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#get-/v2.0/connections).
+  </Tab>
+</Tabs>
+<Warning>
+  If you delete a Connection, features relying on this Connection stop working. When you delete a Connection, the Flow that uses the deleted Connection in a Node isn't updated automatically. Executing the Flow that uses the deleted Connection hangs on that Node and can cause error messages.
+</Warning>
+
+## More Information
+
+- [Extensions](/ai/for-developers/extensions)
+- [Nodes](/ai/agents/develop/nodes/overview)
+- [HTTP Request Node](/ai/agents/develop/node-reference/service/http-request)

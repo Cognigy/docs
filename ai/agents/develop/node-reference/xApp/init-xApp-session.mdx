@@ -1,0 +1,83 @@
+---
+title: 'xApp: Init Session'
+hidden: false
+---
+
+<a href="/release-notes/4.51"><Badge className="version-badge" color="blue">Updated in 4.50</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/xApp/init-xApp-session.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node initializes a new xApp session. 
+
+After the execution of this Node, the xApp can be accessed in two different ways:
+
+- [Without entering PIN Codes](#without-pin)
+- [By entering PIN Codes](#with-pin)
+
+### Without PIN
+
+To require only a URL to access an xApp session, a Session URL can be shared. This URL is available via the [xApp Session URL](/xApps/tokens#xapp-session-url) token.
+
+The **xApp Session URL** token provides a URL, which is also accessible via `input.apps.url` in the input object.
+
+With the provided link, a user can access the xApp page without requiring a PIN.
+
+### With PIN
+
+To allow users to access the xApp session via a PIN, share both a PIN and a PIN Page URL with the users. 
+
+This functionality is available via the [xApp PIN Page URL](/xApps/tokens#xapp-pin-page-url) token and the [xApp: Get Session PIN](/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN) Node.
+
+The **Get Session PIN** Node generates a PIN, which is accessible via the [xApp Session PIN token](/xApps/tokens#xapp-session-pin) or `input.apps.session.pin` in the input object.
+
+The **xApp PIN Page URL** token provides a URL, which is also accessible via `input.apps.baseUrl` in the input object.
+
+With the provided link, a user can access the PIN page and enter their provided PIN to gain access to the xApp.
+
+## Parameters
+
+<AccordionGroup>
+  <Accordion title="Style Customization">
+
+    | Parameter          | Type          | Description                                                                                                                                                                                                      |
+    |--------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Background Color   | CognigyScript | A color that is displayed in the background of all Shell Page Screens. You can use CSS background-color values such as `hex`, `hsl+a`, and `rgb+a`.                                                              |
+    | Text Color         | CognigyScript | A color that is used for textual content on all Shell Page Screens. You can use CSS color values such as `hex`, `hsl+a`, and `rgb+a`. Make sure that the text color has high contrast with the background color. |
+    | Logo               | List          | You can choose to show the default logo, not any logo, or a custom logo. If you select the custom logo option, specify the Custom Logo URL.                                                                      |
+    | Custom Favicon URL | CognigyScript | An image URL for the custom favicon.                                                                                                                                                                             |
+    | Page Title         | CognigyScript | A text shown as a tab or window title. The title is displayed on all Shell Page Screens.                                                                                                                         |
+  </Accordion>
+
+  <Accordion title="xApp Screens">
+
+    | Parameter           | Type          | Description                                                                                |
+    |---------------------|---------------|--------------------------------------------------------------------------------------------|
+    | 'Loading' Text      | CognigyScript | Specify messages displayed to the user when the xApp page is loading                       |
+    | 'Launch Error' Text | CognigyScript | Specify messages displayed to the user when the xApp page fails for some reason            |
+    | 'xApp Error' Text   | CognigyScript | Specify messages displayed to the user when the xApp page encounters an error or is halted |
+  </Accordion>
+
+  <Accordion title="Intermediate Screen">
+
+    Customize the text displayed on the Intermediate Screen. Alternatively, you can replace the default Intermediate Screen with an xApp page by providing the xApp Template, a mini website containing HTML/CSS/JS, and parameters that you pass into this xApp Template, the xApp Template Data.
+  </Accordion>
+
+  <Accordion title="Connection Screen">
+
+    Customize the text displayed on the Connection Screen. Alternatively, you can replace the default Connection Screen with an xApp page by providing the xApp Template, a mini website containing HTML/CSS/JS, and parameters that you pass into this xApp Template, the xApp Template Data.
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [xApp Tokens](/xApps/tokens)
+- [xApp Nodes](/ai/agents/develop/node-reference/xApp/overview)
+- [xApp: Get Session PIN](/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN)
+- [xApp: Show HTML](/ai/agents/develop/node-reference/xApp/set-html-xApp-state)
+- [xApp: Show Adaptive Card](/ai/agents/develop/node-reference/xApp/set-AdaptiveCard-xApp-state)
+- [xApps](/xApps/overview)

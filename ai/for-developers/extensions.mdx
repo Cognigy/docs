@@ -1,0 +1,184 @@
+---
+title: Extensions
+hidden: false
+keywords:
+  - cognigy.ai
+  - extensions
+  - extension
+---
+
+<a href="/release-notes/2025.21"><Badge className="version-badge" color="blue">Updated in 2025.21</Badge></a>
+
+_Extensions_ in Cognigy.AI are packages that enhance your Flows with additional capabilities. An Extension can include _Extension Nodes_, _Knowledge Connectors_, or both.
+
+- [Extension Nodes](#extension-nodes) let you:
+    - Integrate with third-party APIs.
+    - Run custom logic for lightweight operations.
+    - Build convenience nodes using NPM modules.
+- [Knowledge Connectors](#knowledge) let you:
+    - Import documents or data as [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview).
+    - Improve AI Agents' RAG capabilities.
+
+You can install Extensions from the [Marketplace](https://www.cognigy.com/marketplace#/), develop your [custom Extensions](#custom-extensions), or modify existing ones.
+
+## Limitations
+
+- Extensions have a default 20-second timeout. You can change the timeout by doing the following:
+    - For dedicated SaaS installations, contact [Cognigy technical support](/help/get-help) to change the timeout.
+    - For on-premises installations, change the environment variable as described in the [Cognigy.AI Helm Chart](https://github.com/Cognigy/cognigy-ai-helm-chart/blob/main/values.yaml).
+- Extensions can make up to 10 API calls per execution.
+
+## Working with Extensions
+
+<Tabs>
+  <Tab title="GUI">
+    In **Manage > Extensions**, you can install, update, and uninstall Extensions from the Marketplace or [custom Extensions](#custom-extensions). Also, you can [mark your custom Extensions as trusted](#make-extensions-trusted).
+
+    The Extension Marketplace is also available on [Cognigy's website](https://www.cognigy.com/marketplace#/).
+  </Tab>
+  <Tab title="CLI">
+    You can pull Extensions using the [Cognigy.AI CLI](https://github.com/Cognigy/cognigy-cli).
+  </Tab>
+  <Tab title="API">
+    You can view, delete, upload, and update Extensions using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#tag--Extensions-v2.0). Also, you can [mark your custom Extensions as trusted](#make-extensions-trusted).
+  </Tab>
+</Tabs>
+
+### Extension Nodes
+
+You can add Extension Nodes to your Flows in the [Flow editor](/ai/agents/develop/projects-and-flows/editor).
+
+### Knowledge Connectors
+
+You can add Knowledge Sources from external knowledge databases to a [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store) in **Build > Knowledge**.
+
+### Custom Extensions
+
+Cognigy allows anyone to extend the capabilities of Cognigy.AI by developing their own Extensions. Custom Extensions are JavaScript or TypeScript modules that you can use to create fully customized Extension Nodes and Knowledge Connectors. After developing a custom Extension, you can install it by uploading it in **Manage > Extensions**.
+
+Extensions are designed for lightweight operations. When developing a custom Extension, avoid CPU-intensive computations, high-memory operations, large loops, and code issues, for example, infinite loops or unresolved promises, in the Extension code. These practices can impact the performance of your AI Agents.
+
+Additionally, you can publish your custom Extension on the Marketplace so other Cognigy users can access it.
+
+<AccordionGroup>
+  <Accordion title="Develop Custom Extensions">
+    The following materials provide in-depth information to develop a custom Extension:
+
+    - [Readme](https://www.npmjs.com/package/@cognigy/extension-tools) of the `@cognigy/extension-tools` package for requirements.
+    - [Cognigy Sessions Episode](https://support.cognigy.com/hc/en-us/articles/360019893139-Cognigy-Sessions-Extensions) about Extensions for a technical deep dive.
+    - An [Extension Node](https://github.com/Cognigy/Extensions/tree/master/docs/example/src/nodes) example that shows how to build an Extension Node.
+    - A [Knowledge Connector](https://github.com/Cognigy/Extensions/blob/master/docs/example/src/knowledge-connectors/simpleKnowledgeConnector.ts) example that shows how to build a Knowledge Connector.
+    - [GitHub repository](https://github.com/Cognigy/Extensions/tree/master/extensions) for more Extension examples.
+
+    <Check>
+      [Cognigy Hammer](https://github.com/tgbv/cognigy-hammer/), created by the Cognigy community, is an Extension development suite designed for Cognigy.AI. Cognigy Hammer offers several tools and features to assist in the development of Cognigy Extensions. Note that Cognigy Hammer isn't a product of Cognigy and doesn't qualify for enterprise support.
+    </Check>
+
+    **Best practices for developing custom Extensions**
+
+    To guarantee the [performance](#extension-performance-and-security) of a custom Extension, make sure the Extension code:
+
+    - Undergoes review by experienced developers.
+    - Avoids very complex logic and use cases. Keep Extensions small in size and with few Nodes, for example, less than 20. 
+    - Contains only production- or runtime-relevant dependencies in the final build.
+    - Is tested both independently and in Flows before production rollout.
+    - Provides error handling across all potential error cases, for example, using try/catch blocks and resolving promises.
+
+    **Code Example for Error Handling**
+
+    **Code Example for Error Handling**
+
+    ```javascript
+    function: async ({ cognigy, config }) => {
+        const { api } = cognigy;
+        const { contextKey, inputKey } = config;
+
+        const endpoint = `API_TO_CALL`;
+
+        try {
+            const result = await axios.get(endpoint);
+
+            // store in context
+            api.addToContext(contextKey, result.data, 'simple');
+
+            // store in input 
+            api.addToInput(inputKey, result.data);
+        }
+        catch (error) {
+            api.addToContext(contextKey, { error: error.message }, 'simple');
+        }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+<Accordion title="Publish Custom Extensions">
+  If you want to publish a custom Extension on the Marketplace, follow the approval procedure in the [Extensions GitHub repository](https://github.com/Cognigy/Extensions).
+</Accordion>
+
+## Extension Performance and Security
+
+By default, Cognigy.AI considers Extension code untrusted and runs it in a secure, isolated environment. This additional security layer introduces some overhead during startup. For this reason, Extensions usually run slower than default Nodes in Flows. 
+
+To reduce startup overhead, keep Extensions small. Include only the custom Nodes and npm packages required for operation to maintain a lightweight bundle. If your Extension contains many Nodes (dozens to hundreds), split them into multiple Extensions scoped to specific use cases, rather than combining all Nodes into a single Extension.
+
+Cognigy.AI ensures that Extension code runs in a secure context by:
+
+1. Executing the Extension code in a separate microservice. This approach ensures that, in a worst-case scenario, a breakout affects only the dedicated microservice, but not the rest of the system.
+
+2. Using a dedicated child process that the system spawns for each execution of the Extension code within the separate microservice. This approach ensures that the Extension code can access only a defined set of environment variables and allows Cognigy.AI to terminate this code if it runs for too long.
+
+3. Creating a separate JavaScript virtual machine within the child process in which the Extension code is executed. This approach restricts the usability of certain APIs from the underlying Node.js execution context, limiting what the code can do when running on the Cognigy.AI infrastructure.
+
+API calls made by the Extension code are proxied back to the rest of the system through synchronous events via the Cognigy.AI internal event bus.
+
+### Make Extensions Trusted
+
+<Danger>
+  Never trust Extension code without thorough review. Extensions can use external packages from NPM, which may contain malicious code or routines. An Extension can steal sensitive information when executed in the standard environment.
+</Danger>
+
+A trusted Extension is considered safe to run in the standard environment. This means that trusted Extensions may offer lower latency but need to be handled more carefully to avoid [performance issues](#custom-extensions).
+
+To make Extensions trusted and let them run in the standard environment, you have two options:
+
+<Accordion title="Make Extensions Trusted">
+  - Mark an Extension as trusted in **Manage > Extensions**. Trusted Extensions display the ![trust-extensions](/_assets/icons/blue/trusted-extension.svg) icon. Only admins and users with the `extension_trust_admin` [role](/ai/administer/access/members) can mark Extensions as trusted and update them.
+  - For dedicated SaaS or on-premises installations: 
+      1. Set the `FEATURE_ALLOW_TRUSTED_CODE_CONFIGURATION` environment variable to `true` by adding the following code to your `config-map_patch.yaml` in the `kubernetes` repository where the deployment manifest files are stored:
+      ```YML
+      - op: add
+        path: /data/FEATURE_ALLOW_TRUSTED_CODE_CONFIGURATION
+        value: "true"
+      ```
+      2. Use the Cognigy.AI API [PATCH](https://api-trial.cognigy.ai/openapi#patch-/v2.0/extensions/-extensionId-) request to update the `trustedCode` property of an Extension.
+</Accordion>
+
+## Install Extensions for All Organizations
+
+On-premises customers can install Extensions across all organizations in their installation. To do so, add the `FEATURE_ADDITIONAL_SYSTEM_WIDE_EXTENSIONS_PATH` environment variable to `values.yaml` under the `cognigyEnv` mapping key and enter the path to the Extension.
+
+## Cache Extensions in your Local Directory
+
+You can cache Extensions in your local directory to improve loading performance.
+
+<Accordion title="Maximum cache storage">
+  By default, when Extensions exceed the maximum cache directory size, the last 10 Extensions are removed from the local directory. On-premises and dedicated SaaS customers can change the number of Extensions that are removed when the maximum cache directory size is exceeded using the `EXCEED_DIR_SIZE_AMOUNT_TO_DROP_FROM_MAP` environment variable.
+
+  On-premises and dedicated SaaS customers can change the maximum directory size by adding the `MAX_EXTENSIONS_CACHE_DIR_SIZE_IN_MB` environment variable to `values.yaml`. By default, the maximum directory size is 512 MB.
+
+  The cache is in the `service-execution` [Kubernetes pod](https://kubernetes.io/docs/concepts/workloads/pods/).
+</Accordion>
+
+## Dynamic Fields
+
+You can use a dynamic selection field as a field type in Extensions. This feature can be used to dynamically fetch the content of a selection field, for example, through an external API call.
+
+## Localization for Extensions
+
+Extension builders can include localized UI text, such as default Node labels or Node field descriptions.
+
+For more details, read the [Localization for Extensions](https://www.npmjs.com/package/@cognigy/extension-tools#extension-localization) documentation.
+
+## Error Handling
+
+If an Extension [times out or sends too many API calls](#limitations), the Flow execution doesn't stop. Instead, an error message is written to the `input.extensionError` Input object.

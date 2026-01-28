@@ -1,0 +1,24 @@
+---
+title: Add To Context
+hidden: false
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/logic/add-to-context.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node stores information in the [Context](/ai/agents/develop/ai-agent-memory/context) object. With this approach, you can use the stored value throughout the session on subsequent user inputs.
+
+## Parameters
+
+| Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                             |
+| --------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Key       | CognigyScript | The key where to store in the Context object. For example, if you enter `requestedProduct`, the value is assigned to the `context.requestedProduct` key. You can use nested keys, for example, entering `user.profile.name` assigns the value to the `context.user.profile.name` key. This parameter doesn't support dashes or hyphens. |
+| Value     | CognigyScript | The value to store in the Context object.                                                                                                                                                                                                                                                                                               |
+| Mode      | Select        | <ul><li>**Simple** — assigns the value to the key.</li><li>**Array** — appends the value to an array under the key. By default, you can add only unique values. If you need to add a value that already exists in the array, use the `.push()` function in a [Code Node](/ai/agents/develop/node-reference/basic/code).</li></ul> |
+
+<Accordion title="Storing an Object">
+  If you want to store an object in the Context object, use `.preserveType()` at the end of the CognigyScript expression to keep it as an object. For example, `input.slots.city[0].preserveType()` stores the Slot object for the first found city entity in the Context object.
+</Accordion>
