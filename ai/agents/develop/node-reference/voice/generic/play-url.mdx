@@ -1,0 +1,32 @@
+---
+title: Play URL
+hidden: false
+---
+
+import AiNodeReferenceVoiceAcAndGenericNodeDeprecation from '/snippets/ai/node-reference/voice/ac-and-generic-node-deprecation.mdx'
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/generic-voice/play-url.png" style={{ width: 'auto' }} />
+  <figcaption>Generic Play URL Node</figcaption>
+</Frame>
+
+## Description
+
+<AiNodeReferenceVoiceAcAndGenericNodeDeprecation/>
+
+The Play URL Node lets you stream a sound file into the call. 
+
+This Node is useful for playing advertisements, pre-recorded jingles, or other sound files for callers. It supports MP3 and WAV encoded files.
+
+## Parameters
+
+| Parameter               | Type          | Description                                                                                                                                                                                                                                                                                                                         |
+|-------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Media URL               | CognigyScript | Accepts URL links to MP3 and WAV tracks. The URL should point to the storage location where you want to host it and doesn't need to include the `.mp3` or `.wav` extension. For example, `https://abc.xyz/music.mp3` or `https://audio.jukehost.co.uk/N5pnlULbup8KabGRE7dsGwHTeIZAwWdr`. Make sure the file is publicly accessible. |
+| Set Activity Parameters | Toggle        | Enables parameters which will be valid for this activity only. The available parameters are: <br/> - [Recognizer (STT)](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) <br/> - [Barge In](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) <br/> - [DTMF](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)               |
+
+## More Information
+
+- [AudioCodes Play URL Node](/ai/agents/develop/node-reference/voice/audiocodes/play-url)
+- [Voice Gateway Play Node](/ai/agents/develop/node-reference/voice/voice-gateway/play)
+- [Parameter Details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)

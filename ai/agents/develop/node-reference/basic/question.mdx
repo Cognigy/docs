@@ -1,0 +1,490 @@
+---
+title: Question
+keywords: ['Question', 'Node', 'Input']
+---
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="blue">Updated in 2026.3</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/basic/question.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+A Question Node is used to ask a question that requests specific information from the user. When the Node is triggered, the [Entrypoint](/ai/agents/develop/projects-and-flows/editor) shifts to this Node so that the conversation continues only after the user answers. Also, a new [Input](/ai/agents/develop/ai-agent-memory/input) object is generated.
+
+When a user input is received, it's scored based on natural language understanding (NLU). If an attached Flow has an Intent that scores higher than Intents in the current Flow, the [attached Flow](/ai/platform-features/nlu/attachments) is executed. The Intent scoring occurs before validation of the Question Node is completed.
+
+After the AI Agent asks a question and the user answers, the answer is validated according to its type. If it passes, the answer is valid and stored, and the conversation continues.
+
+<Accordion title="Question Nodes and Intent Execution">
+  Question Nodes, by default, are triggered repeatedly until a valid answer is provided. To avoid this behavior, you can use an Optional Question or change the Intent Execution setting.
+
+  <iframe width="701" height="438" src="https://www.youtube.com/embed/iGc3fekZQOw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="centered-iframe"></iframe>
+</Accordion>
+
+## Parameters
+
+<AccordionGroup>
+  <Accordion title="Question Types">
+
+    Question Nodes have a selection of types that determine the validation used before a conversation continues.
+
+    | Type                                 | Expected user input to answer question                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Example                                                                                                                                                                |
+    |--------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Text                                 | Any text input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                        |
+    | Yes / No                             | A positive or negative response.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                        |
+    | Intent                               | One of the trained [Intents](/ai/platform-features/nlu/intents/overview) must be identified from the user's response.                                                                                                                                                                                                                                                                                                                                                                                                   |                                                                                                                                                                        |
+    | Slot                                 | A [System Slot](/ai/platform-features/nlu/slots/system-defined) or [Lexicon Slot](/ai/platform-features/nlu/slots/user-defined/lexicon) must be detected within the user's response. The slot is defined by name.                                                                                                                                                                                                                                                                                 |                                                                                                                                                                        |
+    | Date                                 | Any date (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                        |
+    | Number                               | Any number (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |                                                                                                                                                                        |
+    | Temperature                          | Any temperature (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                                                                                                                        |
+    | Age                                  | Any age (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                                                                                                                        |
+    | Duration                             | Any time duration (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                        |
+    | Email                                | Any email address (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                                                                                                                                                        |
+    | Money                                | Any amount of money (system-defined). The input needs to include a number and a currency: <ul><li>**Number** — if the number has decimals, they need to be separated by the respective separator of the conversation's language. For example, separate decimals with a period for English and with a comma for German.</li><li>**Currency** — it is accepted as a symbol or written out, and can be written before or after the number.</li></ul>                                                                       | `1,300 dollars`, `111.21 USD` (English), `USD 75`, `43 $`, `$ 11`, `300 euros`, `300 Euro`, `150,00 EUR` (German), `150.00 EUR` (English), `EUR 28`, `1900 €`, `€ 200` |
+    | URL                                  | Any reference/address to a resource on the Internet, for example, `http://example.com`.                                                                                                                                                                                                                                                                                                                                                                                                                                 |                                                                                                                                                                        |
+    | Percentage                           | Any percentage (system-defined).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                        |
+    | Regex                                | Any custom data format defined by a regex expression must be detected in the user's response. The regular expression must start with `/` and end with `/g`. For example, `/^1\d{7}$/g`.                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                        |
+    | Data                                 | Any data (input.data) input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |                                                                                                                                                                        |
+    | xApp                                 | Any xApp input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                                                                                                                                                                        |
+    | Custom                               | Any input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                        |
+    | Pattern: License Plate (DE)          | A pattern for the [German vehicle registration plate](https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Germany). This license plate is a unique alphanumeric identification tag displayed on a vehicle. It consists of letters, numbers, and sometimes special characters, for example, `ö`, `ä`, or `ü`. License plates serve as a means of identifying and registering vehicles, providing important information such as vehicle ownership, registration details, and compliance with legal requirements. | `M-345`, `x1Y2Z3`, `D 12345C`                                                                                                                                          |
+    | Pattern: IBAN                        | A pattern for the International Bank Account Number (IBAN).                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `DE12345678901234567890`                                                                                                                                               |
+    | Pattern: Bank Identifier Code (BIC)  | A pattern for the Bank Identifier Code (BIC).                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `DEUTDEFF500`                                                                                                                                                          |
+    | Pattern: Social Security Number (US) | A pattern for the US Social Security Number.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `123-45-6789`                                                                                                                                                          |
+    | Pattern: IP Address (IPv4)           | A pattern for the IPv4 address.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `192.168.1.1`                                                                                                                                                          |
+    | Pattern: Phone Number                | A pattern for the phone number.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | `+49 0000000000`, `49 0000000000`, `+490000000000`, `(555) 000-000`                                                                                                    |
+    | Pattern: Credit Card                 | A pattern for the bank card.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `4111111111111111`                                                                                                                                                     |
+    | LLM-extracted Entity                 | Utilizes a chosen LLM to extract entities, such as product codes, booking codes, and customer IDs, from a given string. Go to the LLM Entity Extraction Options.                                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                        |
+
+
+    <Note>
+      All data formats supported by the Cognigy NLU for system slot mapping are listed on the [Slot Mapping](/ai/platform-features/nlu/slots/system-defined) page.
+    </Note>
+    
+  </Accordion>
+
+  <Accordion title="Channels and Output Types">
+
+    Question Node output types carry the same functionality as the [Say Node](/ai/agents/develop/node-reference/basic/say).
+
+    <Check>
+      If you select the Date as a Question Type, the Question Node automatically renders a datepicker if the channel supports it. Refer to [Datepicker](/ai/agents/develop/node-reference/data/datepicker) for more information. 
+    </Check>
+  </Accordion>
+
+  <Accordion title="LLM Entity Extraction Options">
+
+    This section appears if you've selected the **LLM-extracted Entity** question type.
+
+    Before using this Question type, 
+    set the LLM provider in the [Settings](/ai/agents/develop/gen-ai-and-llms/generative-ai).
+    You can configure the Node to either use the default model defined in the Settings or choose a specific configured LLM.
+
+    | Parameter             | Type          | Description                                                                                                                                    |
+    |-----------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Large Language Model  | Select        | Select a model or use the default one.                                                                                                         |
+    | Entity Name           | CognigyScript | The name of the entity to extract. For example, `customerID`.                                                                                  |
+    | Entity Description    | CognigyScript | A sentence which describes the entity. For example, `An alphanumeric string of 6 characters, e.g. ABC123 or 32G5FD`.                           |
+    | Example Input         | Text          | Examples of text inputs. For example, `My ID is AB54EE, is that ok?`, `That would be ah bee see double 4 three`, `I guess it's 49 A B 8 K`.    |
+    | Extracted Entity      | CognigyScript | Examples of extracted entities. For example, `AB54EE`, `ABC443`, `49AB8K`.                                                                     |
+    | Additional Validation | CognigyScript | User input must meet this extra validation criteria, in addition to the built-in field validation, for example, Email, to be considered valid. |
+
+    Alternatively, you can add input examples in the **Use JSON Editor** code field. For example:
+
+    ```json
+    {
+      "My ID is AB54EE, is that ok?": "AB54EE",
+      "That would be ah bee see double 4 three": "ABC443",
+      "I guess it's 49 A B 8 K": "49AB8K"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Advanced">
+
+    | Parameter   | Type      | Description                                                                                            |
+    |-------------|-----------|--------------------------------------------------------------------------------------------------------|
+    | Temperature | Indicator | The appropriate sampling temperature for the model. Higher values mean the model takes more risks. |
+    | Timeout     | Number    | The maximum amount of milliseconds to wait for a response from the LLM provider.             |
+  </Accordion>
+
+  <Accordion title="Reprompt Options">
+
+    Reprompt messages are automatically triggered if the question is not answered correctly,
+    such as when the expected type of input is not provided or a validation does not return `true`.
+
+    **Reprompt Methods**
+
+    <Tabs>
+      <Tab title="Simple Text">
+
+        Outputs a simple text message to the user.
+
+        | Parameter        | Type          | Description                                                                                                |
+        |------------------|---------------|------------------------------------------------------------------------------------------------------------|
+        | Reprompt Message | CognigyScript | The message to output if the given answer is invalid. For example, `Not sure I understood this correctly`. |
+
+      </Tab>
+      <Tab title="Channel Message">
+
+        Outputs a comprehensive, channel-specific message to the user.
+        This message includes rich-media, for example, images or audio.
+        You can define distinct messages for each channel, such as Webchat, Voice Gateway, WhatsApp, and others.
+
+        | Parameter        | Type    | Description                                                                                                                                                                                                                                                |
+        |------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Reprompt Message | Channel | The channel for which you want to configure the repromt message. You can select multiple channels.                                                                                                                                                         |
+        | Output Type      | Select  | The format of the content that delivers through the selected channel. Depending on the selected channel, a list of possible output types suitable for that channel is presented. All channels support the text type, but support for other types may vary. |
+
+      </Tab>
+      <Tab title="LLM Prompt">
+
+        Runs an LLM prompt and outputs the result in the format of a text message to the user.
+        Before using this Node, configure a model in the [LLM](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) settings.
+
+        | Parameter                 | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                    |
+        |---------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Large Language Model      | Select        | The channel for which you want to configure the repromt message. You can select multiple channels.                                                                                                                                                                                                                                                                                                             |
+        | LLM Instructions          | CognigyScript | The input or command, such as a prompt or system message, that is given to the Language Model to generate an output.                                                                                                                                                                                                                                                                                           |
+        | Transcript Turns          | Slider        | The number of conversation turns to include in the LLM chat completion request. By default, the value is `3`.                                                                                                                                                                                                                                                                                                  |
+        | Stream Reprompt to Output | Toggle        | Streams the result directly into the output. This means that the model provides prompts directly into the conversation chat, as soon as a Stream Buffer Flush Token is matched, and you don't need to use the LLM Prompt Result token and Say Node. Note that streaming may not be supported by all [Cognigy LLM Prompt Node](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) providers, such as Google<sup>[1](#footnote1)</sup>. |
+
+      </Tab>
+      <Tab title="Execute Flow and Return">
+
+        Executes a specific Flow and returns to the question afterward.
+
+        | Parameter      | Type   | Description                                                                                                                                          |
+        |----------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Select Flow    | Select | The Flow that is executed as the reprompt message.                                                                                                   |
+        | Select Node    | Select | The Node from which the Flow should be executed as the reprompt message.                                                                             |
+        | Parse Intents  | Toggle | This setting determines whether the system should parse Intents separately in the executed Flow. By default, this setting is enabled.                |
+        | Parse Slots    | Toggle | This setting determines whether the system should parse Slots separately in the executed Flow. By default, this setting is enabled.                  |
+        | Absorb Context | Toggle | This setting determines whether the system should absorb the executed Flow's Context into the current Context. By default, this setting is disabled. |
+
+        **Repeat Question**
+
+        Repeats a question if a user gives an invalid answer. By default, this setting is enabled.
+
+        **Reprompt Condition**
+
+        Optionally, you can add a [CognigyScript](/ai/platform-features/cognigyscript) condition to determine whether a reprompt message is shown.
+
+        **Skip on Intent**
+
+        Skips the reprompt if an Intent was found in the input.
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Result Storage">
+
+    Question results are always stored in `input.result`.
+
+    If **Store Result in Context** is enabled, the Question Result is also stored in the [Context](/ai/agents/develop/ai-agent-memory/context) object. 
+
+    If **Store Result to Contact Profile** is enabled, the Question Result is also stored in the [Profile](/ai/agents/develop/ai-agent-memory/profile) object.
+  </Accordion>
+
+  <Accordion title="Escalation - Intents">
+
+    Allows the conversation to break out of the Question Node if a specified Intent was found.
+
+    | Parameter         | Type     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+    | ----------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Escalation Action | Selector | Defines what happens when a question step escalates. Select one of the following options: <ul><li> **No Escalation** – no action is taken. This option is selected by default.</li> <li>**Output Message** – sends a message and behaves the same as a Say Node.</li><li>**Skip Question** – skips the question and stores a value under the `result` in the Input object.</li><li> **Go To Node** – jumps to a specific Node and continues from there and behaves as a Go To Node.</li><li>**Execute Flow and Return** – executes a Flow Node and then returns to the question step and behaves as an Execute Flow Node.</li><li>**Handover to Human Agent** – hands the conversation over to a human agent and behaves the same as a Handover to Human Agent Node.</li></ul> |
+    | Send Queue Event  | Toggle   | Sends an event to the Flow when the handover is queued.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+    | Send Active Event | Toggle   | Sends an event to the Flow when the handover becomes active.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+    <Accordion title="Escalation Action: Output Message">
+
+    | Parameter                      | Type   | Description                                                                                                                                                        |
+    | ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | Valid Intents                  | List   | A list of Intents that can trigger the escalation. Press **Enter** to add each Intent. Only Intents included in this list will be considered for escalation.       |
+    | Intent Score Threshold         | Number | The minimum confidence score an Intent must have to trigger the escalation. If the detected Intent’s score is below this threshold, the escalation will not occur. |
+    | Escalation Message             | Text   | The message the AI Agent sends when the wrong answer count is reached. Supports CognigyScript and [Tokens](/ai/platform-features/tokens).                                              |
+    | Output Type                    | Toggle | Defines how the escalation message is sent. For example, **Text** will render the message as plain text in the channel, supporting emojis, HTML formatting, or CognigyScript.              |
+    | Linear                         | Toggle | Controls whether multiple escalation messages are shown in a specific order (linearly) or randomly. If enabled, messages appear in the defined sequence.                                   |
+    | Loop                           | Toggle | Works with **Linear**. If **Loop** is enabled, the sequence starts over after the last message. If disabled, the last message repeats after reaching the end.                              |
+    | Data                           | JSON   | Additional data to send with the escalation message. For example, `{ "type": "escalation" }`.                                                                                              |
+    | Prevent Reprompt Message Once  | Toggle | If enabled, the escalation message will only be triggered once per conversation, preventing repeated escalation messages.                                                                  |
+
+   </Accordion>
+
+       <Accordion title="Escalation Action: Skip Question">
+
+        | Parameter                      | Type   | Description                                                                                                                                                                                |
+        | ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+        | Valid Intents                  | List   | A list of Intents that can trigger the escalation. Press **Enter** to add each Intent. Only Intents included in this list will be considered for escalation.       |
+        | Intent Score Threshold         | Number | The minimum confidence score an Intent must have to trigger the escalation. If the detected Intent’s score is below this threshold, the escalation will not occur. |
+
+       </Accordion>
+
+       <Accordion title="Escalation Action: Go To Node">
+
+       | Parameter                  | Type     | Description                                                                                                                                                                                                                                               |
+       | -------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+       | Valid Intents              | List     | A list of Intents that can trigger the escalation. Press **Enter** to add each Intent. Only Intents included in this list will be considered for escalation.       |
+       | Intent Score Threshold     | Number   | The minimum confidence score an Intent must have to trigger the escalation. If the detected Intent’s score is below this threshold, the escalation will not occur. |
+       | Select Flow                | Flow ID  | Select the Flow to switch to when the escalation triggers. Use **Manual Input** to enter the Flow ID directly, or click the target Flow icon to select.                                                                                                   |
+       | Select Node                | Node ID  | Select the Node to switch to when the escalation triggers. The Node must be an Entrypoint. Use **Manual Input** to enter the Node ID directly.                                                                                                            |
+       | GoTo Execution Mode        | Selector | Determines the behavior when switching to the selected Node/Flow: <ul> <li>**Go to Node and continue** – the conversation immediately continues in the target Node or Flow using the current input. You can override the text or data using **Optional Injected Text** or **Optional Injected Data**.</li><li>**Go to Node and Wait for input** – the conversation switches to the target Node/Flow but pauses, waiting for the user to provide input before continuing. Useful when you want the escalation to prompt the user.</li></ul>|
+       | Optional Injected Text     | Text     | When the escalation triggers, you can overwrite the text sent with this field. If left empty, the default text from **Escalation Message** is used.                                                                                                       |
+       | Optional Injected Data     | JSON     | When the escalation triggers, you can overwrite the data sent with this field. If left empty, the default data is used.                                                                                                                                   |
+       </Accordion>
+
+       <Accordion title="Escalation Action: Execute Flow and Return">
+
+       | Parameter                  | Type     | Description                                                                                                                                                                                                    |
+       | -------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+       | Valid Intents              | List     | A list of Intents that can trigger the escalation. Press **Enter** to add each Intent. Only Intents included in this list will be considered for escalation.       |
+       | Intent Score Threshold     | Number   | The minimum confidence score an Intent must have to trigger the escalation. If the detected Intent’s score is below this threshold, the escalation will not occur. |
+       | Select Flow                | Flow ID  | Select the Flow to switch to when the escalation triggers. Use **Manual Input** to enter the Flow ID directly.                                                                                                 |
+       | Select Node                | Node ID  | Select the Node to switch to when the escalation triggers. The Node must be an Entrypoint. Use **Manual Input** to enter the Node ID directly.                                                                 |
+
+       </Accordion>
+       <Accordion title="Escalation Action: Handover to Human Agent">
+
+       | Parameter                                            | Type           | Description                                                                                                                                                                                                                                                                                                                                |
+       | ---------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+       | Valid Intents                                        | List           | A list of Intents that can trigger the escalation. Press **Enter** to add each Intent. Only Intents included in this list will be considered for escalation.       |
+       | Intent Score Threshold                               | Number         | The minimum confidence score an Intent must have to trigger the escalation. If the detected Intent’s score is below this threshold, the escalation will not occur. |
+       | Handover Accepted Message                            | CognigyScript  | The message that is displayed to the user when the handover request is accepted. It confirms to the user that a human agent will take over the conversation, providing reassurance that their issue is being handled.                                                                                                                      |
+       | Repeat Handover Accepted Message                     | Toggle         | Repeatedly outputs the Handover Accepted Message if the user sends additional messages while waiting in the queue. This parameter the user informed and reassured during the wait. The parameter is activated by default.                                                                                                                                   |
+       | Cancel Intent                                        | CognigyScript  | Specifies the Intent that a user can trigger to cancel a handover request. This parameter allows users to regain control of the conversation if they change their mind or no longer want to wait for a human agent.                                                                                                                         |
+       | Cancel Button Text                                   | CognigyScript  | Provides the text for a quick-reply button that users can click to cancel the handover. This parameter is an alternative to triggering the cancel Intent manually, offering a more robust option to stop the handover process.                                                                                                                  |
+       | Flow Continuation                                    | Selector       | Determines where the conversation resumes after the handover is completed. Select one of the following options: <ul><li>**At current AgentInject Entrypoint** – Start again where the handover began.</li><li>**Below this Node** – Continue with the next step in the chat.</li></ul> |
+       | Send resolve event to Virtual Agent                  | Toggle         | Sends an event to the AI Agent when the human agent resolves the conversation. This parameter allows the AI Agent to respond appropriately, update conversation status, or trigger additional automated processes after the human interaction. The parameter is deactivated by default.                                                                                         |
+       | Handover Provider                                    | Selector       | The provider that will handle the handover. By default, **Legacy Mode** is selected, using endpoint settings defined in **Deploy > Endpoints**. Alternatively, you can migrate to a provider from the Handover Providers interface or create a new provider from scratch.                                                           |
+       | Additional Category IDs                              | CognigyScript  | The IDs for for the RingCentral Engage handover provider to allow you to categorize or route conversations according to custom categories. This parameter that the handover is directed to the appropriate team or workflow.                                                                                                                                           |
+       | Live Agent Inbox Id                                  | CognigyScript  | The inbox ID used to route the conversation to the human agent. This ID must match the inbox configured in the Live Agent system to ensure messages are delivered correctly.                                                                                                                                                       |
+       | Live Agent – Allow reply as user                     | Toggle         | Lets human agents respond on behalf of the end user in the chat interface. This parameter is useful for scenarios where a human agent needs to simulate user actions or correct information during the conversation. The parameter is deactivated by default.                                                                                                                                                |
+       | Chatwoot Inbox Id                                    | CognigyScript  | The ID for routing the conversation to a Chatwoot inbox. This ensures proper delivery and handling within Chatwoot’s system.                                                                                                                                                                                                               |
+       | Salesforce Send Transcript As First Message          | Toggle         | Sends the conversation transcript to Salesforce as the first message when handover begins. If the transcript is long, it is split into multiple messages. This parameter helps human agents have context at the start of the interaction. The parameter is deactivated by default.                                                                                                        |
+       | Salesforce Prechat Entities                          | JSON           | Refers to structured key-value data used for routing, automation, or passing contextual information to Salesforce flows. These are often used internally by Salesforce to map chat data to variables in Omni-Channel or automation logic. |
+       | Salesforce Prechat Details                           | JSON           | Refers to user-facing or pre-filled field data in Salesforce chat forms, for example, name, email, issue type. This data is used to pre-populate fields the agent sees when the conversation starts.                                           |
+       | Language                                             | CognigyScript  | Defines the languages for the conversation. This ensures the user is connected to agents who can communicate effectively in the chosen language.                                                                                                                                                                                           |
+       | Skills                                               | CognigyScript  | Specifies the skills required to handle the conversation. Agents are filtered based on these skills, ensuring users are connected to qualified personnel for their issue.                                                                                                                                                                  |
+       | Priority                                             | CognigyScript  | Sets the priority of the conversation. Higher-priority conversations may be routed faster or treated with urgency in the contact center.                                                                                                                                                                                                   |
+       | Custom Attributes                                    | JSON           | Adds additional key-value metadata to provide context or support custom routing and reporting. These attributes can include any relevant information about the user, conversation, or business context.                                                                                                                                     |
+       | 8x8 Channel Id                                       | CognigyScript  | Specifies the ID of the 8x8 chat channel used for handover. Links the conversation to the correct channel.     |
+       | 8x8 Queue Id                                         | CognigyScript  | Identifies the queue in 8x8 where the conversation should be routed.                                           |
+       | 8x8 JSON Properties                                  | JSON           | Allows sending additional custom JSON properties to 8x8 for configuration, routing, or passing extra metadata. |
+       | Only escalate once                                   | Toggle         | Ensures that a conversation is handed over only once. Prevents repeated escalations for the same issue to avoid confusion or redundant agent interactions.                                                                                                                                                                                 |
+       | Enable User Connects Message                         | Toggle         | Notifies human agents when a user reconnects to the chat. This parameter ensures agents are aware of returning users and can continue the conversation seamlessly.                                                                                                                                                                                   |
+       | Enable User Disconnects Message                      | Toggle         | Notifies human agents when a user leaves or closes the chat. This parameter helps maintain awareness of user engagement and session status.                                                                                                                                                                                                          |
+       | Maximum Queue Position                               | CognigyScript  | Sets the threshold for the maximum queue position. If this threshold is reached, the alternative text is sent. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                            |
+       | Maximum Estimated Wait Time                          | CognigyScript  | Defines the maximum estimated wait time in milliseconds. If this duration is exceeded, the alternative text is sent. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                      |
+       | Alternative Text                                     | CognigyScript  | The message sent to the user when the maximum queue position or wait time threshold is reached. This ensures users are informed and reduces frustration while waiting for an human agent.                                                                                                                                                        |
+
+     </Accordion>
+  </Accordion>
+
+  <Accordion title="Escalation - Wrong Answers">
+
+    Allows the conversation to break out of the Question Node after a number of incorrect answers were provided.
+
+    | Parameter         | Type     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+    | ----------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Escalation Action | Selector | Defines what happens when a question step escalates. Select one of the following options: <ul><li> **No Escalation** – no action is taken. This option is selected by default.</li> <li>**Output Message** – sends a message and behaves the same as a Say Node.</li><li>**Skip Question** – skips the question and stores a value under the `result` in the Input object.</li><li> **Go To Node** – jumps to a specific Node and continues from there and behaves as a Go To Node.</li><li>**Execute Flow and Return** – executes a Flow Node and then returns to the question step and behaves as an Execute Flow Node.</li><li>**Handover to Human Agent** – hands the conversation over to a human agent and behaves the same as a Handover to Human Agent Node.</li></ul> |
+    | Send Queue Event  | Toggle   | Sends an event to the Flow when the handover is queued.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+    | Send Active Event | Toggle   | Sends an event to the Flow when the handover becomes active.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+    <Accordion title="Escalation Action: Output Message">
+
+    | Parameter                      | Type   | Description                                                                                                                                                                                |
+    | ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | Wrong Answer Count Trigger     | Number | The number of incorrect responses a user can give before the escalation message is triggered. For example, if set to `1`, the escalation message will appear after the first wrong answer. |
+    | Escalation Message             | Text   | The message the AI Agent sends when the wrong answer count is reached. Supports CognigyScript and [Tokens](/ai/platform-features/tokens).                                              |
+    | Output Type                    | Toggle | Defines how the escalation message is sent. For example, **Text** will render the message as plain text in the channel, supporting emojis, HTML formatting, or CognigyScript.              |
+    | Linear                         | Toggle | Controls whether multiple escalation messages are shown in a specific order (linearly) or randomly. If enabled, messages appear in the defined sequence.                                   |
+    | Loop                           | Toggle | Works with **Linear**. If **Loop** is enabled, the sequence starts over after the last message. If disabled, the last message repeats after reaching the end.                              |
+    | Data                           | JSON   | Additional data to send with the escalation message. For example, `{ "type": "escalation" }`.                                                                                              |
+    | Prevent Reprompt on Escalation | Toggle | If enabled, the escalation message will only be triggered once per conversation, preventing repeated escalation messages.                                                                  |
+    | Only escalate once             | Toggle | Ensures that a conversation is handed over only once. Prevents repeated escalations for the same issue to avoid confusion or redundant agent interactions.                                                                                                                                                                                 |
+
+    </Accordion>
+
+    <Accordion title="Escalation Action: Skip Question">
+
+     | Parameter                      | Type   | Description                                                                                                                                                                                |
+     | ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+     | Wrong Answer Count Trigger     | Number | The number of incorrect responses a user can give before the escalation message is triggered. For example, if set to `1`, the escalation message will appear after the first wrong answer. |
+     | Only escalate once             | Toggle | Ensures that a conversation is handed over only once. Prevents repeated escalations for the same issue to avoid confusion or redundant agent interactions.                                                                                                                                                                                 |
+
+    </Accordion>
+
+    <Accordion title="Escalation Action: Go To Node">
+
+    | Parameter                  | Type     | Description                                                                                                                                                                                                                                               |
+    | -------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Wrong Answer Count Trigger | Number   | Set the number of incorrect responses a user can give before the escalation action is triggered. For example, if set to `1`, the escalation will occur after the first wrong answer.                                                                      |
+    | Select Flow                | Flow ID  | Select the Flow to switch to when the escalation triggers. Use **Manual Input** to enter the Flow ID directly, or click the target Flow icon to select.                                                                                                   |
+    | Select Node                | Node ID  | Select the Node to switch to when the escalation triggers. The Node must be an Entrypoint. Use **Manual Input** to enter the Node ID directly.                                                                                                            |
+    | GoTo Execution Mode        | Selector | Determines the behavior when switching to the selected Node/Flow: <ul> <li>**Go to Node and continue** – the conversation immediately continues in the target Node or Flow using the current input. You can override the text or data using **Optional Injected Text** or **Optional Injected Data**.</li><li>**Go to Node and Wait for input** – the conversation switches to the target Node/Flow but pauses, waiting for the user to provide input before continuing. Useful when you want the escalation to prompt the user.</li></ul>|
+    | Optional Injected Text     | Text     | When the escalation triggers, you can overwrite the text sent with this field. If left empty, the default text from **Escalation Message** is used.                                                                                                       |
+    | Optional Injected Data     | JSON     | When the escalation triggers, you can overwrite the data sent with this field. If left empty, the default data is used.                                                                                                                                   |
+    | Only escalate once         | Toggle   | If enabled, the escalation message is triggered only once per conversation, preventing repeated escalation messages.                                                                                                                                      |
+    </Accordion>
+
+    <Accordion title="Escalation Action: Execute Flow and Return">
+
+    | Parameter                  | Type     | Description                                                                                                                                                                                                    |
+    | -------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Wrong Answer Count Trigger | Number   | The number of incorrect responses a user can give before the escalation action is triggered. For example, if set to `1`, the escalation will occur after the first wrong answer.                               |
+    | Select Flow                | Flow ID  | Select the Flow to switch to when the escalation triggers. Use **Manual Input** to enter the Flow ID directly.                                                                                                 |
+    | Select Node                | Node ID  | Select the Node to switch to when the escalation triggers. The Node must be an Entrypoint. Use **Manual Input** to enter the Node ID directly.                                                                 |
+    | Only escalate once         | Toggle   | If enabled, the escalation action is triggered only once per conversation, preventing repeated escalation triggers.                                                                                            |
+
+    </Accordion>
+    <Accordion title="Escalation Action: Handover to Human Agent">
+
+    | Parameter                                            | Type                 | Description                                                                                                                                                                                                                                                                                                                                |
+    | ---------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | Wrong Answer Count Trigger                           | Slider               | Defines the number of consecutive incorrect answers the AI Agent can give before automatically triggering a handover. This helps ensure users aren’t stuck with repeated wrong responses and are directed to a human agent when necessary.                                                                                                 |
+    | Handover Accepted Message                            | CognigyScript        | The message that is displayed to the user when the handover request is accepted. It confirms to the user that a human agent will take over the conversation, providing reassurance that their issue is being handled.                                                                                                                      |
+    | Repeat Handover Accepted Message                     | Toggle               | Repeatedly outputs the Handover Accepted Message if the user sends additional messages while waiting in the queue. This parameter the user informed and reassured during the wait. The parameter is activated by default.                                                                                                                                   |
+    | Cancel Intent                                        | CognigyScript        | Specifies the Intent that a user can trigger to cancel a handover request. This parameter allows users to regain control of the conversation if they change their mind or no longer want to wait for a human agent.                                                                                                                         |
+    | Cancel Button Text                                   | CognigyScript        | Provides the text for a quick-reply button that users can click to cancel the handover. This parameter is an alternative to triggering the cancel Intent manually, offering a more robust option to stop the handover process.                                                                                                                  |
+    | Flow Continuation                                    | Selector             | Determines where the conversation resumes after the handover is completed. Select one of the following options: <ul><li>**At current AgentInject Entrypoint** – Start again where the handover began.</li><li>**Below this Node** – Continue with the next step in the chat.</li></ul> |
+    | Send resolve event to Virtual Agent                  | Toggle               | Sends an event to the AI Agent when the human agent resolves the conversation. This parameter allows the AI Agent to respond appropriately, update conversation status, or trigger additional automated processes after the human interaction. The parameter is deactivated by default.                                                                                         |
+    | Handover Provider                                    | Selector             | The provider that will handle the handover. By default, **Legacy Mode** is selected, using endpoint settings defined in **Deploy > Endpoints**. Alternatively, you can migrate to a provider from the Handover Providers interface or create a new provider from scratch.                                                           |
+    | Additional Category IDs                              | CognigyScript        | The IDs for for the RingCentral Engage handover provider to allow you to categorize or route conversations according to custom categories. This parameter that the handover is directed to the appropriate team or workflow.                                                                                                                                           |
+    | Live Agent Inbox Id                                  | CognigyScript        | The inbox ID used to route the conversation to the human agent. This ID must match the inbox configured in the Live Agent system to ensure messages are delivered correctly.                                                                                                                                                       |
+    | Live Agent – Allow reply as user                     | Toggle               | Lets human agents respond on behalf of the end user in the chat interface. This parameter is useful for scenarios where a human agent needs to simulate user actions or correct information during the conversation. The parameter is deactivated by default.                                                                                                                                                |
+    | Chatwoot Inbox Id                                    | CognigyScript        | The ID for routing the conversation to a Chatwoot inbox. This ensures proper delivery and handling within Chatwoot’s system.                                                                                                                                                                                                               |
+    | Salesforce Send Transcript As First Message          | Toggle               | Sends the conversation transcript to Salesforce as the first message when handover begins. If the transcript is long, it is split into multiple messages. This parameter helps human agents have context at the start of the interaction. The parameter is deactivated by default.                                                                                                        |
+    | Salesforce Prechat Entities                          | JSON                 | Refers to structured key-value data used for routing, automation, or passing contextual information to Salesforce flows. These are often used internally by Salesforce to map chat data to variables in Omni-Channel or automation logic. |
+    | Salesforce Prechat Details                           | JSON                 | Refers to user-facing or pre-filled field data in Salesforce chat forms, for example, name, email, issue type. This data is used to pre-populate fields the agent sees when the conversation starts.                                           |
+    | Language                                             | CognigyScript        | Defines the languages for the conversation. This ensures the user is connected to agents who can communicate effectively in the chosen language.                                                                                                                                                                                           |
+    | Skills                                               | CognigyScript        | Specifies the skills required to handle the conversation. Agents are filtered based on these skills, ensuring users are connected to qualified personnel for their issue.                                                                                                                                                                  |
+    | Priority                                             | CognigyScript        | Sets the priority of the conversation. Higher-priority conversations may be routed faster or treated with urgency in the contact center.                                                                                                                                                                                                   |
+    | Custom Attributes                                    | JSON                 | Adds additional key-value metadata to provide context or support custom routing and reporting. These attributes can include any relevant information about the user, conversation, or business context.                                                                                                                                     |
+    | 8x8 Channel Id                                       | CognigyScript        | Specifies the ID of the 8x8 chat channel used for handover. Links the conversation to the correct channel.     |
+    | 8x8 Queue Id                                         | CognigyScript        | Identifies the queue in 8x8 where the conversation should be routed.                                           |
+    | 8x8 JSON Properties                                  | JSON                 | Allows sending additional custom JSON properties to 8x8 for configuration, routing, or passing extra metadata. |
+    | Only escalate once                                   | Toggle               | Ensures that a conversation is handed over only once. Prevents repeated escalations for the same issue to avoid confusion or redundant agent interactions.                                                                                                                                                                                 |
+    | Enable User Connects Message                         | Toggle               | Notifies human agents when a user reconnects to the chat. This parameter ensures agents are aware of returning users and can continue the conversation seamlessly.                                                                                                                                                                                   |
+    | Enable User Disconnects Message                      | Toggle               | Notifies human agents when a user leaves or closes the chat. This parameter helps maintain awareness of user engagement and session status.                                                                                                                                                                                                          |
+    | Maximum Queue Position                               | CognigyScript        | Sets the threshold for the maximum queue position. If this threshold is reached, the alternative text is sent. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                            |
+    | Maximum Estimated Wait Time                          | CognigyScript        | Defines the maximum estimated wait time in milliseconds. If this duration is exceeded, the alternative text is sent. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                      |
+    | Alternative Text                                     | CognigyScript        | The message sent to the user when the maximum queue position or wait time threshold is reached. This ensures users are informed and reduces frustration while waiting for an human agent.                                                                                                                                                        |
+
+    </Accordion>
+
+  </Accordion>
+
+  <Accordion title="Reconfirmation Options">
+
+    Allows for answers to be reconfirmed before continuing.
+    This is especially useful when using voice agents and reconfirming what the agent understood
+    (for example, in Number questions when the user said "_my number is three double five triple nine five six eight_").
+    The answer given to the reconfirmation question has
+    to be a yes/no style answer and follows the same rules as a Yes/No Question.
+
+    Reconfirmation Questions can contain a specific token `ANSWER`, which is replaced with a short form version of the given answer (for example, "3 EUR" in a Money question). The short form answer is taken from `input.activeQuestion.tentativeShortFormAnswer`;
+
+    Reconfirmation Questions can have a specific re-prompt set, which is output before the question if the answer to the question is not of yes/no style.
+  </Accordion>
+
+  <Accordion title="Advanced">
+
+    **Store detailed Results**
+
+    This setting, when enabled, stores a more detailed JSON object under the result property of the input. This is useful in case more information is needed.
+
+    **Skip if Answer in Input**
+
+    When enabled, this setting skips the Question if the answer is already provided in the input text.
+
+    **Additional Validation**
+
+    A [CognigyScript](/ai/platform-features/cognigyscript) condition which must return `true` in order for the answer to be considered valid. An example would be an additional validation on an Email Question of `input.slots.EMAIL[0].endsWith("cognigy.com")` which would guarantee that only cognigy.com email addresses pass the validation.
+
+    **Result Location**
+
+    The location of an answer is determined by default by the question type (for example, `input.slots.EMAIL[0]` for Email Questions). This can be overwritten using this setting (for example, `input.slots.EMAIL` would store all found email slots). If the result location doesn't return a value (= is falsy), the answer is considered invalid.
+
+    **Forget Question Threshold**
+
+    This setting determines how long a user can have been "away" from the Node after the question was initially asked. With the default setting `1` this means that the question has to be answered on the next user input. If a user input comes back to the question at a later stage, it is treated as if the question was hit for the first time and the question is asked.
+  </Accordion>
+
+  <Accordion title="Handover to Human Agent">
+
+      | Action                  | Description                                                                                             |
+      |-------------------------|---------------------------------------------------------------------------------------------------------|
+      | Handover Output Destination| Defines how messages are delivered after the handover occurs: **User and Agent**, **Agent Only**, or **User Only**. This option is available only for the Live Agent handover provider.|
+
+  </Accordion>
+
+  <Accordion title="AI-Enhanced Output">
+
+    To use AI-enhanced output rephrasing, read the [Generative AI](/ai/agents/develop/gen-ai-and-llms/generative-ai) article.
+  </Accordion>
+
+  <Accordion title="Answer Preprocessing">
+
+    You can use various functions of the [Text Cleaner](/ai/platform-features/nlu/text-cleaner) class to preprocess the answer to a question before it is evaluated. This can be helpful, for example, when requesting a name using a `text` type question or when asking for a part number using a `slot` question.
+
+    In addition to the Text Cleaner functions, users have the option to rerun NLU after the cleaning process. This approach allows for tasks such as re-detecting slots or properly filling any remaining slots.
+  </Accordion>
+</AccordionGroup>
+
+### Exclude from Transcript
+
+Excludes the Node output from the conversation transcript. The output remains visible to the end user but isn't stored in the [`transcript`](/ai/agents/develop/ai-agent-memory/input#nested-objects) object or shared with the LLM provider.
+
+You can use this parameter to:
+
+- Hide sensitive or irrelevant data, such as legal disclaimers, so the model doesn't see or repeat them.
+- Prevent the model from copying patterns (called in-context learning) you didn't want it to learn.
+
+<Accordion title="Example">
+  By default, the model model repeats the question style it learned from the AI Agent’s earlier question, even though the end user asked for an answer, not a question.
+
+  ```txt
+  AI Agent: What is your favorite color? (included in the conversation transcript)
+  End User: Blue.
+  Later:
+  End User: Tell me your favorite food.
+  AI Agent: What is your favorite food?
+  ```
+
+  By excluding the AI Agent's earlier question from the transcript, the same conversation looks like this:
+
+  ```txt
+  AI Agent: What is your favorite color? (included in the conversation transcript)
+  End User: Blue.
+  Later:
+  End User: Tell me your favorite food.
+  AI Agent: I enjoy pizza.
+  ```
+  Use this parameter to maintain confidentiality, for example, prevent sensitive data from reaching the LLM, or to display messages such as legal disclaimers or system notes that shouldn't affect the AI Agent's behavior.
+</Accordion>
+
+## Question Information in Input
+
+When a question is active, meaning that the AI Agent is waiting for the answer, information regarding the question is added to the Input object.
+
+```JSON
+"activeQuestion": {
+    "nodeId": "18b158bf-71a3-4d4f-a31f-812b1810f8af",
+    "type": "yesNo",
+    "lastExecutedAt": 2,
+    "forgetQuestionThreshold": 1,
+    "repromptCount": 1,
+    "escalationCount": 0
+}
+``` 
+
+This information can be used to trigger specific actions on escalation or to jump back to the Question Node after an escalation.
+
+<Accordion title="Slot Fillers">
+  Questions can be combined with **Slot Fillers** to create a "Missing Pattern". This mechanism keeps asking the user for the missing information in a very natural way, until all questions have been answered.
+</Accordion>
+
+---
+
+<sup id="footnote1">1</sup>: Note that not all LLM models support streaming.

@@ -1,0 +1,72 @@
+---
+title: Real-Time Translation
+hidden: false
+seo:
+  metatags:
+    description: >-
+      Real-Time Translation is a feature that allows you to translate
+      conversations in real time, eliminating the need for pre-translation, as
+      in typical localization scenarios.
+keywords:
+  - real-time translation
+  - multilingual AI
+  - machine translation
+  - localization
+  - translation providers
+  - multilingual support
+---
+
+import AiBuildTranslationAndLocalizationCompatibilityWithMachineTranslationProviders from '/snippets/ai/build/translation-and-localization/compatibility-with-machine-translation-providers.mdx'
+import AiBuildTranslationAndLocalizationConfigureAMachineTranslationProvider from '/snippets/ai/build/translation-and-localization/configure-a-machine-translation-provider.mdx'
+
+The _Real-Time Translation_ feature translates conversations in real time, eliminating the need for pre-translation, as in typical [localization](/ai/platform-features/translation-and-localization/localization) scenarios.
+
+With real-time translation, you don't need human agents for every language nor to localize your Flow beforehand. You can focus on a few key languages while still serving customers in many others.
+
+## Key Features
+
+- [Multilingual AI](#users-and-ai-agents). Your voice and chat [AI Agents](/ai/agents/quickstart) can switch languages in real time, even if you only have configured your Flow in English. With this approach, you can reach a greater audience in their native language with low effort.
+- [Real-time translation between users and human agents](#users-and-human-agents). Users and human agents can write in their languages after a [handover](/ai/escalate/handovers), but they receive messages translated into their own language.
+
+## Prerequisites
+
+- You have configured a [machine translation provider](#configure-machine-translation-providers).
+
+## Compatibility with Machine Translation Providers
+
+<AiBuildTranslationAndLocalizationCompatibilityWithMachineTranslationProviders/>
+
+## Configure Machine Translation Providers
+
+<AiBuildTranslationAndLocalizationConfigureAMachineTranslationProvider/>
+
+## How to Use Real-Time Translation
+
+You can configure the real-time translation feature in the [Real Time Translation](/ai/agents/deploy/endpoints/real-time-translation-settings) settings in the Endpoint editor. All Endpoints, including voice Endpoints, such as Voice Gateway, support real-time translation.
+
+### Users and AI Agents
+
+Real-time translation between a user and an AI Agent works for text-based and voice conversations.
+
+### Users and Human Agents
+
+Real-time translation between a user and a human agent works for text-based conversations after a user triggers a [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent) in the [Flow](/ai/agents/develop/projects-and-flows/overview). Conversations with real-time translation between the user and the human agent are recorded for compliance purposes.
+
+After the human agent takes over the conversation, the user can keep writing in their original language while the human agent receives real-time translation of the user input. The human agent can respond in their language, and the user receives real-time translation of the human agent's response. The following image shows real-time translation example, where the user is writing in German and the human agent is responding in English.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/translation-and-localization/real-time-translation.png" style={{ width: 'auto' }} />
+</Frame>
+
+## More Information
+
+- [Real-Time Translation Settings](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Automatic Translation](/ai/platform-features/translation-and-localization/auto-translation)
+- [Localization](/ai/platform-features/translation-and-localization/localization)
+
+---
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote1">1</sup> To use **Azure Cognitive Services Translator**, select Microsoft Translator in **Manage > Settings > Translation Settings**.
+</span>
+<br />

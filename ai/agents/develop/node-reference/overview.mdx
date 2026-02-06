@@ -1,0 +1,94 @@
+---
+title: Node Reference
+sidebarTitle: Overview
+hidden: false
+---
+
+This Node reference provides details about the [Nodes'](/ai/agents/develop/nodes/overview) parameters to help you configure your [Flow](/ai/agents/develop/projects-and-flows/overview).
+
+## Node Categories
+
+<CardGroup cols={3}>
+  <Card
+    title="Basic"
+    href="/ai/agents/develop/node-reference/basic/overview"
+  >
+    Use Basic Nodes for basic conversational Flows, for example, the [Say Node](/ai/agents/develop/node-reference/basic/say) and the [Question Node](/ai/agents/develop/node-reference/basic/question).
+  </Card>
+  <Card
+    title="Logic"
+    href="/ai/agents/develop/node-reference/logic/overview"
+  >
+    Use Logic Nodes to control the Flow execution, for example, the [If Node](/ai/agents/develop/node-reference/logic/if) and the [Lookup Node](/ai/agents/develop/node-reference/logic/lookup).
+  </Card>
+  <Card
+    title="Voice"
+    href="/ai/agents/develop/node-reference/voice/overview"
+  >
+    Voice Nodes are for developing voice AI Agents.
+  </Card>
+  <Card
+    title="Analytics"
+    href="/ai/agents/develop/node-reference/analytics/overview"
+  >
+    Nodes for tracking and analyzing conversation data and taking advantage of Cognigy AI's comprehensive marketing functionality.
+  </Card>
+  <Card
+    title="Service"
+    href="/ai/agents/develop/node-reference/service/overview"
+  >
+    Use Service Nodes to trigger external services, like databases and email servers. Additional services can be added through [Extensions](/ai/for-developers/extensions).
+  </Card>
+  <Card
+    title="AI"
+    href="/ai/agents/develop/node-reference/ai/overview"
+  >
+    AI Nodes are a collection of Nodes for Cognigy.AI [NLU](/ai/platform-features/nlu/overview) and [Agentic AI](/ai/agents/overview).
+  </Card>
+  <Card
+    title="Data"
+    href="/ai/agents/develop/node-reference/data/overview"
+  >
+    Data Nodes are designed to manage, manipulate, process, or store data.
+  </Card>
+  <Card
+    title="Agent Copilot"
+    href="/ai/agents/develop/node-reference/agent-copilot/overview"
+  >
+    Nodes for creating the Agent Copilot workspace.
+  </Card>
+  <Card
+    title="xApps"
+    href="/ai/agents/develop/node-reference/xApp/overview"
+  >
+    Nodes for creating xApps.
+  </Card>
+  <Card
+    title="Other"
+    href="/ai/agents/develop/node-reference/other-nodes/overview"
+  >
+    Additional specialized Nodes.
+  </Card>
+</CardGroup>
+
+If you want to create a custom Node, go to the [Extensions](/ai/for-developers/extensions) section.
+
+<Note>
+  Nodes can belong to multiple categories for easier search and navigation. In the following sections, each Node is assigned to a single category to avoid duplicated descriptions.
+</Note>
+
+## Common Sections to All Node Types
+
+### Settings
+
+All Node types include the **Settings** section, which contains the following parameters:
+
+| Parameter      | Description                                                                                                              |
+|----------------|--------------------------------------------------------------------------------------------------------------------------|
+| Label          | The name of the Node that is displayed in the Flow editor. This is useful to distinguish between Nodes of the same type. |
+| Comment        | A comment that is displayed in the Flow editor. This is useful to add additional information about the Node.             |
+| Analytics Step | An [analytic step](/ai/agents/analyze/analytics-steps) to track which paths users take in the Flow.        |
+
+### Mocking
+
+Use this section to control [Mocking](/ai/agents/test/mocking) at the Node level.

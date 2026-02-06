@@ -1,0 +1,60 @@
+---
+title: Intent Recognition with External Embedding Model
+hidden: false
+keywords:
+  - intent recognition
+  - external NLU
+  - external embedding model
+seo:
+  metatags:
+    description: >-
+      In Cognigy.AI, the Intent Recognition with External Embedding Model
+      feature allows using the `text-embedding-3-large` hosted by OpenAI and
+      Azure OpenAI, replacing the default Cognigy embedding models.
+---
+
+<a href="/release-notes/4.74"><Badge className="version-badge" color="blue">Updated in 4.74</Badge></a>
+
+
+An embedding is a sequence of numbers that represents the meaning of sentences and is used by the NLU for tasks such as Intent classification.
+
+The _Intent Recognition with External Embedding Model_ feature allows
+using the `text-embedding-3-large` hosted by OpenAI and Azure OpenAI, replacing the default Cognigy embedding models.
+
+<Note>
+  The Azure OpenAI and OpenAI models are multilingual, and the NLU will work even if the Cognigy Flow is set in a different language than the user input. We recommend creating individual Flows for each localization.
+</Note>
+
+## Key Benefits
+
+- The feature is designed for complex projects with a large number of Intents and example sentences.
+- It enables you to set up the Intent model faster because you spend less time selecting and refining example sentences.
+- There is a cost associated with using third-party models. It involves making external requests, which may incur expenses and latency.
+
+## Prerequisites
+
+- Add the [`text-embedding-3-large`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) model provided by [Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai#add-models) or [OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/openai#add-models). Note that if you use an external embedding model provider, Cognigy will send user inputs to the selected service. Ensure that your data processing policy reflects this practice.
+- Consider that using the `text-embedding-3-large` external NLU model increases [Snapshot](/ai/agents/deploy/snapshots) size, leading to longer download and upload times.
+
+## Set Up a Third-Party NLU model
+
+To set up a third-party NLU model, follow these steps:
+
+1. In the left-side menu of the Project, go to **Manage > Settings**.
+2. Go to the **NLU Settings** section.
+3. From the **Embedding Model Provider** list, select a model that you added as part of the [Prerequisites](#prerequisites).
+4. Confirm changes.
+
+## Train Flows
+
+Changing the NLU embedding model requires all Flows in the Project to be retrained. 
+Otherwise, Intent recognition will fail because the new embeddings won't match the old ones used for training.
+
+During Flow training, only enabled Intents are considered. Intents marked as disabled will be skipped.
+
+You can train a single Flow or multiple Flows by navigating to **Build > Flows**.
+
+## More Information
+
+- [LLMs](/ai/agents/develop/gen-ai-and-llms/llms)
+- [Intent Overview](/ai/platform-features/nlu/intents/overview)

@@ -1,0 +1,142 @@
+---
+title: "2025.25"
+---
+
+<Warning>
+  With this release, transformers starts using the `axios` library for handling HTTP requests internally instead of `request-promise`. For more details, read [Transformers Overview](/ai/for-developers/transformers/overview).
+</Warning>
+
+<Warning>
+  The following models have been removed from Cognigy.AI because OpenAI and Microsoft Azure OpenAI no longer support them: `gpt-3.5-turbo`, `gpt-3.5-turbo-instruct`, and `gpt-4`.
+
+  If you use these models in your Flows, replace them with available models from the [Model Support by Feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) list to ensure your AI Agents remain stable.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2025.25.1
+
+### Cognigy Live Agent
+
+**Released** December 16, 2025
+
+#### Bug Fixes
+
+- Fixed the issue with the Cognigy.AI OData endpoint where account-level filtering was not correctly applied to the `ReportingEvent` collection
+
+### Cognigy Voice Gateway
+
+**Released** December 10, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Microsoft Azure's speech services functions didn't work properly for on-premises installations by rolling back the FreeSWITCH image to `cognigy.azurecr.io/vg-freeswitch-mrf:0.9.3` 
+
+## 2025.25.0
+
+### Cognigy.AI
+
+**Released** December 9, 2025
+
+#### Features
+
+##### Data Redaction
+
+Introduced [data redaction](/ai/platform-features/data-redaction) to automatically redact any information, including Personally Identifiable Information (PII), from conversation logs and analytics.
+This feature prevents exposure or misuse of predefined data while maintaining log readability and analytics accuracy.
+
+##### New Tools for AI Agents
+
+Introduced the [Send Email and Handover to AI Agent tools](/ai/agents/develop/manage-ai-agents), enabling AI Agents to send emails directly and transfer conversations to other AI Agents within workflows
+
+##### New NiCE CXone AAH Endpoint
+
+Provided full access to the [NiCE CXone AAH Endpoint](/agent-copilot/deploy/nice-aah) for all users, enabling human agents to integrate Agent Copilot into their NiCE contact center platform
+
+#### Improvements
+
+- Enabled [Simulator availability](/ai/agents/test/simulator/overview) across all SaaS installations
+- Removed the beta flag for the [LLM Fallback](/ai/agents/develop/gen-ai-and-llms/fallback) feature
+- Added the Tenant ID field and moved the Billing Time Zone to the Change Organization Information section in the [Management UI](/ai/administer/access/management-ui#manage-organizations)
+- Removed the `gpt-3.5-turbo`, `gpt-3.5-turbo-instruct`, and `gpt-4` models
+- Replaced the `request-promise` library with Axios for HTTP requests sent from the transformers
+- Added support for custom hostnames when deploying the platform behind a CDN or firewall
+- Updated logic for generating session IDs for Endpoints. Now, each Endpoint and third‑party account combination, for example, a WhatsApp Endpoint and a WhatsApp account, gets a unique session ID with no duplicates across Endpoints and Projects
+
+#### Bug Fixes
+
+- Fixed the issue where deprecated models were displayed without the Deprecated icon
+- Fixed the issue where organization deletion didn't remove the NFS directories
+- Fixed the issue where additional attributes in Genesys Open Messaging handovers were corrupted due to invalid data types
+- Fixed the issue where the Storm handover provider wasn't working due to request verification issues
+- Fixed the issue where the LLM Prompt tool Nodes couldn't be added
+- Fixed the issue where custom models and request options for Google Gemini weren't forwarded to the provider
+- Fixed the issue where Azure OpenAI LLMs using API key connections with custom URLs failed
+- Fixed the issue where the custom attributes in Genesys prevented handovers from being created when they contained nested JSON attributes
+
+### Cognigy Voice Gateway
+
+**Released** December 9, 2025
+
+#### Improvements
+
+- Improved connection handling when multiple WebSocket connection attempts are made, reducing dropped and failed connections
+- Improved handling of DTMF signals and Barge-in scenarios, making voice interactions more responsive and accurate
+
+#### Bug Fixes
+
+- Fixed the issue with Silence Overlay and Atmosphere sounds, improving call reliability and user experience
+- Fixed the HTTP session failures, such as those occurring when starting a SIPREC session, ensuring reliable call recording and signaling
+
+### Cognigy Webchat
+
+**Released** December 9, 2025
+
+#### Improvements
+
+- Updated Demo Webchat to 3.34.0
+
+### Cognigy Live Agent
+
+**Released** December 9, 2025
+
+#### Features
+
+##### Escalation to Supervisors
+
+Introduced the [escalation to supervisors](/live-agent/settings/inboxes#escalate-conversations-to-supervisors) feature. This feature allows human agents to escalate conversations from the Live Agent interface to a designated supervisor. Supervisors can then take over the conversation, ensuring faster resolution of complex issues and better support management.
+
+##### Live Agent OData Endpoint v2.0
+
+Introduced [Live Agent OData Endpoint version 2.0](/live-agent/tools/odata-endpoint), featuring enhanced functionality and a new teams collection for managing team data.
+
+#### Bug Fixes
+
+- Fixed the issue where memories in Contact Profiles weren't in a human-readable format
+- Fixed the issue causing evaluation errors in Excel OData Power Query Editor
+
+### Cognigy Insights
+
+**Released** December 9, 2025
+
+#### Improvements
+
+- Added Markdown rendering support to the Transcript Explorer
+- Updated the session's Locale information when switching Locales in the Flow
+
+#### Bug Fixes
+
+- Fixed the issue where a red error message appeared in the Transcript Explorer when quick reply texts were empty
+- Fixed the issue where multiselect filters in the Transcript Explorer didn't work as expected
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

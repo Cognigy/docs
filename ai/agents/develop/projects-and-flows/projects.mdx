@@ -1,0 +1,89 @@
+---
+title: Projects
+hidden: false
+keywords:
+  - ' Cognigy.AI'
+  - ' Projects'
+seo:
+  metatags:
+    description: >-
+      Cognigy.AI Projects contain collections of Conversational AI resources,
+      including Flows, Lexicons, Endpoints, and other resources. You can
+      collaborate on a given Project with multiple team members.
+---
+
+<a href="/release-notes/4.92"><Badge className="version-badge" color="blue">Updated in 4.92</Badge></a>
+
+_Projects_ are collections of Conversational AI resources to build and deploy [AI Agents](/ai/agents/overview). You can design AI Agents to tackle one specific or cover a few use cases and handle multiple user intents. You can deploy AI Agents on a wide range of channels within a Project. Multiple team members can work on a Project at the same time.
+
+Projects include:
+
+- [AI Agents](/ai/agents/overview)
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Endpoints](/ai/agents/deploy/endpoints/overview)
+- [Connections](/ai/platform-features/connections)
+
+## Limitations
+
+- The maximum number of invitations to Projects per user per day. For example, if the limit is set to 5, each user can send invitations to at most 5 different Projects in a single day. Any additional invitation attempts will be blocked until the next day. If you have a dedicated SaaS or on-premises installation, you can change this limit by setting the `MAX_ADD_PROJECT_MEMBER_REQUESTS_PER_EMAIL_PER_DAY` environment variable.
+
+## Working with Projects
+
+<Tabs>
+  <Tab title="GUI">
+    To create a Project with the [Project Creation wizard](#project-creation-wizard), click the **+** button in the upper-left corner of the [Main page](/ai/overview/user-interface/main-page). On the **Main** page, you can also edit or delete a Project as well as copy a Project's Reference ID.
+  </Tab>
+  <Tab title="API">
+        You can view, create, and manage Projects using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#get-/v2.0/projects).
+  </Tab>
+  <Tab title="CLI">
+        You can access Project resources, for example, AI Agents, Flows, and Endpoints, using the [Cognigy.AI CLI](https://github.com/Cognigy/Cognigy-CLI?tab=readme-ov-file#cognigy-command-line-interface-cli).
+  </Tab>
+</Tabs>
+
+### Project Creation Wizard
+
+In the Project Creation wizard, select a Project type based on the AI Agent you want to build:
+
+<Tabs>
+  <Tab title="Agentic AI">
+        An autonomous AI Agent driven by large language models (LLMs). You can build an [Agentic AI Agent](/ai/agents/quickstart) or hire one from the [Job Market](/ai/agents/overview#job-market).
+  </Tab>
+  <Tab title="Intent-driven AI">
+        An AI Agent that uses [Intents](/ai/platform-features/nlu/intents/overview) to understand user input. You can build an [AI Agent](/ai/agents/quickstart) and integrate it with [Knowledge AI](/ai/agents/develop/knowledge-ai/overview), a RAG-based solution that provides context-aware responses.
+
+    After creating a Project, you can customize your AI Agent to be Intent-driven or Agentic according to your needs.
+
+    If you already have a Live Agent account and admin rights, you can also:
+
+    - Connect Live Agent to your Project using the **Set Up Cognigy Live Agent** option.
+    - Create an [Agent Copilot](/agent-copilot/overview) Flow by selecting the **Enable AI Copilot** option from the list.
+  </Tab>
+</Tabs>
+
+<Accordion title="Live Agent feature flag for on-premises installations">
+  For on-premises installations, the **Live Agent** section in the Project Creation wizard is visible only if you enable the `FEATURE_USE_COGNIGY_LIVE_AGENT` environment variable.
+</Accordion>
+
+## Task Panel
+
+<a href="/release-notes/4.65"><Badge className="version-badge" color="blue">Updated in 4.65</Badge></a>
+
+
+_Tasks_ are specific activities, such as training Intents, importing Snapshots, or creating a new Project. A Task is an asynchronous process that runs in the background and for which you get notifications. The Task Panel provides an overview of ongoing and completed Tasks. To open the Task Panel, click the ![task-menu](/_assets/icons/blue/task-menu.svg) button in the upper-right corner of the **Project** page. 
+
+<Accordion title="View Tasks">
+  Note that only the most recent 100 tasks are visible on the Task Panel. To view tasks beyond the latest 100, use the [Get Tasks](https://api-trial.cognigy.ai/openapi#get-/v2.0/tasks) API request as follows:
+
+  - To skip the first 100 Tasks that are already visible on the Task Panel, set the `skip` parameter to 100.
+  - To view, for example, the next 100 Tasks, set the `limit` parameter to 100.
+</Accordion>
+
+## More Information
+
+- [User Menu](/ai/administer/user-menu/overview)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Insights](/insights/overview)
+- [Analytics](/ai/agents/analyze/overview)
+- [Agentic AI Agent](/ai/agents/overview)
+- [AI Workforce](/ai/overview/ai-workforce)

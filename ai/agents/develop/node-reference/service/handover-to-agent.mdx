@@ -1,0 +1,229 @@
+---
+title: Handover to Human Agent
+keywords: ['handover to human agent', 'handover', 'escalate to human', 'contact center', 'live agent', 'human agent transfer', 'handover to agent']
+---
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="blue">Updated in 2026.3</Badge></a>
+
+<Frame>
+  <img
+    class="image-center"
+    src="/_assets/ai/develop/node-reference/services/handover-to-agent.png"
+    style={{ width: 'auto' }}
+  />
+</Frame>
+
+## Description
+
+The Handover to Human Agent Node enables AI Agents to pass on conversations to human agents in contact centers.
+This Node is useful when your AI Agent is unable to handle the complexity of the inquiry
+or when a human touch is necessary to address sensitive issues or provide personalized assistance.
+Besides adding this Node to the Flow,
+create a [handover provider](/ai/escalate/handover-reference/overview) and an [Endpoint](/ai/agents/deploy/endpoint-reference/overview)
+and set up the connection to your contact center.
+
+Alternatively, you can use a Question Node to trigger the handover process either when a [specific Intent is detected](/ai/agents/develop/node-reference/basic/question#escalation-intents) or when the [AI Agent misunderstands the user’s input](/ai/agents/develop/node-reference/basic/question#escalation-wrong-answers).
+
+### Handover Process
+
+The handover process contains the following steps:
+
+1. **Identifying Edge Cases**. When a user request is too specific for the AI Agent, it can suggest forwarding the user to a human agent without changing channels.
+2. **Integration with Agent Handover**. Once the **Handover to Human Agent** Node is triggered, it sends a handover request to the contact center configured in the [Endpoint Handover Settings](/ai/agents/deploy/endpoints/handover-settings), allowing a human agent to take over the conversation.
+3. **Flow Pausing and Resumption**. When a handover is initiated, the Flow pauses until the end user cancels the request or an agent finishes the conversation. Upon completion, the Flow resumes execution below the Handover to Human Agent Node.
+4. **Handover Status**. The handover status can be:
+
+   - **completed** — the agent finished the Handover.
+   - **cancelled** — the user canceled the request.
+   - **error** — an error occurred during the Handover.
+
+   The object that is exposed has the following structure:
+
+   ```json
+   {
+     "handover": {
+       "status": "completed"
+     }
+   }
+   ```
+
+   In case of an `error` status, the handover object is extended to contain additional information:
+
+   ```json
+   {
+     "handover": {
+       "status": "completed",
+       "error": {
+         "reason": "unsupported",
+         "message": ""
+       }
+     }
+   }
+   ```
+
+In case a channel doesn't support handover, the error reason is marked as `unsupported`. However, if there is an issue when contacting the handover provider, the error reason is marked as `error`.
+
+Use the **Handover Status** [Token](/ai/platform-features/tokens) to access handover status in Flow.
+
+<Frame>
+  <img
+    class="image-center"
+    src="/_assets/ai/develop/node-reference/services/handover-flow.png"
+    style={{ width: 'auto' }}
+  />
+</Frame>
+
+### Handover Status
+
+To configure the AI Agent's behavior based on the handover status,
+use a [Lookup](/ai/agents/develop/node-reference/logic/lookup) Node to handle different outcomes.
+Select the **Handover Status** option in the Lookup Node settings.
+
+### Handover Providers
+
+For a list of supported Handover services,
+refer to the [Handover Providers Overview](/ai/escalate/handover-reference/overview) documentation.
+
+## Parameters
+
+| Parameter                        | Type          | Description                                                                                                                                                                                                                                                                                                                                                                              |
+| -------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Handover Provider                | Selector      | Select the handover provider from the list and [configure the handover accordingly](/ai/escalate/handover-reference/overview). The **Legacy** option is selected by default, meaning the Node configuration points to the settings in **Deploy > Endpoints > Handover Settings**. To select a provider from the list, you need to either migrate your settings to the [Handover Providers](/ai/escalate/migration) interface or create this handover provider from scratch. |
+| Handover Accepted Message        | CognigyScript | The message to be outputted when the handover is requested.                                                                                                                                                                                                                                                                                                                              |
+| Repeat Handover Accepted Message | Toggle        | Enable to repeatedly output the Handover Accepted Message if the user sends a message while waiting in the queue for an agent.                                                                                                                                                                                                                                                           |
+
+<AccordionGroup>
+  <Accordion title="Cancel Handover Options">
+
+    | Parameter          | Type          | Description                                                                       |
+    |--------------------|---------------|-----------------------------------------------------------------------------------|
+    | Cancel Intent      | CognigyScript | The Intent the user has to trigger to cancel the Handover request.                |
+    | Cancel Button Text | CognigyScript | The text for a quick reply button that cancels the Handover request when clicked. |
+
+  </Accordion>
+
+  <Accordion title="On Resolve Options">
+
+    | Parameter                           | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+    |-------------------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Flow Continuation                   | List   | <ul><li>**Below this Node** – the user is taken to the Node below the Handover Node once the agent resolves the conversation. In this case, the user would continue in a different flow, but the starting point would be the Node below the Handover Node.</li><li>**At current AgentInject Entrypoint** – the user continues the chat at the current agent inject entrypoint. This option allows the agent to guide the user to a specific part of the chat and then give control back to the user.</li></ul> |
+    | Send resolve event to Virtual Agent | Toggle | Sending an event when the AI Agent resolves a conversation.                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+
+  </Accordion>
+
+  <Accordion title="Live Agent Settings">
+
+    | Parameter                       | Description                                                                                                                                                                                                                                                                                                                                                            |
+    |---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Live Agent Inbox Id             | Enter the Inbox ID that you obtained in the [previous step](/ai/escalate/handover-reference/live-agent).                                                                                                                                                                                                                                                       |
+    | Skills                          | Enter a list of skills that should be used to filter the available agents. For example, `technical support, billing`.                                                                                                                                                                                                                                                  |
+    | Languages                       | Enter a list of languages that should be used to filter the available agents. For example, `english, spanish`.                                                                                                                                                                                                                                                         |
+    | Priority                        | Select a priority for the conversation from the list. For example, `Urgent`.                                                                                                                                                                                                                                                                                           |
+    | Get Queue Position              | Enable the system to retrieve the end user's current queue position. This parameter is inactive by default.                                                                                                                                                                                                                                                            |
+    | Update Interval                 | Specify the interval, in seconds, for how often to receive updates on the queue status. This parameter appears if **Get Queue Position** is selected.                                                                                                                                                                                                                  |
+    | Get Estimated Wait Time         | Enable the retrieval of the estimated wait time for the end user. This parameter is inactive by default.                                                                                                                                                                                                                                                               |
+    | Wait Time Update Interval       | Set the interval, in seconds, for how often to receive updates on estimated wait time. This parameter appears if **Get Estimated Wait Time** is selected.                                                                                                                                                                                                              |
+    | Alternative Update              | The alternative update options when certain conditions are met. This parameter is inactive by default.                                                                                                                                                                                                                                                                 |
+    | Maximum Queue Position          | Set the threshold for the maximum queue position. If this threshold is reached, the alternative text is sent. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                            |
+    | Maximum Estimated Wait Time     | Define the maximum estimated wait time in milliseconds. If this duration is exceeded, the alternative text is sent. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                      |
+    | Alternative Text                | The message to be sent when either the maximum queue position or maximum wait time is reached. This parameter appears if **Alternative Update** is selected.                                                                                                                                                                                                           |
+    | Enable User Connects Message    | Notify human agents when an end user reconnects to the chat. The parameter is enabled by default. When the parameter is enabled, the message `User joined the conversation` appears in the chat as soon as the end user returns to the chat tab by clicking the **←** (back arrow) at the top bar in the browser, after having opened a new URL on the same tab as the chat. |
+    | Enable User Disconnects Message | Notify human agents when an end user disconnects from the chat. The parameter is enabled by default. When the parameter is enabled, the message `User left the conversation` is sent as soon as the end user closes the tab with the chat or switches to a new URL address within the current tab.                                                                           |
+
+    For more information, read the [Live Agent Handover Setup](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-flow) and [Real-Time Queue Notifications](/live-agent/conversation/conversation-queue/real-time-queue-notifications) documentation.
+
+  </Accordion>
+
+  <Accordion title="Salesforce Settings">
+
+    | Parameter           | Description                                                                                                                                                                                                                                                                                                                                                   |
+    |---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Live Agent Base URL | The Base URL should be retrieved from the Salesforce installation. On the **Home** page, navigate to **Feature Settings > Service > Chat > Chat Settings**. On the **Chat Settings** page, go to the **API Information > Chat API Endpoint**. Copy the Endpoint value without the `/chat/rest` part. Example: `https://x.xxx-xx-xxx.salesforceliveagent.com`. |
+    | API Version         | The API version value is `52`.                                                                                                                                                                                                                                                                                                                                |
+    | Organization ID     | The ID of your organization in Salesforce.                                                                                                                                                                                                                                                                                                                    |
+    | Deployment ID       | The ID of your deployment in Salesforce.                                                                                                                                                                                                                                                                                                                      |
+    | Button ID           | The ID of your button for the related deployment in Salesforce. For more information, see [Salesforce Handover](/ai/escalate/handover-reference/salesforce).                                                                                                                                                                       |
+
+    For more information, read the [Salesforce Handover](/ai/escalate/handover-reference/salesforce) documentation.
+
+  </Accordion>
+
+  <Accordion title="Salesforce MIAW Settings">
+
+    | Setting                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+    |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Send Transcript as first message       | Allow Salesforce to receive the conversation transcript as the first message. If the transcript exceeds 3000 characters, it is split into multiple messages. This setting is turned off by default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+    | Conversation Routing Attributes        | Pass custom data from the chat to Salesforce using key-value pairs. The keys are variables you define in the Omni-Channel flow in Salesforce, and the values are the data you want to send for each conversation. To set this up, follow the [Map Pre-Chat Values in Omni-Channel Flow](https://help.salesforce.com/s/articleView?id=service.miaw_map_messaging_2.htm) guide. Enter the data in JSON format. Example: <br/>`{"customerName": "John Doe","issueType": "Billing"}`. Here, `customerName` and `issueType` are Salesforce variables, and `John Doe` and `Billing` are the corresponding values sent from the chat. This parameter allows Salesforce flows to automatically use information collected in the chat to route conversations, pre-fill forms, or trigger specific actions.|
+    | Identity Token for Authenticated Users | Specify an access token generated via the [Salesforce API](https://developer.salesforce.com/docs/service/messaging-api/references/miaw-api-reference?meta=generateAccessTokenForAuthenticatedUser) to enable secure interactions for authenticated users with Salesforce MIAW. Before using this token, [set up user verification](https://help.salesforce.com/s/articleView?id=sf.user_verification_setup.htm) on the Salesforce side. This setting is off by default; unauthenticated users can still interact.                                                                                                                                                                                                                                                                                |
+    | Enable User Connects Message           | Notify human agents when an end user reconnects to the chat. The parameter is enabled by default. When the parameter is enabled, the message `User joined the conversation` appears in the chat as soon as the end user returns to the chat tab by clicking the **←** (back arrow) at the top bar in the browser, after having opened a new URL on the same tab as the chat.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+    | Enable User Disconnects Message        | Notify human agents when an end user disconnects from the chat. The parameter is enabled by default. When the parameter is enabled, the message `User left the conversation` is sent as soon as the end user closes the tab with the chat or switches to a new URL address within the current tab.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+    | End Handover on Participant Change     | Allow the handover to end automatically when a human agent is removed from a Salesforce MIAW conversation. The parameter is turned off by default. Instead of waiting for the conversation close event, which [Salesforce may not always send](https://help.salesforce.com/s/articleView?id=000397177&type=1), this setting relies on the participant change event to trigger the end of the handover.                                                                                                                                                                                                                                                                                                                                                                                           |
+
+    For more information, read the [Salesforce Handover](/ai/escalate/handover-reference/salesforce-miaw) documentation.
+
+  </Accordion>
+
+  <Accordion title="Genesys Settings">
+
+    | Parameter                       | Description                                                                                                                                                                                                                                                                                                                                                            |
+    |---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Language                        | Specify a language for the conversation. For example, `english`, `spanish`, `german`.                                                                                                                                                                                                                                                                                  |
+    | Skills                          | Define skills for the conversation. For example, `escalation`.                                                                                                                                                                                                                                                                                                         |
+    | Priority                        | Set the priority for the conversation. For example, `1`. <br/> If a priority is set, it triggers a flow in Genesys to prioritize or de-prioritize the conversation within the queue. <br/> Note that this functionality requires the appropriate flow to be set up in Genesys.                                                                                           |
+    | Enable User Connects Message    | Notify human agents when an end user reconnects to the chat. The parameter is enabled by default. When the parameter is enabled, the message `User joined the conversation` appears in the chat as soon as the end user returns to the chat tab by clicking the **←** (back arrow) at the top bar in the browser, after having opened a new URL on the same tab as the chat. |
+    | Enable User Disconnects Message | Notify human agents when an end user disconnects from the chat. The parameter is enabled by default. When the parameter is enabled, the message `User left the conversation` is sent as soon as the end user closes the tab with the chat or switches to a new URL address within the current tab.                                                                           |
+    | Custom Attributes               | Add custom attributes in JSON format, which allows you to include additional information. For more information, refer to [Genesys Cloud Open Messaging](ai/escalate/handover-reference/genesys-cloud-open-messaging).                                                                                                                                                                                                                                                                |
+
+    Example for the **Custom Attributes** parameter:
+
+    ```json
+    {
+      "section": "section A",
+      "region": "Europe"
+    }
+    ```
+    For more information,
+    read
+    the [Genesys Cloud Guest Chat](/ai/escalate/handover-reference/genesys-cloud-guest-chat#prerequisites) and [Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging) documentation.
+
+  </Accordion>
+
+  <Accordion title="8x8 Settings">
+
+    | Parameter           | Description                                                                                                                                                                                                                                                                    |
+    |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | 8x8 Channel Id      | Specify the channel ID that you created during the 8x8 configuration. <br/> You can find this ID in the 8x8 admin console. Navigate to **Channels > Chat API**. In the channel list, find the channel that you created. Copy the **ID** from the channel row.                   |
+    | 8x8 Queue Id        | Specify the header value required for authenticating API calls to the 8x8 system. <br/> You can find this ID in the 8x8 admin console. Navigate to **Channels > Chat API**. In the channel list, find the channel that you created. Copy the **Queue ID** from the channel row. |
+    | 8x8 JSON properties | Extend 8x8 properties with custom JSON.                                                                                                                                                                                                                                        |
+
+    For more information, read the [8x8 Handover Setup](/ai/escalate/handover-reference/8x8) documentation.
+
+  </Accordion>
+
+  <Accordion title="RingCentral Engage Settings">
+
+    | Parameter                       | Type                                                                                                                                                                                                                                                                                                                                                                   | Description |
+    |---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
+    | Additional Category Ids         | IDs to be passed to the RingCentral Engage handover provider.                                                                                                                                                                                                                                                                                                         |             |
+    | Enable User Connects Message    | Notify human agents when an end user reconnects to the chat. The parameter is enabled by default. When the parameter is enabled, the message `User joined the conversation` appears in the chat as soon as the end user returns to the chat tab by clicking the **←** (back arrow) at the top bar in the browser, after having opened a new URL on the same tab as the chat. |
+    | Enable User Disconnects Message | Notify human agents when an end user disconnects from the chat. The parameter is enabled by default. When the parameter is enabled, the message `User left the conversation` is sent as soon as the end user closes the tab with the chat or switches to a new URL address within the current tab.                                                                           |
+
+    For more information, read the [RingCentral Engage Integration](/ai/escalate/handover-reference/ring-central-engage) documentation.
+
+  </Accordion>
+
+  <Accordion title="Event Settings">
+
+    | Parameter         | Type   | Description                                             |
+    |-------------------|--------|---------------------------------------------------------|
+    | Send Queue Event  | Toggle | Sends an event to the Flow once the Handover is queued. |
+    | Send Active Event | Toggle | Sends an event to the Flow once the Handover is active. |
+
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Handover Providers](/ai/escalate/handover-reference/overview)
+- [Check Agent Availability Node](/ai/agents/develop/node-reference/service/check-agent-availability)
+- [User Inactivity Detection and Handling](/ai/escalate/handover-features/user-inactivity-detection)

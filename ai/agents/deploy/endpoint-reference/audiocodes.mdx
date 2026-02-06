@@ -1,0 +1,79 @@
+---
+title: AudioCodes
+hidden: false
+keywords:
+  - ' audiocodes'
+  - ' audiocodes endpoint'
+seo:
+  metatags:
+    description: >-
+      The AudioCodes Endpoint enables to connect your AI Agent to your contact
+      center or other phone numbers using the AudioCodes platform. This Endpoint
+      allows your customers to speak with your AI Agents instead of using a
+      chat.
+---
+import AiAcEndpointDeprecation from '/snippets/ai/ac-endpoint-deprecation.mdx'
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/deploy/endpoint-reference/audiocodes.png" />
+</Frame>
+
+<AiAcEndpointDeprecation/>
+
+The AudioCodes Endpoint enables to connect your AI Agent to your contact center or other phone numbers using the [AudioCodes](https://www.audiocodes.com/) platform. This Endpoint allows your customers to speak with your AI Agents instead of using a chat.
+
+## Prerequisites
+
+- A Flow configured with [AudioCodes](/ai/agents/develop/node-reference/voice/audiocodes/overview) or [Voice Generic](/ai/agents/develop/node-reference/voice/generic/overview) Nodes.
+- To link the AudioCodes Endpoint to a phone number, contact your Cognigy representative to provision and configure a Voice Gateway instance.
+- The Cognigy AudioCodes Endpoint is 100% compatible with [AudioCodes VoiceAI Connect](https://voiceaiconnect.audiocodes.com), where you can sign up for free and get a phone number within minutes.
+
+## Generic Endpoint Settings
+
+Learn about the generic Endpoint settings on the following pages:
+
+- [Endpoints Overview](/ai/agents/deploy/endpoints/overview)
+- [NLU Connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Real-Time Translation Settings](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Transformer Functions](/ai/for-developers/transformers/overview)
+
+## Specific Endpoint Settings
+
+<Accordion title="Voice Gateway Settings">
+  | **Parameter** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                   |
+  |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | Async Mode    | When async mode is enabled for the AudioCodes Endpoint, outputs are sent directly as they are processed in a Flow. This mode is useful when the Flow needs to send an HTTP request. <br/><br/>When async mode is off, outputs are sent only after the entire Flow has finished processing the input.<br/><br/>The [Inject and Notify](/ai/agents/deploy/endpoints/inject-and-notify) feature only works when async mode is enabled. |
+</Accordion>
+## How to Set Up
+
+### Configuration on the Cognigy.AI Side
+
+<Accordion title="Create an AudioCodes Endpoint">
+  1. In the left-side menu of the Cognigy.AI Project, go to **Deploy > Endpoints**.
+  2. On the **Endpoints** page, click **+ New Endpoint**.
+  3. In the **New Endpoint** section, do the following:
+      1. Select the **AudioCodes** Endpoint type.
+      2. Add a unique name.
+      3. Select a relevant Flow from the list.
+  4. _(Optional)_ Activate the **Async Mode** setting.
+</Accordion>
+## Additional Information
+
+<Accordion title="Call Metadata">
+  AudioCodes identifies information about the caller and adds it to the [Input](/ai/agents/develop/ai-agent-memory/input) object as `input.data.numberMetaData`.
+
+  | Parameter            | Type    | Description                                                                                                                                                                                    | Example              |
+  |----------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|
+  | `number`             | string  | The complete phone number of the caller, including the country code.                                                                                                                           | `+4921154591991`     |
+  | `country`            | string  | The 2-letter ISO country code.                                                                                                                                                                 | `DE`                 |
+  | `countryCallingCode` | string  | The country calling code (without the `+` sign).                                                                                                                                               | `49`                 |
+  | `nationalNumber`     | string  | The national number, excluding the country code and leading zero.                                                                                                                              | `21154591991`        |
+  | `valid`              | boolean | Indicates whether the phone number is valid.                                                                                                                                                   | `true`               |
+  | `type`               | string  | The type of phone number. Possible values: `PREMIUM_RATE`, `TOLL_FREE`, `SHARED_COST`, `VOIP`, `PERSONAL_NUMBER`, `PAGER`, `UAN`, `VOICEMAIL`, `FIXED_LINE_OR_MOBILE`, `FIXED_LINE`, `MOBILE`. | `FIXED_LINE`         |
+  | `uri`                | string  | The URI representation of the phone number.                                                                                                                                                    | `tel:+4921154591991` |
+</Accordion>
+## More Information
+
+- [All Endpoints](/ai/agents/deploy/endpoint-reference/overview)
+- [Migration to Voice Gateway](/voice-gateway/migrate-from-ac-to-vg)
