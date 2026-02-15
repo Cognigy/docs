@@ -1,0 +1,797 @@
+---
+title: Live Agent OData Analytics Endpoint
+sidebarTitle: OData
+---
+
+<a href="/release-notes/2025.25"><Badge className="version-badge" color="blue">Updated in 2025.25</Badge></a>
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+Live Agent exposes an OData 4 analytics endpoint to retrieve analytics records. [OData](https://www.odata.org/), the best way to REST, is a powerful API framework. The OData endpoints allows you to retrieve the most relevant data models from Live Agent by using GET requests. It covers all your enterprise analytics needs to make fine-grained queries in your spreadsheets or build rich dashboards for your bots with your favorite data visualization tool.
+
+The Live Agent OData endpoint supports only `GET` requests and doesn't support any other request types, such as `PATCH`, `DELETE`, or `POST`.
+
+<blockquote class="callout callout_info" theme="📘">
+    <span class="callout-icon">▶️</span>
+    <div class="callout-heading">
+      <div class="callout-text">
+         <a href="https://support.cognigy.com/hc/en-us/articles/360019467199-Cognigy-Sessions-Analytics-OData" target="_blank" >Technical video "Analytics &amp; OData"</a>
+      </div>
+      <div class="callout-subtext">
+      Watch this Episode of Cognigy Sessions for a technical deep dive
+      </div>
+   </div>
+</blockquote>
+
+## Supported Versions
+
+| OData endpoint version | Live Agent version  | Status    | New in Version                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---------------------- | ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2.0                    | 2025.25.0 and later | Supported | The Team and AgentAvailabilityRecord collections were added. A new field, `priority`, was added to the Conversation model, and the changes introduced in 1.1 were rolled back.                                                                                                                                                                                                                                                                                                                                   |
+| 1.1                    | 2025.18.0 or later  | Supported | Rollback to pre-1.0 fields: - **Restored fields**: Conversation (`identifier`, `contact_last_seen_at`), Inbox (`greeting_enabled`, `greeting_message`, `email_address`), Message (`status`, `source_id`), User (`encrypted_password`, `reset_password_token`, `reset_password_sent_at`, `remember_created_at`, `current_sign_in_ip`, `last_sign_in_ip`, `confirmation_token`) - **No longer supported**: Conversation (`assigned_at`, `ended_at`), Label (`conversation_ids`), User (`last_sign_out_at`)       |
+| 1.0                    | 1.0.0 and later     | Supported | Initial release.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+## Usage and Authentication
+
+<div class="divider"></div>
+
+To connect to the OData endpoint, get a Live Agent Access Token:
+
+1. In the left-side menu of the Live Agent interface, go to **Profile Settings**.
+2. In the **Access Token** section, copy the existing token.
+3. Paste this token into your OData request.
+
+An OData URL is composed of the service root, API version, service path, data collection, and Live Agent access token parameter as follows:
+
+```txt
+GET /<api-version>/odata/<OData data model>?<odata query> HTTP/1.1
+Host: <odata domain>
+Authorization: Bearer <Live Agent access token>
+```
+
+The authentication can also be done using a query param such as follows:
+
+```
+/<api-version>/odata/<OData data model>?<odata query>&$top=1&$skip=0&apikey=<Live Agent access token>
+```
+
+<AccordionGroup>
+  <Accordion title="OData Domain Name">
+    The OData endpoint is available on a different domain from your Cognigy User Interface domain. For example, [https://odata-liveagent-trial.cognigy.ai/v1.0/odata](https://odata-dev-live-agent.cognigy.ai/v1.0/odata).
+
+    For example, on our trial server, the OData endpoint URL for the Analytics Inputs Collection is `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Message?`. For on-premises installations, replace the `odata-trial.cognigy.ai` domain name with the domain name configured for your local installation.
+
+  </Accordion>
+
+  <Accordion title="Excel/Power BI">
+    When using Power BI or Excel, you might be asked to authenticate. Simply choose `anonymous authentication` and pass the Live Agent access token as a query parameter `&apikey=<Live Agent access-token>`
+  </Accordion>
+</AccordionGroup>
+
+## Endpoint Versions
+
+<div class="divider"></div>
+
+<Tabs>
+  <Tab title="Version 2.0">
+      This endpoint version is available in Live Agent 2025.25.0 and later. In this version, the following OData collections are available:
+
+      - [Message](#message) (`/Message`)
+      - [Conversation](#conversation) (`/Conversation`)
+      - [Inbox](#inbox) (`/Inbox`)
+      - [Reporting Event](#reporting-event) (`/ReportingEvent`)
+      - [Label](#label) (`/Label`)
+      - [User](#user) (`/User`)
+      - [Team](#team) (`/Team`)
+      - [Agent Availability Record](#agentavailabilityrecord) (`/AgentAvailabilityRecord`)
+
+      To see all the available OData models, use the following Endpoint:
+      `https://<hostname>/v1.1/odata/`
+
+      The URL for accessing the OData endpoint 1.1 is the following:
+      `https://<hostname>/v1.1/odata/<collection>`
+  </Tab>
+  <Tab title="Version 1.1">
+    This endpoint version is available in Live Agent 2025.18.0 or later. In this version, the following OData collections are available:
+
+    - [Message](#message) (`/Message`)
+    - [Conversation](#conversation) (`/Conversation`)
+    - [Inbox](#inbox) (`/Inbox`)
+    - [Reporting Event](#reporting-event) (`/ReportingEvent`)
+    - [Label](#label) (`/Label`)
+    - [User](#user) (`/User`)
+
+    To see all the available OData models, use the following Endpoint:
+    `https://<hostname>/v1.1/odata/`
+
+    The URL for accessing the OData endpoint 1.1 is the following:
+    `https://<hostname>/v1.1/odata/<collection>`
+  </Tab>
+  <Tab title="Version 1.0">
+    This endpoint version is available in Live Agent 1.0.0 and later. In this version, the following OData collections are available:
+
+    - [Message](#message) (`/Message`)
+    - [Conversation](#conversation) (`/Conversation`)
+    - [Inbox](#inbox) (`/Inbox`)
+    - [Reporting Event](#reporting-event) (`/ReportingEvent`)
+    - [Label](#label) (`/Label`)
+    - [User](#user) (`/User`)
+
+    To see all the available OData models, use the following Endpoint:
+    `https://<hostname>/v1.0/odata/`
+
+    The URL for accessing the OData endpoint 1.0 is the following:
+    `https://<hostname>/v1.0/odata/<collection>`
+  </Tab>
+</Tabs>
+
+## Querying
+
+<div class="divider"></div>
+
+The Endpoint supports the following OData Query Language operators:
+
+- `$skip`<sup>[1](#footnote1)</sup>
+- `$top`<sup>[1](#footnote1)</sup>
+- `$filter`
+- `$select`
+- `$orderby`
+- `$expand`
+
+### Example Queries
+
+<Tabs>
+<Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Conversation(1)?$select=inbox_id,account_id&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns inbox_id and account_id for the Conversation with id=1.
+
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Conversation?$select=id,account_id&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns' ID and account_id for all Conversations.
+
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Conversation?$select=id,account_id&$top=1&$skip=0&$filter=created_at le '2021-11-23T00:00:00'&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns' ID and account_id for all the Conversations filtered by the created_at column being lower or equal to '2021-11-23T00:00:00'
+  </Tab>
+  <Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Conversation(1)?$select=inbox_id,account_id&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns inbox_id and account_id for the Conversation with id=1.
+
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Conversation?$select=id,account_id&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns' ID and account_id for all Conversations.
+
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Conversation?$select=id,account_id&$top=1&$skip=0&$filter=created_at le '2021-11-23T00:00:00'&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns' ID and account_id for all the Conversations filtered by the created_at column being lower or equal to '2021-11-23T00:00:00'
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Conversation(1)?$select=inbox_id,account_id&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns inbox_id and account_id for the Conversation with id=1.
+
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Conversation?$select=id,account_id&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns' ID and account_id for all Conversations.
+
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Conversation?$select=id,account_id&$top=1&$skip=0&$filter=created_at le '2021-11-23T00:00:00'&$top=1&$skip=0&apikey=<access-token>`
+    Return the columns' ID and account_id for all the Conversations filtered by the created_at column being lower or equal to '2021-11-23T00:00:00'
+  </Tab>
+</Tabs>
+
+## Reference Documentation
+
+For complete reference documentation, refer to the [extensive collection of resources at OData.org](https://www.odata.org/) and the [Oasis OData URL Convention Documentation](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html).
+
+## Data Protection & Analytics
+
+<div class="divider"></div>
+
+Only users with an admin role in Live Agent will be able to query OData Models.
+
+## Live Agent OData Collections
+
+<div class="divider"></div>
+
+This section details the data types that exist within the OData Collections that can be retrieved from the OData endpoint. The following Collections are available:
+
+- [Message](#message)
+- [Conversation](#conversation)
+- [User](#user)
+- [Reporting Event](#reporting-event)
+- [Label](#label)
+- [Inbox](#inbox)
+- [Team](#team)
+- [Agent Availability Record](#AgentAvailabilityRecord)
+
+### Message
+
+**Description:**
+
+<Tabs>
+  <Tab title="Version 2.0">
+      `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Message?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Message?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Message?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+<Tabs>
+  <Tab title="Version 2.0">
+   | Field Name            | Description                                                                                     | Type    | Example                                                                                      |
+   |-----------------------|-------------------------------------------------------------------------------------------------|---------|----------------------------------------------------------------------------------------------|
+   | `id`                  | The unique message ID                                                                           | Number  | `9411`                                                                                         |
+   | `content`             | The text content of the message                                                                 | String  | `"hi"`                                                                                         |
+   | `account_id`          | The ID of the account where the conversation belongs                                            | Number  | `2`                                                                                           |
+   | `inbox_id`            | The ID of the inbox where the conversation belongs                                              | Number  | `427`                                                                                          |
+   | `conversation_id`     | The ID of the conversation to which this message belongs                                        | Number  | `1424`                                                                                         |
+   | `message_type`        | The type of message: `{ incoming: 0, outgoing: 1, activity: 2, template: 3 }`                   | Number  | `0`                                                                                            |
+   | `created_at`          | The timestamp when the message was created                                                      | Date    | `"2023-01-20T13:01:24.141Z"`                                                                  |
+   | `updated_at`          | The timestamp when the message was last updated                                                 | Date    | `"2023-01-20T13:01:24.141Z"`                                                                  |
+   | `private`             | Indicates if the message is private (visible only to agents)                                    | Boolean | `false`                                                                                        |
+   | `content_type`        | The content type: `text: 0`, `input_text: 1`, `input_textarea: 2`, `input_email: 3`             | Number  | `0`                                                                                            |
+   | `content_attributes`  | JSON object with additional content details, for example, items, external timestamps            | JSON    | ``{"items":[{"text":"hi","data":null}],"external_created_at":1674219684}``                     |
+   | `sender_type`         | The type of sender: `"Contact"`, `"Agent"`, or `"cognigy"`                                      | String  | `"Contact"`                                                                                    |
+   | `sender_id`           | The unique ID of the sender                                                                     | String  | `"1045"`                                                                                        |
+  </Tab>
+  <Tab title="Version 1.1">
+    | Field Name            | Description                                                                                                                                                                                                          | Type    | Example                                   |
+    |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-------------------------------------------|
+    | `id`                  | Unique message ID                                                                                                                                                                                                    | Number  | 1                                         |
+    | `content`             | The message sent                                                                                                                                                                                                     | String  | `Welcome to Live Agent`                   |
+    | `account_id`          | Account ID                                                                                                                                                                                                           | Number  | 1                                         |
+    | `inbox_id`            | Inbox ID                                                                                                                                                                                                             | Number  | 1                                         |
+    | `conversation_id`     | Conversation ID                                                                                                                                                                                                      | Number  | 1                                         |
+    | `message_type`        | Type of message `{ incoming: 0, outgoing: 1, activity: 2, template: 3 }`                                                                                                                                             | Number  | 3                                         |
+    | `created_at`          | Message Creation Date                                                                                                                                                                                                | Date    | `2023-01-19T13:31:18.553Z`                |
+    | `updated_at`          | Message Updated Date                                                                                                                                                                                                 | Date    | `2023-01-19T13:31:18.553Z`                |
+    | `private`             | Message Visibility                                                                                                                                                                                                   | Boolean | false                                     |
+    | `status`              | Message Status `{ sent: 0, delivered: 1, read: 2, failed: 3 }`                                                                                                                                                       | Number  | 3                                         |
+    | `source_id`           | Message source ID                                                                                                                                                                                                    | String  | default                                   |
+    | `content_type`        | `text: 0`, `input_text: 1`, `input_textarea: 2`, `input_email: 3`, `input_select: 4`, `cards: 5`, `form: 6`, `article: 7`, `incoming_email: 8`, `input_csat: 9`, `typescognigy: 2016`, `request_file_upload: 2017` | Number  | 0                                         |
+    | `content_attributes`  | JSON Attribute/Value Definitions                                                                                                                                                                                     | JSON    | `{"items":[{"title":"Acme Hardware"}]}`   |
+    | `sender_type`         | Provides information on who originated the message                                                                                                                                                                   | String  | `cognigy`                                 |
+    | `sender_id`           | Sender unique ID                                                                                                                                                                                                     | Number  | 1                                         |
+  </Tab>
+  <Tab title="Version 1.0">
+    | Field Name            | Description                                                                                                                                                                                                          | Type    | Example                                   |
+    |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-------------------------------------------|
+    | `id`                  | Unique message ID                                                                                                                                                                                                    | Number  | 1                                         |
+    | `content`             | The message sent                                                                                                                                                                                                     | String  | `Welcome to Live Agent`                   |
+    | `account_id`          | Account ID                                                                                                                                                                                                           | Number  | 1                                         |
+    | `inbox_id`            | Inbox ID                                                                                                                                                                                                             | Number  | 1                                         |
+    | `conversation_id`     | Conversation ID                                                                                                                                                                                                      | Number  | 1                                         |
+    | `message_type`        | Type of message `{ incoming: 0, outgoing: 1, activity: 2, template: 3 }`                                                                                                                                             | Number  | 3                                         |
+    | `created_at`          | Message Creation Date                                                                                                                                                                                                | Date    | `2023-01-19T13:31:18.553Z`                |
+    | `updated_at`          | Message Updated Date                                                                                                                                                                                                 | Date    | `2023-01-19T13:31:18.553Z`                |
+    | `private`             | Message Visibility                                                                                                                                                                                                   | Boolean | false                                     |
+    | `content_type`        | `text: 0`, `input_text: 1`, `input_textarea: 2`, `input_email: 3`, `input_select: 4`, `cards: 5`, `form: 6`, `article: 7`, `incoming_email: 8`, `input_csat: 9`, `typescognigy: 2016`, `request_file_upload: 2017` | Number  | 0                                         |
+    | `content_attributes`  | JSON Attribute/Value Definitions                                                                                                                                                                                     | JSON    | `{"items":[{"title":"Acme Hardware"}]}`   |
+    | `sender_type`         | Provides information on who originated the message                                                                                                                                                                   | String  | `cognigy`                                 |
+    | `sender_id`           | Sender unique ID                                                                                                                                                                                                     | Number  | 1                                         |
+  </Tab>
+</Tabs>
+
+### Conversation
+
+**Description:**
+
+A Conversation is the communication channel opened between an Agent and a client.
+
+**Example Query:**
+
+<Tabs>
+  <Tab title="Version 2.0">
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Conversation?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Conversation?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Conversation?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+<Tabs>
+  <Tab title="Version 2.0">
+  | Field Name            | Description                                                                                     | Type    | Example                                                                                      |
+  |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-------------------------------------------|
+  | `id`                       | The unique conversation ID                                                                   | Number | `74160`                                                                      |
+  | `account_id`               | The account ID where the conversation belongs                                              | Number | `2`                                                                          |
+  | `inbox_id`                 | The inbox ID where the conversation belongs                                                | Number | `34608 `                                                                     |
+  | `status`                   | The conversation status: open: 0, resolved: 1, pending: 2, snoozed: 3, abandoned: 4, deleted: 5                | Number | `2`                                                                          |
+  | `assignee_id`              | The agent ID assigned to the conversation                                                  | Number | `null`                                                                       |
+  | `created_at`               | The conversation creation date                                                              | Date   | `"2023-12-08T13:39:57.528Z"`                                               |
+  | `updated_at`               | The date when the conversation was last updated                                            | Date   | `"2023-12-08T14:58:04.695Z"`                                                |
+  | `contact_id`               | The unique client ID                                                                        | Number | `"42992"`                                                                    |
+  | `display_id`               | The display ID for the conversation                                                        | Number | `6133`                                                                       |
+  | `agent_last_seen_at`       | The last seen date of the agent                                                            | Date   | `"2023-12-19T06:51:27.875Z"`                                                |
+  | `contact_inbox_id`         | The contact inbox ID                                                                        | Number | `"117788"`                                                                   |
+  | `last_activity_at`         | The date of the last activity in the conversation                                          | Date   | `"2023-12-08T14:58:04.693Z"`                                                |
+  | `team_id`                  | The team ID the conversation belongs to                                                    | Number | `null`                                                                       |
+  | `snoozed_until`            | The end date until which the conversation is snoozed                                       | Date   | `null`                                                                       |
+  | `assignee_last_seen_at`    | The last seen date of the assigned agent                                                  | Date   | `null`                                                                       |
+  | `first_reply_created_at`   | The date when the first reply was created                                                 | Date   | `null`                                                                       |
+  | `assigned_at`              | The date when the conversation was assigned                                               | Date   | `null`                                                                       |
+  | `ended_at`                 | The date when the conversation ended                                                     | Date   | `null`                                                                       |
+  | `priority`                 | The priority of the conversation: low: 0, medium: 1, high: 2, urgent: 3, escalation: 4.                                                          | Number | `null`                                                                       |
+  | `additional_attributes`    | A JSON object containing any additional attributes                                       | JSON   | "{}"                                                                        |
+  | `uuid`                     | The unique identifier                                                                     | String | `"e41a989a-81c8-49f7-af64-9a85482c67da"`                                     |
+  | `custom_attributes`        | A JSON object containing extra add-on attributes                                         | JSON   | `{"enableAgentInject":false,"cognigy_channel_type":"admin-webchat","cognigy_agent_assist_workspace_url":"https://agent-assist-trial.cognigy.ai/?sessionId=session-a369b88c-03fb-4497-a60b-495b94313210&userId=4cc1adcf-df86-401d-86ff-4effd5e3c9b1&URLToken=1234"}` |
+  | `cognigy_session_id`       | The unique session ID                                                                     | String | `"session-a369b88c-03fb-4497-a60b-495b94313210"`                             |
+  </Tab>
+  <Tab title="Version 1.1">
+    | Field Name              | Description                                                                                             | Type   | Example                                        |
+    |-------------------------|---------------------------------------------------------------------------------------------------------|--------|------------------------------------------------|
+    | `id`                    | Unique conversation ID                                                                                  | Number | 1                                              |
+    | `account_id`            | Account ID (where the conversation belongs)                                                             | Number | 1                                              |
+    | `inbox_id`              | Inbox ID (where the conversation belongs)                                                               | Number | 1                                              |
+    | `status`                | Conversation status: `{ open: 0, resolved: 1, pending: 2, snoozed: 3 }`                                   | Number | 1                                              |
+    | `assignee_id`           | Agent ID (assigned to the conversation)                                                                 | Number | 1                                              |
+    | `created_at`            | Conversation creation date                                                                              | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `updated_at`            | Conversation updated date                                                                               | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `contact_id`            | Client unique identification                                                                            | Number | 3                                              |
+    | `display_id`            | Display ID                                                                                              | Number | 3                                              |
+    | `contact_last_seen_at`  | Contact/Client date last seen                                                                           | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `agent_last_seen_at`    | Agent date last seen                                                                                    | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `additional_attributes` | JSON containing any additional attributes                                                               | JSON   | `{}`                                             |
+    | `contact_inbox_id`      | Contact Inbox ID                                                                                        | Number | 1                                              |
+    | `uuid`                  | Unique identifier                                                                                       | String | `89f20666-e17d-427c-9283-268ba7870283`         |
+    | `identifier`            | Identifier                                                                                              | String | `89f20666-e17d-427c-9283-268ba7870283`         |
+    | `last_activity_at`      | Last activity date                                                                                      | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `team_id`               | Team ID (belonging to the conversation)                                                                 | Number | 1                                              |
+    | `snoozed_until`         | Snoozed date end                                                                                        | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `custom_attributes`     | Extra add-on attributes                                                                                 | JSON   | `{}`                                           |
+    | `assignee_last_seen_at` | Date of last time the assignee has been seen                                                            | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `cognigy_session_id`    | Unique session ID                                                                                       | String | "session-deedb62a-8062-490f-83ac-826de9ef94S3" |
+  </Tab>
+  <Tab title="Version 1.0">
+    | Field Name              | Description                                                                                             | Type   | Example                                        |
+    |-------------------------|---------------------------------------------------------------------------------------------------------|--------|------------------------------------------------|
+    | `id`                    | Unique conversation ID                                                                                  | Number | 1                                              |
+    | `account_id`            | Account ID (where the conversation belongs)                                                             | Number | 1                                              |
+    | `inbox_id`              | Inbox ID (where the conversation belongs)                                                               | Number | 1                                              |
+    | `status`                | Conversation status: `{ open: 0, resolved: 1, pending: 2, snoozed: 3 }`                                   | Number | 1                                              |
+    | `assignee_id`           | Agent ID (assigned to the conversation)                                                                 | Number | 1                                              |
+    | `created_at`            | Conversation creation date                                                                              | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `updated_at`            | Conversation updated date                                                                               | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `contact_id`            | Client unique identification                                                                            | Number | 3                                              |
+    | `display_id`            | Display ID                                                                                              | Number | 3                                              |
+    | `agent_last_seen_at`    | Agent date last seen                                                                                    | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `additional_attributes` | JSON containing any additional attributes                                                               | JSON   | `{}`                                             |
+    | `contact_inbox_id`      | Contact Inbox ID                                                                                        | Number | 1                                              |
+    | `uuid`                  | Unique identifier                                                                                       | String | "89f20666-e17d-427c-9283-268ba7870283"         |
+    | `last_activity_at`      | Last activity date                                                                                      | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `team_id`               | Team ID (belonging to the conversation)                                                                 | Number | 1                                              |
+    | `snoozed_until`         | Snoozed date end                                                                                        | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `custom_attributes`     | Extra add-on attributes                                                                                 | JSON   | `{}`                                           |
+    | `assignee_last_seen_at` | Date of last time the assignee has been seen                                                            | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `cognigy_session_id`    | Unique session ID                                                                                       | String | "session-deedb62a-8062-490f-83ac-826de9ef94S3" |
+    | `assigned_at`           | The date and time when the conversation was assigned to a human agent                                   | Date   | `2023-01-19T13:31:18.553Z`                     |
+    | `ended_at`              | The date and time when the human agent closed the conversation (marked it as `Resolved` or `Abandoned`) | Date   | `2023-01-19T13:31:18.553Z`                     |
+  </Tab>
+</Tabs>
+
+### Inbox
+
+**Description:**
+
+The Inbox is where all Conversations from a specific set of Agents will be placed.
+
+**Example Query:**
+
+<Tabs>
+  <Tab title="Version 2.0">
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Inbox?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Inbox?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Inbox?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+<Tabs>
+  <Tab title="Version 2.0">
+  | Field Name                 | Description                                                            | Type            | Example                                      |
+  | -------------------------- | ---------------------------------------------------------------------- | --------------- | -------------------------------------------- |
+  | `id`                       | Unique Inbox record ID                                                 | Number          | `3`                                          |
+  | `channel_id`               | The channel ID this Inbox is connected to                              | Number          | `3`                                          |
+  | `name`                     | Inbox name                                                             | String          | `"cucumberTest_Project_by_template-default"` |
+  | `account_id`               | Account ID that owns the Inbox                                         | Number          | `2`                                          |
+  | `created_at`               | Timestamp when the Inbox was created                                   | String          | `"2023-01-10T17:36:00.052Z"`                 |
+  | `updated_at`               | Timestamp when the Inbox was last updated                              | String          | `"2023-01-10T17:36:00.052Z"`                 |
+  | `channel_type`             | Communication channel type, e.g., API, Webchat, Facebook (Meta)        | String          | `"Channel::Api"`                             |
+  | `enable_auto_assignment`   | Whether conversations are automatically assigned to agents             | Boolean         | `true`                                       |
+  | `working_hours_enabled`    | Whether working hours scheduling is enabled                            | Boolean         | `false`                                      |
+  | `out_of_office_message`    | Custom message displayed when outside working hours                    | String          | `null`                                       |
+  | `timezone`                 | Timezone of the Inbox                                                  | String          | `"UTC"`                                      |
+  | `enable_email_collect`     | Whether email collection is enabled                                    | Boolean         | `true`                                       |
+  | `csat_survey_enabled`      | Whether CSAT survey is enabled                                         | Boolean         | `false`                                      |
+  | `cognigy_organization_id`  | Cognigy Organization ID                                                | String          | `null`                                       |
+  | `cognigy_project_id`       | Cognigy Project ID                                                     | String          | `"63bda1ff4688585c8fa2ccae"`                 |
+  | `enable_auto_reassignment` | Whether conversations can be automatically reassigned                  | Boolean         | `true`                                       |
+  | `conversations_show_all`   | Whether agents can see all conversations, even if not assigned to them | Boolean         | `true`                                       |
+  </Tab>
+  <Tab title="Version 1.1">
+    | Field Name                 | Description                                                                | Type    | Example                    |
+    |----------------------------|----------------------------------------------------------------------------|---------|----------------------------|
+    | `id`                       | Unique record ID                                                           | Number  | 1                          |
+    | `channel_id`               | Channel ID                                                                 | Number  | 1                          |
+    | `name`                     | Inbox name                                                                 | String  | `Welcome to Live Agent`    |
+    | `email_address`            | Email address                                                              | String  | `ai-agent@cognigy.com`     |
+    | `account_id`               | Account ID                                                                 | Number  | 1                          |
+    | `created_at`               | Inbox creation date                                                        | Date    | `2023-01-19T13:31:18.553Z` |
+    | `updated_at`               | Inbox updated date                                                         | Date    | `2023-01-19T13:31:18.553Z` |
+    | `channel_type`             | Communication channel, for example, API, Webchat, Facebook (Meta)          | String  | `Channel:Webchat`          |
+    | `enable_auto_assignment`   | Feature that allows the agent to auto assign conversations                 | Boolean | `true`                     |
+    | `greeting_enabled`         | Feature that allows an automatic greeting to be sent                       | Boolean | `false`                    |
+    | `greeting_message`         | Automatic greeting message                                                 | String  | `Hi there!`                |
+    | `working_hours_enabled`    | Feature that enables a working hours timetable                             | Boolean | `true`                     |
+    | `out_of_office_message`    | Feature that enables a working hours timetable                             | Boolean | `true`                     |
+    | `timezone`                 | Inbox timezone                                                             | String  | "UTC"                      |
+    | `enable_email_collect`     | Allows email collection                                                    | Boolean | `true`                     |
+    | `csat_survey_enabled`      | Allows CSAT survey                                                         | Boolean | `true`                     |
+    | `cognigy_organization_id`  | Cognigy account ID                                                         | String  | 1                          |
+    | `cognigy_project_id`       | Cognigy Project ID                                                         | String  | 1                          |
+    | `enable_auto_reassignment` | Allows conversation reassignment                                           | Boolean | `true`                     |
+    | `conversations_show_all`   | Allows to see all conversations in the Inbox, even if they don't belong to you | Boolean | `true`                     |
+  </Tab>
+  <Tab title="Version 1.0">
+    | Field Name                 | Description                                                                | Type    | Example                    |
+    |----------------------------|----------------------------------------------------------------------------|---------|----------------------------|
+    | `id`                       | Unique record ID                                                           | Number  | 1                          |
+    | `channel_id`               | Channel ID                                                                 | Number  | 1                          |
+    | `name`                     | Inbox Name                                                                 | String  | `Welcome to Live Agent`    |
+    | `account_id`               | Account ID                                                                 | Number  | 1                          |
+    | `created_at`               | Inbox creation date                                                        | Date    | `2023-01-19T13:31:18.553Z` |
+    | `updated_at`               | Inbox updated date                                                         | Date    | `2023-01-19T13:31:18.553Z` |
+    | `channel_type`             | Communication channel, for example, API, Webchat, Facebook (Meta)          | String  | `Channel:Webchat`          |
+    | `enable_auto_assignment`   | Feature that allows the agent to auto assign conversations                 | Boolean | `true`                     |
+    | `working_hours_enabled`    | Feature that enables a working hours timetable                             | Boolean | `true`                     |
+    | `out_of_office_message`    | Feature that enables a working hours timetable                             | Boolean | `true`                     |
+    | `timezone`                 | Inbox Timezone                                                             | String  | `UTC`                      |
+    | `enable_email_collect`     | Allows email collection                                                    | Boolean | `true`                     |
+    | `csat_survey_enabled`      | Allows CSAT survey                                                         | Boolean | `true`                     |
+    | `cognigy_organization_id`  | Cognigy Account ID                                                         | String  | 1                          |
+    | `cognigy_project_id`       | Cognigy Project ID                                                         | String  | 1                          |
+    | `enable_auto_reassignment` | Allows conversation reassignment                                           | Boolean | `true`                     |
+    | `conversation_show_all`    | Allows to see all conversations in Inbox, even if they don't belong to you | Boolean | `true`                     |
+  </Tab>
+</Tabs>
+
+### Label
+
+**Description:**
+
+Labels are used to mark, identify, or group different Conversations.
+
+**Example Query:**
+
+<Tabs>
+  <Tab title="Version 2.0">
+     `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Label?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/Label?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/Label?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+<Tabs>
+  <Tab title="Version 2.0">
+   | Field Name          | Description                                                                                 | Type           | Example                                             |
+   |---------------------|---------------------------------------------------------------------------------------------|-----------------|-----------------------------------------------------|
+   | `id`                | A unique label ID                                                                           | String           | `"1"`                                                 |
+   | `title`             | The label title                                                                             | String           | `"qa-60"`                                             |
+   | `description`       | The label description                                                                       | String           | `"sadc"`                                             |
+   | `color`             | The label color in HEX format                                                               | String           | `"#111113"`                                          |
+   | `show_on_sidebar`   | Indicates whether the label is shown on the sidebar                                         | Boolean          | `true`                                                |
+   | `account_id`        | The ID of the account to which the label belongs                                            | String           | `"2"`                                                 |
+   | `created_at`        | The label creation timestamp                                                                | Date             | `"2023-01-19T13:31:18.553Z"`                         |
+   | `updated_at`        | The label last updated timestamp                                                            | Date             | `"2023-09-18T12:34:19.579Z"`                         |
+   | `conversation_ids`  | A list of conversation IDs associated with this label                                       | Array of Numbers | `[77455, 78729, 79906, …]`                           |
+  </Tab>
+  <Tab title="Version 1.1">
+    | Field Name        | Description                                 | Type    | Example                     |
+    |-------------------|---------------------------------------------|---------|-----------------------------|
+    | `id`              | Unique label ID                             | Number  | 1                           |
+    | `title`           | Label title                                 | String  | `label-complain`            |
+    | `description`     | Label description                           | String  | `labels used for complains` |
+    | `color`           | Label color                                 | String  | `red`                       |
+    | `show_on_sidebar` | Allows the label to be shown on the sidebar | Boolean | `true`                      |
+    | `account_id`      | Account to which the label will belong      | Number  | 3                           |
+    | `created_at`      | Label creation date                         | Date    | `2023-01-19T13:31:18.553Z`  |
+    | `updated_at`      | Label updated date                          | Date    | `2023-01-19T13:31:18.553Z`  |
+  </Tab>
+  <Tab title="Version 1.0">
+    | Field Name         | Description                                            | Type             | Example                     |
+    |--------------------|--------------------------------------------------------|------------------|-----------------------------|
+    | `id`               | Unique label ID                                        | Number           | 1                           |
+    | `title`            | Label title                                            | String           | `label-complain`            |
+    | `description`      | Label description                                      | String           | `labels used for complains` |
+    | `color`            | Label color                                            | String           | `red`                       |
+    | `show_on_sidebar`  | Allows the label to be shown on the sidebar            | Boolean          | `true`                      |
+    | `account_id`       | Account to which the label will belong                 | Number           | 3                           |
+    | `created_at`       | Label creation date                                    | Date             | `2023-01-19T13:31:18.553Z`  |
+    | `updated_at`       | Label updated date                                     | Date             | `2023-01-19T13:31:18.553Z`  |
+    | `conversation_ids` | An array of conversation IDs associated with the label | Array of numbers | `[15628, 15964, 15965]`     |
+  </Tab>
+</Tabs>
+
+### Reporting Event
+
+**Description:**
+
+The Reporting Event model represents actions or occurrences tracked in the system for reporting and analytics purposes.
+
+**Example Query:**
+
+<Tabs>
+   <Tab title="Version 2.0">
+     `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/ReportingEvent?$top=10&$skip=0`.
+   </Tab>
+  <Tab title="Version 1.1">
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/ReportingEvent?$top=10&$skip=0`.
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/ReportingEvent?$top=10&$skip=0`.
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+| Field Name         | Description                                        | Type   | Example                                                                                                             |
+|--------------------|----------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------------|
+| `id`               | Unique Reporting Event ID                          | Number | 4                                                                                                                   |
+| `event_start_time` | Start time of the event                            | Date   | `2023-01-08T18:34:43.162Z`                                                                                          |
+| `event_end_time`   | End time of the event                              | Date   | `2023-01-08T18:34:43.162Z`                                                                                          |
+| `name`             | Name of the event                                  | String | `message_created`, `conversation_resolved`, `first_reply_created`, `assignee_changed`, `conversation_inbox_changed` |
+| `value`            | Value associated with the event, such as timestamp | Number | 1                                                                                                                   |
+| `created_at`       | The date and time when the event was created       | Date   | `2023-01-08T18:34:43.213Z`                                                                                          |
+| `updated_at`       | The date and time when the event was last updated  | Date   | `2023-01-08T18:34:43.213Z`                                                                                          |
+| `account_id`       | ID of the account associated with the event        | Number | 2                                                                                                                   |
+| `conversation_id`  | ID of the conversation associated with the event   | Number | 1                                                                                                                   |
+| `inbox_id`         | ID of the inbox associated with the event          | Number | 1                                                                                                                   |
+| `user_id`          | ID of the user associated with the event           | Number | 3                                                                                                                   |
+
+<Note>
+  To avoid potential query timeouts due to large data volumes, use the `$top` query option to limit the number of returned records.
+</Note>
+
+### User
+
+**Description:**
+
+This data model stores information about Live Agent users.
+
+**Example Query:**
+
+<Tabs>
+   <Tab title="Version 2.0">
+
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/User?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.1">
+
+    `https://odata-liveagent-trial.cognigy.ai/v1.1/odata/User?$top=1&$skip=0`
+  </Tab>
+  <Tab title="Version 1.0">
+    `https://odata-liveagent-trial.cognigy.ai/v1.0/odata/User?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+<Tabs>
+  <Tab title="Version 2.0">
+  | Field Name             | Description                                                    | Type   | Example                                                                                                         |
+  | ---------------------- | -------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+  | `id`                   | A unique record ID                                             | Number | `1`                                                                                                             |
+  | `provider`             | The provider, for example, email                               | String | `email`                                                                                                         |
+  | `uid`                  | A provided unique identifier                                   | String | `some-email@cognigy.com`                                                                                        |
+  | `confirmed_at`         | The date when the confirmation token was confirmed             | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  | `confirmation_sent_at` | The date when the confirmation token was sent                  | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  | `unconfirmed_email`    | An unconfirmed email                                           | String | `unconfirmed@cognigy.com`                                                                                       |
+  | `name`                 | The user's name                                                | String | `Francisco`                                                                                                     |
+  | `display_name`         | The user's display name                                        | String | `Paco`                                                                                                          |
+  | `email`                | The user's email                                               | String | `fran@cognigy.com`                                                                                              |
+  | `tokens`               | The user's tokens                                              | JSON   | `{"MN4iNP38tvwe5wer7pvpnAQ":{"token":"$2a$10$iA7Si0sBV9lMkO2mqvwiD.L90.uTCl27WQbEo/Kc0W","expiry":1644763988}}` |
+  | `created_at`           | The date when the user was created                             | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  | `updated_at`           | The date when the user was last updated                        | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  | `pubsub_token`         | The user's publish/subscribe token                             | String | `MiVxY3FKry6oklambiuqL72nn`                                                                                     |
+  | `availability`         | The user's availability                                        | Number | 1                                                                                                               |
+  | `custom_attributes`    | The user's custom attributes                                   | JSON   | `{}`                                                                                                            |
+  | `cognigy_user_id`      | The Cognigy user ID                                            | String | `610bEOk617uPiXy9L3HOq8nn6kdjJK2`                                                                               |
+  | `sign_in_count`        | The total number of times the user has logged in to Live Agent | Number | 3                                                                                                               |
+  | `current_sign_in_at`   | The date and time of the user's most recent login              | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  | `last_sign_in_at`      | The date and time of the user's last login                 | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  | `last_sign_out_at`     | The date and time of the user's last logout from Live Agent    | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  </Tab>
+  <Tab title="Version 1.1">
+    | Field Name               | Description                                                       | Type   | Example                                                                                                         |
+    |--------------------------|-------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------|
+    | `id`                     | Unique record ID                                                  | Number | 1                                                                                                               |
+    | `provider`               | For example, email                                                | String | `email`                                                                                                         |
+    | `uid`                    | Provided unique identifier                                        | String | `some-email@cognigy.com`                                                                                        |
+    | `encrypted_password`     | Encrypted password                                                | String | `$2a$11$L.610bE0k617uÜiXy9L3H0q8nn6kdjJK2/X4p7ghlxPC38hjovasd`                                                  |
+    | `reset_password_token`   | Token used to reset the password                                  | String | `$2a$11$L.610bE0k617uÜiXy9L3H0q8nn6kdjJK2/X4p7ghlxPC38hjsvaru`                                                  |
+    | `reset_password_send_at` | Date when a password reset was sent                               | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `remember_created_at`    | Date of remember creation                                         | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `sign_in_count`          | Number of times the user has signed in                            | Number | 3                                                                                                               |
+    | `current_sign_in_ip`     | Current sign in IP address                                        | String | `120.0.0.1`                                                                                                     |
+    | `last_sign_in_ip`        | Last sign in IP address                                           | String | `120.0.0.1`                                                                                                     |
+    | `confirmation_token`     | Confirmation token                                                | String | `$2a$11$L.610bE0k617uÜiXy9L3H0q8nn6kdjJK2/X4p7ghlxPC38hjovasd`                                                  |
+    | `confirmed_at`           | Confirmation token confirmed at date                              | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `confirmation_sent_at`   | Confirmation token sent at date                                   | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `unconfirmed_email`      | Unconfirmed email                                                 | String | `unconfirmed@cognigy.com`                                                                                       |
+    | `name`                   | User name                                                         | String | `Francisco`                                                                                                     |
+    | `display_name`           | User display name                                                 | String | `Paco`                                                                                                          |
+    | `email`                  | User email                                                        | String | `fran@cognigy.com`                                                                                              |
+    | `tokens`                 | User tokens                                                       | JSON   | `{"MN4iNP38tvwe5wer7pvpnAQ":{"token":"$2a$10$iA7Si0sBV9lMkO2mqvwiD.L90.uTCl27WQbEo/Kc0W","expiry":1644763988}}` |
+    | `created_at`             | User creation date                                                | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `updated_at`             | User updated date                                                 | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `pubsub_token`           | User publish/subscribe token                                      | String | `MiVxY3FKry6oklambiuqL72nn`                                                                                     |
+    | `availability`           | This represents the user's availability                           | Number | 1                                                                                                               |
+    | `custom_attributes`      | Custom attributes                                                 | JSON   | `{}`                                                                                                            |
+    | `cognigy_user_id`        | Cognigy user ID                                                   | string | `610bEOk617uPiXy9L3HOq8nn6kdjJK2`                                                                               |
+    | `sign_in_count`          | The total number of times the user has logged in to Live Agent    | Number | 3                                                                                                               |
+    | `current_sign_in_at`     | The date and time of the user's most recent login                 | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `last_sign_in_at`        | The date and time of the user's login previous to the current one | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  </Tab>
+  <Tab title="Version 1.0">
+    | Field Name             | Description                                                       | Type   | Example                                                                                                         |
+    |------------------------|-------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------|
+    | `id`                   | Unique record ID                                                  | Number | 1                                                                                                               |
+    | `provider`             | For example, email                                                | String | `email`                                                                                                         |
+    | `uid`                  | Provided unique identifier                                        | String | `some-email@cognigy.com`                                                                                        |
+    | `confirmed_at`         | Confirmation token confirmed at date                              | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `confirmation_sent_at` | Confirmation token sent at date                                   | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `unconfirmed_email`    | Unconfirmed email                                                 | String | `unconfirmed@cognigy.com`                                                                                       |
+    | `name`                 | User name                                                         | String | `Francisco`                                                                                                     |
+    | `display_name`         | User display name                                                 | String | `Paco`                                                                                                          |
+    | `email`                | User email                                                        | String | `fran@cognigy.com`                                                                                              |
+    | `tokens`               | User tokens                                                       | JSON   | `{"MN4iNP38tvwe5wer7pvpnAQ":{"token":"$2a$10$iA7Si0sBV9lMkO2mqvwiD.L90.uTCl27WQbEo/Kc0W","expiry":1644763988}}` |
+    | `created_at`           | User creation date                                                | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `updated_at`           | User updated date                                                 | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `pubsub_token`         | User publish/subscribe token                                      | String | `MiVxY3FKry6oklambiuqL72nn`                                                                                     |
+    | `availability`         | This represents the user's availability                           | Number | 1                                                                                                               |
+    | `custom_attributes`    | Custom attributes                                                 | JSON   | `{}`                                                                                                            |
+    | `cognigy_user_id`      | Cognigy user ID                                                   | string | `610bEOk617uPiXy9L3HOq8nn6kdjJK2`                                                                               |
+    | `sign_in_count`        | The total number of times the user has logged in to Live Agent    | Number | 3                                                                                                               |
+    | `current_sign_in_at`   | The date and time of the user's most recent login                 | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `last_sign_in_at`      | The date and time of the user's login previous to the current one | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+    | `last_sign_out_at`     | The date and time of the user's last logout from Live Agent       | Date   | `2021-12-11 12:41:26.745`                                                                                       |
+  </Tab>
+</Tabs>
+
+### Team
+
+**Description:**
+
+This data model stores information about Live Agent teams.
+
+**Example Query:**
+
+<Tabs>
+  <Tab title="Version 2.0">
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/Team?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+| Field Name                     | Description                                                        | Type            | Example                                                             |
+| ------------------------------ | ------------------------------------------------------------------ | --------------- | ------------------------------------------------------------------- |
+| `id`                           | The unique ID of the team                                          | String          | `"9"`                                                               |
+| `name`                         | The name of the team                                               | String          | `"customer support team"`                                           |
+| `description`                  | A description of the team                                          | String          | `"for urgent user requests"`                                           |
+| `allow_auto_assign`            | Whether conversations can be automatically assigned to the team    | Boolean         | `true`                                                              |
+| `account_id`                   | The account ID the team belongs to                                 | String          | `"2"`                                                               |
+| `created_at`                   | The timestamp when the team was created                            | String | `"2025-12-08 12:41:26.745`                                        |
+| `updated_at`                   | The timestamp when the team was last updated                       | String | `"2025-12-08 12:41:26.745"`                                        |
+| `members`                      | An array of user entities                                           | Array           | `[...]`                                                             |
+| `members.id`                   | The member ID (internal Live Agent ID)                             | Number          | `57`                                                                |
+| `members.provider`             | The authentication provider                                        | String          | `"cognigy"`                                                         |
+| `members.uid`                  | The user UID from the provider                                     | String          | `"63ca7c200d733defd7512584"`                                        |
+| `members.confirmed_at`         | The timestamp when the user confirmed their account                | String          | `"2025-12-08 12:41:26.745"`                                        |
+| `members.confirmation_sent_at` | The timestamp when the confirmation was sent                       | String          | `null`                                                              |
+| `members.unconfirmed_email`    | The email pending confirmation                                     | String          | `null`                                                              |
+| `members.name`                 | The full name of the user                                          | String          | `"John Doe"`                                                 |
+| `members.display_name`         | The display name used in the UI                                    | String          | `"John"`                                                           |
+| `members.email`                | The email address                                                  | String          | `"john.doe@example.com"`                                     |
+| `members.tokens`               | Authentication tokens                                              | String | `null`                                                              |
+| `members.created_at`           | The timestamp when the user was created                            | String | `"2025-12-08 12:41:26.745"`                                        |
+| `members.updated_at`           | The timestamp when the user was last updated                       | String | `"2025-12-08 12:41:26.745"`                                        |
+| `members.pubsub_token`         | The token for real-time updates                                    | String          | `"a5DXd5Q84djArRReTNfavEZk"`                                        |
+| `members.availability`         | The user availability status (0 = offline)                         | Number          | `0`                                                                 |
+| `members.custom_attributes`    | Custom attributes in JSON format                                   | String          | `"{}"`                                                              |
+| `members.cognigy_user_id`      | The user ID from Cognigy.AI                                        | String          | `"63ca7c200d733eefd7512584"`                                        |
+| `members.sign_in_count`        | The number of times the user signed in                             | Number          | `17`                                                                |
+| `members.current_sign_in_at`   | The timestamp of the current login session                         | String | `"2025-12-08 12:41:26.745"`                                        |
+| `members.last_sign_in_at`      | The timestamp of the last login                                | String | `"2025-12-08 12:41:26.745"`                                        |
+| `members.last_sign_out_at`     | The timestamp of the last logout                                   | String | `"2025-12-08 12:41:26.745"`                                        |
+
+### AgentAvailabilityRecord
+
+**Description:**
+
+This data model stores information about agent availability in Live Agent.
+
+**Example Query:**
+
+<Tabs>
+  <Tab title="Version 2.0">
+    `https://odata-liveagent-trial.cognigy.ai/v2.0/odata/AgentAvailabilityRecord?$top=1&$skip=0`
+  </Tab>
+</Tabs>
+
+**Data Types:**
+
+When retrieving this data model, the endpoint returns the following fields:
+
+| Field Name     | Description                                                            | Type            | Example                      |
+| -------------- | ---------------------------------------------------------------------- | --------------- | ---------------------------- |
+| `id`           | The unique ID of the availability record                               | String          | `"1"`                        |
+| `availability` | The agent's availability status (`0 = offline`, `1 = available)        | Number          | `0`                          |
+| `created_at`   | The timestamp when the record was created                              | ISO 8601 String | `"2025-12-03T09:22:32.760Z"` |
+| `updated_at`   | The timestamp when the record was last updated                         | ISO 8601 String | `"2025-12-03T09:22:32.760Z"` |
+| `account_id`   | The ID of the account the agent belongs to                             | String          | `"2"`                        |
+| `user_id`      | The ID of the user (agent)                                             | String          | `"8953"`                     |
+
+## Integrations
+
+<div class="divider"></div>
+
+### Excel
+
+When connecting from Microsoft Excel 2016, you must use the Power Query feature, which can be found under **Data > Get & Transform > New Query > From Other Sources > From OData Feed**. This will connect to our OData 4 feed.
+
+### Power BI
+
+Follow the [instructions in the Power BI documentation](https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata).
+
+### Tableau
+
+<Danger>
+  Cognigy.AI supports OData 4.0, which implies that certain versions of Tableau aren't compatible.
+</Danger>
+
+Find instructions on how to connect an OData Feed in the [Tableau documentation](https://help.tableau.com/current/pro/desktop/en-gb/examples_odata.htm).
+
+## OData Consumer Ecosystem
+
+For a full list of available OData Consumer options, [follow the link to Consumers on OData.org](https://www.odata.org/ecosystem/#consumers).
+
+## Client Libraries in .NET, Java, JavaScript, C++, and Other Platforms
+
+For a full list of available OData Libraries, [see the latest directory of available libraries on OData.org](https://www.odata.org/libraries/).
+
+---
+
+<sup id="footnote1">1</sup>: This parameter is required to make a request to the Live Agent OData endpoint.

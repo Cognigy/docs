@@ -1,0 +1,54 @@
+---
+title: Request Rating
+hidden: false
+---
+
+import AiNodesInsightsForRating from "/snippets/ai/nodes/insights-for-rating.mdx";
+import AiNodesRating from "/snippets/ai/nodes/rating.mdx";
+
+<Frame>
+  <img
+    class="image-center"
+    src="/_assets/ai/develop/node-reference/analytics/request-rating.png"
+    style={{ width: "auto" }}
+  />
+</Frame>
+
+## Description
+
+This Node prompts end users to give feedback or rate their conversation experience using a rating widget in a chat.
+The Node is typically placed at the end of a Flow to collect final feedback from conversations with either AI or human agents.
+
+In contrast to the [Set Rating Node](/ai/agents/develop/node-reference/analytics/set-rating), the Request Rating Node doesn't rate a conversation automatically.
+
+## Restrictions
+
+- The Webchat v2 Endpoint doesn't support all parameters in this Node. You can still use it to [implement rating for Webchat v2](#implement-rating-for-webchat-v2).
+
+## Parameters
+
+| Parameter                            | Description                                                                                                                                                                                                                                                                    |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Rating Screen Title                  | Sets the text for the screen title of the rating widget. The default text is `Conversation Rating`.                                                                                                                                                                                   |
+| Rating Title Text                    | Sets the text for the title of the rating widget. The default text is `Please rate your chat experience`. For Webchat v2, overrides the Rating Title Text parameter in the [Webchat v2 Endpoint settings](/webchat/v2/configuration#conversation-rating-settings).             |
+| Rating Comment Placeholder           | Sets the placeholder text for the comment field in the rating widget. The default text is `Type something here...`. For Webchat v2, overrides the Rating Comment Text parameter in the [Webchat v2 Endpoint settings](/webchat/v2/configuration#conversation-rating-settings). |
+| Rating Submit Button Text            | Sets the text that appears on the button users click to submit their chat ratings and feedback. The default text is `Send feedback`. Applicable only to Webchat v3.                                                                                                           |
+| Rating Submitted Event Banner Text   | Sets the text that appears in a banner after a user successfully submits their rating and feedback. The default text is `Your feedback was submitted`. Applicable only to Webchat v3.                                                                                         |
+| Rating Submitted Chat Status Message | Sets the status message that appears in the chat after a user successfully submits their rating and feedback. The default text is `Feedback submitted`. Applicable only to Webchat v3.                                                                                        |
+
+### Implement Rating for Webchat v2
+
+For Webchat v2, add this Node to your Flow and configure the rating widget directly in the [Conversation Rating Settings section](/webchat/v2/configuration#conversation-rating-settings) in the Webchat v2 Endpoint.
+
+## Track Ratings in Insights
+
+<AiNodesInsightsForRating />
+
+## Use Cases
+
+<AiNodesRating />
+
+## More information
+
+- [Set Rating](/ai/agents/develop/node-reference/analytics/set-rating)
+- [Insights](/insights/overview)

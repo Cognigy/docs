@@ -1,0 +1,123 @@
+---
+title: Cognigy Live Agent
+mode: wide
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+<div className="hero-container">
+  <div className="hero-content">
+    _Cognigy Live Agent_ is a contact center solution that is designed to work exclusively with Cognigy.AI.
+    <p>
+    Live Agent is built for human agents to handle escalated conversations from AI Agents.
+    </p>
+    <p>
+    The system automatically assigns human agents based on their expertise and availability, which helps businesses optimize efficiency, scalability, and deliver exceptional customer support.
+    </p>
+  </div>
+    <div>
+      <video
+        width="200"
+        height="200"
+        className="block dark:hidden"
+        style={{
+          margin: "0 auto",
+          borderRadius: "var(--rounded-xl, .75rem)",
+          borderBottom: "1px solid lightgray",
+          borderRight: "1px solid lightgray",
+          borderTop: "0",
+          borderLeft: "0"
+        }}
+        autoPlay
+        muted
+        loop
+      >
+        <source
+          src="https://docscognigyassets.blob.core.windows.net/assets/Cognigy_Microanimation_3_Light_V1_Optimised.mp4"
+          type="video/mp4"
+        />
+      </video>
+        <video
+        width="200"
+        height="200"
+        className="hidden dark:block"
+        style={{
+          margin: "0 auto",
+          borderRadius: "var(--rounded-xl, .75rem)",
+          borderBottom: "1px solid #313437",
+          borderRight: "1px solid #313437",
+          borderTop: "0",
+          borderLeft: "0"
+        }}
+        autoPlay
+        muted
+        loop
+          >
+            <source
+               src="https://docscognigyassets.blob.core.windows.net/assets/Cognigy_Microanimation_3_Dark_V1_Optimised.mp4"
+               type="video/mp4"
+             />
+      </video>
+    </div>
+</div>
+
+<CardGroup cols={3}>
+  <Card
+    title="About Live Agent"
+    icon="info"
+    href="/live-agent/overview"
+  >
+    Learn more about Live Agent features and set up Live Agent to your needs by creating your first inbox and adding agents to it.
+  </Card>
+  <Card
+    title="Conversations"
+    icon="mail"
+    href="/live-agent/conversation/overview"
+  >
+    Conversation is a core component of Live Agent. Explore conversation's interface and start implementing conversation routing.
+  </Card>
+  <Card
+    title="Build Processes"
+    icon="hammer"
+    href="/live-agent/settings/agents"
+  >
+    Organize your human agents' work. Create inboxes, add agents, and group them into teams.
+  </Card>
+  <Card
+    title="Assistants"
+    icon="bot"
+    href="/live-agent/assistants/overview"
+  >
+    Use virtual assistants to support your human agents, enabling them to respond to user queries more accurately and efficiently.
+  </Card>
+  <Card
+    title="Analytics Tools"
+    icon="chart-column"
+    href="/live-agent/reports/overview"
+  >
+    Use to enhance and optimize human agent performance, maximizing productivity and efficiency.
+  </Card>
+  <Card
+    title="Automation and Logs"
+    icon="workflow"
+    href="/live-agent/settings/automation-rules"
+  >
+    Automate routine tasks and track user actions in Live Agent.
+  </Card>
+  <Card
+    title="Administer"
+    icon="user-cog"
+    href="/live-agent/settings/account-settings"
+  >
+    Manage your account settings and assign roles such as Agent, Supervisor, and Administrator to different users based on their responsibilities and access level.
+  </Card>
+  <Card
+    title="User Profile and Notifications"
+    icon="bell-dot"
+    href="/live-agent/profile-settings"
+  >
+    Live Agent users can manage their profile settings and configure notifications based on their preferences.
+  </Card>
+</CardGroup>

@@ -1,0 +1,118 @@
+---
+title: "Data Redaction"
+sidebarTitle: "Data Redaction"
+keywords: ['data redaction', 'PII redaction', 'data protection', 'privacy', 'compliance']
+"seo":
+  metatags:
+    description: "The Data Redaction feature provides an easy way to detect and redact any data, including personally identifiable information (PII), to ensure compliant logging and analytics. This feature is important in the context of conversational AI due to privacy, trust, compliance, and responsible AI practices."
+---
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="purple">Updated in 2026.3 (beta)</Badge></a>
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+The _Data Redaction_ feature provides an easy way to detect and redact any data, including [personally identifiable information (PII)](https://en.wikipedia.org/wiki/Personal_data), to ensure compliant [logging](/ai/agents/test/logs) and [analytics](/ai/agents/analyze/overview). This feature is important in the context of conversational AI due to privacy, trust, compliance, and responsible AI practices.
+
+## Key Benefits
+
+- **Enhanced Data Handling**. Ensures data protection during the processing, logging, and storage of conversations containing sensitive data. Compared to data masking, which hides or selectively excludes information at the [Endpoint](/ai/agents/deploy/endpoints/data-protection-and-analytics) or Flow level ([Blind Mode Node](/ai/agents/develop/node-reference/analytics/blind-mode)), data redaction fully removes the sensitive data from all logs and analytics for stronger data protection.
+- **Easy Configuration**. Includes a set of [default data types](#default-data-types) you can select to redact, such as credit card numbers or email addresses.
+- **Customization**. Lets you add [custom data types](#custom-data-type) to redact. You can use regular expressions (regex) to define patterns for custom data types to detect.
+
+## Prerequisites
+
+- To activate the data redaction feature for on-premises installations in Cognigy.AI 2026.2 and earlier versions, you need to set the following feature flags in the `values.yaml` file:
+
+    - For all organizations:
+      ```yaml
+      FEATURE_PII_DATA_REDACTION_ROLLOUT: "100"
+      FEATURE_ENABLE_PII_DATA_REDACTION: "true"
+      ```
+    - If you want to limit data redaction to specific organizations, enter the `organisationId` values in `FEATURE_ENABLE_PII_DATA_REDACTION_WHITELIST`, for example, `FEATURE_ENABLE_PII_DATA_REDACTION_WHITELIST="organization1,organization2"`.
+
+## Restrictions
+
+- Data redaction uses regex patterns to detect and redact data, which can:
+    - Cause false positive matches.
+    - Skip patterns that don't match the [default types](#default-data-types) or a [custom data type](#custom-data-type) you define. For example, if the user enters a phone number with `/` or misspells a company name set to be redacted in a custom data type.
+- Custom data types support only Google's [RE2 syntax](https://github.com/google/re2) library for regex patterns.
+- Depending on the Cognigy.AI version you use, data redaction works differently with [Slots](/ai/platform-features/nlu/slots/overview):
+
+    <AccordionGroup>
+      <Accordion title="Cognigy.AI 2026.3 and later versions">
+          Data redaction works for patterns detected by Slots only if the Slot matches the entire data redaction pattern. If a Slot matches only part of the pattern, the data isn't redacted as expected.
+
+          For example, if a credit card number is split across multiple Slots, such as [a number Slot and a date Slot](/ai/platform-features/nlu/slots/system-defined#list-of-system-defined-slots), the credit card number isn't fully redacted.
+          Make sure you use Slots that match the exact data redaction pattern, or deactivate the Slots that cause the pattern to split either at the [Flow](/ai/agents/develop/projects-and-flows/overview#system-slots) or the [Project](/ai/administer/access/project-settings#nlu-settings) level.
+
+          If you use [Regex Slots](/ai/platform-features/nlu/slots/user-defined/regex), you need to remove the [Slot Filler](/ai/platform-features/nlu/slot-fillers) that contains the Regex Slot.
+      </Accordion>
+      <Accordion title="Cognigy.AI 2026.2 and earlier versions">
+          Data redaction doesn't work for patterns detected by Slots. To redact such data, deactivate Slots at the [Flow](/ai/agents/develop/projects-and-flows/overview#system-slots) or the [Project](/ai/administer/access/project-settings#nlu-settings) level.
+
+          If you use [Regex Slots](/ai/platform-features/nlu/slots/user-defined/regex), you need to remove the [Slot Filler](/ai/platform-features/nlu/slot-fillers) that contains the Regex Slot.
+      </Accordion>
+    </AccordionGroup>
+
+## How to Use
+
+To use the data redaction feature, first check the [default data types](#default-data-types). If none are suitable or if an existing type doesn't match your data due to its pattern rules, you can create a [custom data type](#custom-data-type).
+
+### Default Data Types
+
+The data redaction feature includes the following default data types, covering common forms of PII:
+
+| Data Type                 | Description                                                                                             | Examples                                                                                            | Redaction Pattern        |
+|---------------------------|---------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|------------------------|
+| Credit Card Number        | Redacts 16-digit card numbers starting with `3` (Amex), `4` (Visa), `5` (MasterCard), or `6` (Discover). Digits may be separated by spaces or hyphens. The credit card number redaction is activated by default to protect credit card data and ensure compliance with PCI DSS, GDPR, and CCPA. | `4111111111111111`, `4111 1111 1111 1111`, `5555-5555-5555-4444`, `3782-822463-10005`               | `[CREDIT CARD REDACTED]` |
+| Email Address             | Redacts email addresses. Must contain a valid local part, an `@` symbol, and a valid domain. By default, the email address redaction is deactivated. | `test@example.com`, `admin@company.org`, `user@domain.com`                                           | `[EMAIL REDACTED]`       |
+| Phone Number              | Redacts phone numbers in U.S. national, U.S. local, or international formats. By default, the phone number redaction is deactivated. | `(555) 123-4567`, `+1 (555) 123-4567`, `555-123-4567`, `5551234567`, `+491575313119`, `+447911123456` | `[PHONE REDACTED]`       |
+| Social Security Number    | Redacts 9-digit U.S. Social Security numbers in `XXX-XX-XXXX` format. By default, the Social Security number redaction is deactivated.          | `123-45-6789`, `987-65-4320`                                                                         | `[SSN REDACTED]`         |
+| IPv4 Address              | Redacts IPv4 addresses in `X.X.X.X` format, where each octet is 0–255. Supports private ranges. By default, the IPv4 address redaction is deactivated. | `192.168.1.1`, `255.255.255.255`, `10.0.0.1`                                                        | `[IPv4 REDACTED]`        |
+| IPv6 Address              | Redacts IPv6 addresses, including full, shortened, or loopback (`::1`) forms. By default, the IPv6 address redaction is deactivated. | `2001:0db8:85a3:0000:0000:8a2e:0370:7334`, `::1`, `2001:db8::1`, `fe80::1`                            | `[IPv6 REDACTED]`        |
+
+To activate the data redaction for default data types, follow these steps:
+
+1. In **Manage > Settings**, go to the **Data Redaction Settings** section.
+2. Click the subsection of the data type you want to redact and configure the following:
+    - **Activate Redaction** — toggle on to activate the redaction for the data type.
+    - **Redaction Pattern** — select one of the following options:
+        - **Default** — use the default redaction pattern. Each data type has a default redaction pattern, for example, the redaction pattern for credit card numbers is `[CREDIT CARD REDACTED]`.
+        - **Custom** — enter a custom redaction pattern. The custom redaction pattern should be enclosed in square brackets and must not contain spaces or special characters. For example, `[PROTECTED_INFO]`.
+3. Under **Scope**, select where the data type is redacted:
+    - **Logs** — redact the data type on the Logs page.
+    - **Analytics** — redact the data type in Insights and the Cognigy.AI OData endpoint.
+
+### Custom Data Type
+
+If you need to redact data that isn't included in the default data types, you can add custom data types.
+
+To add a custom data type, follow these steps:
+
+1. In **Manage > Settings**, click the **Data Redaction Settings** section to expand it.
+2. At the bottom of the section, click **+ Custom Data Type** and configure the following:
+    - **Name** — enter a unique name.
+    - **Regex** — enter a regular expression to detect the data type pattern.
+    - **Custom redaction pattern** — enter a custom redaction pattern. The custom redaction pattern should be enclosed in square brackets and must not contain spaces or special characters. For example, `[PROTECTED_INFO]`.
+3. Under **Scope**, select where the data type is redacted:
+    - **Logs** — redact the data type on the Logs page.
+    - **Analytics** — redact the data type in Insights and the Cognigy.AI OData endpoint.
+
+#### Examples
+
+The following table includes examples of regex patterns and redaction patterns for custom data types.
+
+| Custom Data Type     | Regex                                        | Redaction Pattern             |
+|----------------------|----------------------------------------------|-------------------------------|
+| ZIP Code             | `\b\d{5}-\d{4}\b`                            | `[REDACTED_ZIP_CODE]`         |
+| German License Plate | `\b[A-ZÄÖÜ]{1,3}-[A-Z]{1,2}\s\d{1,4}[HE]?\b` | `[REDACTED_DE_LICENSE_PLATE]` |
+| US P.O. Box          | `\b(?:P\.?O\.?\|POB)\s?Box?\s?\d+\b`         | `[REDACTED_US_PO_BOX]`        |
+
+## More Information
+
+- [Logs](/ai/agents/test/logs)
+- [Insights](/insights/overview)
+- [Slots](/ai/platform-features/nlu/slots/overview)
+- [Project Settings](/ai/administer/access/project-settings)

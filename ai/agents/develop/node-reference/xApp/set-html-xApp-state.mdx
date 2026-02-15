@@ -1,0 +1,65 @@
+---
+title: 'xApp: Show HTML'
+hidden: false
+---
+
+import AiXappCustomNode from '/snippets/ai/xApp/custom-node.mdx'
+import AiXappOverlay from '/snippets/ai/xApp/overlay.mdx'
+import AiXappWaitingBehavior from '/snippets/ai/xApp/waiting-behavior.mdx'
+
+<a href="/release-notes/4.75"><Badge className="version-badge" color="blue">Updated in 4.75</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/xApp/set-html-xApp-state.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The xApp page can be built by providing custom HTML code. Once this Node is executed, this xApp page is displayed in the xApp Session.
+
+You can access the xApp page SDK through a global `SDK` variable.
+To submit a result back to the Flow, call `SDK.submit({ name: "John" });`.
+The submitted payloads need to be serializable JSON objects.
+
+The following example renders a button that submits on click:
+
+`<button type="button" onclick="SDK.submit({ variant: 'button1' })">button 1</button>`.
+
+To view submitted data, use the Interaction panel. You can access submitted data in the `data` object by clicking **INFO > Input**, or in the chat by adding a Say Node and specifying <code>Submit payload: &lcub;&lcub;JSON.stringify(input.data)&rcub;&rcub;</code> or <code>Submit payload: &lcub;&lcub;JSON.stringify(ci.data)&rcub;&rcub;</code>.
+
+To access session data from within the HTML Code, use CognigyScript `{{JSON.stringify(cc.someContextKey)}}`.
+
+<AiXappCustomNode/>
+
+## Parameters
+
+| Parameter | Type | Description                                                                 |
+|-----------|------|-----------------------------------------------------------------------------|
+| Content   | List | Select the content format:<ul><li>HTML document</li><li>HTML body</li></ul> |
+
+<AiXappWaitingBehavior/>
+
+<AiXappOverlay/>
+
+<Accordion title="xApp Page SDK">
+
+  When hosted within Cognigy.AI, the xApp page or any generic HTML xApp can load the xApp page SDK using a fixed URL:
+  `<script src=”/sdk/app-page-sdk.js”></script>`.
+  Loading this file exposes the xApp page SDK as a global instance called `SDK`.
+  To access its methods, call `SDK.someExampleMethod()` after loading the SDK file. The SDK code isn't loaded asynchronously.
+
+  | Function                                    | Usage                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+  |---------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | `SDK.getAppTemplateData():Promise<unknown>` | Returns the xApp Template Data associated with this xApp page.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+  | `SDK.submit(result: Object):Promise<void>`  | Submits the provided "result" object to the Flow. Has to be a JSON serializable object.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+  | `SDK.getCustomReadyHandler():Function`      | Returns a custom ready state handler. By default, the xApp page is ready as soon as the document is fully loaded.<br/>If you want to fetch additional content before showing the Page, you can override the `ready` event by getting a custom `ready handler` and calling it as soon as your xApp page is ready manually. <br/> The end user sees the xApp Loading Screen on the Shell Page.<br/>Note: If loading the xApp page takes more than 10 seconds, the xApp is treated as `Failed to load` without the possibility of recovering. |
+</Accordion>
+
+## More Information
+
+- [xApps](/xApps/overview)
+- [xApp Nodes](/ai/agents/develop/node-reference/xApp/overview)
+- [xApp: Init Session](/ai/agents/develop/node-reference/xApp/init-xApp-session)
+- [xApp: Get Session PIN](/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN)
+- [xApp: Show Adaptive Card](/ai/agents/develop/node-reference/xApp/set-AdaptiveCard-xApp-state)

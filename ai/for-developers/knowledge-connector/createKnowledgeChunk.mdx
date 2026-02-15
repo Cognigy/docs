@@ -1,0 +1,42 @@
+---
+title: createKnowledgeChunk
+seo:
+  metatags:
+    description: Creates a Knowledge Chunk in a Knowledge Source containing text and optional Source metadata.
+keywords: ['createKnowledgeChunk', 'knowledge api', 'knowledge chunk', 'knowledge source']
+---
+
+## Syntax
+
+`api.createKnowledgeChunk(params)`
+
+## Description
+
+Creates a [Knowledge Chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) in a [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview). A Knowledge Chunk is a discrete piece of knowledge containing text and optional Chunk metadata that can be searched and retrieved during AI Agent interactions.
+
+**Parameters:**
+
+- `params`: `CreateKnowledgeChunkParams` — configuration object for the Knowledge Chunk. The object contains the following parameters:
+
+| Parameter           | Type   | Required | Description                                                                                               |
+| ------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| `knowledgeSourceId` | String | Yes      | The ID of the Knowledge Source.                                                                           |
+| `text`              | String | Yes      | The content of the Knowledge Chunk.                                                                       |
+| `data`              | Object | No       | Metadata for the chunk. An object where keys are strings and values can be strings, numbers, or booleans. |
+
+**Returns:** `Promise<{}>` — a promise that resolves to an empty object when the Knowledge Chunk is created.
+
+## Example
+
+```js
+await api.createKnowledgeChunk({
+    knowledgeSourceId: "ks_abc123def456",
+    text: "To reset your password, click 'Forgot Password' on the login page and follow the instructions sent to your email.",
+    data: {
+        category: "account-management",
+        priority: 5,
+        lastUpdated: "2025-11-01",
+        verified: true
+    }
+});
+```

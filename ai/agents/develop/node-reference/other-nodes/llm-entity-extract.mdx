@@ -1,0 +1,132 @@
+---
+title: LLM Entity Extract
+keywords: ['llm entity extract', 'large language model', 'entity extraction', 'ai nodes', 'generative ai']
+seo:
+  metatags:
+    description: >-
+      The LLM Entity Extract Node uses a chosen LLM to extract entities,
+      such as product codes, booking codes, and customer IDs, from a given
+      string.
+---
+
+<a href="/release-notes/4.97"><Badge className="version-badge" color="blue">Updated in 4.97</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/other/llm-entity-extract.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node uses a Large Language Model (LLM) to extract entities, such as product codes, booking codes, or customer IDs, from `input.text` of the Input object.
+
+The Node supports both chat and voice use cases by processing text and transcribed speech inputs.
+
+Before using this Node, set the LLM provider in the [Settings](/ai/agents/develop/gen-ai-and-llms/generative-ai).
+You can configure the Node to either use the default model defined in the Settings or choose a specific configured LLM.
+
+To view the extracted entity in the Interaction Panel, activate [debug mode](/insights/explorers/transcript#debug-mode).
+
+To output the extracted entity, add a [Say Node](/ai/agents/develop/node-reference/basic/say) below the LLM Entity Extract Node in the Flow editor. In the **Text** field of the Say Node, use the key you specified in the [Storage Options](#storage-options) section, for example, `{{input.extractedEntity}}`.
+
+## Parameters
+
+| Parameter            | Type          | Description                                                                                                                                                                                                                              |
+|----------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Large Language Model | List          | Select a model or use the default one.                                                                                                                                                                                                  |
+| Entity Name          | CognigyScript | The name of the entity to extract. For example, `customerID`.                                                                                                                                                                           |
+| Entity Description   | CognigyScript | A sentence that describes the entity. For example, `An alphanumeric string of 6 characters, e.g., ABC123 or 32G5FD`.                                                                                                                    |
+| Example Input        | Text          | Examples of text inputs. For example, `My ID is AB54EE, is that ok?`, `That would be ah bee see double 4 three`, `I guess it's 49 A B 8 K`. Alternatively, you can click **Show JSON Editor** and add input examples in the code field. |
+| Extracted Entity     | CognigyScript | Examples of extracted entities. For example, `AB54EE`, `ABC443`, `49AB8K`.                                                                                                                                                              |
+
+<AccordionGroup>
+  <Accordion title="Advanced">
+
+    | Parameter       | Type      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+    |-----------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Temperature     | Indicator | The appropriate sampling temperature for the model. Higher values mean the model will take more risks.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+    | Timeout         | Number    | The maximum number of milliseconds to wait for a response from the LLM provider.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+    | Response Format | Select    | Choose the format for the model's output result. You can select one of the following options:<ul><li>**None** — No response format is specified. Use this option if the LLM provider doesn't accept the response format you're using, or if you want to use the provider's default format. This option is selected by default.</li><li>**Text** — the model returns messages in text format.</li><li>**JSON Object** — the model returns messages in JSON format. In contrast to the [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) Node, this Node is already instructed to generate a JSON output when this option is selected Note that not all LLMs support this format, which may cause model calls to fail. For more information, refer to the LLM provider's API documentation.</li></ul> |
+  </Accordion>
+
+  <Accordion title="Storage Options">
+
+    | Parameter                   | Type          | Description                                                                                                                                                                                     |
+    |-----------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | How to handle the result    | Select        | Determine how to handle the prompt result:<ul><li>**Store in Input** — stores the result in the Input object.</li><li>**Store in Context** — stores the result in the Context object.</li></ul> |
+    | Input Key to store Result   | CognigyScript | The parameter appears when **Store in Input** is selected. The result is stored in the `extractedEntity` Input object by default. You can specify another key.                                  |
+    | Context Key to store Result | CognigyScript | The parameter appears when **Store in Context** is selected. The result is stored in the `extractedEntity` Context object by default. You can specify another key.                              |
+  </Accordion>
+
+  <Accordion title="Debugging Options">
+
+    When using the Interaction Panel, you can trigger two types of debug logs. These logs are only available when using the Interaction Panel and aren't intended for production debugging. You can also combine both log types.
+
+    | Parameter                  | Type   | Description                                                                                                                                                                                                                                                                                         |
+    |----------------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Show Token Count           | Toggle | Send a debug message containing the input, output, and total token count. The message appears in the Interaction Panel when debug mode is activated. Cognigy.AI uses the GPT-3 tokenizer, so actual token usage may vary depending on the model. The parameter is inactive by default. |
+    | Log Request and Completion | Toggle | Send a debug message containing the LLM provider and the subsequent completion. The message appears in the Interaction Panel when Debug Mode is enabled. The parameter is inactive by default.                                                                                                      |
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+<AccordionGroup>
+
+    <Accordion title="Extract a Booking Code from User Input">
+
+    The user input is stored under `input.text`:
+
+    ```text
+    Hello, my booking code is XYZ987. Can you confirm my reservation?
+    ```
+
+    LLM Entity Extract Node configuration:
+
+    - **Entity Name**: `bookingCode`
+    - **Entity Description**: `An alphanumeric booking code of 6 characters, e.g., XYZ123 or ABC987`
+    - **Example Input**:
+      - `My booking code is XYZ123.`
+      - `It’s X Y Z 1 2 3.`
+    - **Extracted Entity**:
+      - `XYZ123`
+
+    The extracted entity is stored under `input.extractedEntity`:
+
+    ```text
+    XYZ987
+    ```
+
+    </Accordion>
+
+    <Accordion title="Extract a Product Code from User Input">
+
+    The user input is stored under `input.text`:
+
+    ```text
+    I’d like to order the product with code P45K2Q. Can you add it to my cart?
+    ```
+
+    LLM Entity Extract Node configuration:
+
+    - **Entity Name**: `productCode`
+    - **Entity Description**: `An alphanumeric product code, e.g., P12A3B or X45K2Q`
+    - **Example Input**:
+      - `The product code is P12A3B.`
+      - `That would be P 1 2 A 3 B.`
+    - **Extracted Entity**:
+      - `P12A3B`
+
+    The extracted entity is stored under `input.extractedEntity`:
+
+    ```text
+    P45K2Q
+    ```
+
+    </Accordion>
+
+</AccordionGroup>
+
+## More Information
+
+- [Question Node: LLM-extracted Entity](/ai/agents/develop/node-reference/basic/question#)
