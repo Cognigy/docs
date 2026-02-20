@@ -1,0 +1,159 @@
+---
+title: '4.75'
+
+---
+
+import ReleaseNotesFeatureRemoval from '/snippets/release-notes/feature-removal.mdx'
+import ReleaseNotesUpdateForSocketioWebchatEndpoints from '/snippets/release-notes/update-for-socket.io-webchat-endpoints.mdx'
+import ReleaseNotesWeaviateToQdrant from '/snippets/release-notes/weaviate-to-qdrant.mdx'
+
+<ReleaseNotesUpdateForSocketioWebchatEndpoints/>
+
+<ReleaseNotesFeatureRemoval/>
+
+<ReleaseNotesWeaviateToQdrant/>
+
+## 4.75.4
+
+### Live Agent
+
+**Released** May 27, 2024
+
+#### Bug Fixes
+
+- Fixed the issue where the Agent Availability Node incorrectly returned 0 for the number of available agents even when at least one human agent was online
+
+## 4.75.3
+
+### Live Agent
+
+**Released** May 27, 2024
+
+#### Improvements
+
+- Added internal improvements to enhance Live Agent performance
+
+## 4.75.2
+
+### Live Agent
+
+**Released** May 24, 2024
+
+#### Improvements
+
+- Improved the speed of retrieving inbox collaborators, which also speeds up working with the `inbox_members` API
+
+#### Bug Fixes
+
+- Fixed the issue where human agents could not log in to Live Agent, and auto assignment was occurring when clicking Unassign in the Conversation Details
+- Fixed the issue where profile and inbox avatars were not displayed
+
+## 4.75.1
+
+### Cognigy.AI
+
+**Released** May 17, 2024
+
+#### Improvements
+
+- Added the ability to [forward Genesys bot messages to the end user](/ai/escalate/handover-reference/genesys-cloud-open-messaging) to the end user while using the Genesys Cloud Open Messaging handover provider. These messages will be injected into the chat. To enable this feature for on-premises installations, use the `GENESYS_CLOUD_OM_HANDLE_BOT_MESSAGE: "true"` feature flag
+
+### Insights
+
+**Released** May 17, 2024
+
+#### Bug Fixes
+
+- Fixed the issue where Insights would crash when in the Endpoints filter 'Interaction Panel' was selected together with one additional Endpoint
+
+### Live Agent
+
+**Released** May 22, 2024
+
+#### Improvements
+
+- Improved by adding new activity messages about assignments within the conversation. These messages will appear when the selected team is changed, and when auto-assignment occurs as the conversation is created
+
+#### Bug Fixes
+
+- Fixed the issue where when the [Allow auto assignment inbox setting](https://docs.cognigy.com/live-agent/conversation/conversation-routing/automatic-mode/#automatic-assignment) is enabled with the [Consider conversation count](https://docs.cognigy.com/live-agent/conversation/conversation-routing/automatic-mode/#additional-automatic-assignment-parameters) setting checked conversations were assigned to agents who did not belong to the inbox
+
+## 4.75.0
+
+### Cognigy.AI
+
+**Released** April 30, 2024
+
+#### Improvements
+
+- Added the [xApp Overlay](/xApps/build/overlay) feature for Webchat v3
+- Added the [`knowledgeAdmin`](/ai/administer/access/members#project-roles) project-level role that permits users to create, update, read, and delete the knowledge resources within a project
+- Improved UX consistency for required fields in the Connection form
+- Improved by adding a [default retry mechanism of 3 attempts](/ai/agents/develop/gen-ai-and-llms/llms#retry-mechanism) when contacting an LLM provider for the following Nodes and features:<br/>
+  Nodes: LLM Prompt, LLM Entity Extract, GPT Conversation, Search Extract Output.<br/>
+  Features: Question Node Slot mapping, Question Node LLM reprompting, Sentiment Analysis.<br/>
+  This retry mechanism can be controlled using the following environment variables: `GENERATIVE_AI_RETRY_OPTIONS_NUMBER_OF_RETRIES`, `GENERATIVE_AI_RETRY_OPTIONS_MIN_TIMEOUT`, `GENERATIVE_AI_RETRY_OPTIONS_MAX_TIMEOUT`, `GENERATIVE_AI_RETRY_OPTIONS_FACTOR`
+
+#### Bug Fixes
+
+- Fixed the issue where after making changes to a connection, the flow execution would continue using the old connection tokens. This would lead to errors and unexpected behavior, especially with the LLM prompt Node
+- Fixed the issue of a 403 error message briefly appearing in the UI upon loading a page
+- Fixed the issue where the NLU intents form reset button was clickable even when the form state was empty
+- Fixed the issue where the Reprompt Method configuration for older question Nodes would not be processed correctly
+- Fixed the issue where metadata was not being forwarded to the HTML and iframe tiles in Agent Copilot
+- Fixed the issue where a Knowledge Source with web page import, which could have more than 100 chunks, could not be created
+
+### Cognigy Insights
+
+**Released** April 30, 2024
+
+#### Improvements
+
+- Removed [Interaction Panel and Playbook data](/insights/global-filters) from Insights by default and added a toggle to include it in the Endpoints filter
+
+#### Bug Fixes
+
+- Fixed the issue where the Transcript Details page was crashing due to an unexpected payload
+
+### Cognigy Live Agent
+
+**Released** April 30, 2024
+
+#### Improvements
+
+- Added the possibility of using custom sounds for message notification
+- Added a configuration option to set a timespan after which the agent is automatically logged out if they are away or set to away or offline
+- Added the capability to [change the conversation inbox individually and through bulk actions](/live-agent/conversation/assign-conversations#change-inboxes)
+- Added a reporting events model to Live Agent OData to retrieve stats about deleted or unassigned conversations
+
+#### Bug Fixes
+
+- Fixed the issue where conversation reports were broken upon removing an inbox member
+- Fixed the issue where users with the Supervisor role could gain API access to resources restricted to the Administrator role
+
+### Cognigy Voice Gateway
+
+**Released** April 30, 2024
+
+#### Bug Fixes
+
+- Fixed the issue where DTMF input was being triplicated in instances where Genesys and UDP were utilized
+- Fixed the issue where enabling Barge In could cause incorrect transcriptions to arrive later in the call
+
+### Infrastructure
+
+#### Cognigy.AI
+
+##### Migration from Weaviate to Qdrant
+
+In version 4.75, the Weaviate vector database has been removed. If you have a Cognigy on-premises installation and are utilizing the [Knowledge AI features](/ai/agents/develop/knowledge-ai/overview), switch to Qdrant before upgrading to version 4.75.0. For a smooth migration, follow the [provided guide](/ai/administer/installation/migration/from-weaviate-to-qdrant).
+
+The migration has a side effect that alters the `distance` value. Decision-making in the Flow will be ineffective post-migration if distance is used. If you are using this value in your Flows, refer to [recommendations](/ai/agents/develop/knowledge-ai/distance-value-change-after-migration) for configuring this value.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

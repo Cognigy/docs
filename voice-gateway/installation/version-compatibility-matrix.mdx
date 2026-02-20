@@ -1,0 +1,100 @@
+---
+title: 'Voice Gateway: Version Compatibility Matrix'
+---
+
+import InstallationOnPremCompatibilityMatrixNote from "/snippets/installation/on-prem-compatibility-matrix-note.mdx";
+
+This matrix outlines the compatibility of Cognigy Voice Gateway versions with Cognigy infrastructure components,
+such as Kubernetes, MongoDB, and Redis.
+
+<InstallationOnPremCompatibilityMatrixNote />
+
+| Voice Gateway /<br/> Infra component | Kubernetes | PostgreSQL | Redis                         | MySQL | Traefik | InfluxDB | Jaeger | Helm          |
+| ------------------------------------ | ---------- | ---------- | ----------------------------- | ----- | ------- | -------- | ------ | ------------- |
+| 2026.4                               | 1.23-1.34  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2026.3                               | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2026.2                               | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2026.1                               | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.25                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.24                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.23                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.22                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.21                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.20                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.19                              | 1.23-1.33  | 14.18      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.18                              | 1.23-1.33  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.17                              | 1.23-1.33  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.16                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.15                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.14                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.13                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.12                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.4.0   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.11                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 2025.10                              | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.100                                | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.99                                 | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.98                                 | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.97                                 | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.96                                 | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.95                                 | 1.23-1.32  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.94                                 | 1.23-1.31  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.92                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.91                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.90                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.89                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.88                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 3.1.6   | 1.8      | 1.61   | 3.9 or higher |
+| 4.87                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.61   | 3.9 or higher |
+| 4.86                                 | 1.23-1.30  | 14.12      | 7.4<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.61   | 3.9 or higher |
+| 4.85                                 | 1.23-1.30  | 14.12      | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.84                                 | 1.23-1.30  | 14.12      | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.83                                 | 1.23-1.29  | 14.12      | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.82                                 | 1.23-1.28  | 14.12      | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.81                                 | 1.23-1.28  | 14.12      | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.80                                 | 1.23-1.28  | 14.12      | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.79                                 | 1.23-1.28  | 14.9       | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.78                                 | 1.23-1.28  | 14.9       | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.77                                 | 1.23-1.28  | 14.9       | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.57   | 3.9 or higher |
+| 4.76                                 | 1.23-1.28  | 14.9       | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.54   | 3.9 or higher |
+| 4.75                                 | 1.23-1.28  | 14.9       | 7.2<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.54   | 3.9 or higher |
+| 4.74                                 | 1.23-1.28  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.54   | 3.9 or higher |
+| 4.73                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.54   | 3.9 or higher |
+| 4.72                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.54   | 3.9 or higher |
+| 4.71                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.47   | 3.9 or higher |
+| 4.70                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.47   | 3.9 or higher |
+| 4.69                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.47   | 3.9 or higher |
+| 4.68                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.47   | 3.9 or higher |
+| 4.67                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | 1.47   | 3.9 or higher |
+| 4.66                                 | 1.23-1.27  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.65                                 | 1.23-1.26  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.64                                 | 1.23-1.26  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.63                                 | 1.23-1.26  | 14.9       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.62                                 | 1.23-1.26  | 14.8       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.61                                 | 1.23-1.26  | 14.8       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.60                                 | 1.23-1.26  | 14.8       | 7.0<sup>[1](#footnote1)</sup> | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.59                                 | 1.23-1.26  | 14.8       | 7.0                           | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.58                                 | 1.23-1.26  | 14.8       | 7.0                           | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.57                                 | 1.23-1.26  | 14.8       | 7.0                           | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.56                                 | 1.23-1.26  | 14.8       | 7.0                           | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.55                                 | 1.23-1.26  | 14.7       | 7.0                           | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.54                                 | 1.19-1.25  | 14.7       | 7.0                           | 8.0   | 2.10    | 1.8      | -      | 3.9 or higher |
+| 4.53                                 | 1.19-1.25  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.52                                 | 1.19-1.25  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.51                                 | 1.19-1.24  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.50                                 | 1.19-1.24  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.49                                 | 1.19-1.24  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.48                                 | 1.19-1.24  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.47                                 | 1.19-1.24  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+| 4.46                                 | 1.19-1.24  | 14.7       | 7.0                           | 8.0   | 2.6     | 1.8      | -      | 3.8 or higher |
+
+## More Information
+
+Version Compatibility Matrix:
+
+- [Cognigy.AI and Insights](/ai/administer/installation/version-compatibility-matrix)
+- [Agent Assist Workspace](/agent-copilot/installation/version-compatibility-matrix)
+- [Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+
+---
+
+<sup id="footnote1">1</sup>: Both stand-alone and High Availability (HA) with
+Sentinel deployments.

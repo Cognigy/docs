@@ -1,0 +1,82 @@
+---
+title: Profile Settings
+---
+
+<a href="/release-notes/2025.24"><Badge className="version-badge" color="blue">Updated in 2025.24</Badge></a>
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+_Profile Settings_ are a set of customizable options and configurations available to individual users within the Live Agent system. These settings include the customization of profile appearance, notification preferences, activation of Agent Copilot, configuration of hotkeys for sending messages, and access to API functionality.
+
+To open the **Profile Settings** in Live Agent, do the following:
+
+1. In the bottom-left corner of the Live Agent interface, click **Profile Settings**.
+2. In the drop-down list, select **Profile Settings**. The **Profile Settings** page will be displayed.
+
+The following settings are available within the user profile:
+
+- [User Profile Appearance](#user-profile-appearance)
+- [Profile Language](#user-profile-appearance)
+- [Notifications](#notifications)
+- [Agent Copilot](#agent-copilot)
+- [Hotkey to send messages](#hotkey-to-send-messages)
+
+Additionally, you can copy the [API Token](#api-access-token) to access the [Live Agent API](https://liveagent-trial.cognigy.ai/openapi).
+
+## User Profile Appearance
+
+To personalize your profile settings, you can edit your profile image and the name displayed in conversations.
+
+| Setting       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Profile image | The image will be displayed in the conversations, agent lists, and user profile menu.<br/> For [Webchat v3](/webchat/v3/configuration#webchat-layout), when the Profile Image is not available, the system will use the value from the **Human Agent Avatar Logo URL** parameter from the **Webchat Layout** section if it is provided. Otherwise, a default human agent icon will be displayed.                                                                                         |
+| Display name  | This name will be displayed in the conversations and is used as the sender name when human agents send conversation transcripts in emails.<br/> For [Webchat v3](/webchat/v3/configuration#webchat-layout), when the Display name is not available, the system will use the value from the **Human Agent Avatar Name** parameter from the **Webchat Layout** section if it is provided. Otherwise, the value of the **Name** parameter in the **Webchat Layout** section will be displayed. |
+
+The other user data, such as email address, full name, and password, needs to be updated in the Cognigy.AI account. The changes will automatically apply to Live Agent.
+
+## Profile Language
+
+Choose your preferred language for the Live Agent interface from the drop-down menu.
+By default, your [account language](/live-agent/settings/account-settings) is applied, but you can set a different language for your profile. For example, if your account is set to English but you prefer Japanese, you can select Japanese (ja) to make navigation easier.
+Setting a profile language also translates system messages, push notifications, and email notifications.
+
+## Notifications
+
+In Live Agent, you can configure email and push notifications, and audio alerts for certain types of actions that trigger notifications.
+
+The email and push notification settings in the [Account Settings](/live-agent/notifications#configure-notifications-at-the-account-level) will take precedence over the Profile Settings.
+If the administrator has not yet changed the push and email notification settings, you can change them in the Profile Settings.
+
+To configure notifications, refer to [Notifications](/live-agent/notifications#configure-notifications-at-the-user-profile-level).
+
+## Agent Copilot
+
+Cognigy Agent Copilot offers a variety of advanced features that empower human agents to provide faster and more accurate customer support. The workspace is fully customizable with widgets that display the most relevant information for any chat and voice use case. When embedded into your contact center, it enhances the overall efficiency of your contact center.
+
+In the **Profile Settings**, a user can activate Agent Copilot if [it has been installed previously](/agent-copilot/getting-started/chat).
+
+If an administrator has already preset the **Copilot Workspace** setting in the **Account Settings**,
+this setting will take precedence over the user profile settings.
+In this case, a user is not able to change the **Copilot Workspace** settings.
+
+For more information, read the [Agent Copilot](/live-agent/assistants/agent-copilot) and [Agent Copilot Whisper](/live-agent/assistants/agent-copilot-whisper) documentation.
+
+## Hotkey to send messages
+
+To send messages in the [conversation chat](/live-agent/conversation/overview), you can select one of the following hotkey options:
+
+- **None** — send messages by clicking the **Send** button. The <kbd>enter</kbd> key will be used for line breaks.
+- **Enter (↵)** — send messages by pressing the <kbd>enter</kbd> key instead of clicking the **Send** button. The  <kbd>shift+enter</kbd> key combination will be used for line breaks.
+- **Cmd/Ctrl + Enter (⌘ + ↵)** — send messages by pressing <kbd>cmd+enter</kbd> or <kbd>ctrl+enter</kbd>instead of clicking the **Send** button. This option is selected by default. The <kbd>enter</kbd> key will be used for line breaks.
+
+## API Access Token
+
+The displayed Access Token serves as the authentication and authorization key for the [Live Agent API](https://liveagent-trial.cognigy.ai/openapi). It contains information specific to a user, and the actions it enables are restricted by the user's [assigned role](/live-agent/roles).
+
+## More Information
+
+- [Account Settings](/live-agent/settings/account-settings)
+- [User Roles](/live-agent/roles)
+- [Agent Copilot](/live-agent/assistants/agent-copilot)

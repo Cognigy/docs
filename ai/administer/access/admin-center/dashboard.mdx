@@ -1,0 +1,95 @@
+---
+title: Admin Center Dashboard
+keywords:
+  - admin center
+  - ' dashboard'
+  - ' billable conversations'
+  - ' knowledge ai'
+  - ' cognigy products'
+  - ' delete organization'
+seo:
+  metatags:
+    description: >-
+      The Admin Center Dashboard allows you to track the number of billable
+      conversations, Knowledge Chunks, and Queries within your organization.
+      Additionally, you can activate other Cognigy services, such as Live Agent
+      and Voice Gateway, as well as delete the organization if necessary.
+---
+
+<a href="/release-notes/4.89"><Badge className="version-badge" color="blue">Updated in 4.89</Badge></a>
+
+The _Admin Center Dashboard_ allows you to track the number of billable conversations, Knowledge Chunks, and Queries within your organization. Additionally, you can activate other Cognigy products, such as Live Agent and Voice Gateway, as well as delete organizations if necessary.
+
+On the Admin Center Dashboard, you can perform the following actions:
+
+- [View Charts](#charts)
+- [Set up Cognigy Products](#set-up-cognigy-products)
+- [Delete Organizations](#delete-organizations)
+
+You can access the **Dashboard** page using one of the following options:
+
+- Click **User Menu > Admin Center** on the **Main** page, then select **Dashboard** from the left-side menu.
+- Select **Admin Center** from the User Menu in the bottom-left corner of the **Project** page, then select **Dashboard** from the left-side menu.
+
+## Charts
+
+Charts display key metrics, such as billable conversations and Knowledge AI usage, to help manage costs within the organization. Data can be filtered by month and year.
+
+<AccordionGroup>
+  <Accordion title="Billable Conversations">
+    The chart shows the number of [billable conversations](/ai/administer/billing) for the organization.
+
+    <Frame>
+      <img class="image-center" src="/_assets/ai/administer/access/billable-conversations.png" style={{ width: 'auto' }} />
+    </Frame>
+
+    The billable conversations metrics include the following:
+
+    1. The number of billable conversations created within the selected period.
+    2. The total number of billable conversations created overall.
+  </Accordion>
+  <Accordion title="Knowledge AI">
+    Within each organization, if the Knowledge AI feature is used, you can monitor the number of Knowledge Queries and Knowledge Chunks.
+
+    Knowledge Chunks and Knowledge Queries are billable units. Tracking their usage helps manage costs and optimize resource allocation.
+
+    <Frame>
+      <img class="image-center" src="/_assets/ai/administer/access/knowledge-ai.png" style={{ width: 'auto' }} />
+    </Frame>
+
+    The Knowledge AI metrics include the following:
+
+    1. The number of Knowledge Queries performed within the selected period.
+    2. The total number of Knowledge Queries performed.
+    3. The number of Knowledge Chunks currently available in the organization.
+    4. The maximum number of Knowledge Chunks allocated to the organization.
+
+    For more information on how to activate Knowledge AI for your organization, read the [Knowledge AI](/ai/agents/develop/knowledge-ai/activate) documentation.
+  </Accordion>
+</AccordionGroup>
+
+## Set up Cognigy Products
+
+The **Cognigy Products** section allows you to activate additional Cognigy products for your organization, such as [Live Agent](/live-agent/index) and [Voice Gateway](/voice-gateway/index).
+
+## Delete Organizations
+
+<AccordionGroup>
+  <Accordion title="1. Before Deleting Organizations">
+    <Danger>
+        Deleting an organization is irreversible and permanently erases all associated data.
+    </Danger>
+
+    Before the organization deletion, you need to set up:
+
+    - Valid system administrator emails in the environment variable `SYS_ADMINISTRATOR_EMAIL` of the `values.yaml` file. For example, `SYS_ADMINISTRATOR_EMAIL: "admin1@domain.com,admin2@domain.com"`. Your administrators receive a notification at these email addresses regarding the organization deletion request. By following the link provided in the email, the administrators can proceed with the organization deletion. For dedicated SaaS installations, contact Cognigy technical support to set this variable.
+    - The Cognigy.AI [Management UI](/ai/administer/access/management-ui) is installed, and its path is set in the `MANAGEMENTUI_BASE_URL_WITH_PROTOCOL` variable of the `values.yaml` file. For example, `MANAGEMENTUI_BASE_URL_WITH_PROTOCOL: http://management-ui`. For dedicated SaaS installations, contact Cognigy technical support to set this variable.
+  </Accordion>
+  <Accordion title="2. Deletion Process for Organizations">
+    This process contains the following steps:
+
+    1. On the **Dashboard** page, a user with the admin role requests to delete the organization by clicking **Delete Organization**. This request is sent to the system administrator's email.
+    2. The system administrator receives the email and follows the link to the [Management UI](/ai/administer/access/management-ui).
+    3. The system administrator deletes the organization in the Management UI and then receives a confirmation email.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,267 @@
+---
+title: "Node Execution API: All Functions"
+sidebarTitle: "All Functions"
+hidden: false
+seo:
+  metatags:
+    description: The Node Execution API is a toolset for developers to build and control
+      Flows.
+keywords: ['node execution api', 'function reference']
+---
+
+The _Node Execution API_ is a toolset for developers to build and control Flows. Its functions allow you to:
+
+- **Manage Data**. Control Contact Profiles and use the Context object.
+- **Control Flows**. Manage States and set which Nodes to execute.
+- **Interact and Monitor**. Send messages to the user, and log or monitor the conversation execution.
+- **Run Scripts**. Execute scripts and evaluate conditions within a Flow.
+
+## CognigyScript
+
+The _CognigyScript_ functions are used to execute and evaluate CognigyScript expressions. You can use them to render text that contains CognigyScript or to evaluate a condition to a `true` or `false` value.
+
+### [`parseCognigyScriptText`](/ai/for-developers/function-reference/cognigyscript/parseCognigyScriptText)
+
+**Syntax:** `parseCognigyScriptText(text)`
+
+Renders a text containing CognigyScript expressions.
+
+### [`parseCognigyScriptCondition`](/ai/for-developers/function-reference/cognigyscript/parseCognigyScriptCondition)
+
+**Syntax:** `parseCognigyScriptCondition(condition)`
+
+Evaluates a CognigyScript expression and returns a `true` or `false` value.
+
+## Contact Profiles
+
+The _Contact Profile_ functions are used to manage a user's [Contact Profile](/ai/agents/analyze/contact-profiles). They allow you to activate or deactivate a Contact Profile, update specific fields, and merge one Contact Profile with another. When a Contact Profile is deactivated, no data can be read from or written to it.
+
+### [`activateProfile`](/ai/for-developers/function-reference/contact-profiles/activateProfile)
+
+**Syntax:** `activateProfile()`
+
+Activates a Contact Profile for the user.
+
+### [`deactivateProfile`](/ai/for-developers/function-reference/contact-profiles/deactivateProfile)
+
+**Syntax:** `deactivateProfile(deleteData)`
+
+Deactivates a Contact Profile for the user. When the Contact Profile is deactivated, no data can be read from or written into it.
+
+### [`updateProfile`](/ai/for-developers/function-reference/contact-profiles/updateProfile)
+
+**Syntax:** `updateProfile(key, value)`
+
+Updates a value in the Contact Profile.
+
+### [`mergeProfile`](/ai/for-developers/function-reference/contact-profiles/mergeProfile)
+
+**Syntax:** `mergeProfile(contactId)`
+
+Merges the current Contact Profile with another Contact Profile.
+
+## Context Object
+
+The _Context Object_ functions are used to manage the [Context object](/ai/agents/develop/ai-agent-memory/context) of a conversation. You can add, get, remove, or delete data from the Context object, as well as reset it to its default state.
+
+### [`addToContext`](/ai/for-developers/function-reference/context-object/addToContext)
+
+**Syntax:** `addToContext(key, value, mode)`
+
+Adds a value to the Context object.
+
+### [`getContext`](/ai/for-developers/function-reference/context-object/getContext)
+
+**Syntax:** `getContext(key)`
+
+Retrieves the value associated with a given key in the Context object.
+
+### [`deleteContext`](/ai/for-developers/function-reference/context-object/deleteContext)
+
+**Syntax:** `deleteContext(key)`
+
+Removes a value from the Context object.
+
+### [`removeFromContext`](/ai/for-developers/function-reference/context-object/removeFromContext)
+
+**Syntax:** `removeFromContext(key, value, mode)`
+
+Removes data from the Context object: either a key-value entry or a specific value within an array stored under that key.
+
+### [`resetContext`](/ai/for-developers/function-reference/context-object/resetContext)
+
+**Syntax:** `resetContext()`
+
+Resets the current Context to the default Context of the active Flow.
+
+## Execution and Flow Control
+
+The _Execution and Flow Control_ functions let you manage how a Flow runs. You can stop or restart a Flow, track Node executions, run other Flows, and set which Node executes next.
+
+### [`executeFlow`](/ai/for-developers/function-reference/execution-control/executeFlow)
+
+**Syntax:** `executeFlow(config)`
+
+Executes a target Flow starting from a specified Entrypoint Node.
+
+### [`setNextNode`](/ai/for-developers/function-reference/execution-control/setNextNode)
+
+**Syntax:** `setNextNode(nodeId, flowId)`
+
+Sets a custom Node with the given `nodeId` to be executed after the current Node. If the target Node is in a different Flow, the `flowId` parameter is required.
+
+### [`resetNextNodes`](/ai/for-developers/function-reference/execution-control/resetNextNodes)
+
+**Syntax:** `resetNextNodes()`
+
+Removes any `setNextNode` instructions that were previously set.
+
+### [`addConditionalEntrypoint`](/ai/for-developers/function-reference/execution-control/addConditionalEntrypoint)
+
+**Syntax:** `addConditionalEntrypoint(params)`
+
+Adds a conditional entrypoint for the current conversation. Used by the Optional Question Node.
+
+### _(Deprecated)_ [`think`](/ai/for-developers/function-reference/execution-control/think)
+
+**Syntax:** `think(text, data)`
+
+Restarts Flow execution with a simulated input. The function is deprecated since 4.98.0.
+
+### [`thinkV2`](/ai/for-developers/function-reference/execution-control/thinkV2)
+
+**Syntax:** `thinkV2(text, data)`
+
+Restarts Flow execution with a simulated input based on defined text and data.
+
+### [`stopExecution`](/ai/for-developers/function-reference/execution-control/stopExecution)
+
+**Syntax:** `stopExecution()`
+
+Stops processing the current input after this Node.
+
+### [`getExecutionAmount`](/ai/for-developers/function-reference/execution-control/getExecutionAmount)
+
+**Syntax:** `getExecutionAmount(nodeId)`
+
+Retrieves the number of times a Node with the given `nodeId` has been executed during this conversation.
+
+### [`setExecutionAmount`](/ai/for-developers/function-reference/execution-control/setExecutionAmount)
+
+**Syntax:** `setExecutionAmount(nodeId, value)`
+
+Updates the number of executions for a Node with the given `nodeId`. This is useful for tracking how many times a Node has been executed.
+
+### [`resetExecutionAmount`](/ai/for-developers/function-reference/execution-control/resetExecutionAmount)
+
+**Syntax:** `resetExecutionAmount(nodeId)`
+
+Resets the number of executions to 0 for the Node with the given `nodeId`.
+
+## Input and Output
+
+The _Input and Output_ functions handle communication for a conversation.
+You can use `say` to send messages to the user and `addToInput` to pass data to the next Node.
+
+### [`say`](/ai/for-developers/function-reference/input-and-output/say)
+
+**Syntax:** `say: TSayFunction`
+
+**Alias:** `output`
+
+Sends a message to the user.
+
+### [`output`](/ai/for-developers/function-reference/input-and-output/output)
+
+**Syntax:** `output: TSayFunction`
+
+**Alias:** `say`
+
+Sends a message to the user.
+
+### [`addToInput`](/ai/for-developers/function-reference/input-and-output/addToInput)
+
+**Syntax:** `addToInput(key, value)`
+
+Writes a value into the Input object for the conversation. This function is useful for passing data to the next Node in the Flow.
+
+## Logging and Monitoring
+
+The _Logging and Monitoring_ functions help you monitor and debug a conversation. They let you log messages and track token usage.
+
+### [`log`](/ai/for-developers/function-reference/logging/log)
+
+**Syntax:** `log(level, message)`
+
+Writes a message into the execution logs.
+
+### [`getLLMTokenUsageForSession`](/ai/for-developers/function-reference/logging/getLLMTokenUsageForSession)
+
+**Syntax:** `getLLMTokenUsageForSession()`
+
+Retrieves the token usage information for the conversation session. Returns `null` if no token usage information is available.
+
+### [`setSensitiveLoggingSettings`](/ai/for-developers/function-reference/logging/setSensitiveLoggingSettings)
+
+**Syntax:** `setSensitiveLoggingSettings(settings)`
+
+Updates the masking redaction settings for the active conversation.
+
+## States
+
+The _States_ functions are used to manage a Flow State. They let you get the current State, update it to a new value, or reset it to its default.
+
+### [`getState`](/ai/for-developers/function-reference/states/getState)
+
+**Syntax:** `getState()`
+
+Returns the current State of the conversation.
+
+### [`setState`](/ai/for-developers/function-reference/states/setState)
+
+**Syntax:** `setState(state)`
+
+Updates the conversation State to a specified State. The State must be one of the States defined in the current Flow via **NLU > States**.
+
+### [`resetState`](/ai/for-developers/function-reference/states/resetState)
+
+**Syntax:** `resetState()`
+
+Resets the conversation State to its default value.
+
+## xApp Functions
+
+The xApp functions are used to manage conversations with xApps. 
+
+### [`setAppState`](/ai/for-developers/function-reference/xApps/setAppState)
+
+**Syntax:** `setAppState(xAppTemplateId, xAppTemplateData)`.
+
+Updates the state of the xApp Session for this conversation.
+
+## Other
+
+These are functions that don't belong to any specific group. They let you evaluate conditions, mark conversation goals as complete, and extract data from user input using regex.
+
+### [`evaluateRule`](/ai/for-developers/function-reference/other/evaluateRule)
+
+**Syntax:** `evaluateRule(rule)`
+
+Evaluates a condition based on a rule configuration that follows the `left`, `operator`, `right` pattern. 
+This function works similarly to the If Node. 
+
+### [`completeGoal`](/ai/for-developers/function-reference/other/completeGoal)
+
+**Syntax:** `completeGoal(goal)`
+
+Marks a goal as `completed` for the conversation.
+
+### [`setRegexSlot`](/ai/for-developers/function-reference/other/setRegexSlot)
+
+**Syntax:** `setRegexSlot(params)`
+
+Extracts Slots from user inputs using a regular expression and writes them to `input.slots`. This function is used by the [Regex Slot Filler](/ai/agents/develop/node-reference/ai/regex-slot-filler) Node.
+
+## More Information
+
+- [Code Node: API Functions](/ai/for-developers/code/api-functions)

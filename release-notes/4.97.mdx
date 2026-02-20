@@ -1,0 +1,185 @@
+---
+title: '4.97'
+
+---
+
+import ReleaseNotesHandoverProvidersDeprecation from '/snippets/release-notes/handover-providers-deprecation.mdx'
+
+<ReleaseNotesHandoverProvidersDeprecation/>
+
+<Warning>
+  - The shutdown date for the Google Gemini 1.0 Pro model is April 9, 2025. Google recommends migrating to [Gemini 1.5 Pro and Gemini 1.5 Flash](https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/gemini-1.0-pro) before April 9,2025. We strongly recommend carrying out this migration since Gemini 1.0 Pro support will be removed from future Cognigy.AI versions.
+  - On April 1, 2025, [Insights Beta API](https://api-trial.cognigy.ai/openapi#get-/insights/beta/messages/report/-queryHash-) will be deprecated. Instead, use the [Cognigy.AI OData endpoint](/ai/agents/analyze/odata).
+  - On April 29, 2025, we will discard `say` verbs with `empty text content` affecting the following Voice Gateway Nodes:
+      - [Say](/ai/agents/develop/node-reference/basic/say)
+      - [Question](/ai/agents/develop/node-reference/basic/question)
+      - [Optional Question](/ai/agents/develop/node-reference/basic/optional-question)
+  - In September, 2025, OData 2.3 will be deprecated. Before this date, ensure a smooth transition by switching to the [Cognigy.AI OData 2.4](/ai/agents/analyze/odata#supported-versions).
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 4.97.3
+
+### Cognigy.AI
+
+**Released** April 16, 2025
+
+#### Improvements
+
+- Added error entries to the Logs page to capture details when a handover fails, improving visibility and troubleshooting
+
+#### Bug Fixes
+
+- Fixed the issue where the handover request for the 8x8 client failed
+- Fixed the issue where the RingCentral Engage and Genesys Open Messaging handover providers failed to start a conversation
+- Fixed the issue where the RingCentral Engage handover didn't occur when created with the new handover provider settings
+- Fixed the issue where `service-handover` restarted when an organization was deleted
+- Fixed the issue where double hyphens in the domain name weren't allowed by the URL validation
+
+## 4.97.2
+
+### Cognigy.AI
+
+**Released** April 7, 2025
+
+#### Improvements
+
+- Changed the handover API error code handling. Previously, most integrations with handover providers like Genesys Open Messaging and RingCentral Engage returned a 500 error. Now, the system returns the appropriate codes, such as `404`, `400`, and `500`
+
+#### Bug Fixes
+
+- Fixed the issue where the Genesys Open Messaging conversation wasn't terminated when using triggers. Now, the conversation is properly terminated, and the system returns the correct HTTP status codes in case of errors
+
+## 4.97.1
+
+### Cognigy.AI
+
+**Released** March 25, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where handovers using the Live Agent handover provider, created in Deploy > Handover Providers in a new Project, failed when executed
+- Fixed the issue where the Impersonate user functionality in the Management UI didn't function properly
+
+### Cognigy Voice Gateway
+
+**Released** March 31, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where switching voices in the voice preview didn't work properly when Deepgram was selected as the speech provider
+- Fixed the issue where the Call Completed event wasn't sent because the WebSocket connection had closed before the event occurred
+- Disabled the audio pre-caching feature by default, as it potentially caused issues with corrupted audio
+
+### Infrastructure
+
+**Released** March 31, 2025
+
+#### Cognigy Voice Gateway
+
+- Lowered `terminationGracePeriodSeconds` to 300 to improve the speed and reliability of the Helm Chart deployment
+
+## 4.97.0
+
+### Cognigy.AI
+
+**Released** March 18, 2025
+
+#### Features
+
+##### New Interface for Handover Providers
+
+Introduced a new [interface for handover providers](/ai/escalate/migration).
+You can now find all providers in one place and manage them separately from Endpoints.
+Additionally, you can use different providers within your Flow,
+allowing you to route customers with varying support needs to the appropriate contact centers.
+
+##### Global LLMs
+
+Introduced [Global LLMs](/ai/administer/access/admin-center/global-resources/overview) in the Admin Center, allowing assignment to any Project within your organization and streamlining LLM management across Projects.
+
+#### Improvements
+
+- Renamed the option from Log Token Count to Show Token Count to more accurately reflect its functionality. This change affects the following Nodes: [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output), [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt), [LLM Entity Extract](/ai/agents/develop/node-reference/other-nodes/llm-entity-extract), and [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent)
+- Added a new LLM type, [OpenAI Compatible](/ai/agents/develop/gen-ai-and-llms/providers/openai-compatible), which allows users to integrate any provider and model with an API that adheres to OpenAI's API standards
+- Added the Exclude from Transcript option to the Advanced section in [Say](/ai/agents/develop/node-reference/basic/say#advanced) and [Question](/ai/agents/develop/node-reference/basic/question#exclude-from-transcript) Nodes to hide an output message from AI Agents
+- Added support for [Claude 3.7 Sonnet](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) by Anthropic
+- Added streamed AI Agent messages to the same output bubble in the Interaction Panel, improving readability
+
+#### Bug Fixes
+
+- Fixed the issue where importing Packages containing Extensions failed when mapping a primary Locale to a secondary Locale
+- Fixed the issue where socket-related channels like Webchat v2 and Socket.io were grouped under the realtime channel when using the get conversation counter APIs. With the fix, conversations will now be available with the respective channel filter
+- Fixed the issue where critical data was unintentionally saved on the client side or in the browser within the Management UI
+- Fixed the issue where sensitive headers were exposed for the HTTP Node when request or full debug mode was enabled
+- Fixed the issue where updating the Node using the API fails when trying to update the fields with the same value
+- Fixed the issue where CognigyScript in the Tool Node's name or description fields was not properly parsed
+- Fixed the issue where configured LLMs weren't displayed when setting up a Knowledge Store after importing it via Packages, until the website was refreshed through the browser
+- Fixed the issue where entering the Admin Center for the first time from a completely fresh browser environment (cleared local storage, incognito mode) caused an application crash until the user refreshed the page
+- Fixed the issue where an error occurred when saving after removing translation settings
+- Fixed the issue where finishing a call during a Dial transfer didn't trigger the actions on the Call Completed event in the Voice Gateway Endpoint
+- Fixed the issue where a `Transfer Refer Error` or `Transfer Dial Error` event with the `executeFlow` action pointing to the same Flow where the error occurred led to an infinite loop of Flow executions
+- Fixed the issue where old OpenAI LLMs from Snapshots and Packages were unusable
+- Fixed the issue where AI Agents couldn't be resolved when a Snapshot was used as an entry for the Endpoint
+- Fixed the issue where updating the Working Hours Node failed due to Node validation
+- Fixed the issue where Snapshot creation and restoration consumed more memory than versions before 4.96
+
+### Cognigy Voice Gateway
+
+**Released** March 18, 2025
+
+#### Features
+
+##### Deepgram in Voice Preview
+
+Added Deepgram as a voice provider to the [Voice Preview](/ai/agents/test/voice-preview#set-up-a-speech-provider) feature, enabling you to test your voice AI Agent using your Deepgram credentials in the Interaction Panel.
+
+#### Improvements
+
+- Added the `notifyURL` parameter to the list of parameters for creating an [Outbound Call API request](/voice-gateway/creating-outbound-calls#basic-configuration-request), enabling status updates for the call
+- Improved speech fallback to cover additional cases, including invalid SSML in streaming TTS APIs
+- Added the `PRE_CACHE_IGNORE_LIST` environment variable to allow specifying a list of vendors that shouldn't be pre-cached. Valid values: `aws`, `deepgram`, `elevenlabs`, `google`, `ibm`, `microsoft`, `nuance`, `wellsaid`, `whisper`, and `playh`.
+  You can set these values via `{{ .Values.featureServer.preCacheIgnoreList }}`. By default, `deepgram` is in the ignore list due to potentially corrupted audio during pre-caching
+
+### Cognigy Webchat
+
+**Released** March 18, 2025
+
+#### Improvements
+
+- Added the capability to configure translations for Webchat UI elements in the [Webchat Custom Settings](/webchat/v3/configuration#webchat-custom-settings) of the Webchat v3 Endpoint
+- Added the option to customize the [Start new conversation button text](/webchat/v3/configuration#previous-conversations) in the Webchat v3 Endpoint
+- Updated Webchat v3 and Demo Webchat to [3.16.0](https://github.com/Cognigy/Webchat/releases/)
+
+### Cognigy Insights
+
+**Released** March 5, 2025
+
+#### Features
+
+##### Deleting Session Transcripts
+
+Introduced the capability to [delete session transcripts](/insights/explorers/transcript#delete-sessions) in the Transcript Explorer, giving you greater control over your data. This feature enhances data management, boosts confidentiality, and ensures you can easily maintain a clean and secure transcript history.
+
+#### Bug Fixes
+
+- Fixed the issue where the UI failed when users selected a custom timespan with no dates set
+
+### Infrastructure
+
+#### Cognigy Voice Gateway
+
+- Update `vg-rtpengine` to `13.1.1.5`
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

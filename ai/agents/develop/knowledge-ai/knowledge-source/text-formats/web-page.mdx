@@ -1,0 +1,42 @@
+---
+title: Web Page
+hidden: false
+seo:
+  metatags:
+    description: Use web pages as Knowledge Sources for Knowledge AI.
+---
+
+<a href="/release-notes/4.73"><Badge className="version-badge" color="blue">Updated in 4.73</Badge></a>
+
+
+Knowledge AI supports using web pages to create [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview).
+
+## Restrictions
+
+- The web page must be hosted on a publicly accessible website.
+- When you create a Knowledge Source from a web page, Knowledge AI processes all visible text on the web page, including potentially unwanted text, such as cookie notices.
+- Knowledge AI doesn't process web page content with anti-crawling measures.
+- Knowledge AI doesn't support images or Optical Character Recognition (OCR) capabilities.
+
+## Chunking Process
+
+When processing a web page, Knowledge AI:
+
+1. Visits the URL as a page in a browser session.
+2. Scrolls to the bottom of the web page. 
+3. Accesses lazy-loaded<sup>[1](#footnote1)</sup> content by checking for any text changes until the web page is stable and no longer loads additional text.
+4. Generates Knowledge Source content based on the visible text result.
+
+Knowledge AI imports the web page content into a Knowledge Source once. If the web page you used as a source is updated and you want to include the new content in the web page, create a new Knowledge Source based on the updated web page.
+
+## More Information
+
+- [Knowledge AI Overview](/ai/agents/develop/knowledge-ai/overview)
+- [Create a Knowledge Store](/ai/agents/develop/knowledge-ai/getting-started)
+- [Chunk editor](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk)
+- [Cognigy Text Format](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt)
+- [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf)
+
+---
+
+<sup id="footnote1">1</sup>: Lazy loading is a web development technique that delays loading non-critical or non-visible content until it is necessary. This technique improves web page loading times and user experience.
