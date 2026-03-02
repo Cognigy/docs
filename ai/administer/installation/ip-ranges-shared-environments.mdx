@@ -1,0 +1,283 @@
+---
+title: "IP Address Ranges Shared Environments"
+keywords: ["ip addresses", "IP address ranges shared environments", "IP address ranges shared installations", "shared saas", "cognigy saas", "cxone saas"]
+"seo": {
+  "metatags": {
+    "description": "This page contains the IP addresses used by our environments to perform SIP signaling or to send outbound requests."
+  }
+}
+---
+
+This page lists the public IP addresses used by NiCE Cognigy and NiCE CXOne Shared SaaS installations to perform SIP signaling or send outbound requests.
+
+Both Cognigy.AI and Cognigy Voice Gateway use multiple public _IP addresses_ per installation. _IP addresses_ in this document refer to the network addresses used for outbound requests (Cognigy.AI) and SIP signaling (Voice Gateway).
+
+If you implement IP whitelisting on your API servers for added security, inform Cognigy Support or your Customer Success Manager.
+
+<Note>
+   The list of IP addresses may change over time. NiCE Cognigy will promptly notify you of any updates.
+</Note>
+
+<Warning>
+   The IP addresses for SIP signaling aren't used for transmitting audio data. Separate IP addresses handle audio/media traffic and are subject to change due to automatic scaling, so NiCE Cognigy doesn't provide those addresses. The required IP addresses and ports for audio/media will be negotiated dynamically when establishing calls.
+</Warning>
+
+Find the relevant public IP addresses according to your installation type:
+
+- [Cognigy SaaS](#nice-cognigy-saas-clusters)
+- [NiCE CXone Shared SaaS](#nice-cxone-shared-saas-clusters)
+
+## NiCE Cognigy SaaS Clusters
+
+Standard Cognigy environments in multiple regions.
+
+### 🇪🇺 Europe SaaS - app.cognigy.ai
+
+#### Cognigy.AI
+
+Cognigy.AI uses the following IP addresses for outbound requests:
+
+- 3.70.39.176
+- 3.69.130.45
+- 3.124.74.126
+
+#### Cognigy Voice Gateway
+
+Cognigy Voice Gateway uses the following IP addresses for SIP signaling:
+
+- 3.68.22.26
+- 3.73.70.70
+- 3.74.34.237
+
+### 🇺🇸 US SaaS - app-us.cognigy.ai
+
+#### Cognigy.AI
+
+Cognigy.AI uses the following IP addresses for outbound requests:
+
+- 3.229.129.99
+- 34.236.251.178
+- 54.236.86.4
+
+#### Cognigy Voice Gateway
+
+Cognigy Voice Gateway uses the following IP addresses for SIP signaling:
+
+- 18.210.218.95
+- 34.233.59.163
+
+### 🇬🇧 United Kingdom SaaS - app-uk.cognigy.ai
+
+#### Cognigy.AI
+
+Cognigy.AI uses the following IP addresses for outbound requests:
+
+- 13.42.121.72
+- 3.10.92.32
+- 35.177.65.3
+
+#### Cognigy Voice Gateway
+
+Cognigy Voice Gateway will use the following IP addresses for SIP signaling:
+
+- 13.43.21.62
+- 18.170.191.49
+
+### 🇦🇺 Australia SaaS - au-02.cognigy.ai
+
+#### Cognigy.AI
+
+Cognigy.AI uses the following IP addresses for outbound requests:
+
+- 13.238.252.9
+- 13.55.38.237
+- 3.105.214.205
+
+#### Cognigy Voice Gateway
+
+Cognigy Voice Gateway uses the following IP addresses for SIP signaling:
+
+- 54.66.80.76
+- 52.65.113.43
+
+### 🇪🇺 Trial Europe - trial.cognigy.ai
+
+#### Cognigy.AI
+
+Cognigy.AI uses the following IP addresses for outbound requests:
+
+- 3.69.16.128
+- 18.158.151.80
+- 3.64.180.26
+
+#### Cognigy Voice Gateway
+
+Cognigy Voice Gateway uses the following IP addresses for SIP signaling:
+
+- 3.77.106.237
+- 18.197.64.96
+
+### 🇺🇸 Trial US - trial-us.cognigy.ai
+
+#### Cognigy.AI
+
+Cognigy.AI uses the following IP addresses for outbound requests:
+
+- 50.17.209.2
+- 54.158.99.91
+- 34.225.133.252
+
+#### Cognigy Voice Gateway
+
+Cognigy Voice Gateway uses the following IP addresses for SIP signaling:
+
+- 3.218.190.67
+- 44.223.130.33
+
+## NiCE CXone Shared SaaS Clusters
+
+Shared NiCE CXone clusters hosted on AWS in various regions.
+
+### 🇦🇺 AU1 [Asia Pacific (Sydney)] - cognigy-au1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 15.134.174.233
+- 54.79.247.44
+- 13.237.226.156
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 3.105.140.69
+- 54.66.126.245
+- 13.55.15.164
+
+### 🇯🇵 JP1 [Asia Pacific (Tokyo)] - cognigy-jp1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 52.68.126.161
+- 54.95.9.113
+- 52.68.154.59
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 13.159.217.57
+- 54.95.216.134
+- 3.112.141.161
+
+### 🇺🇸 NA3 [US East (N. Virginia)] - cognigy-na3.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 100.49.18.38
+- 3.209.7.189
+- 54.87.214.223
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 100.49.100.62
+- 54.172.111.252
+- 44.213.166.198
+
+### 🇨🇦 CA1 [Canada (Central)] - cognigy-ca1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 15.156.226.173
+- 15.157.85.122
+- 15.223.137.91
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 16.54.34.172
+- 16.52.248.114
+- 35.183.56.219
+
+### 🇪🇺 EU1 [Europe (Frankfurt)] - cognigy-eu1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 63.180.145.39
+- 18.153.113.137
+- 3.120.154.140
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 18.157.233.190
+- 3.73.24.17
+- 18.193.169.160
+
+### 🇺🇸 NA1 [US West (Oregon)] - cognigy-na1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 44.252.142.51
+- 44.254.240.46
+- 44.254.21.124
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 44.230.36.253
+- 16.144.122.147
+- 52.89.55.174
+
+### 🇬🇧 UK1 [Europe (London)] - cognigy-uk1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 18.135.62.239
+- 13.43.245.110
+- 51.24.4.142
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 3.11.55.23
+- 18.133.72.127
+- 3.11.59.137
+
+### 🇮🇳 IN1 [Asia Pacific (Mumbai)] - cognigy-in1.nicecxone.com
+
+#### Cognigy.AI
+
+NiCE CXone uses the following IP addresses for outbound requests:
+
+- 15.207.158.222
+- 3.6.187.58
+- 13.205.10.135
+
+#### Cognigy Voice Gateway
+
+NiCE CXone uses the following IP addresses for SIP signaling:
+
+- 3.108.85.21
+- 13.232.154.152
+- 13.201.208.232

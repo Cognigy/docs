@@ -1,0 +1,81 @@
+---
+title: Conversation Queue
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+_Conversation Queue_ is a list of conversations awaiting agent attention. In Live Agent, a queue works like a waiting area, where conversations are held until an agent sends the first reply.
+
+If a conversation limit is set, assigned conversations appear on the **Mine** tab, while unassigned conversations waiting for an available agent appear on the **Unassigned** tab.
+
+In the conversation queue, conversations can have different priorities:
+
+- **Standard Conversations** – new conversations are added to the agent's queue. An agent with the `Agent` role takes ownership of the conversation when they send the first reply.
+- **Escalated Conversations** – when a [conversation is escalated](/live-agent/conversation/conversation-routing/manual-mode), its priority changes to `Escalation`. Escalated conversations move to the top of the same queue but remain subject to conversation limits. An agent with the `Supervisor` role automatically takes ownership of the conversation after escalation.
+
+## Examples
+
+The provided examples show how the conversation queues work:
+
+The [conversation limits](/live-agent/settings/account-settings#conversation-limit-per-agent) and specific queue behavior may vary depending on the Live Agent configuration and settings in use.
+
+**Example 1**
+
+Conditions:
+
+- Conversations are assigned to an agent, but they still need to send the first reply.
+- The Conversation limit is set to 2 conversations per agent.
+- There is one agent available.
+- 3 conversations are created.
+
+Result: The first two conversations are assigned to the agent and are moved to the queue, awaiting the agent's reply. One conversation remains unassigned.
+
+**Example 2**
+
+Conditions:
+
+- Conversations are assigned to an agent, but they still need to send the first reply.
+- The Conversation limit is turned off, meaning there is no limit on the number of conversations per agent.
+- There is 1 agent available.
+- 3 conversations are created.
+
+Result: All three conversations are assigned to the agent and are moved to the queue, waiting for the agent to send the first reply. None of the conversations has been assigned yet.
+
+**Example 3**
+
+Conditions:
+
+- Both settings in the Inbox are activated: Automatic Conversation Assignment and Consider Conversation Priority.
+- Conversations are assigned to an agent, but they still need to send the first reply.
+- The Conversation limit is set to 2 conversations per agent.
+- There is one agent available.
+- 3 conversations with different [priorities](/live-agent/conversation/conversation-routing/automatic-mode#additional-automatic-assignment-parameters) are created:
+- Conversation 1 is Medium.
+- Conversation 2 is Low.
+- Conversation 3 is High.
+
+Result: The agent is assigned Conversation 3 (High), followed by Conversation 1 (Medium), both in the queue. Conversation 2 (Low) remains unassigned.
+
+**Example 4**
+
+Escalation behavior may vary depending on Live Agent configuration and settings in use.
+
+Conditions:
+
+- Conversations are assigned to an agent, but the agent hasn't sent the first reply.
+- The conversation limit is set to 2 conversations per agent.
+- One agent with the **Agent** role and one agent with the **Supervisor** role are available. The supervisor isn't included in the list of agents.
+- 2 conversations are created and assigned to the agent with the **Agent** role.
+- 1 conversation remains unassigned.
+- The agent escalates **Conversation 2** to the Supervisor.
+
+Result: Conversation 1 and Conversation 3 are assigned to the agent, while Conversation 2 moves to the top of the same queue with the `Escalation` priority and becomes visible to the supervisor.
+
+
+## More Information
+
+- [Real-Time Queue Notifications](/live-agent/conversation/conversation-queue/real-time-queue-notifications)
+- [Conversation Routing: Automatic mode](/live-agent/conversation/conversation-routing/automatic-mode)
+- [Conversation Routing Overview](/live-agent/conversation/conversation-routing/overview)

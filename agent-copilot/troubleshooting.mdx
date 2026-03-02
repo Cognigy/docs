@@ -1,0 +1,31 @@
+---
+title: "Troubleshooting"
+sidebarTitle: "Common Issues"
+keywords: ['troubleshooting', 'troubleshoot Agent Copilot', 'Agent Copilot issues']
+"seo": {
+    "metatags": {
+        "description": "This page lists common issues you may encounter while using Agent Copilot and provides troubleshooting steps to resolve them."
+    }
+}
+---
+
+This page lists common issues you may encounter while using Agent Copilot and provides troubleshooting steps to resolve them.
+
+<AccordionGroup>
+  <Accordion title="Why are some tiles not appearing in my Copilot workspace?">
+    You may see a message like `The following tiles are not registered in the workspace layout and will not be rendered: <tileId-1>, <tileId-2>.`
+    This occurs because some of the Nodes in your Flow aren't correctly configured in the [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid).
+
+    To fix this issue, ensure all Copilot Nodes are added to the Set Grid Node with the exact same Tile ID; check for typos. If the tiles are not needed, delete the unused tiles from the grid and related Nodes from your Flow.
+  </Accordion>
+
+  <Accordion title="My Copilot workspace shows the error `<host-name> refused to connect`">
+    This usually indicates the workspace is pointing to the wrong host. Use the correct base URL (`AICopilotBaseUrl`) for your installation.
+  </Accordion>
+
+  <Accordion title="Why is the Sentiment tile failing to render?">
+    Two key issues can prevent the Sentiment tile from displaying:
+    - No model selected for Sentiment Analysis. In **Manage > Settings > Generative AI Settings**, make sure a model, such as `gpt-4o` is selected. Without this model, Agent Copilot can't render the tile and may return a 500 error.
+    - Flow contains incompatible Nodes. Standard output Nodes, such as Say and Question Nodes, can't be placed below the [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid) in the Agent Copilot Flow. Remove or disable incompatible Nodes to render the tile correctly.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,47 @@
+---
+title: Voice Preview
+keywords: ['Cognigy.AI', 'AI Agents', 'Voice Preview', 'Speech-to-Text', 'Text-to-Speech', 'STT', 'TTS', 'Google', 'Microsoft', 'Amazon AWS', 'Deepgram', 'AI Voice Testing', 'ElevenLabs']
+seo:
+  metatags:
+    description: >-
+      The Voice Preview feature lets users quickly test their voice output
+      without going through the entire flow with a mock call. It supports cloud
+      speech-to-text and text-to-speech services from providers such as Google,
+      Microsoft, and Amazon AWS.
+---
+
+import AiVoiceProviders from '/snippets/ai/voice-providers.mdx'
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="blue">Updated in 2026.3</Badge></a>
+
+The _Voice Preview_ feature lets users quickly test their AI Agents' voice output in the [Flow editor](/ai/agents/develop/projects-and-flows/editor) or [Interaction Panel](/ai/agents/test/interaction-panel/overview)) without going through the entire [Flow](/ai/agents/develop/projects-and-flows/overview) with a mock call. This feature supports cloud speech-to-text (STT) and text-to-speech (TTS) services. To use the Voice Preview, you need to enter text or SSML syntax, and select the language and voice.
+
+## Restrictions
+
+- The Voice Preview feature supports only the Google, Microsoft, Amazon AWS, and Deepgram speech providers. When testing a voice Flow through the Interaction Panel, you should check the STT and TTS settings of the voice Nodes to ensure that one of these providers is specified. If any other provider, such as ElevenLabs, is specified in the Nodes, the Interaction Panel won't support the voice conversation.
+- To use SSML syntax in the Voice Preview, the speech provider must support SSML syntax. For example, ElevenLabs doesn't support SSML. Check the documentation of your speech provider to see if it supports SSML.
+
+## Access STT and TTS Providers
+    
+If your environment has network connection restrictions or requires strict security rules, make sure that both STT and TTS providers are accessible. Add the IP address ranges of your STT and TTS providers to the firewall's whitelist. This approach ensures the Cognigy.AI server can interact smoothly with both providers, guaranteeing the expected functionality of the Voice Preview feature.
+
+## How to Use Voice Preview
+
+### Set up a Speech Provider
+
+To set up a speech provider and test your voice agents, follow these steps:
+
+<AiVoiceProviders/>
+
+### Use Voice Preview
+
+You can access the Voice Preview feature in two different ways:
+
+- In the Flow editor, click ![voice-preview](/_assets/icons/black-and-white/voice-preview.svg).
+- In the Interaction Panel, hover over the AI Agent message in the chat and click ![voice-preview](/_assets/icons/black-and-white/voice-preview.svg) in the interactive tooltip. The Voice Preview button is displayed only for certain types of output, including regular text output, fallback text, and text or SSML output from channels that support voice.
+
+## More Information
+
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Voice Gateway](/voice-gateway/index)
+- [Voice Nodes](/ai/agents/develop/node-reference/voice/overview)

@@ -1,0 +1,20 @@
+---
+title: Remove From Context
+hidden: false
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/logic/remove-from-context.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node removes information from the [Context](/ai/agents/develop/ai-agent-memory/context) object.
+
+## Parameters
+
+| Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                                                 |
+| --------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Key       | CognigyScript | The key of the property you want to remove from the Context object. For example, if you enter `requestedProduct`, it removes the `context.requestedProduct` property. You can use nested keys, for example, `user.profile.name` removes the `context.user.profile.name` property from the Context object. This parameter doesn't support dashes or hyphens. |
+| Value     | CognigyScript |  The value to remove from the array. Required only if you select **Array** in the **Mode** parameter.                                                                                                                                                                                                                                                       |
+| Mode      | Select        | <ul><li>**Simple** — removes the key-value pair completely from the Context object.</li><li>**Array** — removes the value entered in the **Value** parameter from the array under the key in the Context object.</li></ul>                                                                                                                                  |

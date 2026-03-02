@@ -1,0 +1,64 @@
+---
+title: Agent Copilot
+hidden: false
+keywords:
+  - agent copilot
+  - contact centers
+seo:
+  metatags:
+    description: >-
+      Cognigy Agent Copilot offers a variety of advanced features that empower
+      agents to provide faster and more accurate customer support.
+---
+
+Agent Copilot is a Cognigy product designed to empower human agents with context-specific information, next-step suggestions, and more during conversations. With Agent Copilot, you also have a fully customizable workspace that integrates into your contact center platform to expand its capabilities and improve your interactions with customers. You can control and customize Agent Copilot's behavior entirely from the Flow in Cognigy.AI.
+
+Additionally, you can combine [Agent Copilot with Voice Gateway](/agent-copilot/getting-started/voice.mdx) to handle voice calls while still profiting from Agent Copilot's support.
+
+## Core Components
+
+### Flow
+
+Agent Copilot uses specific Nodes from Flows to entirely control how the Agent Copilot workspace looks and behaves. Your Agent Copilot Flow serves only to define the Agent Copilot tiles and provides a separate environment from other Flows. In Agent Copilot Flows, you can perform knowledge searches, display customer information to human agents, and many other actions.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/agent-copilot/knowledge-tile-flow.webp" style={{ width: 'auto' }} />
+</Frame>
+
+For more information, read the [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview) documentation.
+
+### Backend
+
+The Agent Copilot backend listens to the Agent Copilot Flow and handles the logic execution, API calls, and dynamic updates.
+
+### Frontend
+
+The frontend interface is a grid-like workspace that displays the configured tiles to human agents and updates in real time during conversations. You can run the frontend as a standalone app or embedded in your contact center platform.
+
+#### Standalone
+
+A separate app that you can open in your browser and that shows the full Agent Copilot workspace. The human agent receives a link to Agent Copilot in the conversation.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/escalate/agent-copilot-standalone.png" style={{ width: 'auto' }} />
+</Frame>
+
+#### Embedded
+
+The Agent Copilot tiles are displayed directly in your contact center platform via an iFrame.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/escalate/agent-copilot-embedded.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Use Cases
+
+| Use Case                                      | Agent Copilot Behavior                                                         |
+| --------------------------------------------- | ------------------------------------------------------------------------------ |
+| A customer mentions a billing problem.        | Retrieves the mentioned invoice and suggests resolution steps.                 |
+| An agent needs to verify identity.            | Retrieves customer details from connected systems and displays to human agent. |
+| A customer indicates frustration in the chat. | Displays customer history and user sentiment information.                      |
+| A voice call is in progress.                  | Displays live transcript and next-step actions in real time.                   |
+
+For more information, read the [Agent Copilot](/agent-copilot/overview) documentation.
+

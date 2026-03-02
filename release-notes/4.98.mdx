@@ -1,0 +1,187 @@
+---
+title: '4.98'
+
+---
+
+<Warning>
+  The following features have been deprecated in 4.98:
+
+  - [Insights Beta API](https://api-trial.cognigy.ai/openapi#get-/insights/beta/messages/report/-queryHash-). Instead, use the [Cognigy.AI OData endpoint](/ai/agents/analyze/odata).
+  - The `actions.think` and `api.think` functions. Instead, use `actions.thinkV2()` and `api.thinkV2()`. The removal date is June 2025.
+</Warning>
+
+<Warning>
+  - The shutdown date for the Google Gemini 1.0 Pro model is April 9, 2025. Google recommends migrating to [Gemini 1.5 Pro and Gemini 1.5 Flash](https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/gemini-1.0-pro) before April 9,2025. We strongly recommend carrying out this migration since Gemini 1.0 Pro support will be removed from future Cognigy.AI versions.
+  - On April 29, 2025, we will discard `say` verbs with `empty text content` affecting the following Voice Gateway Nodes: [Say](/ai/agents/develop/node-reference/basic/say), [Question](/ai/agents/develop/node-reference/basic/question), [Optional Question](/ai/agents/develop/node-reference/basic/optional-question)
+  - In September, 2025, OData 2.3 will be deprecated. Before this date, ensure a smooth transition by switching to the [Cognigy.AI OData 2.4](/ai/agents/analyze/odata#supported-versions).
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 4.98.5
+
+### Cognigy.AI
+
+**Released** April 17, 2025
+
+#### Improvements
+
+- Added error entries to the Logs page to capture details when a handover fails, improving visibility and troubleshooting
+
+#### Bug Fixes
+
+- Fixed the issue where the handover request for the 8x8 client failed
+- Fixed the issue where the RingCentral Engage and Genesys Open Messaging handover providers failed to start a conversation
+- Fixed the issue where the RingCentral Engage handover didn't occur when created with the new handover provider settings
+- Fixed the issue where `service-handover` restarted when an organization was deleted
+- Fixed the issue where double hyphens in the domain name weren't allowed by the URL validation
+
+## 4.98.4
+
+### Cognigy.AI
+
+**Released** April 11, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where `cp.goals` was renamed to `cp.tasks` in Code Nodes
+- Fixed the issue where the RingCentral Engage and Genesys Open Messaging handover providers failed to start a conversation
+- Fixed the issue where the handover request for the 8x8 client failed
+- Fixed the issue where queue update validation failed for the Maximum Queue Position field in the Handover to Agent Node
+
+## 4.98.3
+
+### Cognigy.AI
+
+**Released** April 8, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where call events with the Execute Flow option selected in the Voice Gateway Endpoint weren't triggered after the second occurrence
+
+## 4.98.2
+
+### Cognigy.AI
+
+**Released** April 7, 2025
+
+#### Improvements
+
+- Changed the handover API error code handling. Previously, most integrations with handover providers like Genesys Open Messaging and RingCentral Engage returned a 500 error. Now, the system returns the appropriate codes, such as `404`, `400`, and `500`
+
+#### Bug Fixes
+
+- Fixed the issue where the Genesys Open Messaging conversation wasn't terminated when using triggers. Now, the conversation is properly terminated, and the system returns the correct HTTP status codes in case of errors
+
+## 4.98.1
+
+### Cognigy.AI
+
+**Released** April 2, 2025
+
+#### Bug Fixes
+
+- Fixed the issue that caused the deployment to time out due to delays in the database migration process
+
+### Cognigy Voice Gateway
+
+**Released** April 11, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the Call Completed event wasn't sent because the WebSocket connection had closed before the event occurred
+
+### Agent Copilot
+
+**Released** April 2, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where multiple widgets in the Agent Copilot workspace, implemented via the Copilot: HTML Tile Node, could trigger the same postback action several times
+
+## 4.98.0
+
+### Cognigy.AI
+
+**Released** April 1, 2025
+
+#### Features
+
+##### New Handover Provider for Salesforce MIAW
+
+Introduced a [new handover provider for Salesforce MIAW](/ai/escalate/handover-reference/salesforce-miaw). With the Salesforce MIAW handover provider, you can integrate Cognigy.AI with Salesforce Messaging for In-App and Web, enabling end users to connect with human agents working in a contact center that uses Salesforce.
+
+#### Improvements
+
+- Improved AI Agent voice capabilities in the [AI Agent creation wizard](/ai/agents/develop/manage-ai-agents) and [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent). Now, you can add labels for TTS vendors and disable the audio cache
+- Removed the beta flag from the [Yes/No Intents](/ai/platform-features/nlu/intents/yes-no-intents) feature
+
+#### Bug Fixes
+
+- Fixed the issue where the left-side menu in Cognigy.AI wasn't reacting to Locale changes
+- Fixed the issue where the Impersonate user function in the Management UI was missing from the frontend URL
+- Fixed the issue where API requests for copying a Playbook wasn't working
+- Fixed the issue where the Lexicon generation didn't work properly for the `gpt-4o`, `gpt-4o-mini`, and `gpt-35-turbo` models
+- Fixed the issue where the notification regarding the disabled non-SSO login persisted on the screen, even after switching to SSO login, along with a typo in the notification
+- Fixed the issue where you couldn't save the Webhook Endpoint after removing the Webhook URL
+- Fixed the issue where the Last edited timestamp of resources imported in a Package was incorrectly set to the Package's creation time instead of the actual import time
+- Fixed the issue where data-only Default Replies failed for AI Agent implemented from Snapshots when the opt-in memory optimization feature was activated
+- Fixed the issue where the 20-second TTL wasn't applied to trusted Extensions, leading to uncaught errors, blocked conversations, and unintended system behavior
+- Fixed the issue where the Handover Settings section in the Endpoint editor couldn't be expanded
+- Fixed the issue where the link to the resource page didn't include `localeId`, resulting in a gray screen if the user didn't have access to the Project
+
+### Cognigy Voice Gateway
+
+**Released** April 1, 2025
+
+#### Improvements
+
+- Added the `notifyURL` parameter for additional cases, enabling proper reporting of `REFER` and `DIAL` success and failure statuses via the `call:status` [webhook event](/voice-gateway/creating-outbound-calls#basic-configuration-request)
+- Added automatic reconciliation of call counters to ensure accurate tracking of active sessions, even after TTL expires
+- Added support for delayed media with encryption, where the SDP packet is included in the `200` OK response and acknowledged in the ACK message
+- Added a more precise approach of how to count calls and active sessions, and a widget displaying active sessions when using `cognigy-monitoring-stack` with Grafana
+
+#### Bug Fixes
+
+- Fixed the issue where invalid empty transcripts from Microsoft Azure Speech Services caused to errors when a Say Node was created
+- Fixed the issue where fallback refer transfers without a configured Referred by setting lead to an error
+- Fixed the issue where call counts became inaccurate over time due to Redis TTL without counter decrements
+- Fixed the issue in the Voice Gateway Self-Service Portal where the default Deepgram voice, configured in an Application, was displayed incorrectly upon page load. The portal now shows the correct voice
+
+### Cognigy Insights
+
+**Released** April 1, 2025
+
+#### Improvements
+
+- Renamed Goals to Tasks in the [Contact Profile](/ai/agents/analyze/contact-profiles) to standardize naming conventions across Cognigy.AI
+- Replaced the `goals` property in the [Profile object](/ai/agents/develop/ai-agent-memory/profile) with `tasks`
+
+#### Bug Fixes
+
+- Fixed the issue where the Top chart wasn't updated in time for the new Insights framework
+- Fixed the issue where the legend colors weren't updated for the Time Saved, Cost Savings, and Revenue Earned charts in the Goals Report
+
+### Infrastructure
+
+#### Cognigy Voice Gateway
+
+- Updated cron jobs `update-api-ban-list`, `update-call-history-billing-app`, `deactivate-account-billing`, `clean-up-test-call-manager` and included `image.pullSecrets` dynamically via helper instead of the hardcoded `cognigy-registry-token` imagePullSecrets
+- Updated the template of `sbc-inbound` and `sbc-outbound` and added the following environment variables:
+   - `CALL_COUNTER_TRACK_ACCOUNT_CALLS` configurable via `{{ .Values.global.callCounter.enabled }}`. The default value is `true`
+   - `CALL_COUNTER_RECONCILE_INTERVAL_SECONDS` configurable via `{{ .Values.global.callCounter.reconcileIntervalSeconds }}`. The default value is 30 seconds.
+   - `CALL_COUNTER_LEADER_ELECTION_SECONDS` configurable via `{{ .Values.global.callCounter.leaderElectionIntervalSeconds }}`. The default value is 60 seconds.
+   - `K8S_APP_NAME`
+   - `CALL_COUNTER_TTL_IN_MINUTES`. The default value is `5`
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

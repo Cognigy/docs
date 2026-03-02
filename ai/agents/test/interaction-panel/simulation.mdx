@@ -1,0 +1,37 @@
+---
+title: "Simulation"
+keywords: ['debug mode', 'simulator', 'interaction panel', 'test AI Agents']
+"seo": {
+  "metatags": {
+    "description": "Learn how to use Simulation mode to test AI Agents in the Interaction Panel."
+  }
+}
+---
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="blue">Added in 2026.3</Badge></a>
+
+With _Simulation_ mode, you can simulate conversations for your LLM-based AI Agents using [predefined scenarios](/ai/agents/test/simulator/overview). This mode allows you to test and debug your AI Agent's behavior in various situations without needing real user input.
+
+## Restrictions
+
+- Simulations don't work with Snapshots in the Interaction Panel.
+
+## How to Use Simulation Mode
+
+To open simulation mode, click the ![simulation](/_assets/icons/black-and-white/simulation.svg) tab in the [Interaction Panel](/ai/agents/test/interaction-panel/overview), then select the scenario to run the simulation on.
+
+The simulation of the selected scenario starts with the following predefined settings:
+
+- The number of simulation runs is 1 and can't be changed.
+- The simulation uses the [default LLM](/ai/agents/develop/gen-ai-and-llms/other-operations#set-a-model-as-default) selected on the **Large Language Models** page.
+
+<div style={{textAlign: 'center'}}>
+   <video width="300" height="500" controls autoPlay alt="type:video" style={{border: '1px solid #ccc', borderRadius: '12px', display: 'block', margin: '0 auto'}}>
+      <source src="https://docscognigyassets.blob.core.windows.net/assets/interaction-panel-simulator.mp4" />
+   </video>
+</div>
+
+## More Information
+
+- [Simulator](/ai/agents/test/simulator/overview)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)

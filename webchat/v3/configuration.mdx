@@ -1,0 +1,580 @@
+---
+title: 'Webchat v3: Endpoint Configuration'
+sidebarTitle: Endpoint Configuration
+---
+
+import WebchatPrivacyNoticeAcceptance from "/snippets/webchat/privacy-notice-acceptance.mdx";
+
+<a href="/release-notes/2025.23"><Badge className="version-badge" color="blue">Updated in 2025.23</Badge></a>
+
+To prepare the AI Agent for your website, you need to deploy it by [creating Webchat v3 Endpoints](#create-a-webchat-v3-endpoint) and customize the agent to fit your needs using the [Webchat v3 Endpoint settings](#configure-specific-settings).
+
+## Create a Webchat v3 Endpoint
+
+1. In the left-side menu of the Cognigy.AI interface, select a Project.
+2. In the left-side menu of the Project, go to **Deploy > Endpoints**.
+3. On the **Endpoints** page, click **+ New Endpoint**.
+4. In the **New Endpoint** section, do the following:
+   1. Select the **Webchat (v3)** Endpoint type.
+   2. Specify a unique name.
+   3. Select a relevant Flow from the list.
+5. Click **Save**.
+
+## Configure General Settings
+
+The following general settings are available within this Endpoint:
+
+- [Endpoints Overview](/ai/agents/deploy/endpoints/overview)
+- [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer Functions](/ai/for-developers/transformers/overview)
+- [NLU Connectors](/ai/platform-features/nlu/external/nlu-connector-reference/all-nlu-connectors)
+- [Session Management](/ai/agents/deploy/endpoints/session-management)
+- [Handover Settings](/ai/agents/deploy/endpoints/handover-settings)
+- [Real-Time Translation Settings](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Agent Copilot](/agent-copilot/overview)
+- [File Storage](/ai/agents/deploy/endpoints/file-storage)
+
+<Accordion title="Supports Inject and Notify">
+  You can use the [Inject and
+  Notify](/ai/agents/deploy/endpoints/inject-and-notify) feature with this
+  Endpoint.
+</Accordion>
+
+## Configure Specific Settings
+
+Customize Webchat to meet your specific needs.
+You can adjust colors and add features such as file uploads to enhance the effectiveness of your AI Agent.
+Any updates you make will be instantly and seamlessly reflected when you load or reload your website with Webchat linked to the Endpoint.
+
+### Style Presets
+
+The Style Presets settings offer predefined dimensions and text display behavior for the Webchat widget. The style presets allow you to quickly customize your Webchat widget without the need to manually adjust the [CSS customization settings](/webchat/v3/embedding/npm#customize-webchat-settings), the [Advanced Layout settings](#advanced-layout-settings), or the [Webchat Layout](#webchat-layout) settings.
+
+You can select the following style presets:
+
+<div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
+
+{" "}
+<div
+  style={{
+    flex: "1",
+    textAlign: "center",
+    minWidth: "200px",
+    maxWidth: "220px",
+  }}
+>
+  <video
+    controls=""
+    alt="type:video"
+    style={{
+      border: "1px solid #ccc",
+      borderRadius: "12px",
+      width: "100%",
+      maxWidth: "200px",
+    }}
+    autoPlay
+    loop
+  >
+    <source src="https://docscognigyassets.blob.core.windows.net/assets/classic-preset.webm" />
+  </video>
+  <p style={{ maxWidth: "200px", margin: "10px auto 0 auto", fontSize: "14px" }}>
+    <strong>Classic:</strong> The classic, smaller Webchat widget with bordered
+    AI Agent messages.
+  </p>
+</div>
+
+{" "}
+<div
+  style={{
+    flex: "1",
+    textAlign: "center",
+    minWidth: "200px",
+    maxWidth: "220px",
+  }}
+>
+  <video
+    controls=""
+    alt="type:video"
+    style={{
+      border: "1px solid #ccc",
+      borderRadius: "12px",
+      width: "100%",
+      maxWidth: "200px",
+    }}
+    autoPlay
+    loop
+  >
+    <source src="https://docscognigyassets.blob.core.windows.net/assets/modern-preset.webm" />
+  </video>
+  <p style={{ maxWidth: "300px", margin: "10px auto 0 auto", fontSize: "14px" }}>
+    <strong>Modern:</strong> A larger, wider Webchat widget with borderless AI
+    Agent messages.
+  </p>
+</div>
+
+{" "}
+<div
+  style={{
+    flex: "1",
+    textAlign: "center",
+    minWidth: "200px",
+    maxWidth: "220px",
+  }}
+>
+  <video
+    controls=""
+    alt="type:video"
+    style={{
+      border: "1px solid #ccc",
+      borderRadius: "12px",
+      width: "100%",
+      maxWidth: "200px",
+    }}
+    autoPlay
+    loop
+  >
+    <source src="https://docscognigyassets.blob.core.windows.net/assets/slick-preset.webm" />
+  </video>
+  <p style={{ maxWidth: "200px", margin: "10px auto 0 auto", fontSize: "14px" }}>
+    <strong>Slick:</strong> A larger but narrower Webchat widget with bordered
+    AI Agent messages with a grey background.
+  </p>
+</div>
+
+</div>
+
+Selecting a style preset automatically applies predefined values to the following settings: Webchat Layout (including Colors) and Webchat Behavior.
+If you adjust any of these settings afterward, the preset is deselected and your custom changes take effect instead.
+
+The full list of settings applied by each preset:
+
+<AccordionGroup>
+  <Accordion title="Classic">
+
+    | Setting                                   | Parameter                       | Value         |
+    |-------------------------------------------|---------------------------------|---------------|
+    | [Webchat Layout](#webchat-layout)         | Disable Bot Output Border       | Off           |
+    |                                           | Bot Output max-width percentage | 73%           |
+    |                                           | Chat Window width (px)          | 460           |
+    |                                           | Enable Input Collation          | Off           |
+    | [Webchat Layout: Colors](#webchat-layout) | AI Agent Message                | #ffffff       |
+    | [Webchat Behavior](#webchat-behavior)     | Scrolling Behavior              | Always Scroll |
+    |                                           | Collate Streamed Outputs        | Off           |
+    |                                           | Progressive Message Rendering   | Off           |
+    |                                           | Render Markdown                 | On            |
+  </Accordion>
+
+  <Accordion title="Modern">
+
+    | Setting                                   | Parameter                       | Value                             |
+    |-------------------------------------------|---------------------------------|-----------------------------------|
+    | [Webchat Layout](#webchat-layout)         | Disable Bot Output Border       | On                                |
+    |                                           | Bot Output max-width percentage | 100%                              |
+    |                                           | Chat Window width (px)          | 900                               |
+    |                                           | Enable Input Collation          | On                                |
+    | [Webchat Layout: Colors](#webchat-layout) | AI Agent Message                | #ffffff                           |
+    | [Webchat Behavior](#webchat-behavior)     | Scrolling Behavior              | Scroll until last Input is at Top |
+    |                                           | Collate Streamed Outputs        | On                                |
+    |                                           | Progressive Message Rendering   | On                                |
+    |                                           | Render Markdown                 | On                                |
+  </Accordion>
+
+  <Accordion title="Slick">
+
+    | Setting                                   | Parameter                       | Value                             |
+    |-------------------------------------------|---------------------------------|-----------------------------------|
+    | [Webchat Layout](#webchat-layout)         | Disable Bot Output Border       | Off                               |
+    |                                           | Bot Output max-width percentage | 100%                              |
+    |                                           | Chat Window width (px)          | 600                               |
+    |                                           | Enable Input Collation          | On                                |
+    | [Webchat Layout: Colors](#webchat-layout) | AI Agent Message                | #cccccc                           |
+    | [Webchat Behavior](#webchat-behavior)     | Scrolling Behavior              | Scroll until last Input is at Top |
+    |                                           | Collate Streamed Outputs        | On                                |
+    |                                           | Progressive Message Rendering   | Off                               |
+    |                                           | Render Markdown                 | On                                |
+  </Accordion>
+</AccordionGroup>
+### Webchat Layout
+
+The Webchat Layout settings offer parameters for changing the Webchat Layout,
+including options to customize the title and logo of the Webchat interface.
+Additionally,
+settings outline a forthcoming feature allowing separate logos and names for messages from AI and human agents.
+
+| Parameter                                                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name                                                           | Customizes the Webchat title at the top of the chat interface, which by default, corresponds to the name of your Agent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Logo URL                                                       | Customizes the Webchat logo at the top of the chat interface. To do that, enter the URL of the image you want. Recommended formats: JPG, JPEG, SVG, PNG, GIF with a size of 28px x 28px.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Use different logo and name for Virtual & Human Agent Messages | By default, the specified name and logo are applied to messages written by AI and human agents. By activating this toggle, you can specify separate logos and names for AI and human agent messages. <br/><br/>If you use [Live Agent](/live-agent/index) as your handover provider, Webchat v3 will prioritize the Display Name and Profile Image from the [Profile Settings](/live-agent/profile-settings#user-profile-appearance) in Live Agent, regardless of whether the **Use different logo and name for Virtual & Human Agent Messages** parameter is enabled or disabled.<br/>In cases where neither the Display Name nor the Profile Image is provided, the following will apply:<br/>- When **Display Name** is not available, the system will use a value from the **Human Agent Avatar Name** parameter if provided. Otherwise, the Webchat name specified in the **Name** parameter will be displayed. <br/>- When **Profile Image** is not available, the system will use a value from the **Human Agent Avatar Logo URL** parameter if provided. Otherwise, a default human agent avatar will be displayed. |
+| AI Agent Avatar Name                                           | Customizes the name displayed above each message sent by the AI Agent. If no input is provided, the Webchat name specified in the **Name** parameter will be displayed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| AI Agent Avatar Logo URL                                       | Customizes the logo displayed above each message sent by the AI Agent. If no input is provided, the logo specified in the **Logo URL** parameter will be displayed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Human Agent Avatar Name                                        | Customizes the name displayed above each message sent by human agents. If no input is provided, the Webchat name specified in the **Name** parameter will be displayed.<br/><br/>If you use [Live Agent](/live-agent/index) as your handover provider, Webchat v3 will prioritize the Display Name from the [Profile Settings](/live-agent/profile-settings#user-profile-appearance) in Live Agent. When **Display Name** is not available, the system will use a value from the **Human Agent Avatar Name** parameter if provided. Otherwise, the Webchat name specified in the **Name** parameter will be displayed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Human Agent Avatar Logo URL                                    | Customizes the logo displayed above each message sent by human agents. If no input is provided, the logo specified in the **Logo URL** parameter will be displayed.<br/><br/> If you use [Live Agent](/live-agent/index) as your handover provider, Webchat v3 will prioritize the Profile Image from the [Profile Settings](/live-agent/profile-settings#user-profile-appearance) in Live Agent. When **Profile Image** is not available, the system will use a value from the **Human Agent Avatar Logo URL** parameter if provided. Otherwise, a default human agent icon will be displayed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+#### Webchat Icon
+
+The Webchat Icon settings allow you to customize the icon displayed on your website to open the Webchat widget. Additionally, you can animate the icon and set the animation frequency and speed. After setting the icon animation, you can preview the animation in the icon field.
+
+| Parameter          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Icon               | Select or upload an icon to be displayed on your website to open the Webchat widget. You can select the following:<ul><li>![default-webchat-icon](/_assets/icons/black-and-white/default-webchat-icon.svg)<br/>This is the default icon.</li><li>![shiny-message-bubble-icon](/_assets/icons/black-and-white/shiny-message-bubble-icon.svg)</li><li>![round-message-bubble-icon](/_assets/icons/black-and-white/round-message-bubble-icon.svg)</li><li>![transparent-plus-square](/_assets/icons/black-and-white/transparent-plus-square.svg)<br/>Upload your own icon.</li></ul> |
+| Icon animation     | Select the animation for the icon. You can select one of the following options:<ul><li>**None** — the icon is displayed statically. This option is set by default.</li><li>**Bounce** — the icon bounces vertically.</li><li>**Swing** — the icon swings back and forth.</li><li>**Pulse** — the icon pulses.</li></ul>                                                                                                                                                                                                                                                                     |
+| Animation interval | Set the interval between animations in seconds. The default value is 5 seconds.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Animation speed    | Select the speed of the animation. You can select one of the following options:<ul><li>**Slow** — halves the animation speed.</li><li>**Normal** — this is the default option.</li><li>**Fast** — doubles the animation speed.</li><li>**Superfast** — multiplies the animation speed by 3.</li></ul>                                                                                                                                                                                                                                                                                    |
+
+#### Colors
+
+The Colors settings let you customize the Webchat v3 interface, including the primary and secondary colors.
+Additionally, settings outline forthcoming features: background color adjustments for the chat interface,
+AI Agent messages, user messages, and text links.
+
+| Parameter                 | Description                                                       |
+| ------------------------- | ----------------------------------------------------------------- |
+| Primary Color             | Sets the primary color for the Webchat interface.                 |
+| Secondary Color           | Sets the secondary color for the Webchat interface.               |
+| Chat Interface Background | Sets the background color for the chat interface.                 |
+| AI Agent Message          | Sets the background color for the agent messages.                 |
+| User Message Background   | Sets the background color for the user messages.                  |
+| Text Link                 | Sets the color in which text links within messages will be displayed. |
+
+#### Persistent Menu
+
+The Persistent Menu settings ensure quick access to different conversation stages, guide users, offer features, share information, and enhance the overall user experience.
+
+| Parameter              | Description                                                                                                                                                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Persistent Menu | Activates the Persistent Menu.                                                                                                                                                                                            |
+| Persistent Menu Title  | Sets the title for your Persistent Menu. This title will be displayed to users.                                                                                                                                           |
+| Add Menu Item          | Adds items to the Persistent Menu. Each menu item has a title and a payload.                                                                                                                                              |
+| Title                  | The text that you want users to see in the Persistent Menu. This text should be descriptive and clear, indicating the function or action associated with the menu item.                                                   |
+| Payload                | The payload text that will be sent to your AI Agent Flow when the user selects this menu item. This payload can be a simple word or phrase, or a more complex query, depending on your AI Agent's functionality. |
+
+#### Advanced Layout Settings
+
+The Advanced Layout settings provide parameters for managing the chat interface, focusing on input behavior, HTML styling, and JavaScript.
+
+| Parameter                              | Description                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Disable Bot Output Border              | Hides the chat bubble around AI Agent text output. Hiding the chat bubble makes AI Agent text outputs look cleaner and fit better into the chat screen. This parameter is useful for custom designs that include system messages or long messages. It also improves the layout of interactive elements, such as buttons and links, as well as static content, such as tables. |
+| Bot Output max-width percentage        | Determines the maximum width of the AI Agent text output as a percentage of the total available space. The default value is 73%.                                                                                                                                                                                                                                             |
+| Chat Window width (px)                 | Controls the width of the Webchat window in pixels, determining how much horizontal space it occupies on the screen. The default value is 460px.                                                                                                                                                                                                                             |
+| Maximum Number of Input Rows           | Determines the maximum limit of lines that can be entered into the Reply field. If the text exceeds this limit, a vertical scrollbar will automatically appear to make the input text easier to display.                                                                                                                                                                         |
+| Enable Input Collation                 | Combines typed inputs from the Reply field into a single message after a one-second delay without new text input. Immediate feedback or rapid responses are sent right away, prompting the transmission of any grouped messages.                                                                                                                       |
+| Input Collation Timeout                | Enables you to specify the time delay before the AI Agent groups together typed inputs. If users don't type anything new within this time frame, their previous inputs are consolidated into a single message. This approach ensures a complete message context, especially when users type slowly or send multiple related messages at once.                                |
+| Dynamic Image Aspect Ratio             | Ensures that images displayed in gallery, attachment, or list output types maintain their original proportions. They fill the display area width without cropping or distortion.                                                                                                                                                                                             |
+| Disable Input Autocomplete             | Switches off the ability of the system to automatically suggest and complete words or phrases for all users.                                                                                                                                                                                                                                                                 |
+| Enable generic HTML                    | Applies basic styling to HTML content within standard text messages. When this feature is activated, the system applies a standard style to HTML code, enhancing the appearance of your text messages.                                                                                                                                                                |
+| Allow JavaScript in HTML Message       | Enables including JavaScript functionalities, such as `onclick` or `onload` attributes, in your HTML messages. By default, these elements are removed before the message is displayed to minimize the risk of harmful content. When this setting is activated, these elements will not be removed.                                                                       |
+| Allow JavaScript in Button/Action URLs | Enables JavaScript functionalities within button or action URLs in your interface. By default, JavaScript URLs starting with 'javascript:' are blocked for security reasons. However, activating this setting preserves such URLs, allowing the embedded JavaScript code to execute when users interact with the button or element.                                           |
+
+### Webchat Behavior
+
+The Webchat Behavior settings enhance communication by enabling typing indicators, customizing input text, enabling Speech-To-Text, Text-To-Speech features, adjusting message delay, ensuring focus after interaction, and alerting users to internet connection status.
+
+| Parameter                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+|------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Scrolling Behavior                 | Controls how scrolling behaves when the chat is scrolled to the bottom and a new message arrives. You can select one of the following options:<br/>- **Always Scroll** – keeps the chat at the bottom. This option is selected by default. <br/>- **Scroll until Last Input is at Top** – scrolls down until the last user input reaches the top border of the chat screen.                                                                                                                                                                                                                                                                                                                  |
+| Collate Streamed Outputs           | Allows multiple streamed text messages to appear in the same chat bubble as they are received, rather than showing each one separately. The configuration applies to streamed outputs from the [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent) or [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt). To achieve the best results with this feature, activate the **Progressive Message Rendering** and **Render Markdown** parameters as well.                                                                                                                                                                                                          |
+| Progressive Message Rendering      | Enables the AI Agent to display text gradually, allowing content to appear progressively, without delay for the full message.<br/><br/> When using this parameter, enable both **Collate Streamed Outputs** and **Render Markdown** for optimal results.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Render Markdown                    | Enables Markdown rendering for AI Agent text outputs. It supports basic formatting options, including italics, bold text, links, and headers, as well as advanced features such as tables, footnotes, and nested lists. Formulas are not supported.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Collect Metadata                   | Lets you collect additional data from your end users' browsers, such as language, location, device, and browser type. By using this data, you can personalize the AI Agent's behavior. For example, you can offer the user the option to switch the conversation language to their browser language, or provide offers relevant to their current location. For more information, read [Collect Metadata](/webchat/v3/metadata).                                                                                                                                                                                                                                          |
+| Enable Typing Indicators           | Shows when the AI Agent is typing a response, helping users understand when to expect replies. When the parameter is turned on, a typing symbol appears, signaling that the AI Agent is processing your request and will respond soon. <br/><br/>If you integrate Webchat v3 with a contact center, only [Cognigy Live Agent](/live-agent/index), [Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging), and [Salesforce MIAW](/ai/escalate/handover-reference/salesforce-miaw) support the typing indicator.                                                                                                                                         |
+| Display AI Agent Notice            | Lets you display a text notice in the chat about interacting with the AI Agent. This notice appears at the top of the chat as soon as the end user enters. By default, this parameter is enabled. <br/><br/> Alternatively, you can control the appearance of the text notice via the `enableAIAgentNotice` option in the [embedding](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md#behavior) configuration.                                                                                                                                                                                                                                                                |
+| AI Agent Notice Text               | This parameter appears if **Display AI Agent Notice** is activated. This parameter lets you change the notice text. By default, it is set to `You're now chatting with an AI Agent.` <br/><br/> Alternatively, you can change the notice text via the `AIAgentNoticeText` option in the [embedding](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md#behavior) configuration.                                                                                                                                                                                                                                                                                                  |
+| Input Placeholder Text             | Enables you to customize the placeholder text in the Reply field, indicating where users can type their messages to interact with the AI Agent. By default, it is set to `Type something…`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Enable speech-to-text              | Adds a microphone button to the Webchat interface. Users can convert speech into written text, providing a hands-free and easy way to communicate with the AI Agent. This feature is particularly beneficial for users who prefer speaking or may have difficulty typing their responses.<br/><br/> Note that this parameter is not supported by the Mozilla Firefox browser.                                                                                                                                                                                                                                                                                                                |
+| Enable text-to-speech              | Adds a Text-To-Speech (TTS) feature that converts text messages into spoken voice output. This feature is especially beneficial for users who prefer or require auditory feedback. As an alternative to this parameter, for more customization and a personalized user experience, go to the [Text-To-Speech](#text-to-speech) section in the Chat Options section.<br/><br/>By default, the parameter is inactive. If you turn it on and also adjust [Text-To-Speech](#text-to-speech) in the Chat Options, the Chat Options settings will override this parameter. Note that the text-to-speech feature uses the Browser API, so the available voices depend on the OS and browser vendor. |
+| Message Delay                      | Defines the duration Webchat waits before sending the AI Agent's response to your messages. By default, it's set to 500 milliseconds, promoting a more natural conversational flow and mitigating the impression of an immediate automated response.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Focus Input after Postback         | Ensures that after a Postback button or quick reply button is clicked, Webchat immediately redirects focus back to the Reply field.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Enable Connection Status Indicator | Displays a warning message if the user's internet connection is lost during a conversation with the AI Agent. This ensures users are aware of potential interruptions or delays in the chat. The warning automatically disappears once the internet connection is re-established, indicating that the chat can proceed normally.                                                                                                                                                                                                                                                                                                                                            |
+
+#### Start Behavior
+
+The Start Behavior settings offer features for initiating conversations that include starting with a text field, button click, or automatic message, with customization options available.
+
+| Parameter      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Start Behavior | Defines the initial action when initiating a new conversation with the AI Agent. You can select one of the following modes:<br/>- **Start with a Text Field** — the conversation begins when an end user sends a message.<br/>- **Start with a Button** — the conversation begins when an end user clicks the button that you configured.<br/>- **Auto Send a Message to the Bot** — the conversation begins when the automated message that you configured is sent to the AI Agent. |
+| Text Payload   | This parameter is applicable to modes: **Start with a Button** and **Auto Send a Message to the Bot**. This parameter customizes the first message that starts the conversation with the AI Agent. It helps set the context and tone of the interaction, ensuring a purposeful and engaging start aligned with your objectives.                                                                                                                                                      |
+| Data Payload   | This parameter is applicable to modes: **Start with a Button** and **Auto Send a Message to the Bot**. This parameter sends the additional data to your Flow.                                                                                                                                                                                                                                                                                                                        |
+| Display Text   | This parameter is applicable to modes: **Start with a Button** and **Auto Send a Message to the Bot**. This parameter presents a message as if it were entered by the user when the chat initiates. This simulation of a user input bubble creates an immediate and engaging interaction.                                                                                                                                                                                            |
+| Button Title   | This parameter is applicable to **Start with a Button** mode. This parameter customizes the text displayed on the Start Button, serving as the interactive prompt for users to begin their conversation with the AI Agent.                                                                                                                                                                                                                                                           |
+
+#### Attachment Upload
+
+The Attachment Upload settings offer features to upload files in Webchat, customize the upload area text, and choose where files are stored, such as AWS, Azure, or Google Cloud, along with the necessary connection credentials.
+
+| Parameter                | Description                                                                                                                                                                                      |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Allow Attachment Upload  | Displays an attachment icon in the Webchat interface, allowing users to share files such as documents or images directly with agents in the chat.                                                |
+| Attachment Dropzone Text | Allows customization of the text displayed on the file upload dropzone, instructing users to drag and drop the files they wish to upload. By default, it is set to `Drop to attach`.             |
+| File Storage Provider    | This parameter appears when Allow Attachment Upload is activated. It allows you to select the platform where uploaded files will be stored, offering three options: AWS, Azure, or Google Cloud. |
+| Connection               | Allows you to specify credentials for the selected storage provider.                                                                                                                             |
+
+#### Business Hours
+
+The Business Hours settings help manage business hours in Webchat. They enable you to restrict Webchat availability by specifying behavior outside business hours, customize messages, set the time zone, and define operational days.
+
+| Parameter                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Business Hours            | Restricts the availability of the Webchat widget to specified business hours, ensuring live chat support during those times. Outside of business hours, options include hiding, disabling, or displaying a message informing users. This feature helps companies effectively manage customer support and align with operational timings.                                                                                                                                                                                                                                                                  |
+| Business Hours Mode              | Defines the behavior when the AI Agent is accessed outside of business hours. Choose one of the following modes:<br/>- **Inform users about calling out of business hours** — users will receive a message in the Webchat interface informing them that they are contacting the AI Agent outside of business hours.<br/>- **Hide the Webchat Widget** — the Webchat widget will be completely hidden from users outside of business hours.<br/>- **Disable the Webchat Widget** — the Webchat widget will be visible but disabled, preventing users from interacting with the AI Agent until business hours resume. |
+| Business Hours Information Text  | The parameter is applicable to the following modes: **Inform users about calling out of business hours** and **Disable the Webchat Widget**. This parameter determines the text that will be displayed to users during out-of-business hours.                                                                                                                                                                                                                                                                                                                                                                       |
+| Business Hours Information Title | The parameter is applicable to **Inform users about calling out of business hours** mode. This parameter determines the title that will be displayed to users during out-of-business hours.                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Timezone                         | The parameter indicates the time zone used to calculate the office hours offset.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Start Time                       | The parameter indicates the beginning of the AI Agent's availability each day.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| End Time                         | The parameter indicates the end of the AI Agent's availability each day.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Day of the Week                  | The parameter indicates the operational days for the AI Agent.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+
+#### Unread Messages
+
+The Unread Messages settings help users stay informed about unread messages in Webchat. They include features such as displaying message counts, previews, and notification sounds for timely responses.
+
+| Parameter                             | Description                                                                                                                                                                                                                                                       |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Unread Message Title Indicator | Displays the number of unread messages on the browser tab title every 1000 milliseconds, ensuring users stay updated and preventing any missed communication from the AI Agent, especially during multitasking with multiple tabs open.                           |
+| Enable Unread Message Badge           | Displays the count of unread messages. This approach ensures users are aware of any new messages or responses from the AI Agent that they have yet to view, promoting timely and responsive interactions.                                                         |
+| Enable Unread Message Preview         | Displays a preview bubble containing the newest message from the agent. This is helpful when the chat interface is minimized, as it allows users to get an idea of the most recent communication without having to open and read through the entire conversation. |
+| Enable Unread Message Sound           | Triggers a notification sound every time a user receives a new unread message.                                                                                                                                                                                    |
+
+### Home Screen
+
+The Home Screen settings enable personalization of welcome messages, backgrounds, and button texts, creating a user-friendly and brand-aligned initial chat interface.
+
+| Parameter                      | Description                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Home Screen             | Ensures the home screen is displayed whenever the Webchat widget is launched, creating a welcoming initial interface for users to begin their interaction. If the parameter is not activated, users will be shown the privacy note page (if activated) or the standard chat interface.                                                                                            |
+| Welcome Text                   | This parameter appears if **Enable Home Screen** is activated. This parameter lets you customize the greeting message displayed when the Webchat widget launches, providing users with an inviting entry point into the conversation. By default, the message is `Welcome! How can we help?`                                                                                                  |
+| Background Image               | Enables you to upload an image displayed as the background of the Webchat interface. If both a background image and color are configured, the image will be shown in the foreground. For optimal results, the recommended image size is `460px x 608px`.                                                                                                                                 |
+| Background Color/Gradient      | Allows customization of the Home Screen background color or gradient in the Webchat interface. It accepts CSS color codes or gradient values, providing flexibility to align the chat interface's look with your brand's color schemes. By default, no color or gradient is set. Example hex code: `#05309e`. Example gradient: `linear-gradient(to left, rgba(1,1,1), rgba(5,48,158))`. |
+| Start Conversation Button Text | Enables you to modify the text displayed on the Start Conversation button, aligning it with your brand's voice or making the call-to-action more compelling. Personalizing this text can significantly enhance the user experience by making it feel more engaging and tailored. The default text is `Start conversation`.                                            |
+
+#### Conversation Starters
+
+The Conversation Starters settings offer pre-defined messages to prompt interactions with AI Agents,
+enhancing user engagement and streamlining conversation flow.
+You can customize messages, choose an interaction type (Postback Value or URL), and add up to 5 starters.
+
+| Parameter                    | Description                                                                                                                                                                                                                                                     |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Conversation Starters | Enables pre-defined messages to be displayed on the home screen. Users can select a Starter to initiate a conversation with the AI Agent, enhancing user experience by providing insights into the agent's capabilities and facilitating smoother conversation. |
+| Title                        | Lets you personalize the text of the conversation starter, adding customization and setting the tone for the conversation with the AI Agent.                                                                                                                    |
+| Type                         | Determines the type of Conversation Starter, which can be set to either Postback Value or URL, offering different methods of interaction.                                                                                                                       |
+| Postback Value               | Defines a specific message that is automatically sent to the Flow when a Conversation Starter is clicked, initiating a pre-defined conversation flow.                                                                                                           |
+| URL                          | Lets you specify a URL to direct the user to when selecting a Conversation Starter, guiding users to relevant web pages or resources.                                                                                                                           |
+| Add                          | Allows you to add up to a maximum of 5 Conversation Starters to the list.                                                                                                                                                                                       |
+
+#### Previous Conversations
+
+The Previous Conversations settings enable users
+to access past interactions with the AI Agent within the last 30 days through a dedicated button on the home screen.
+You can customize the conversation screen's button text and header to enhance usability and personalization.
+
+| Parameter                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Previous Conversations      | Displays the Previous Conversations button on the home screen, allowing users to access past conversations with the AI Agent within the last 30 days using the same browser.<br/><br/>By default, previous conversations are stored in the local storage of the user's browser until the user clears this history or until they expire. To view local storage data on the website with your Webchat, use developer tools of your browser. For example, in the Google Chrome browser, open **Developer Tools**, navigate to **Application > Storage**, and expand **Local Storage**. Click a domain to view its key-value pairs. To preview the chat history below the table, select a pair.<br/><br/>You can change the default behavior by setting the parameter `useSessionStorage` to `true` [in the embedding code](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md). This way, previous conversations will be stored in the session storage until the user closes or reopens a browser tab. To view session storage data on the website with your Webchat, use developer tools of your browser. For example, in the Google Chrome browser, open **Developer Tools**, navigate to **Application > Storage**, and expand **Session Storage**. Click a domain to view its key-value pairs. To preview the chat history below the table, select a pair.<br/>Note that for [Demo Webchat](/webchat/demo), data will always be stored in the session storage of the user's browser. |
+| Enable Delete All Conversations    | Displays the ![delete-conversations](/_assets/icons/webchat/delete-conversations.svg) (**Delete All Conversations**) button at the top of the **Previous Conversations** screen, which allows end users to delete all previous conversations and the current one. If you want your end users to be able to delete only the current conversation, configure the [Enable Delete Conversation](#enable-delete-conversation) parameter.<br/><br/> Note that after deletion, all conversations will be removed from the Webchat widget on the end user's side but will still be available in the Cognigy.AI OData endpoint, Insights, and Contact Profile.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Start New Conversation Button Text | Lets you set the text displayed on the **Start New Conversation** button, which is located below the list of previous conversations. Clicking this button opens a new chat conversation. The default text is `Start new conversation`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Previous Conversations Button Text | Lets you customize the text on the Previous Conversations button, which appears only if the feature is enabled. The default label is `Previous conversations`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Previous Conversation Title        | Lets you customize the header of the Previous Conversations screen.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+
+### Teaser Message
+
+The Teaser Message settings include personalized teaser messages, the display of conversation starters, and the ability to define specific actions upon user interaction, such as sending messages or directing users to URLs.
+
+| Parameter                    | Description                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Teaser Message Text          | Lets you customize a message displayed beside the Webchat icon. It aims to encourage user engagement by providing a preview of the interactive service. For example, you can use it for a question, a greeting, or an informative statement to spark users' interest in starting a conversation.                                  |
+| Show Teaser Message in Chat  | Displays teaser messages directly within the chat window.                                                                                                                                                                                                                                                                         |
+| Enable Conversation Starters | Enables pre-defined messages to appear on the home screen, allowing users to select a starter to initiate a conversation with the AI Agent. This feature enhances the user experience by providing examples of interaction and insights into the agent's capabilities, facilitating a smoother and more guided conversation flow. |
+| Title                        | Enables you to personalize the text of the conversation starter, providing an introductory message for your conversation.                                                                                                                                                                                                         |
+| Type                         | Sets the type of Conversation Starter, which can be either Postback Value or URL.                                                                                                                                                                                                                                                 |
+| Postback Value               | Defines the specific value or message that will be automatically sent to the Flow when the user clicks a Conversation Starter. This predetermined response initiates a pre-defined conversation pathway within the AI Agent.                                                                                                      |
+| URL                          | Enables you to specify the particular URL that users will be directed to when they select a Conversation Starter. This feature can guide users to relevant web pages or resources, enhancing their experience by providing immediate access to needed information.                                                                |
+| Add                          | Enables you to include more Conversation Starters in your list, with a maximum limit of 5 Conversation Starters.                                                                                                                                                                                                                  |
+
+### Chat Options
+
+The Chat Options include enabling chat features, such as quick replies and conversation rating, as well as adding a footer section for additional information or navigation links.
+
+#### Enable Chat Options
+
+The Enable Chat Options settings offer features such as Quick Replies, Conversation Rating, and Footer,
+enhancing user interaction.
+You can customize the title of the Chat Options screen to personalize the user experience.
+
+| Parameter           | Description                                                                                                                                                                                                               |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Chat Options | Activates additional interactive features like Quick Replies, Conversation Rating, and Footer within the chat interface, broadening users' communication and feedback options for a richer interaction with the AI Agent. |
+| Chat Options Title  | Lets you customize the title of the Chat Options screen. By default, the title is `Chat options`.                                                                                                                         |
+
+#### Enable Delete Conversation
+
+By default, end users can't delete conversations in the Webchat widget. To allow end users to delete the current conversation, activate the **Enable Delete Conversation** parameter. After activation, they can delete the current conversation on the **Chat Options** screen.
+
+If you want your end users to be able to delete all conversations, configure the **Enable Delete All Conversations** parameter in the [Previous Conversations](#previous-conversations) section.
+
+Note that after deletion, the conversation will be removed from the Webchat widget on the end user's side but will still be available in the Cognigy.AI OData endpoint, Insights, and Contact Profile.
+
+#### Quick Replies
+
+The Quick Replies settings improve chat interactions with pre-defined response options that users can customize, manage, and use to direct users to URLs or trigger specific responses, enhancing the overall conversational experience.
+
+| Parameter                   | Description                                                                                                                                                                                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Quick Replies        | Lets you display pre-defined quick response options at the top of the Chat Options screen. These quick replies simplify the chat process by providing ready-made responses that are sent to the Flow.                                                                                                     |
+| Quick Replies Section Title | Lets you specify a title for the section of the chat interface where quick replies are offered. The default title is `People are also interested in`.                                                                                                                                                     |
+| Title                       | Lets you personalize the text of the quick reply. You can tailor the quick responses to address frequently asked questions or to provide additional information.                                                                                                                               |
+| Type                        | Determines the type of a Quick Reply, which can be set to either Postback Value or URL.                                                                                                                                                                                                                   |
+| Postback Value              | Determines the specific value or message that will be automatically sent to the Flow when the user clicks a Quick Reply. This predefined response initiates a particular conversation flow with the AI Agent, facilitating a direct, guided, and efficient user interaction based on the selected prompt. |
+| URL                         | Defines the specific URL that users will be directed to when selecting a Quick Reply. It can guide users to relevant web pages or resources, enhancing their experience by providing immediate access to the information they need.                                                                              |
+| Add                         | Enables you to include more Quick Replies in your list, with a maximum limit of 5 Quick Replies.                                                                                                                                                                                                          |
+
+#### Text-to-Speech
+
+The Text-to-Speech settings allow you to convert text to speech, with options to customize the toggle label and set the toggle to be enabled by default.
+
+| Parameter                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Show text-to-speech toggle     | Lets you activate the text-to-speech feature that converts text messages into spoken voice output. This feature is especially beneficial for users who prefer or require auditory feedback. <br/><br/> By default, this parameter is inactive. Enabling this parameter gives users the option to activate text-to-speech. Note that the text-to-speech feature uses the Browser API, so the available voices depend on the OS and browser vendor. |
+| TTS toggle label               | This parameter appears if **Show text-to-speech toggle** is activated. The parameter enables you to customize the label of the toggle switch that controls the Text-to-Speech feature. By default, the label is set to **Enable text-to-speech**.                                                                                                                                                                                                                          |
+| Activate TTS toggle by default | This parameter appears if **Show text-to-speech toggle** is activated. The parameter lets you make the setting active by default, but end users can still turn it off.                                                                                                                                                                                                                                                                                                     |
+
+#### Conversation Rating
+
+The Conversation Rating settings include a chat rating widget that lets users rate their experience and provide feedback.
+You can customize text prompts and confirmation messages to ensure a user-friendly feedback process.
+
+| Parameter                          | Description                                                                                                                                                                                                                                                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Rating Functionality        | Activates the conversation rating mechanism in the chat options page, allowing users to rate and provide feedback on their chat experience. Enabling this feature lets you gather direct user feedback to continually improve the AI Agent's effectiveness.    |
+| Rating Title Text                  | Defines the text that would invite users to rate their chat experience. The default text is `Please rate your chat experience`.                                                                                                                                |
+| Rating Comment Placeholder Text    | Allows customization of the placeholder text that appears in the comment field where users can leave feedback about their chat experience. The default text is `Type something here`.                                                                          |
+| Rating Submit Button Text          | Sets the text that appears on the button users click to submit their chat ratings and feedback. The default text is `Send feedback`.                                                                                                                           |
+| Rating Submitted Event Banner Text | Enables you to customize the text that appears in a banner after a user successfully submits their rating and feedback. The default message is `Your feedback was submitted`.                                                                             |
+
+#### Footer
+
+The Footer settings offer a customizable footer section to the chat interface.
+You can set a custom title for the footer, specify a URL for redirection upon clicking,
+and add up to 2 title-URL pairs for additional content.
+
+| Parameter     | Description                                                                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Footer | Adds a footer section to the Chat Options page. The footer can be used for various purposes such as legal statements, additional navigation links, or company information.            |
+| Title         | Sets a custom title for the footer section of the chat interface. The default title is `Imprint`.                                                                                     |
+| URL           | Specifies the URL or web page users will be redirected to when clicking the footer. It can direct users to additional resources or specific pages relevant to the footer information. |
+| Add           | Lets you include a new Title and URL pair to the footer. You can add up to 2 pairs for convenience, ensuring the footer remains uncluttered.                             |
+
+### Privacy Notice
+
+The Privacy Notice settings add privacy notices to the chat interface.
+It includes options to enable a custom Privacy Notice, set its title and text, customize the Submit button, define the link title and URL for the Privacy Policy.
+These features ensure users are informed about data handling practices and consent to them, fostering trust and compliance with privacy regulations.
+
+<WebchatPrivacyNoticeAcceptance />
+
+Accepting the privacy notice in the chat doesn't count as a user input in terms of [billable conversations](/ai/administer/billing#billable-conversations).
+
+| Parameter                 | Description                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Privacy Notice            | Allows Webchat to prompt users to agree to a custom Privacy Notice before initiating a conversation with the AI Agent. It ensures that users are fully informed about how their data will be used during the chat. Acceptance of the privacy policy is required to enter the chat, ensuring compliance and user trust. If the user declines the privacy policy, the chat will not start, and no charges will apply. |
+| Enable Privacy Notice     | Displays a privacy notice at the beginning of each chat session to inform users about data handling practices and their consent is obtained.                                                                                                                                                                                                                                                                        |
+| Privacy Notice Title      | Sets the heading that appears at the top of the privacy notice screen. By default, it is set to `Privacy Notice`.                                                                                                                                                                                                                                                                                                   |
+| Privacy Notice Text       | Sets the message that users see in the privacy notice prompt. This parameter supports Markdown syntax. The default text is `Please accept our privacy policy to start your chat`. You can customize this message to provide more detailed information about your data collection, usage practices, and users' rights, ensuring clarity and building trust from the outset of the chat interaction.                  |
+| Submit Button             | Sets the text displayed on the button users click to accept the Privacy Notice. By default, the button is labeled `Submit`.                                                                                                                                                                                                                                                                                         |
+| Privacy Policy Link Title | Sets the text that will be displayed as the title for the Privacy Policy link. It allows you to tailor the label of the link to better match the tone and context of your brand.                                                                                                                                                                                                                                    |
+| Privacy Policy Link URL   | Sets the specific URL that directs users to your Privacy Policies.                                                                                                                                                                                                                                                                                                                                                  |
+
+## Advanced Settings
+
+The Advanced settings offer customization features like adding watermarks and activating maintenance mode for transparent communication during updates. Webchat Custom Settings further enhance customization by allowing specific UI adjustments and feature integrations through JSON formatting.
+
+#### Watermark
+
+The Watermark settings allow
+users to personalize their chat interface with a watermark that suits their branding or platform,
+enhancing recognition and customization options.
+
+| Parameter      | Description                                                                                                                                                                                                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Watermark      | Lets you select the type of watermark that appears at the bottom of the chat interface, acting as a subtle brand or platform identifier. You have the ability to choose between **Default**, **Custom**, and **None**. If Default is selected, the Cognigy.AI Watermark will be displayed. |
+| Watermark Text | This parameter appears when the Custom option is selected for the watermark. This parameter enables you to specify your own text. The default text is `Powered by Cognigy.AI`.                                                                                                             |
+| Watermark URL  | This parameter appears when the Custom option is selected for the watermark. This parameter lets you specify your URL as a hyperlink in the format `https://www.example.com/`. The default URL is `https://www.cognigy.com/`.                                             |
+
+#### Maintenance
+
+The Maintenance settings offer activating maintenance mode in a chat service, including notification, disabling, or hiding options. It allows for the customization of maintenance-related messages displayed to users.
+
+| Parameter                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enable Maintenance            | Activates maintenance mode for the chat endpoint, allowing updates, feature testing, or backend work without impacting the user experience.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Maintenance Mode              | Determines the behavior of the maintenance mode:<br/> - **Inform Users About Maintenance Mode** — keeps the chat visible, displaying a custom message about the maintenance. Best for transparency with users, maintaining engagement without full service.<br/>**Disable the Webchat Widget** — removes the chat interface from the site or app during maintenance. Best for major updates where functionality could be impacted, avoiding user confusion.<br/>**Hide the Webchat Widget** — temporarily hides the chat widget, allowing for quick accessibility post-maintenance without a page reload. Best for short or frequent maintenance periods for a quick return to functionality. |
+| Maintenance Information Text  | This parameter applies to the following modes: **Inform users about maintenance mode** and **Disable the Webchat Widget**.<br/> It determines the text displayed to users during Maintenance mode, allowing for a customizable message to inform users about the maintenance activity or any other relevant information.                                                                                                                                                                                                                                                                                                                                                                              |
+| Maintenance Information Title | This parameter is applicable to **Inform users about maintenance mode**.<br/> It determines the title displayed to users during Maintenance mode, used to briefly describe the nature of the maintenance or provide a succinct message.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+
+### Webchat Custom Settings
+
+The Webchat Custom settings offer advanced options
+to change the appearance and behavior of your webchat beyond the standard settings.
+These settings are specified using JSON format. Ensure the JSON is correctly formatted to prevent any potential crashes of the Webchat widget.
+
+Use the Webchat Custom settings to:
+
+- Overwrite UI text and values configured in the Endpoint settings
+- Change and translate UI text and [aria labels](/webchat/v3/accessibility#aria-labels). You can use dynamic strings, such as `{name}` or `{time}`, as described in the [embedding](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md) documentation.
+- Add values from embedding files not present in the GUI.
+- Specify parameters for your custom Webchat version.
+- Use features from a later Cognigy.AI version while using an earlier one.
+
+<AccordionGroup>
+  <Accordion title="JSON Example: Change Webchat Colors">
+
+    ```JSON
+        {
+            "colors": {
+                "primaryColor": "red",
+                "backgroundColor": "red"
+            }
+        }
+    ```
+
+  </Accordion>
+
+  <Accordion title="JSON Example: Translate Webchat Texts">
+
+    ```JSON
+        {
+            "customTranslations": {
+                "network_error": "Netzwerkfehler",
+                "no_network": "Kein Netzwerk vorhanden",
+                "reconnecting": "Verbindung wird wiederhergestellt...",
+                "reconnect": "Verbindung wiederherstellen",
+                "ariaLabels": {
+                    "messageHeader": {
+                        "bot": "{name} sagt:"
+                    }
+                }
+            }
+        }
+    ```
+
+  </Accordion>
+</AccordionGroup>
+
+### Webchat Plugins
+
+Add a link to the Webchat plugin.
+Note that you can add multiple plugins.
+For more information on creating and triggering plugins, refer to [Webchat Plugins](/webchat/plugins).
+
+### Demo Webchat Settings
+
+Demo Webchat lets you test integrations with different providers and preview Webchat's appearance before deployment.
+It's a valuable tool for ensuring your Webchat functions as expected before launch.
+For more information on how to use this feature, refer to [Demo Webchat](/webchat/demo).
+
+## More Information
+
+- [Webchat v3: Overview](/webchat/v3/overview)
+- [Webchat v3: Features](/webchat/v3/features)
+- [Webchat v3: Embedding](/webchat/v3/embedding/hosted-script)

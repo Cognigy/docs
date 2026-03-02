@@ -1,0 +1,147 @@
+---
+title: "2025.22"
+sidebarTitle: "2025.22"
+hidden: false
+---
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2025.22.3
+
+### Cognigy.AI
+
+**Released** November 20, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Microsoft Azure OpenAI models using the API Key connection type with custom URLs failed
+
+## 2025.22.2
+
+### Cognigy.AI
+
+**Released** November 5, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Snapshot deployments used the incorrect Project ID during Flow executions
+
+### Cognigy Webchat
+
+**Released** November 5, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Webchat displayed the human agent's name and logo from Genesys Open Messaging instead of the AI Agent's name and the Webchat logo
+
+## 2025.22.1
+
+### Cognigy.AI
+
+**Released** October 30, 2025
+
+#### Bug Fixes
+
+- Fixed the issue in the Helm chart that prevented the execution of Knowledge Connectors in the trial environment. For on-premises installations, set `persistentVolumeClaim.runtime.enabled` to `true` so that Knowledge Connectors work properly
+
+## 2025.22.0
+
+### Cognigy.AI
+
+**Released** October 28, 2025
+
+#### Features
+
+##### Cognigy AI Operations Center (AI Ops Center)
+
+With [AI Ops Center](/ops-center/index), you can monitor and manage your AI Agents using real-time dashboards, performance insights, and proactive issue alerts. Full features are unlocked with a license.
+
+#### Improvements
+
+- Added [new LLMs](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature):
+   - Azure OpenAI and OpenAI: `gpt-5`, `gpt-5-nano`, `gpt-5-mini`, `gpt-5-chat-latest`
+   - Google Gemini: `gemini 2.5`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`
+- Added [a new event](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge) to display the human agent's name and image in the conversation for the Genesys Open Messaging Handover provider with the Amazon EventBridge integration
+- Added authorization and authentication actions to [Audit Events](/ai/administer/access/admin-center/audit-events) for successful and failed user login attempts
+- Improved the debug message description for the [MCP Tool Node](/ai/agents/develop/node-reference/service/llm-prompt#mcp-tool). The debug message now indicates whether the tools were fetched from the cache or directly from the MCP Server
+- Upgraded the Basic Parser to a more stable document processing solution to improve reliability, reduce maintenance overhead, and enhance security
+
+#### Bug Fixes
+
+- Fixed the Track Goal Name not displaying properly on the Node
+- Resolved Anthropic responses in LLM prompt nodes occasionally displaying a JSON object instead of text output
+- Updated the deprecation deadline for handover settings to January 2026
+
+### Cognigy Voice Gateway
+
+**Released** October 28, 2025
+
+#### Improvements
+
+- Added filtering of recent calls by application
+- Improved reconnection behavior. Voice Gateway now reconnects faster and more reliably when it temporarily loses its connection to Cognigy.AI
+
+#### Bug Fixes
+
+- Fixed SRTP Base64 padding to ensure compatibility with Zoom’s crypto suite
+- Fixed the issue where the Reason set on the Voice Gateway Endpoint for the Call Failover feature wasn't correctly added as an `X-Reason` header to SIP messages
+
+### Cognigy Webchat
+
+**Released** October 28, 2025
+
+#### Bug Fixes
+
+- Fixed the issue with streaming outputs in Demo Webchat
+
+### Cognigy Live Agent
+
+**Released** October 28, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the database migration job failed when installing a newly set-up Live Agent
+- Fixed the issue where data couldn't be saved or read properly when a custom namespace for a Redis connection pool is used
+
+### Cognigy Insights
+
+**Released** October 28, 2025
+
+#### Bug Fixes
+
+- Fixed the Snapshots list loading issue in the Snapshot filter. The list now appears immediately and reliably when the filter is applied
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot + AI Ops Center
+
+##### Activate AI Ops Center
+
+The activation process depends on the installation type:
+
+- **Shared and dedicated SaaS.** All clusters include the Cognigy.AI monitoring stack by default. Contact your Customer Success Manager to activate AI Ops Center.
+- **On-Premises.** AI Ops Center is unavailable for on-premises installations. To conserve cluster resources, add the following to the localized `values.yaml` file:
+
+    ```yaml
+    dbConnectionString:
+      services:
+        serviceSentinel:
+          enabled: false
+
+    serviceSentinel:
+      enabled: false
+    ```
+
+#### Voice Gateway
+
+- Enable Redis keep-alive ping. Add a new environment variable to `{{ .Values.cognigyEnv }}` named `REDIS_KEEP_ALIVE_INTERVAL_IN_SECONDS` with a default value of 10 seconds. All services with access to Redis will restart after applying this value.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

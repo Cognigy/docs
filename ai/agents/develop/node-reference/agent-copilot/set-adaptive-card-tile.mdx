@@ -1,0 +1,48 @@
+---
+title: 'Copilot: Adaptive Card Tile'
+hidden: false
+---
+
+import AiNodesAdaptiveCardGenai from '/snippets/ai/nodes/adaptive-card-genai.mdx'
+
+<a href="/release-notes/4.79"><Badge className="version-badge" color="blue">Updated in 4.79</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/agent-copilot/set-adaptive-card-tile.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node allows you to create and display adaptive cards in your Agent Copilot workspace. Adaptive cards can display rich content and interactive elements, such as images, text, buttons, and forms. 
+
+The [Adaptive Card Designer](https://adaptivecards.io/designer) can help you to define an Adaptive Card. Copy the JSON card payload and paste it into the form. Alternatively, you can use Generative AI to create a new adaptive card or improve an existing one.
+
+## Parameters 
+
+| Parameter            | Type          | Description                                                                                        |
+|----------------------|---------------|----------------------------------------------------------------------------------------------------|
+| Tile ID              | CognigyScript | The ID that you created in the Agent Copilot configuration.                                        |
+| Generate Node Output | Text          | A prompt or instruction for generating the adaptive card. To apply the prompt, click **Generate**. |
+| Adaptive Card JSON   | JSON          | The JSON payload to render inside the tile. Supported schema version: `1.5` or earlier.            |
+
+<Accordion title="Create an Adaptive Card with Generative AI">
+
+  Before creating an Adaptive Card with Generative AI, ensure that you are connected to one of the [LLM Providers](/ai/agents/develop/gen-ai-and-llms/generative-ai#prerequisites).
+
+  To use this feature, follow these steps:
+
+  <AiNodesAdaptiveCardGenai/>
+
+  <Frame>
+    <img class="image-center" src="/_assets/ai/develop/node-reference/agent-copilot/adaptive-card-generative-ai.png" style={{ width: 'auto' }} />
+  </Frame>
+</Accordion>
+
+## More Information
+
+- [Copilot: HTML Tile](/ai/agents/develop/node-reference/agent-copilot/set-html-tile)
+- [Copilot: IFrame tile](/ai/agents/develop/node-reference/agent-copilot/set-iframe-tile)
+- [Copilot: Set Grid](/ai/agents/develop/node-reference/agent-copilot/set-grid)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Agent Copilot](/agent-copilot/overview)

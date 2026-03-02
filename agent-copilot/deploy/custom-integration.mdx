@@ -1,0 +1,128 @@
+---
+title: "Agent Copilot Custom Integration"
+sidebarTitle: "Custom Integration"
+keywords: ["agent copilot", "custom integration"]
+seo:
+  title: "Custom Integration"
+  description: "This guide shows how to embed Agent Copilot into a custom contact center or agent desktop using the Voice Copilot Endpoint. It helps developers test and validate Copilot quickly without a full contact-center setup. Works for both chat and voice."
+---
+
+This guide shows how to embed Agent Copilot into a custom contact center or agent desktop using the Voice Copilot Endpoint. It helps developers test and validate Copilot quickly without a full contact-center setup. Works for both chat and voice.
+
+## Prerequisites
+
+- Configured the Voice Gateway integration:
+    - If a Voice Copilot Endpoint is used voice or chat use cases.
+    - If a Webhook Endpoint is used for voice use cases.
+
+## Restrictions
+
+- If you use a Webhook Endpoint, you will be charged for two conversations: one with the webhook and one with Agent Copilot.
+
+## Create an Endpoint
+
+Mock a request via Postman or curl to validate the webhook accepts your session.
+
+<Tabs>
+  <Tab title="Voice Copilot">
+   1. In the left-side menu of your Project, click **Deploy > Endpoints**.
+   2. On the **Endpoints** page, click **+ New Endpoint**.
+   3. In the **New Endpoint** section, do the following:
+       1. Select the **Voice Copilot** Endpoint type.
+       2. Specify a unique name.
+       3. Select a Flow from the list. Save changes.
+   4. Go to the **Configuration Information** section and copy the URL from the **Endpoint URL** field.
+  </Tab>
+  <Tab title="Webhook">
+   1. In the left-side menu of your Project, click **Deploy > Endpoints**.
+   2. On the **Endpoints** page, click **+ New Endpoint**.
+   3. In the **New Endpoint** section, do the following:
+       1. Select the **Webhook** Endpoint type.
+       2. Specify a unique name.
+       3. Select a Flow from the list. Save changes.
+   4. Go to the **Configuration Information** section and copy the URL from the **Endpoint URL** field.
+  </Tab>
+</Tabs>
+
+## Mock a Request
+
+Send a `POST` request to the Endpoint which you configured in the previous step.
+Your web server should accept `POST` requests and process the JSON payload sent by Cognigy.AI. For testing purposes, you can use [webhook.site](https://webhook.site) as a temporary web server.
+
+<Tabs>
+  <Tab title="cURL">
+    Replace `https://<your-endpoint-url>` with the Endpoint URL from your Endpoint's settings.
+
+    ```bash
+    curl -X POST https://<your-endpoint-url> \
+      -H "Content-Type: application/json" \
+      -d '{
+        "userId": "user123",
+        "sessionId": "session123",
+        "text": "Hello, I need help with my order",
+        "data": {
+          "exampleKey": "exampleValue"
+        }
+      }'
+    ```
+  </Tab>
+  <Tab title="Postman">
+    1. Open the Postman collection, select **Add a request**, then set the request type to `POST`.
+    2. Enter the Endpoint URL as the request URL.
+    3. Go to the **Headers** tab and add `Content-Type: application/json`.
+    4. Go to the **Body** tab, select **raw**, then select **JSON** as the format.
+    5. Paste the request body:
+
+    ```json
+    {
+      "userId": "user123",
+      "sessionId": "session123",
+      "text": "Hello, I need help with my order",
+      "data": {
+        "exampleKey": "exampleValue"
+      }
+    }
+    ```
+
+    | Parameter | Type   | Description                                                                                                                                                                                                 | Required                        |
+    |-----------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+    | userId    | String | The ID of the end user.                                                                                                                                                                                     | Yes                             |
+    | sessionId | String | The ID used to track the current session and maintain its state. Generate a new unique ID for each new session. For testing, you can use any string and change it whenever you want to start a new session. | Yes                             |
+    | text      | String | The text that the assigned Flow should process.                                                                                                                                                             | No,  if `data` is specified<sup>[1](#footnote1)</sup> |
+    | data      | Object | The data that the assigned Flow should process.                                                                                                                                                             | No,  if `text` is specified<sup>[1](#footnote1)</sup> |
+    </Tab>
+</Tabs>
+
+## Configure the Agent Copilot URL
+
+When setting up Agent Copilot, you can choose between embedded or standalone Agent Copilot versions.
+
+For standalone Agent Copilot, use the URL format to access the workspace:
+
+```txt
+https://${AgentCopilotBaseUrl}/?userId=${userId}&sessionId=${sessionId}&URLToken=${URLToken}
+```
+
+For the configuration details, refer to the [Agent Copilot URL](/agent-copilot/configure/overview#agent-copilot-url) section.
+
+### (Optional) Embed in the Agent Desktop
+
+You can embed Agent Copilot into any contact center interface using an iframe. Some platforms may require additional setup, such as enabling scripts or granting API access.
+
+Embedding is specific to the contact center, so verify the integration on the provider’s side to ensure proper functionality.
+
+```html
+<iframe
+  src="https://${AgentCopilotBaseUrl}/?userId=${userId}&sessionId=${sessionId}&URLToken=${URLToken}}"
+  width="100%"
+  height="720"
+  style="border:0;">
+</iframe>
+```
+
+## More Information
+
+- [Overview](/agent-copilot/deploy/overview)
+
+---
+<sup id="footnote1">1</sup>: You must provide at least one of `text` or `data`. You can send either, or both. If both are missing or invalid, the REST Endpoint throws an error.

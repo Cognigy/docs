@@ -1,0 +1,28 @@
+---
+title: Global Connections
+hidden: false
+keywords:
+  - global resources
+  - global connections'
+  - admin center
+seo:
+  metatags:
+    description: Global Connections are Cognigy.AI Connections at organization level.
+---
+
+<a href="/release-notes/4.97"><Badge className="version-badge" color="blue">Updated in 4.97</Badge></a>
+
+_Global Connections_ are [Connections](/ai/platform-features/connections) established when you create [global LLMs](/ai/agents/develop/gen-ai-and-llms/llms).
+
+## Working with Global LLMs
+
+<Tabs>
+  <Tab title="GUI">
+
+        You can view, edit, and delete global Connections in the [Admin Center](/ai/administer/access/admin-center/global-resources/overview) under **Resources > Connections** as well as copy their Reference ID.
+  </Tab>
+  <Tab title="API">
+
+        You can view, edit, and delete global Connections using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#tag--Connections-v2.0). To do so, set the `resourceLevel` parameter to `organisation` in the JSON body.
+  </Tab>
+</Tabs>

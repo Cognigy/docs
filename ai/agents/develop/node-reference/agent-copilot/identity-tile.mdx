@@ -1,0 +1,45 @@
+---
+title: 'Copilot: Identity Tile'
+hidden: false
+---
+
+<a href="/release-notes/4.60"><Badge className="version-badge" color="blue">Updated in 4.60</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/agent-copilot/identity-tile.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+
+This Node is designed to display and process customer-specific information directly within the widget of your Agent Copilot workspace, enhancing the context and usability of the identity-related data.
+
+## Parameters
+
+| Parameter     | Type          | Description                                                                                                                                       |
+|---------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| Tile ID       | CognigyScript | The ID that you created in the Agent Copilot configuration.                                                                                       |
+| Widget Layout | Select        | The layout of how the widget should be placed in the Workspace (horizontal/vertical).                                                             |
+| Image Shape   | Select        | The shape or format of the image (round or square).                                                                                               |
+| Image URL     | URL           | The URL where the image is hosted or located.                                                                                                     |
+| Customer Data | CognigyScript | Additional customer-specific data for analysis in a key-value format. For example, the key is `Email` and the value is `{{profile.email}}`. |
+
+## Use Case 
+
+Displaying the user's profile picture adds a human touch to the conversation, making it more engaging and personal.
+One way to enhance the conversation further is by showing key customer data,
+such as their name, account information, or preferences, directly within the chat conversation.
+This allows human agents to have contextually relevant discussions without the need to search for customer data in multiple tools.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/agent-copilot/identity-assist-example.png" style={{ width: 'auto' }} />
+</Frame>
+
+## More Information
+
+- [Copilot: Transcript Tile](/ai/agents/develop/node-reference/agent-copilot/transcript-tile)
+- [Copilot: Sentiment Tile Node](/ai/agents/develop/node-reference/agent-copilot/sentiment-tile)
+- [Copilot: Next Action Tile Node](/ai/agents/develop/node-reference/agent-copilot/next-action-tile)
+- [Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Copilot](/agent-copilot/overview)

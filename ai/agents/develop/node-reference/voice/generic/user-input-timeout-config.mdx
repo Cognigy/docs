@@ -1,0 +1,28 @@
+---
+title: User Input Timeout - Config
+hidden: false
+---
+
+import AiNodeReferenceVoiceAcAndGenericNodeDeprecation from '/snippets/ai/node-reference/voice/ac-and-generic-node-deprecation.mdx'
+
+<a href="/release-notes/4.45"><Badge className="version-badge" color="blue">Updated in 4.45</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/generic-voice/user-input-timeout-config.png" style={{ width: 'auto' }} />
+  <figcaption>Generic User Input Timeout - Config</figcaption>
+</Frame>
+
+## Description
+
+<AiNodeReferenceVoiceAcAndGenericNodeDeprecation/>
+
+The User Input Timeout - Config Node defines the action that the AI Agent should take if it does not receive any input from the user within a certain timeframe. 
+
+Once the settings are executed, they will remain in effect for the duration of the session.
+
+| Parameter             | Type     | Description                                                                                                                            |
+|-----------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------|
+| User No Input Mode    | Dropdown | Define the action if a user does not provide input to the AI Agent in time.                                                            |
+| User No Input Timeout | Number   | Define the timeout for user input in  milliseconds.                                                                                    |
+| User No Input Retries | Number   | Define the number of retries for the AI Agent to request input from the user before ending the call. The maximum value is 999 retries. |

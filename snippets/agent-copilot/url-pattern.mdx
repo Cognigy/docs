@@ -1,0 +1,14 @@
+`https://${AgentCopilotBaseUrl}/?userId=${userId}&sessionId=${sessionId}&URLToken=${URLToken}`
+
+    Where:
+
+    - `AICopilotBaseUrl` — the base URL used to access the Agent Copilot workspace.
+    - `sessionId` — the Cognigy session ID. A session represents the interaction between the human agent and the Agent Copilot workspace.
+    - `userId` — the Cognigy user ID. It helps Agent Copilot associate the interaction with a specific user.
+    - `URLToken` — the Endpoint token from Cognigy.AI. The Endpoint must be linked to the Handover Flow. To find this token, go to the Endpoint that you created previously. In the **Endpoint URL** field, copy the token after `https://endpoint-trial.cognigy.ai/`. For example, in the URL `https://endpoint-trial.cognigy.ai/f38791ae20d4961acf0e97d9f377c4fe3df92894e1eff1c7a774a8ed089a4590`, the token is `f38791ae20d4961acf0e97d9f377c4fe3df92894e1eff1c7a774a8ed089a4590`. Only authorized users can access the Agent Copilot system through this URL.
+
+    Example URL:
+
+    ```txt wrap
+    https://ai-copilot-trial.cognigy.ai/?sessionId=session123&userId=user123&URLToken=a4d5c86c98f27730311591f28d194510e05ffed30ca148e3344970defd418e7d
+    ```

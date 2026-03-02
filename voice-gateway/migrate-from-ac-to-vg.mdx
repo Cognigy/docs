@@ -1,0 +1,78 @@
+---
+title: Migration from AudioCodes to Voice Gateway
+
+---
+
+Starting from February 2025,
+you will no longer be able
+to create new [AudioCodes Nodes](/ai/agents/develop/node-reference/voice/audiocodes/overview) and [Generic Voice Nodes](/ai/agents/develop/node-reference/voice/generic/overview),
+but you can still edit or clone existing ones.
+Flows using these Nodes will continue to operate after the deprecation date.
+
+Before that date, we strongly recommend migrating from the third-party AudioCodes service to the native Cognigy product,
+[Voice Gateway](/voice-gateway/index), for smoother integration with your voice AI Agents.
+
+## Prerequisites
+
+- Add the `FEATURE_VG_AC_COMPATIBILITY_MODE` feature flag to the Cognigy.AI `values.yaml` file to activate the compatibility mode.
+- Note that when transferring settings from [AudioCodes Nodes](/ai/agents/develop/node-reference/voice/audiocodes/overview) to [Voice Gateway Nodes](/ai/agents/develop/node-reference/voice/voice-gateway/overview):
+    - Some parameter names may differ slightly, as well as the [names of the Nodes](#mapping-of-voice-nodes). 
+    - The values of some parameters may also vary slightly. If you notice a significant difference in the configuration, contact [Cognigy technical support](/help/get-help).
+
+## Install Voice Gateway
+
+1. Install the [Voice Gateway Self-Service Portal](/voice-gateway/overview) as a SaaS or on-premises solution.
+2. Follow the [Getting Started Guide](/voice-gateway/getting-started) for further actions. For additional assistance, keep in touch with the customer success manager to help you with configuration.
+
+## Create a Voice Gateway Endpoint
+
+1. In the left-side menu of the Cognigy.AI interface, select the Project where you want to create a Voice Gateway Endpoint.
+2. In the left-side menu of the Project, go to **Deploy > Endpoints**.
+3. On the **Endpoints** page, click **+ New Endpoint**.
+4. In the **New Endpoint** section, do the following:<br/>
+    1. Select the **Voice Gateway** Endpoint type.<br/>
+    2. Add a unique name.<br/>
+    3. Select a relevant voice Flow from the list.<br/>
+5. Click **Save**.
+6. In the Endpoint, go to the **AudioCodes Compatibility Mode** section.
+7. Activate the **Enable AudioCodes Compatibility Mode** setting. This setting allows the Voice Gateway to treat your Flow with the AudioCodes Node as if it were a Flow with Voice Gateway Nodes, ensuring that the voice AI Agent works smoothly without interruptions.
+8. Manually move the required settings from your previous AudioCodes Endpoint to the Voice Gateway Endpoint.
+9. Save your changes.
+
+You can use the AudioCodes Endpoint alongside the Voice Gateway Endpoint. First, test the AI Agent with the Voice Gateway Endpoint, and if the tests are successful, you can switch to the Voice Gateway Endpoint permanently.
+
+With Compatibility Mode enabled, you can simultaneously use both Voice Gateway and AudioCodes Nodes in a Flow.
+
+## Mapping of Voice Nodes
+
+The table outlines the mapping of Generic and AudioCodes Nodes to their corresponding Voice Gateway Nodes.
+By following this mapping during migration,
+you can ensure that your AI Agents remain functional and effectively use the features of Cognigy Voice Gateway.
+
+| Generic Voice Node                                                                                                 | AudioCodes Node                                                                                                                                        | Voice Gateway Node                                                                                                                                                 |
+|--------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -                                                                                                                  | [Call Recording](/ai/agents/develop/node-reference/voice/audiocodes/call-recording)                                                                        | [Call Recording](/ai/agents/develop/node-reference/voice/voice-gateway/call-recording)                                                                                 |
+| [Barge In - Config](/ai/agents/develop/node-reference/voice/generic/barge-in-config)                                   | Set Session Params: [Barge In](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)                                                    | Set Session Config: [Barge In](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)                                                                |
+| [Continuous ASR - Config](/ai/agents/develop/node-reference/voice/generic/continuous-asr-config)                       | Set Session Params: [Continuous ASR](https://support.cognigy.com/hc/en-us/articles/360017413959-Audiocodes-Advanced-Configuration#continuous-asr-0-10) | Set Session Config: [Continuous ASR](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)                                                          |
+| [DTMF Collect - Config](/ai/agents/develop/node-reference/voice/generic/dtmf-collect-config)                           | Set Session Params: [DTMF](https://support.cognigy.com/hc/en-us/articles/360017413959-Audiocodes-Advanced-Configuration#dtmf-0-6)                      | Set Session Config: [DTMF](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) and [DTMF](/ai/agents/develop/node-reference/voice/voice-gateway/dtmf) |
+| [Hang Up](/ai/agents/develop/node-reference/voice/generic/hang-up)                                                     | [Hang Up](/ai/agents/develop/node-reference/voice/audiocodes/hangup)                                                                                       | [Hang Up](/ai/agents/develop/node-reference/voice/voice-gateway/hangup)                                                                                                |
+| [Mute Speech Input](/ai/agents/develop/node-reference/voice/generic/mute-speech-input)                                 | -                                                                                                                                                      | [Mute Speech Input](/ai/agents/develop/node-reference/voice/voice-gateway/mute-speech-input)                                                                           |
+| [Play URL](/ai/agents/develop/node-reference/voice/generic/play-url)                                                   | [Play URL](/ai/agents/develop/node-reference/voice/audiocodes/play-url)                                                                                    | [Play](/ai/agents/develop/node-reference/voice/voice-gateway/play)                                                                                                     |
+| [Send Metadata](/ai/agents/develop/node-reference/voice/generic/send-metadata)                                         | [Send Metadata](/ai/agents/develop/node-reference/voice/audiocodes/send-meta-data)                                                                         | [Send Metadata](/ai/agents/develop/node-reference/voice/voice-gateway/send-metadata)                                                                                   |
+| -                                                                                                                  | [Send Message](/ai/agents/develop/node-reference/voice/audiocodes/send-message)                                                                            | - <sup>[1](#footnote1)</sup>                                                                                                                                                             |
+| [Session Speech Parameters - Config](/ai/agents/develop/node-reference/voice/generic/session-speech-parameters-config) | [Set Session Params](/ai/agents/develop/node-reference/voice/audiocodes/set-session-params)                                                                | [Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/set-session-config)                                                                         |
+| [Transfer](/ai/agents/develop/node-reference/voice/generic/transfer)                                                   | [Transfer](/ai/agents/develop/node-reference/voice/audiocodes/transfer-vg)                                                                                 | [Transfer](/ai/agents/develop/node-reference/voice/voice-gateway/transfer)                                                                                             |
+| [User Input Timeout - Config](/ai/agents/develop/node-reference/voice/generic/user-input-timeout-config)               | Set Session Params: [User Timeouts](https://support.cognigy.com/hc/en-us/articles/360017413959-Audiocodes-Advanced-Configuration#user-timeouts-0-12)   | Set Session Config: [User Input Timeout](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)                                                      |
+
+
+## More Information
+
+- [Generic Voice Nodes](/ai/agents/develop/node-reference/voice/generic/overview)
+- [AudioCodes Nodes](/ai/agents/develop/node-reference/voice/audiocodes/overview)
+- [AudioCodes Endpoint](/ai/agents/deploy/endpoint-reference/audiocodes)
+- [Voice Gateway Nodes](/ai/agents/develop/node-reference/voice/voice-gateway/overview)
+- [Voice Gateway Endpoint](/ai/agents/deploy/endpoint-reference/voice-gateway)
+
+---
+
+<sup id="footnote1">1</sup>: There is no direct replacement for the [Send Message](/ai/agents/develop/node-reference/voice/audiocodes/send-message) Node. Alternatively, you can use a [Say Node](/ai/agents/develop/node-reference/basic/say) with the [Voice Gateway Channel](/ai/agents/develop/nodes/channels) that supports SSML.

@@ -1,0 +1,41 @@
+---
+title: createKnowledgeSource
+seo:
+  metatags:
+    description: Creates a Knowledge Source in a Knowledge Store.
+keywords: ['createKnowledgeSource', 'knowledge api', 'knowledge source']
+---
+
+## Syntax
+
+`api.createKnowledgeSource(params)`
+
+## Description
+
+Creates a [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview) in a [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store). A Knowledge Source is a container for [Knowledge Chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) to organize and manage your AI Agents' knowledge.
+
+**Parameters:**
+
+- `params`: `CreateKnowledgeSourceParams` — configuration object for the Knowledge Source. The object contains the following parameters:
+
+| Parameter     | Type     | Required | Description                                                                 |
+| ------------- | -------- | -------- | --------------------------------------------------------------------------- |
+| `name`        | String   | Yes      | The name of the Knowledge Source. Must be unique for each Knowledge Source. |
+| `description` | String   | No       | A description of the Knowledge Source.                                      |
+| `tags`        | Array    | No       | Tags associated with the Knowledge Source, used to filter searches.         |
+| `chunkCount`  | Number   | Yes      | The number of Knowledge Chunks in the Knowledge Source.                     |
+
+**Returns:** `Promise<{ knowledgeSourceId: string }>` — a promise that resolves to an object containing the ID of the created Knowledge Source.
+
+## Example
+
+  ```js
+  const result = await api.createKnowledgeSource({
+    name: "Customer Support FAQ",
+    description: "Frequently asked questions from the support portal",
+    tags: ["support", "faq", "customer-service"],
+    chunkCount: 75
+  });
+  
+  console.log(result.knowledgeSourceId);
+  ```

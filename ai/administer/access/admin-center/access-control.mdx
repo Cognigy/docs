@@ -1,0 +1,138 @@
+---
+title: Access Control
+keywords:
+  - access control
+  - ' global roles'
+  - ' user management'
+  - ' admin center'
+seo:
+  metatags:
+    description: >-
+      The Access Control interface provides a user management tool for
+      organizational-level administration. It acts as an Access Control List
+      (ACL), enabling the assignment of specific roles to users.
+---
+
+<a href="/release-notes/2025.22"><Badge className="version-badge" color="blue">Updated in 2025.22</Badge></a>
+
+import { ExpandableTable } from '/snippets/expandable-table.jsx'
+
+The _Access Control_ interface provides a user management tool for organizational-level administration.
+The interface acts as an Access Control List (ACL), enabling the assignment of specific roles to users.
+
+In the Access Control interface, you can assign global roles only. These roles apply to all Projects within your organization and set basic access rights for all agents the user can access. If you want to assign Project-specific roles, refer to [Members](/ai/administer/access/members).
+
+## Before you Begin
+
+### Explore Global Roles
+
+Global roles are assigned to a user to establish access control across the entire organization. For more granular control within a Project, assign [Project-specific roles](/ai/administer/access/members).
+
+<ExpandableTable
+  headers={["Role", "Description"]}
+  rows={[
+    ["<code>admin</code>", "Access to all organization resources, except the Cognigy.AI OData endpoint. The system creates one admin user during installation. A platform owner should create a new admin user and delete the default one after the first login."],
+    ["<code>base_role</code>", "Access to view most resources in the system. Automatically assigned to new users upon creation."],
+    ["<code>projectManager</code>", "Access to create new Projects. No permission to administer users or modify resources within the Projects."],
+    ["<code>userManager</code>", "Access to create new user accounts assignable to Projects."],
+    ["<code>apiKeys</code>", "Access to create organization-wide API keys for Cognigy.AI RESTful API access. Permissions apply equally when using API keys."],
+    ["<code>odata</code>", "Access to the Admin Center section and the OData interface for querying analytics information."],
+    ["<code>liveAgentAdmin</code>", "Access to Live Agent as an admin. Same permissions as `base_role` in Cognigy.AI."],
+    ["<code>liveAgentSupervisor</code>", "Access to Live Agent as a supervisor."],
+    ["<code>liveAgentAgent</code>", "Access to Cognigy Live Agent as a human agent. Same permissions as `base_role` in Cognigy.AI."],
+    ["<code>userDetailsViewer</code>", "Access to view user details, such as email addresses and usernames with read-only permissions. Enables user detail management without additional privileges."],
+    ["voice-gatewayUser", "Access to the Voice Gateway Self-Service Portal with authorization via Cognigy.AI user credentials. Assigned to users with the Account role."],
+    ["<code>fullSupportUser</code>", "Access with admin-level privileges excluding the ability to assign Projects or global roles to others. Includes access to the Cognigy.AI OData endpoint, Cognigy.AI API, and Audit Events."],
+    ["<code>basicSupportUser</code>", "Access with admin-level privileges for Project setup and platform management, for example, `extension_trust_admin`. Full access for AI Agent debugging and error analysis, for example, logs, Playbooks, Conversation History, Contact Profiles. Read-only access to various Project resources. No access to technical connections, user management, or Knowledge AI."],
+    ["<code>projectAssigner</code>", "Access to assign Projects to self and others. Restrictions include no permission to assign global roles or add users. Read-only access to multiple Project components. No access to Knowledge AI, Contact Profiles, Conversation History, Live Agent, or Voice Gateway."],
+    ["<code>opsCenterUser</code>", "Access to Cognigy AI Ops Center in addition to `base_role` in Cognigy.AI."]
+  ]}
+  initialRowsToShow={5}
+  showMoreRowsText="Show more roles"
+  showLessRowsText="Hide roles"
+/>
+
+### Check Who Can Access the Access Control Page
+
+Users with `admin` rights have full control over the Admin Center interface. However, users with one of the following roles have access only to the **Access Control** page:
+
+- `projectAdmin` – a [Project role](/ai/administer/access/members#project-roles), read-only access.
+- `memberManager` – a [Project role](/ai/administer/access/members#project-roles), read-only access.
+- `userManager` – a global role, full access.
+- `userDetailsViewer` – a global role, read-only access.
+
+## Working with the Access Control interface
+
+<AccordionGroup>
+  <Accordion title="Create New Users">
+    To create a new user in Cognigy.AI for your organization, you must have the `admin` or `userManager` global role.
+
+    To create a new user, follow these steps:
+
+    1. In the Admin Center interface, select **Access Control** from the left-side menu, then click **+ Create new User**.
+    2. In the **New User** window, fill in the following fields:
+        - **Display Name** — a name that is visible to other users within the organization.
+        - **Email Address** — a unique email address associated with the user's account.
+        - **Password** — a user password. Passwords can be modified at any time and are securely stored. Users can change their passwords later by navigating **User Menu > My Profile** on the **Main** page or by selecting **My Profile** from the User Menu in the bottom-left corner of the **Project** page.
+    3. Click **Save & Open**. A page opens where you can assign global roles and Projects to the user.
+
+    When you create a new user, this user receives a notification at the email address specified in their profile.
+  </Accordion>
+  <Accordion title="Assign Global Roles to Users">
+    To assign global roles to a user, follow these steps:
+
+    1. In the upper-right corner of the **Main** page, select **User Menu > Admin Center**.
+    2. In the Admin Center interface, select **Access Control** from the left-side menu. Select a user you want to assign global roles to:
+
+    <Tabs>
+      <Tab title="New user">
+        1. On the **Users** page, create a new user by clicking **+ Create new User**.
+        2. In the **New User** window, fill in the following fields:
+            - **Display Name** — a name that is visible to other users within the organization.
+            - **Email Address** — a unique email address associated with the user's account.
+            - **Password** — a user password. Passwords can be modified at any time and are securely stored. Users can change their passwords later by navigating **User Menu > My Profile** on the **Main** page or by selecting **My Profile** from the User Menu in the bottom-left corner of the **Project** page.
+        3. Click **Save & Open**. A page opens where you can assign global roles to the user.
+        4. In the **Global Roles** section, click **+** to open a list of roles. Select a role from the list.
+
+      </Tab>
+      <Tab title="Existing user">
+        1. On the **Users** page, select the user you want to assign roles to.
+        2. In the **Global Roles** section, click **+** to open a list of roles. Select a role from the list.
+        </Tab>
+      </Tabs>
+    After a role is assigned to a user, the role label is displayed in the **Global Roles** section.
+   </Accordion>
+   <Accordion title="Assign Projects to Users">
+    To assign a Project to a user, follow these steps:
+
+    1. In the upper-right corner of the **Main** page, select **User Menu > Admin Center**.
+    2. In the Admin Center interface, select **Access Control** from the left-side menu. Select a user you want to assign global roles to:
+
+    <Tabs>
+      <Tab title="New user">
+        1. On the **Users** page, create a new user by clicking **+ Create new User**.
+        2. In the **New User** window, fill in the following fields:
+            - **Display Name** — a name that is visible to other users within the organization.
+            - **Email Address** — a unique email address associated with the user's account.
+            - **Password** — a user password. Passwords can be modified at any time and are securely stored. Users can change their passwords later by navigating **User Menu > My Profile** on the **Main** page or by selecting **My Profile** from the User Menu in the bottom-left corner of the **Project** page.
+        3. Click **Save & Open**. A page opens where you can assign Projects to the user.
+        4. In the **Assigned Projects** section, click **+** to open a list of available Projects.
+        5. Type the name of the Project, then select it from the list, or scroll to find and select a Project.
+      </Tab>
+      <Tab title="Existing user">
+        1. On the **Users** page, select the user you want to assign Projects to.
+        2. In the **Assigned Agents** section, click **+** to open a list of available Projects.
+        3. Type the name of the Project, then select it from the list, or scroll to find and select a Project.
+      </Tab>
+    </Tabs>
+
+    After a Project is assigned to a user, the Project label is displayed in the **Assigned Projects** section.
+
+    When you assign a Project to an existing user, this user receives a notification at the email address specified in their profile. The email includes information about the Project name and its URL.
+    </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Members](/ai/administer/access/members)
+- [Admin Center](/ai/administer/access/admin-center/overview)

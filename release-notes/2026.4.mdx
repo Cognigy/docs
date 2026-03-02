@@ -1,0 +1,107 @@
+---
+title: "2026.4 (latest)"
+---
+
+import InsightsStepAndMessageExplorerDeprecation from '/snippets/insights/step-and-message-explorer-deprecation.mdx'
+import OAuth2DeprecationForSendSmtpEmailNode from '/snippets/ai/node-reference/data/oauth2-deprecation-for-send-smtp-email-node.mdx'
+
+<InsightsStepAndMessageExplorerDeprecation/>
+
+<OAuth2DeprecationForSendSmtpEmailNode/>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.4.1
+
+### Cognigy Voice Gateway
+
+**Released** February 18, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Recent Calls page in the Voice Gateway Self-Service Portal displayed an infinite loading spinner for users with the Account scope
+
+## 2026.4.0
+
+### Cognigy.AI
+
+**Released** February 17, 2026
+
+#### Improvements
+
+- Added the [Maximum Loops parameter](/ai/agents/develop/node-reference/ai/resolve-tool-action#advanced) to the Advanced section in the Resolve Tool Action Node. This parameter allows users to control how many times the AI Agent can loop back for multistep reasoning
+- Added a warning about data security to the [Extensions](/ai/for-developers/extensions) page
+- Added deprecation warnings for the [Handover Settings](/ai/agents/deploy/endpoints/handover-settings) section in the Endpoint settings and set this section to read-only mode
+- Added a deprecation tag to the Legacy option of the Handover Providers field in the [Handover to Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent), [Question Node](/ai/agents/develop/node-reference/basic/question), and [Handover to Human Agent Tool](/ai/agents/develop/node-reference/ai/ai-agent#tool)
+- Renamed the End Participant Change toggle to End Chat When Agent Leaves in the [Salesforce MIAW handover provider settings](/ai/escalate/handover-reference/salesforce-miaw#configuration-on-the-handover-provider-side)
+- Added the Display Agent Details toggle to the Handover to Human Agent and to the Question Nodes for Genesys handover providers. This toggle allows you to display the human agent's name and profile image in the chat
+
+#### Bug Fixes
+
+- Fixed the issue where the Embedding option was displayed in the Model Type field for LLM providers for which custom embedding models weren't supported
+- Fixed the issue where handover providers weren't saved after being created or updated
+- Fixed the issue where custom JSON objects sent through handover providers weren't expanded
+- Fixed the issue where data assertions for Quick Replies failed during Playbook runs in the Interaction Panel
+- Fixed the issue where Extension Nodes were displayed on the tab next to the Extension tab, and the Nodes in the last tab weren't displayed
+- Fixed the issue where the Data Redaction settings section was displayed on the Settings page even when the feature was disabled
+- Fixed the issue where the Train Flows tooltip was blank
+- Fixed the issue where the Live Agent Inbox Id field was empty when the Live Agent Handover provider was selected in a Project with a preconfigured Live Agent account
+- Fixed the issue where Nodes prompted users to save changes even if no changes were made
+- Fixed a password reset issue that could expose users across multiple organizations
+- Fixed the issue where goals weren't completely synced to Insights during Snapshot uploads
+- Fixed the issue where the NLU Date Slot outputted an ISO date with incorrect formatting
+- Fixed the issue where the API Access Token and API Key fields couldn't be unmasked in the 8x8 and Chatwoot handover provider settings
+- Fixed the issue where the Question Node wasn't saved when Genesys Cloud Open Messaging was selected as the handover provider for escalations
+
+### Cognigy Voice Gateway
+
+**Released** February 17, 2026
+
+#### Features
+
+##### Deepgram Flux for STT Services
+
+Introduced support for the Deepgram Flux speech provider for speech-to-text (STT) services. This provider is powered by the Deepgram Flux model, which is optimized for transcription accuracy, real-time streaming, and processing large volumes of audio.
+
+##### NiCE CXone: Preconfigured SIP Trunk for Quick Setup
+
+Added NiCE CXone as a [preconfigured SIP trunk provider](/voice-gateway/references/sip-trunk-providers) in the Voice Gateway Self-Service Portal. By selecting NiCE CXone in the carrier settings, the fields on the Edit carrier page are automatically filled in with the standard SIP trunk values for the NiCE CXone carrier. The feature is available only for installations integrated with the NICE CXone platform.
+
+#### Bug Fixes
+
+- Fixed the issue where STT hints weren't correctly passed for Deepgram's Nova-3 models
+- Fixed the issue where a range error occurred due to misaligned audio buffers
+- Fixed the issue where a final ping was sent after a `sip:refer`
+
+### Agent Copilot
+
+**Released** February 17, 2026
+
+#### Improvements
+
+- Added the Accept Only JWT Requests toggle to the Endpoint settings. This toggle allows you to enforce JWT validation for requests to the Agent Copilot URL
+
+### Cognigy Live Agent
+
+**Released** February 17, 2026
+
+#### Improvements
+
+- Implemented conversation-handling logic so that manual assignee changes automatically trigger conversation reassignment
+- Removed the Automatically set escalated conversations to Escalation priority option from the Inbox settings
+- Updated the Live Agent library to align with current Cognigy.AI components. It now supports proper rendering of AI Agent messages with complex output types, such as Text with Buttons, Galleries, and Text with Quick Replies, in conversations. This update ensures structural consistency across components and full compatibility with all Cognigy.AI output types
+
+#### Bug Fixes
+
+- Fixed the issue where the unread message counts didn't include all unread messages in a conversation that the human agent didn't open
+- Fixed the issue where escalated conversations appeared on the Mine tab only after the page was refreshed or the tabs were switched
+
+### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

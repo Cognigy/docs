@@ -1,0 +1,75 @@
+---
+title: "Simulator Dashboard"
+sidebarTitle: "Dashboard"
+keywords: ['simulator', 'simulations', 'simulate conversations', 'test AI Agents']
+"seo": {
+  "metatags": {
+    "description": "The Simulation dashboard provides insights into AI Agent simulations, including key metrics, performance trends, scheduled simulations, and recent results."
+  }
+}
+---
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="blue">Added in 2026.3</Badge></a>
+
+The _Simulator Dashboard_ provides a quick overview of the key metrics of simulations through charts, indicators, and tables. It includes performance trends, recent simulations, and general information.
+
+The summary of key metrics is represented in indicators and a bar chart. The tables display the scheduled and recent simulations.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/test/simulator/simulator-dashboard.webp" alt="Simulator Dashboard" style={{ width: 'auto' }} />
+</Frame>
+
+## Prerequisites
+
+- You need to have run or scheduled at least one simulation to see the Simulator dashboard.
+
+## Filters
+
+In the upper-right corner of the dashboard, you can select the period and the scenarios for which you want to display the data:
+
+| Filter    | Description                                                                                                                                                                                    |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Period    | Select the period for which you want to display the data. You have the following options:<ul><li>Last 7 days. This is the default option.</li><li>Last 30 days</li><li>Last 3 months</li></ul> |
+| Scenarios | Select the scenarios for which you want to display the data. You can enter the name of the scenario in the search field at the top of the list.                                                |
+
+<Tip>
+  Use filters to focus on the data of a group of related scenarios and to view how their performance develops over time.
+</Tip>
+
+## Indicators
+
+### Total Scenarios
+
+The **Total Scenarios** indicator displays the number of scenarios in the Project.
+
+### Total Simulations
+
+The **Total Simulations** indicator displays the number of simulation runs in the selected period.
+
+### Avg Success Rate
+
+The **Avg Success Rate** indicator displays the average success rate of the simulation runs in the selected period.
+
+## Chart
+
+### Success Rate Trend
+
+The **Success Rate Trend** chart displays the proportion of succeeded and failed simulation runs during the selected period. The horizontal axis represents the days or weeks within the selected period. The vertical axis represents the split between succeeded and failed simulation runs, where the lower portion portrays the succeeded simulation runs and the upper portion portrays the failed simulation runs. Hover over the bars in the chart to view more details about the success rate trend, for example, percentage of succeeded and failed simulation runs.
+
+## Tables
+
+### Upcoming Scheduled Runs
+
+The **Upcoming Scheduled Runs** table displays the next scheduled simulations. To view more details about the schedule, click a simulation, and you will be redirected to the **Schedule Configuration** panel on the **Scenarios** tab.
+
+### Recent Simulations
+
+The **Recent Simulations** table displays the latest completed simulations. Click a simulation to access the simulation results overview.
+
+## Simulator Dashboard API
+
+You can use the [Cognigy.AI Simulator API](https://api-trial.cognigy.ai/testing/openapi) to access the Simulator dashboard data.
+
+## More Information
+
+- [Simulator Overview](/ai/agents/test/simulator/overview)

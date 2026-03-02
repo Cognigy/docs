@@ -1,0 +1,30 @@
+---
+title: States
+sidebarTitle: Overview
+hidden: false
+keywords: ['states', 'states functions']
+seo:
+  metatags:
+    description: States functions manage conversation states, allowing you to get,
+      set, or reset the current state.
+---
+
+The _States_ functions are used to manage a conversation's State. They let you get the current State, update it to a new value, or reset it to its default.
+
+## [`getState`](/ai/for-developers/function-reference/states/getState)
+
+**Syntax:** `getState()`
+
+Returns the current State of the conversation.
+
+## [`setState`](/ai/for-developers/function-reference/states/setState)
+
+**Syntax:** `setState(state)`
+
+Updates the conversation State to a specified State. The State must be one of the States defined in the current Flow via **NLU > States**.
+
+## [`resetState`](/ai/for-developers/function-reference/states/resetState)
+
+**Syntax:** `resetState()`
+
+Resets the conversation State to its default value.

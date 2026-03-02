@@ -1,0 +1,159 @@
+---
+title: Voice Gateway Glossary
+sidebarTitle: "Glossary"
+keywords: ['glossary', 'voice gateway glossary', 'voice gateway terms']
+---
+
+Voice Gateway terms listed in alphabetical order. All terms in the glossary are given for informational purposes.
+
+## A
+
+**Account (scope)**
+
+A user role within the Voice Gateway Self-Service Portal. This scope includes basic operations with Voice Gateway entities, such as creating, editing, and deleting entities. Note that only users with the Account scope can be authorized in the Voice Gateway Self-Service Portal via their Cognigy.AI user credentials.
+For more information, read the [Users](/voice-gateway/webapp/users#account) documentation.
+
+**Accounts**
+
+Containers for resources such as applications, carriers, and speech services that are used to create and manage voice applications.
+In Voice Gateway, an Account may represent a specific customer organization and can have multiple users associated with it. For more information, read the [Accounts](/voice-gateway/webapp/accounts) documentation.
+
+**Admin (scope)**
+
+A user role (scope) within the Voice Gateway Self-Service Portal. This scope is only available for on-premises Cognigy Voice Gateway installations. It includes all operations in the Account and Service Provider scopes, allowing for performing all operations in the Voice Gateway. For more information, read the [Users](/voice-gateway/webapp/users#admin) documentation.
+
+**Alerts**
+
+Alerts are created when errors happen in your account configuration. For example, your credentials from the speech provider need to be updated. For more information, read the [Alerts](/voice-gateway/webapp/alerts) documentation.
+
+**Applications**
+
+Connectors that allow the Endpoint to be routed to the Voice Gateway. For more information, read the [Applications](/voice-gateway/webapp/applications) and [Create Voice Gateway Endpoint](/voice-gateway/getting-started#create-a-voice-gateway-endpoint) documentation.
+
+**Atmosphere Sounds**
+
+A parameter within the Session Config Node, which allows the user to configure a background track to be played during the conversation. An Atmosphere Sounds track can be played, silenced, or stopped at any point during the Voice Gateway conversation. You can lower the volume of the track if it's too loud and might overwhelm the conversation, or increase it if it's not audible enough. For more information, read the [Voice Gateway Parameter Details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) documentation.
+
+## C
+
+**Carriers**
+
+Telecommunications service providers are responsible for operating the networks that transmit voice traffic. Within the Voice Gateway Self-Service Portal, you can use different providers such as Voxbone, Twilio, and Simwood. These providers are also known as [SIP Trunk providers](#s). For more information, read the [Carriers](/voice-gateway/webapp/carriers) documentation.
+
+**Cognigy VG**
+
+See [Voice Gateway](#v).
+
+## O
+
+**Outbound Call Routing**
+
+Outbound Call Routing allows you to select a Carrier (SIP Trunk) for outbound calls and configure specific rules for call routing. Outbound call routing is used to select a Carrier when there are multiple Carriers available. For more information, read the [Outbound Call Routing](/voice-gateway/webapp/outbound-call-routing) documentation.
+
+## P
+
+**Phone Numbers**
+
+Phone Numbers are routed to your Endpoints. Phone number helps route incoming voice calls to the Cognigy Flows. To assign applications to phone numbers, you need to select both an Account and a Carrier. For more information, read the [Phone Numbers](/voice-gateway/webapp/phone-numbers) documentation.
+
+## R
+
+**Recent Calls**
+
+A feature that enables you to analyze the calls in your Voice Gateway account, providing valuable insights into the duration of various actions during the call, such as speech recognition and connections. For more information, read the [Recent Calls](/voice-gateway/webapp/recent-calls) documentation.
+
+**Roles**
+
+See [Scopes](#s).
+
+## S
+
+**Scope**
+
+A user role and the permissions associated with it. The scope determines what actions a user can perform, which resources they can access, and what areas of the system they can manage. Assigning the appropriate scope ensures users have the correct level of access while maintaining security and operational control. Depending on the Cognigy Voice Gateway installation, members can have the following scopes: Account, Service Provider, Admin. For more information, read the [Scopes](/voice-gateway/webapp/users#scopes) documentation.
+
+**Service Provider (scope)**
+
+A scope within the Voice Gateway Self-Service Portal. This scope is only available for on-premises Cognigy Voice Gateway installations. It includes all operations in the Account scope and provides the ability to edit user profiles, carriers, and speech services belonging to users with either the Account scope or the Service Provider scope. For more information, read the [Users](/voice-gateway/webapp/users#service-provider) documentation.
+
+**Settings**
+
+Options to configure your Voice Gateway Account. See [Accounts](#a).
+
+**Silence Overlay**
+
+A parameter within the Session Config Node, which allows playing an MP3 track wherever an extended silence occurs. This can happen while the AI Agent is waiting for the customer's response or looking for specific results in the database. Silence Overlay can be used to simulate common call center ambient noise, such as typing the customer's information into the system and clicking the mouse. With the Silence Overlay track, the customer is notified that the agent is working. For more information, read the [Silence Overlay](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) documentation.
+
+**SIP Hop**
+
+A path the SIP message takes between two SIP elements in a network. Each time a SIP message is forwarded from one SIP device to another, it is called a hop. SIP hops can occur between various SIP network elements, such as proxy servers, registrar servers, phones, and softphones. For more information on SIP connections, read the [Wikipedia Session Initiation Protocol](https://en.wikipedia.org/wiki/Session_Initiation_Protocol) documentation.
+
+**SIP Trunk**
+
+A mechanism that allows connecting phone systems to the public telephone network using the Session Initiation Protocol (SIP) over an IP network. To route your Contact Center or Phone Number to your Voice Gateway Endpoint, your SIP Trunk needs to be set up. Get in touch with [Cognigy Technical Support](/help/get-help) to configure your SIP Trunk and route your number to the right Endpoint. For more information, read the [SIP trunking](https://en.wikipedia.org/wiki/SIP_trunking) documentation.
+
+**SIP Trunk Providers**
+
+Providers offering services enable the connection of phone systems to the public telephone network
+using the Session Initiation Protocol
+(SIP) over an IP network.
+These providers enable them to make and receive calls over the Internet.
+Cognigy Voice Gateway can support any SIP trunk provider
+and includes preinstalled configurations for the following SIP trunk providers:
+Voxbone, Twilio, Simwood, TelecomsXChange.
+These providers are also known as [Carriers](#c). For more information, read the [SIP Trunk Providers](/voice-gateway/references/sip-trunk-providers) and [Carriers](/voice-gateway/webapp/carriers) documentation.
+
+**Speech Services**
+
+Settings that serve for integrating Speech-to-Text (STT) or Text-to-Speech (TTS) providers in the Voice Gateway Portal. Speech Services allow you to add various Speech Vendors to the Voice Gateway. You can create a speech service application by selecting a speech service vendor, provided in a list. Get credentials from your provider and add them to the speech service provider settings. For more information, read the [Speech Services](/voice-gateway/webapp/speech-services) documentation.
+
+**STT**
+
+STT (Speech-to-Text) is a technology that consistently converts spoken language into written text. It involves the recognition of spoken words by computers, enabling applications like voice assistants and transcription services to interpret and transcribe verbal communication. For more details, see [Wikipedia: Speech recognition](https://en.wikipedia.org/wiki/Speech_recognition). An STT Vendor is a system provider that offers this speech service. For more information, see [STT Vendors](/voice-gateway/references/tts-and-stt-vendors) supported by Cognigy Voice Gateway.
+
+## T
+
+**Tracing**
+
+Tracing logs are valuable for diagnosing issues, optimizing performance, and understanding the flow of operations for inbound calls. The Tracing tab for recent calls serves to identify delays in various steps, such as speech recognition, connection attempts, and other processing tasks. For more information, read the [Recent Calls](/voice-gateway/webapp/recent-calls) documentation.
+
+**TTS**
+
+TTS (Text-to-Speech) is a technology that transforms written text into spoken words. It allows computers to generate artificial speech, facilitating applications such as voice response systems by consistently translating written language into audible communication. For more details, see [Wikipedia: Speech synthesis](https://en.wikipedia.org/wiki/Speech_synthesis). A TTS Vendor is a system provider that offers this speech service. For more information, see [TTS Vendors](/voice-gateway/references/tts-and-stt-vendors) supported by Cognigy Voice Gateway.
+
+## U
+
+**Users**
+
+Members in your account. You can create new members, edit, or delete existing ones. For more information, read the [Users](/voice-gateway/webapp/users) documentation.
+
+## V
+
+**Voice Gateway**
+
+An AI-based solution to deploy voice AI Agents for automated phone conversations. It seamlessly integrates with the Cognigy.AI platform, empowering you to connect your AI Agent to your contact center. Voice Gateway provides you with voice-based services, such as phone calls, voice assistants, and smart speakers. Also, Voice Gateway can perform various functions, such as speech recognition, natural language understanding, dialogue management, text-to-speech, and speech-to-text conversion. For more information, read the [Voice Gateway](/ai/agents/deploy/endpoint-reference/voice-gateway) and [Voice Gateway Overview](/voice-gateway/overview) documentation.
+
+**Voice Gateway Endpoint**
+
+A connector within Cognigy.AI that enables seamless interaction between the AI Agent and external systems or platforms. To route your contact center to your Voice Gateway Endpoint, your SIP Trunk needs to be set up. Get in touch with Cognigy technical support to configure your SIP Trunk and route your number to the right Endpoint. For more information, read the [Endpoints](/ai/agents/deploy/endpoints/overview) and [Create Voice Gateway Endpoint](/voice-gateway/getting-started#create-a-voice-gateway-endpoint) documentation.
+
+**Voice Gateway Events**
+
+Events that refer to specific occurrences or incidents during a voice call that are recorded by Voice Gateway. These events can give valuable information about the progress and status of the call. For more information, read the [Voice Gateway Events](/voice-gateway/references/events/overview) documentation.
+
+**Voice Gateway Flow**
+
+A structured sequence of interactions designed for voice-enabled applications within the Cognigy.AI platform.
+You can start your Voice Gateway project by creating a voice Flow in Cognigy.AI.
+Every Node that offers text-based messages can be used in a Voice Flow.
+In a voice conversation, the AI Agent responds with a text-based message for every user input.
+Voice conversations happen on a turn-by-turn basis, meaning that all dialogue outputs triggered by the Flow will be bundled into one message and delivered across the phone line.
+For more information, read the [Create Voice Gateway Flow](/voice-gateway/getting-started#create-a-voice-gateway-flow) documentation.
+
+**Voice Gateway Flow Nodes**
+
+Cognigy Voice Gateway Nodes expose the functionality provided by Cognigy Voice Gateway directly in the Flow Editor. For more information, read the [Voice Gateway: Nodes Overview](/ai/agents/develop/node-reference/voice/voice-gateway/overview) documentation.
+
+**Voice Gateway Self-Service Portal**
+
+A web-based interface that empowers users to manage their accounts, settings, and preferences for Cognigy Voice Gateway. For more information, read the [Voice Gateway Self-Service Portal](/voice-gateway/webapp/overview) documentation.

@@ -1,0 +1,140 @@
+---
+title: Knowledge AI
+sidebarTitle: Overview
+seo:
+  metatags:
+    description: >-
+      Knowledge AI lets you upload files, such as PDF, text, and Cognigy Text
+      format, as Knowledge Sources. This feature uses RAG to extract meaningful
+      information from documents and makes it accessible to AI Agents through
+      Knowledge AI Nodes.
+---
+
+import AiTermsOfUseKs from '/snippets/ai/terms-of-use-ks.mdx'
+
+<a href="/release-notes/2026.3"><Badge className="version-badge" color="blue">Updated in 2026.3</Badge></a>
+
+<AiTermsOfUseKs/>
+
+Knowledge AI is a knowledge search and management solution that uses Retrieval-Augmented Generation (RAG) to improve AI Agents' performance and assist human agents. Knowledge AI applies RAG to provide AI Agents with access to a large amount of structured information from different files in a knowledge base, such as articles, manuals, FAQs, and more. By accessing the knowledge base, AI Agents can retrieve and understand specific information, and provide more accurate, context-aware, and helpful responses to user queries.
+
+With Knowledge AI, you have more options beyond relying on [Intents](/ai/platform-features/nlu/intents/overview) and [Default Replies](/ai/platform-features/nlu/intents/default-reply) to identify user questions and provide relevant content based on predefined questions and answers. Creating question-and-answer pairs can be time-consuming and require labor-intensive maintenance.
+
+Knowledge AI lets you upload knowledge in various formats, such as [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf), [Cognigy Text](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt) (CTXT) and [web pages](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/web-page), or connect to external systems via [Knowledge Connectors](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-connectors), to create [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview). This technology extracts meaningful information from these documents and makes it accessible to conversation designers through the [Search Extract Output Node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/search-extract-output). With this Node, you can build knowledge-based AI Agents quickly, overcoming the limitations of traditional intent-based systems and simplifying the creation of sophisticated conversational experiences.
+
+## Prerequisites
+
+Before using Knowledge AI, follow these steps:
+
+1. [Apply for a license and allocate quotas](/ai/agents/develop/knowledge-ai/activate).
+2. Get access to an account from one of the following LLM Providers:
+
+    - [OpenAI](https://platform.openai.com/)
+    - [Microsoft Azure OpenAI](https://azure.microsoft.com/en-us/products/cognitive-services/openai-service)
+    - [Aleph Alpha](https://app.aleph-alpha.com/signup)
+
+### Which Models to Choose?
+
+To use the full potential of Knowledge AI, you need the following models:
+
+<AccordionGroup>
+  <Accordion title="Embedding model">
+   An embedding model converts information from documents into embeddings in [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) and performs knowledge searches.
+
+   <Note>
+
+   Embedding models aren't interchangeable. Each [Project](/ai/agents/develop/projects-and-flows/projects) uses a single embedding model for all Knowledge Stores. You configure the embedding model when you create the first Knowledge Store in your Project. If you change the embedding model, the existing embeddings become incompatible with the new model. To use a different embedding model, you must either delete all [Knowledge Stores](/ai/agents/develop/knowledge-ai/knowledge-store) and recreate them, or create a new Project.
+
+   When you import a [Package](/ai/platform-features/packages) including a Knowledge Store, the source and target Projects must use the same embedding model. If they use different embedding models, recreate the [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) to generate new embeddings with the target Project's model.
+
+   </Note>
+
+   Knowledge AI supports the following embedding models:
+
+    | Model                                                                        | Comment                                                                                                                                                                                                                                                                                                                                                                           |
+    |------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | <span style={ {whiteSpace: 'nowrap'} }>`text-embedding-ada-002`</span>       | –                                                                                                                                                                                                                                                                                                                                                                                 |
+    | <span style={ {whiteSpace: 'nowrap'} }>`text-embedding-3-small`</span>       | The model may be available only in geographically remote locations, leading to high latency for the search operation.                                                                                                                                                                                                                                                             |
+    | <span style={ {whiteSpace: 'nowrap'} }>`text-embedding-3-large`</span>       | The model may be available only in geographically remote locations, leading to high latency for the search operation. The model outputs embedding vectors twice as large as those from `text-embedding-ada-002` and `text-embedding-3-small`. Larger embedding vectors result in higher memory usage and larger [Package](/ai/platform-features/packages) sizes for Knowledge AI. |
+    | <span style={ {whiteSpace: 'nowrap'} }>`amazon.titan-embed-text-v2:0`</span> | For Cognigy.AI 2025.10 and earlier versions, use the `FEATURE_ENABLE_AWS_BEDROCK_EMBEDDING_LLM_WHITELIST` environment variable to make this model available to individual or all feature flags.                                                                                                                                                                                   |
+    | <span style={ {whiteSpace: 'nowrap'} }>`gemini-embedding-001`</span> | Available for Cognigy.AI 2026.3 and later versions.                                                                                                                                                                                                                                                                                                                                       |
+
+  </Accordion>
+  <Accordion title="Generative AI model">
+   A generative model must support [LLM Prompt Nodes or Answer Extraction](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) to use Knowledge Search results and generate context-aware response to user questions.
+  </Accordion>
+</AccordionGroup>
+
+## Knowledge Management
+
+Knowledge AI has the following knowledge hierarchy:
+
+- [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store) — a container that includes Knowledge Sources.
+- [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview) — a collection of organized and structured knowledge extracted from files, for example, user manuals, articles, FAQs, and other relevant information.
+- [Knowledge Chunk](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) — a unit of knowledge inside a Knowledge Source.
+
+<Frame>
+    <img class="image-center" src="/_assets/ai/empower/knowledge-ai/knowledge-hierarchy.png" style={{ width: 'auto' }}/>
+</Frame>
+
+## Knowledge AI Workflow
+
+Working with Knowledge AI involves two phases, similar to the Intents workflow. The first phase consists of collecting, preprocessing, and integrating data — a process known as ingestion — from your knowledge base, and the second phase is querying the knowledge base during [run-time](/ai/agents/develop/gen-ai-and-llms/generative-ai#run-time-generative-ai-features).
+
+### First Phase
+
+1. **Raw Information Upload** — you upload information as files to Knowledge AI.
+2. **Knowledge Chunk Extraction** — Knowledge AI extracts text and metadata from the raw information through a collection of tools and processes the information into a Knowledge Source. The Knowledge Source is divided in Knowledge Chunks, which you can edit in the Chunk editor.
+3. **Vectorization** — Knowledge AI encodes Knowledge Chunks into embeddings. Embeddings are high-dimensional vectors that encode word meaning and similarity into numeric representations. Knowledge AI stores the embeddings in a specialized internal database for quick access during run-time.
+
+### Second Phase
+
+1. **Knowledge Base Querying**. During run-time, Knowledge AI queries the Knowledge Sources to provide accurate and contextually appropriate responses to user questions.
+2. **Knowledge-based AI Agents Building**. AI Agents use the information stored in the Knowledge Sources to engage in more sophisticated and intelligent conversations with users.
+
+## Use cases
+
+With Knowledge AI, both human agents and AI Agents can retrieve information from various Knowledge Sources and provide better responses to your customers:
+
+- **Knowledge AI for AI Agents** — use the [Search Extract Output Node](/ai/agents/develop/node-reference/other-nodes/search-extract-output) so that AI Agents can retrieve product-specific knowledge from Knowledge Sources, for example, manuals and web pages. This way, AI Agent's output more accurate information to customers.
+- **Use Knowledge AI for human agents** — by retrieving data from different Knowledge Sources, LLMs reduce the burden on human agents, making information access quicker and more efficient. To let human agents use the Knowledge Sources for solving tasks, add a widget to the Agent Copilot workspace using a [Copilot: Knowledge Tile Node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile). The widget serves as a search tool, enabling human agents to enter questions and retrieve information from the knowledge base.
+
+To know more about the benefits of using Knowledge AI, watch this webinar:
+
+<iframe
+  width="500"
+  height="313"
+  style={{ border: "1px solid #ccc", borderRadius: "12px" }}
+  src="https://www.youtube.com/embed/DjHJlO_cUfM"
+  title="Cognigy Sessions: Cognigy.AI Slot Fillers"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen
+  class="centered-iframe"
+></iframe>
+
+<Accordion title="FAQ">
+
+  **Q1**: Is Knowledge AI free of charge?
+
+  **A1**: Knowledge AI is not free of charge and requires a [separate license](/ai/agents/develop/knowledge-ai/activate#apply-for-a-license).
+
+  **Q2**: I received `Request failed with status code 429` error message while attempting to upload a file. How can I solve this issue?
+
+  **A2**: The `429` error occurs when your organization's rate limit is exceeded on the side of your LLM's provider. To learn more, refer to your provider's documentation. For instance, if you use the OpenAI API, check out the article [How can I solve 429: 'Too Many Requests' errors?](https://help.openai.com/en/articles/5955604-how-can-i-solve-429-too-many-requests-errors).
+
+  **Q3**: I received a `Error while performing knowledge search. Remote returned error: Search failed: Could not fetch embeddings due to missing API resource name for Azure OpenAI` error message while using knowledge search features. How can I solve this issue?
+
+  **A3**: In recent releases, we have updated the connection settings to Azure OpenAI LLMs and added new parameters, such as the Resource Name. If you have an older connection (for example, created in the 4.53 release) to Azure OpenAI LLMs, especially Azure OpenAI `text-embedding-ada-002` for Knowledge Search, you might receive this error message when you trigger an LLM. To resolve this issue, recreate the LLM and the connection so that both have the latest format.
+</Accordion>
+
+## More Information
+
+- [Getting started with Knowledge AI](/ai/agents/develop/knowledge-ai/getting-started)
+- [Cognigy Text Format](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt)
+- [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf)
+- [Web Page](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/web-page)
+- [Search Extract Output Node](/ai/agents/develop/node-reference/other-nodes/search-extract-output)
+- [LLM](/ai/agents/develop/gen-ai-and-llms/llms)
+- [Generative AI](/ai/agents/develop/gen-ai-and-llms/generative-ai)

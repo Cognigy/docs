@@ -1,0 +1,100 @@
+---
+title: Other LLM Operations
+sidebarTitle: Other Operations
+hidden: false
+keywords:
+  - ' llm'
+  - ' delete llm'
+  - ' clone llm'
+  - ' default llm'
+  - ' export llm'
+seo:
+  metatags:
+    description: >-
+      Once you've added an LLM to Cognigy.AI, you can perform the following
+      operations with your model: clone, set as default, export, or delete.
+---
+
+Once you've added an LLM to Cognigy.AI, you can perform the following operations with your model:
+
+<AccordionGroup>
+  <Accordion title="Clone a Model">
+    <Tabs>
+      <Tab title="GUI">
+             To create a copy of the existing model, follow these steps:
+
+             1. Go to **Build > LLM**.
+             2. Hover over the existing model and click ![vertical-ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg).
+             3. Select **Clone** from the list.
+
+             The model will contain the same settings as the initial one.
+      </Tab>
+      <Tab title="API">
+             To create a copy of the existing model, use the [Cognigy.AI API POST /v2.0/largelanguagemodels/{largeLanguageModelId}/clone](https://api-trial.cognigy.ai/openapi#post-/v2.0/largelanguagemodels/-largeLanguageModelId-/clone) request.
+
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Set a Model as Default">
+
+    Setting a default model ensures a smooth transition when a specific model is removed. It guarantees that there is always a model available to handle compatible use cases, even if the assigned model is removed.
+
+    <Tabs>
+      <Tab title="GUI">
+
+            To set a model as the default, follow these steps:
+
+            1. Go to **Build > LLM**.
+            2. Hover over the existing model and click ![vertical-ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg).
+            3. Select **Make Default** from the list.
+
+            The setting will be applied for the selected model.
+      </Tab>
+      <Tab title="API">
+            To set a model as the default, use the `"isDefault": true` parameter in the [Cognigy.AI API PATCH /v2.0/largelanguagemodels/{largeLanguageModelId}](https://api-trial.cognigy.ai/openapi#patch-/v2.0/largelanguagemodels/-largeLanguageModelId-) request. 
+      
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Export a Model as a Package">
+
+    To reuse a model in other Projects, package the model.
+
+    To package a model, follow these steps:
+
+    1. Go to **Build > LLM**.
+    2. Hover over the existing model and click ![vertical-ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg).
+    3. Select **Create a package**.
+    4. Once the package has created, a new [task](/ai/agents/develop/projects-and-flows/projects), titled **Create package**, will be run. To view the task, click ![task-menu](/_assets/icons/blue/task-menu.svg) in the upper-right corner.
+
+    When the task is completed, you can download the Package in the Task Panel.
+    To ensure the model works correctly in a different Project, export its [connection](/ai/platform-features/connections) as a Package.
+  </Accordion>
+
+  <Accordion title="Delete a Model">
+
+    Note that a default model cannot be deleted. Before deletion, you need to remove the default tag.
+
+    <Tabs>
+      <Tab title="GUI">
+            To delete a model, follow these steps:
+
+            1. Go to **Build > LLM**.
+            2. Hover over the existing model and click ![vertical-ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg).
+            3. Select **Delete**.
+            4. Confirm the deletion. Features relying on this model will stop working if no default model is configured to support those features.
+
+            The model will be deleted from the list.
+      </Tab>
+      <Tab title="API">
+            To delete a model, use the [Cognigy.AI API DELETE /v2.0/largelanguagemodels/{largeLanguageModelId}](https://api-trial.cognigy.ai/openapi#delete-/v2.0/largelanguagemodels/-largeLanguageModelId-).
+     </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Overview](/ai/agents/develop/gen-ai-and-llms/llms)
+- [LLM Providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model Support by Feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

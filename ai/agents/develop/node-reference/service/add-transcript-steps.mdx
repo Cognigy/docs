@@ -1,0 +1,56 @@
+---
+title: Add Transcript Steps
+seo:
+  metatags:
+    description: >-
+      The Add Transcript Steps Node lets you add a step for one of the
+      conversation actor's to simulate an input or output.
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/services/add-transcript-step.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Add Transcript Steps Node allows you to add messages to the conversation transcript. These messages become part of the LLM context and directly influence AI Agent behavior, tool handling, conversation flow, and contextual awareness.
+
+Use this Node to inject additional information into the transcript without requiring a new user input. The Node is especially helpful in complex AI Agent architectures.
+
+## Restrictions
+
+- This Node isn't compatible with the `@cognigyRecentConversation` and `@cognigyRecentUserInputs` tags in the [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt).
+- Overuse of empty or redundant transcript entries can reduce clarity and make debugging more difficult.
+
+## Parameters
+
+| Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|-----------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Role      | Selector      | Defines the conversation actor for the added transcript entry. Select one of the following roles:<ul><li>`User` — represents direct input from the end user, such as questions, requests, or instructions. User messages are primary drivers of the model’s responses.</li><li>`Assistant` — represents previous AI-generated responses in the conversation. Assistant messages provide context and continuity from the model’s perspective.</li><li>`Agent` — represents internal reasoning or planning steps when the LLM operates in agentic mode. Agent messages can influence structured thinking and tool selection within multi-agent workflows.</li><li>`System` — defines overarching rules, constraints, persona, and behavioral guidelines. System messages have strong influence over the model’s behavior and establish global instructions.</li><li>`Tool` — represents outputs returned from external systems or tools invoked by the AI Agent. Tool messages provide factual results, for example, API responses, that the model uses to continue reasoning or generate an answer.</li></ul> The selected role determines how the LLM interprets the message and how strongly it may influence behavior. Only transcript entries included in the active conversation context are visible to the LLM during the request. |
+| Type      | Selector      | Only the `Input` type is available. This type means the provided data is processed as text input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Text      | CognigyScript | The textual content added to the transcript. This content becomes part of the LLM context and can provide instructions, external data, system messages, or conversation continuity.                                                                                                                                                                                                                                                                                                                                                               |
+| Data      | JSON          | Optional structured metadata that complements the **Text** field. For example, `{ "type": "motivational" }` can be used to categorize the input or provide context to influence how the system processes the text.                                                                                                                                                                                                                                                                                                                           |
+
+## Use Cases
+
+The following use cases illustrate where the Add Transcript Step Node is used.
+
+<AccordionGroup>
+  <Accordion title="Add External System Results">
+   Inject API responses such as CRM data, ID&V results, or order information into the transcript so the AI Agent can use this data during reasoning.
+  </Accordion>
+  <Accordion title="Manage AI Agent Transitions">
+   Add transcript entries to mark milestones such as completed handovers or transitions between AI Agents.
+  </Accordion>
+  <Accordion title="Context Refocusing">
+    Insert targeted messages to emphasize new priorities or provide technical context in long-running conversations.
+  </Accordion>
+  <Accordion title="Workflow-Based Context Injection">
+    After deterministic processes, for example, GDPR handling, add follow-up instructions to guide subsequent behavior.
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Get Transcript](/ai/agents/develop/node-reference/service/get-transcript)
+- [Agentic AI](/ai/agents/overview)

@@ -1,0 +1,169 @@
+---
+title: "2025.23"
+hidden: false
+---
+
+<Warning>
+  AudioCodes Nodes will be removed by the end of 2025. After the removal, AI Agents using these Nodes will stop working properly. We strongly recommend migrating to [Voice Gateway Nodes](/ai/agents/develop/node-reference/voice/voice-gateway/overview) before the removal.
+</Warning>
+
+<Warning>
+  In Cognigy.AI 2025.25.0, transformers will start using the `axios` library for handling HTTP requests internally instead of `request-promise`. This change occurs to improve security and maintainability. The following HTTP request options will still be supported:
+  
+  - **URL/Endpoint Configuration** — `uri`, `url`  
+  - **Request Method** — `method`  
+  - **Request Headers & Configuration** — `headers`  
+  - **Request Body/Data** — `form`, `json`  
+  - **Query Parameters** — `qs`, `qsStringifyOptions`  
+  - **Authentication** — `auth`  
+  - **Connection & Network** — `proxy`, `maxRedirects`, `gzip`, `encoding`
+  
+  If you use other HTTP request options, review your transformer code to ensure it is compatible with the new `axios` library before the release of Cognigy.AI 2025.25.0.
+</Warning>
+
+<Warning>
+  With Cognigy.AI 4.91, the Understood Messages concept was deprecated. Use the [Goals and Tasks](https://docs.cognigy.com/ai/analyze/goals-and-tasks/overview/) concepts to evaluate whether your AI Agent understood a particular phrase. In Cognigy.AI 2025.19, the charts related to this concept were removed from the Insights reports.
+
+  Respectively, the `understood` field was also deprecated from the OData endpoint in Cognigy.AI 4.91. The full removal of the `understood` field from the OData endpoint is scheduled for 2026.1. Use the [Goals collection](https://docs.cognigy.com/ai/analyze/odata#goals) in the Cognigy.AI OData endpoint.
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](https://docs.cognigy.com/release-notes/deprecations-and-removals/) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2025.23.2
+
+### Cognigy.AI
+
+**Released** December 3, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Cognigy.AI OData audit events contained sensitive information
+
+## 2025.23.1
+
+### Cognigy.AI
+
+**Released** November 19, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Microsoft Azure OpenAI models using the API Key connection type with custom URLs failed
+- Fixed the issue where a Tool Node couldn't be added to the LLM Prompt Node
+
+### Cognigy Voice Gateway
+
+**Released** December 3, 2025
+
+#### Bug Fixes
+
+- Fixed the issue in `feature-server` where the initial connection to Cognigy.AI required more attempts than expected
+
+## 2025.23.0
+
+### Cognigy.AI
+
+**Released** November 11, 2025
+
+#### Features
+
+##### AI Agent Knowledge Tool
+
+Introduced the knowledge tool for AI Agents. This feature allows you to easily add a knowledge tool to your AI Agent to access Knowledge Sources in the [AI Agent editor](/ai/agents/develop/manage-ai-agents), [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent), or [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt)
+
+#### Improvements
+
+- Added the option to define a custom header to authenticate through [OAuth 2.0 in the Azure OpenAI LLMs](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai)
+- Added the [GET Latest Log Entries](https://docs.cognigy.com/api-reference/logs-v20/get-latest-log-entries) API endpoint to retrieve Cognigy.AI logs with improved performance. By default, this endpoint has a time window of 2 hours. You can change the time window by setting the `FEATURE_ACTIVE_LOGGING_WITH_TAIL_CUT_OFF_HOURS` environment variable in the Helm chart. However, larger time windows may cause lower performance. If you need to retrieve logs over a very long period of time, for example, all your logs, you can use the [GET LogEntries](https://docs.cognigy.com/api-reference/logs-v20/get-logentries) API endpoint. For better performance, pass the `startDate` and `endDate` parameters to the endpoint.
+
+#### Bug Fixes
+
+- Fixed the issue where the Question Node didn't recognize email addresses containing the `old` substring
+- Fixed the issue where missing or incorrect Intents were displayed in debug messages
+- Fixed the issue where handover cancellation messages appeared inconsistently for human agents using Genesys Cloud Open Messaging
+- Fixed the issue where user events messages were included in conversation transcripts
+- Fixed the issue where Flows implemented from Snapshots checked the incorrect Project ID
+- Fixed the issue where GET methods displayed `previous` and `next` parameters, and the `extension` parameter of the `/v2.0/flows/{flowId}/chart/nodes/{nodeId}` endpoint was listed as `enum` type. Now, the GET methods parameters were changed to `previousCursor` and `nextCursor`, and the `extension` parameter type was changed to `string`
+- Fixed the issue where translated text didn't appear after the Locale change
+- Fixed the issue where incorrect Knowledge Connectors were displayed for marketplace extensions
+- Fixed the issue where the user interface and error messages incorrectly referred to Projects as Agents
+- Fixed the issue where custom embedding models weren't listed correctly in the Project settings
+- Fixed the issue where text assertions failed in Playbook runs that included messages with a button
+- Fixed the issue where the loader position in the Knowledge Source list caused the scroll bar on the main list to stop working
+
+### Cognigy Voice Gateway
+
+**Released** November 11, 2025
+
+#### Bug Fixes
+
+- Fixed an issue where atmosphere sounds continued after executing a dial. Now, sounds stop immediately for a clean audio experience
+- Fixed an issue where fallback transfers triggered by speech failover lacked the defined headers. Now, transfers include the correct headers
+
+### Cognigy Webchat
+
+**Released** November 11, 2025
+
+#### Features
+
+##### Custom Webchat Launcher Icon
+
+Added the capability to [customize the Webchat v3 launcher icon](/webchat/v3/configuration). Now, you can select one of the 3 default icons or upload your own to better match your brand
+
+#### Bug Fixes
+
+- Fixed issue where Webchat v3 displayed the human agent's name and logo from Genesys Open Messaging instead of the AI Agent's name and the Webchat logo
+
+### Cognigy Live Agent
+
+**Released** November 11, 2025
+
+#### Improvements
+
+- Added translation logic for API availability messages. System messages such as `User left the conversation` and `User joined the conversation` are now displayed in the correct language
+
+#### Bug Fixes
+
+- Fixed the issue in the Supervisor Overview report where the conversation list could spin indefinitely when opened with an assignee_id URL parameter before the agent list had loaded
+
+### Cognigy AI Ops Center
+
+**Released** November 11, 2025
+
+#### Improvements
+
+- Limited the options in the subcomponent filter to only show component-relevant options
+
+#### Bug Fixes
+
+- Fixed the issue where graphs displayed fractions on the vertical axis
+
+### Cognigy Insights
+
+**Released** November 11, 2025
+
+#### Improvements
+
+- Added automatic saving of Projects selected in the Business Dashboard when switching between dashboards
+
+#### Bug Fixes
+
+- Fixed the issue where Slot matches for the value `0` weren't rendered in the Transcript Explorer
+- Fixed the issue where input data containing keys with dot notation, for example, `{"user.name": "value"}`, wasn't saved to the database and wasn't displayed in Insights
+
+### Infrastructure
+
+#### Voice Gateway
+
+- Parameterize the Test Call Manager cron job schedule via `{{ .Values.testCallManager.cronjobSchedule }}`.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

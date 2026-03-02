@@ -1,0 +1,176 @@
+---
+title: "2026.3"
+---
+
+<Warning>
+  [Cognigy Live Agent](/live-agent/index) is in maintenance mode. The product will continue to be maintained in the foreseeable future. Users can continue to fully rely on Live Agent being available. In future releases, only security updates and bug fixes will be provided; no new features will be released.
+</Warning>
+
+<Warning>
+  Removals in Cognigy.AI 2026.3.0:
+
+  - The [`POST /v2.0/optionsresolver`](/api-reference/optionsresolver-v20/resolves-the-options-for-a-field) API for shared SaaS installations. If you use this method, update your setup to avoid disruptions.
+  - Anthropic's `claude-3-opus` and Amazon Bedrock's `amazon.titan-text-express-v1` models. Switch to the newer models to ensure your AI Agents run smoothly.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.3.2
+
+### Cognigy.AI
+
+**Released** February 12, 2026
+
+#### Features
+
+##### Support for the Latest Models from OpenAI, Microsoft Azure OpenAI, and Anthropic
+
+Introduced support for OpenAI's and Microsoft Azure OpenAI's `gpt-5-2` model, and for Anthropic's `claude-sonnet-4-5` and `claude-haiku-4-5` models.
+
+### Cognigy Voice Gateway
+
+**Released** February 11, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where ElevenLabs's STT service didn't correctly route requests to region-specific API endpoints when Europe was configured as the service region
+
+## 2026.3.1
+
+### Cognigy.AI
+
+**Released** February 9, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the IntelliSense code completion options were limited only to `api.say` in the Code Node editor
+
+### Cognigy Voice Gateway
+
+**Released** February 4, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Deepgram's STT service failed by enforcing Transport Layer Security (TLS) for Deepgram API endpoints
+- Fixed the issue where input was gathered after a `REFER` transfer occurred when event handling for `TRANSFER_REFER_ERROR` was activated
+
+## 2026.3.0
+
+### Cognigy.AI
+
+**Released** February 3, 2026
+
+#### Features
+
+##### New Embedding Model from Google
+
+Introduced the [`gemini-embedding-001`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) model from Google to support the Knowledge AI feature.
+
+##### OAuth2.0 for AI Agent MCP Tools
+
+Introduced OAuth 2.0 in the MCP tool for [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) and [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent) Nodes. OAuth 2.0 provides more secure and robust authentication options.
+
+##### Cognigy.AI Enhancements
+
+Introduced enhancements in Cognigy.AI to improve AI Agent testing:
+
+- [Simulator Dashboard](/ai/agents/test/simulator/dashboard) – get a clear overview of your simulations at a glance.
+- [Simulator Scheduler](/ai/agents/test/simulator/overview#schedule-simulations) – plan and automate simulation runs for easier testing.
+- [Mocking](/ai/agents/test/mocking) – simulate responses to speed up development and testing.
+
+#### Improvements
+
+- Added OAuth2 Client Credentials to the Authentication Type section in the [Send SMTP Email Node](/ai/agents/develop/node-reference/data/send-smtp-email), providing a more robust and simpler option for sending emails
+- Removed beta from the [Train Flows](/ai/platform-features/nlu/intents/overview#all-flows) feature
+- Added visual highlighting for the currently selected option in the simulation transcript. This applies to buttons and list items, making it easier to see which option is active during testing
+- Added full support for [handover escalations via the Question Node](/ai/agents/develop/node-reference/basic/question). Handover providers from the Handover Provider settings can now be configured in the Escalation – Intents or Escalation – Wrong Answers sections
+- Increased the Knowledge Source tags [limit from 10 to 50](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-source-tags#limitations) per Knowledge Source
+- Improved Cognigy.AI API by returning the version key in `GET v2.0/knowledgestores/{knowledgeStoreId}/descriptors`
+- Released the [Data Redaction](/ai/platform-features/data-redaction) feature to all customers following a successful controlled rollout
+- Added data redaction support to patterns that are [matched by Slots](/ai/platform-features/data-redaction#restrictions)
+- Added support to manage user and global roles exclusively on the NICE CXone platform for integrated environments, and to [log in to Cognigy.AI via the CXone interface](/ai/administer/access/management-ui#create-an-organization)
+- Added support for the Live Follow feature when `userId` is updated using the Input Transformer
+- Added full CRUD support for the Simulator on the Audit Events page, showing who performed create, view, update, and delete actions
+
+#### Bug Fixes
+
+- Fixed the issue where the Data Redaction Settings section was displayed on the Project settings page when data redaction was deactivated
+- Fixed the issue where users with the `fullSupportUser` role couldn't access the Audit Events page
+- Fixed the issue where an invalid log displayed the Set Session Config Node content
+- Fixed the issue where a required Node property wasn't updated after a version upgrade, which caused the Deepgram model to break
+- Fixed the issue where small value percentages in the Success Criteria chart weren't displayed properly
+- Fixed the issue where changing AI Agent output timeouts by pressing the `Enter` key broke the UI (`Unable to render the main content`)
+- Fixed the issue where Handover Provider settings were deleted when restoring a Snapshot or importing a Package
+- Fixed the issue where the xApp link didn't work when real-time translation was enabled
+- Fixed the issue where data redaction didn’t work when a `[` or `,` appeared in a string sent in the `data` object of the message
+- Fixed the issue where an error occurred when the conversation history using Amazon Bedrock models grew over 50 messages
+- Fixed the issue where the Custom URL option for OpenAI embedding models wasn't supported by knowledge search
+- Fixed the issue where creating a simulation triggered an incorrect error
+- Fixed the issue where the Knowledge Store import through Packages failed and threw a validation error
+
+### Cognigy Voice Gateway
+
+**Released** February 3, 2026
+
+#### Features
+
+##### New STT and TTS Provider: Speechmatics
+
+Introduced [Speechmatics](/voice-gateway/references/tts-and-stt-vendors) for both STT and text-to-speech (TTS), making voice interactions more flexible and accurate.
+
+##### ElevenLabs as STT Provider
+
+[ElevenLabs](/voice-gateway/references/tts-and-stt-vendors) is now available as an STT provider, giving you even more choice for your AI voice applications. Also, ElevenLabs is supported by the [Voice Preview](/ai/agents/test/voice-preview) feature in Cognigy.AI.
+
+#### Bug Fixes
+
+- Improved stability and reduced call drops in the Silence Overlay and Atmosphere Sounds features
+
+### Cognigy Webchat
+
+**Released** February 3, 2026
+
+#### Improvements
+
+- Refreshed the GeoIP database (GeoLite2-City) to improve the accuracy of geolocation mapping in Webchat metadata
+
+### Cognigy Live Agent
+
+**Released** February 3, 2026
+
+#### Improvements
+
+- Fixed the issue where inbox-level Notification settings were ignored when account-wide settings were active
+- Fixed the issue where the All Conversations tab wasn't visible for human agents
+- Fixed the issue where auto-assignment of queued conversations weren't triggered after escalation to a supervisor
+
+### Cognigy Insights
+
+**Released** February 3, 2026
+
+#### Improvements
+
+- Added the [`deleteConversationsv2.1`](/api-reference/conversations-v21/deletes-conversations-records-for-a-sessionid) API method and updated the Cognigy.AI OpenAPI documentation
+
+#### Bug Fixes
+
+- Fixed the issue where the Flow filter in the Transcript Explorer didn't retrieve correct results
+- Fixed the issue where OData connections weren't handled correctly
+- Fixed the issue where geolocation data was collected despite `maskAnalytics` being enabled. Now, IP addresses and geolocation are excluded
+- Fixed the issue where timeline queries in Insights reports were using an incorrect time zone
+
+### Infrastructure
+
+#### Cognigy Voice Gateway
+
+- Rename `dbCreate` to `apiMigrator`: `dbCreate.hookEnabled` -> `apiMigrator.hookEnabled`
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

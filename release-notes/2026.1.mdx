@@ -1,0 +1,144 @@
+---
+title: "2026.1"
+---
+
+<Warning>
+  In Cognigy.AI 2026.1, the `understood` field was fully removed from the OData endpoint. Use the [Goals collection](/ai/agents/analyze/odata#goals) in the Cognigy.AI OData endpoint.
+</Warning>
+
+<Warning>
+  Following the deprecation of Webchat v2, the full removal of this product is scheduled for February 2026. Make sure you migrate to [Webchat v3](/webchat/migration) before the removal date.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.1.5
+
+### Cognigy.AI
+
+**Released** January 26, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where users couldn't view the Simulation dashboard due to the `Unable to fetch Simulation Batches` error
+
+## 2026.1.4
+
+### Cognigy.AI
+
+**Released** January 23, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where importing Knowledge Stores via Packages failed
+
+## 2026.1.3
+
+### Cognigy.AI
+
+**Released** January 22, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Set Session Config Nodes generated incorrect error logs
+
+## 2026.1.2
+
+### Cognigy.AI
+
+**Released** January 20, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Deepgram STT models weren't applied correctly
+
+## 2026.1.1
+
+### Cognigy.AI
+
+**Released** January 14, 2026
+
+#### Improvements
+
+- Improved service stability and performance
+
+### Cognigy Voice Gateway
+
+**Released** January 20, 2026
+
+#### Bug Fixes
+
+- Rolled back `vg-drachtio-server` due to an issue with handling umlauts and emojis in SIP messages
+
+## 2026.1.0
+
+### Cognigy.AI
+
+**Released** January 13, 2026
+
+#### Features
+
+##### Mocking
+
+Introduced the [Mocking feature](/ai/agents/test/mocking). Mocking lets you change the behavior of a Node by replacing its logic with mock code execution without changing the original Node settings. This approach allows you to test specific Flow conditions in the Simulator, the Interaction Panel, and Endpoints without reconfiguring Nodes.
+
+##### New Handover to Human Agent Tool
+
+Introduced the [Handover to Human Agent tool](/ai/agents/develop/manage-ai-agents#handover-to-human-agent), allowing AI Agents to transfer conversations to human agents via handover providers if they can't address the user's request.
+
+#### Improvements
+
+- Added the Email Sender Name field to the [Email Notification Node](/ai/agents/develop/node-reference/data/email-notification)
+- Published the [Confluence Extension 5.0.2](https://github.com/Cognigy/Extensions/releases/tag/confluence502) and [Diffbot Extension 1.0.2](https://github.com/Cognigy/Extensions/releases/tag/diffbot102) on the Cognigy Marketplace to address critical vulnerabilities of previous versions
+
+#### Bug Fixes
+
+- Fixed the issue where the max token limit in Cognigy.AI didn't allow custom LLM models to use the max token values set by the user
+- Fixed the issue where Amazon Bedrock custom options didn't work properly
+- Fixed the issue where MCP tools didn't support custom headers containing CognigyScript
+- Fixed the issue where validation failed when saving AI Agent Nodes
+- Fixed the issue where Markdown formatting wasn't rendered in messages in the Simulator
+- Fixed the issue where the `.ack()` function was called in a different `amqp` channel than the one that received a message
+- Fixed the issue where the goals list on the Create Scenario page didn't display the existing goals
+- Fixed the issue where handover providers' icons weren't displayed in the Handover Provider list in the Check Agent Availability Node
+- Fixed the issue where Packages including a period in the name missed the `.zip` extension in the file name
+- Fixed the issue where HTTP requests in Endpoint transformers broke when the payload included `json: true`
+- Fixed the issue where the Contact Profiles page in a Project displayed Contact Profiles from other Projects
+
+### Cognigy Voice Gateway
+
+**Released** January 13, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where `CALL_COMPLETED` events were missing for transferred calls when the carrier ended the call first
+- Fixed the issue where TTS streaming failed when using ElevenLabs with non-global regions by limiting the TTS streaming to global regions
+
+### Cognigy Live Agent
+
+**Released** January 13, 2026
+
+#### Improvements
+
+- Added escalated conversations as a metric to the Open Conversations indicator in the [Supervisor Overview report](/live-agent/reports/supervisor-overview#open-conversations)
+
+### Cognigy Insights
+
+**Released** January 13, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the [GET all Conversations API method](/api-reference/conversations-v20/get-all-conversations) didn't include the `endpointName`, `ratings`, and `ratingComments` properties in the response
+- Fixed the issue where goals and Snapshots filters couldn't be applied at the same time
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

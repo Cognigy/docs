@@ -1,0 +1,30 @@
+---
+title: Logging and Monitoring
+sidebarTitle: Overview
+hidden: false
+seo:
+  metatags:
+    description: The Logging and Monitoring functions help you monitor and debug a
+      conversation. They let you log messages and track token usage.
+keywords: ['logging', 'monitoring', 'log', 'getLLMTokenUsageForSession', 'setSensitiveLoggingSettings']
+---
+
+The _Logging and Monitoring_ functions help you monitor and debug a conversation. They let you log messages and track token usage.
+
+## [`log`](/ai/for-developers/function-reference/logging/log)
+
+**Syntax:** `log(level, message)`
+
+Writes a log entry to the execution logs.
+
+## [`getLLMTokenUsageForSession`](/ai/for-developers/function-reference/logging/getLLMTokenUsageForSession)
+
+**Syntax:** `getLLMTokenUsageForSession()`
+
+Retrieves the token usage information for the conversation session. Returns `null` if no token usage information is available.
+
+## [`setSensitiveLoggingSettings`](/ai/for-developers/function-reference/logging/setSensitiveLoggingSettings)
+
+**Syntax:** `setSensitiveLoggingSettings(settings)`
+
+Adjusts the masking and redaction configuration for the conversation.

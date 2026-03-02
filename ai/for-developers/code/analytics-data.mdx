@@ -1,0 +1,78 @@
+---
+title: Analytics Data
+sidebarTitle: Analytics data
+hidden: false
+---
+
+import AiUnderstoodMessages from '/snippets/ai/understood-messages.mdx'
+
+<a href="/release-notes/4.90"><Badge className="version-badge" color="blue">Updated in 4.90</Badge></a>
+
+
+In a [Code Node](/ai/for-developers/code/overview), you can modify certain parts of the analytics data to get more control of what exactly is written to analytics.
+
+You can access the analytics data in a Code Node by using the key `analyticsdata`. For example:
+
+```js
+analyticsdata.intent = "test";
+``` 
+
+## Analytics Data
+
+<AiUnderstoodMessages/>
+
+<Accordion title="Analytics Data Fields">
+  | Field          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Type              |
+  |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+  | intent         | The intent that will be written to analytics. You can for instance modify this field to store the intent that was found in an executed Flow in analytics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | String            |
+  | intentFlow     | The ID of the Flow where the intent was found (main Flow or attached Flow).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | intentScore    | The score of the Intent that was found.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Number            |
+  | inputText      | The input text.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | String            |
+  | inputData      | The input data object.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{"key":"value"}` |
+  | state          | The [State](/ai/agents/test/interaction-panel/state) the Flow is currently in.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | String            |
+  | slots          | The slots that were found in the user's input.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Object            |
+  | completedGoals | A list of goals the user has completed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | List of Strings   |
+  | understood     | An input is considered `understood` if any of the following conditions are met:<ul><li>An Intent or Slot is identified.</li><li>The input is marked as understood through the Nodes: Code, Overwrite Analytics, Search Extract Output, or AI Agent.</li><li>The sentence type is `pAnswer`, `nAnswer`, or `Greeting` (if **Confirmation Word logic** is activated).</li></ul><br/>An input is considered `not understood` if any of the following conditions are met:<ul><li>There is an active handover without triggering an Agent Copilot Whisper Flow.</li><li>The message is explicitly marked as `Don't count` or `Null`.</li></ul> | Boolean           |
+  | custom1        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom2        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom3        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom4        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom5        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom6        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom7        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom8        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom9        | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+  | custom10       | A custom field that can be set to any string value during Flow execution. Defaults to null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | String            |
+</Accordion>
+
+## Custom Fields
+
+Custom fields let you add extra data to your Analytics reports. 
+This feature helps you analyze your data more deeply and get insights beyond the standard metrics. By customizing your data, you can make better decisions that fit your specific business needs and goals.
+
+### Limitations
+
+- The maximum length of a custom field is 1024 characters.
+
+<Accordion title="Store Complex Custom Data">
+
+  For more complex data, you can use a string field object. 
+
+  In this example, `custom1` stores a simple string value, while `custom2` uses a JSON representation of the `customData` object to store more complex information.
+
+  ```js
+  const customData = {
+    key: "value"
+  };
+
+  analyticsdata.custom1 = "userFocusGroup: focusGroup1";
+  analyticsdata.custom2 = JSON.stringify(customData);
+  ```
+</Accordion>
+
+## Analytics Data Lifespan
+
+The analyticsdata object is generated for each Flow Execution.
+This means that any data you store in the analyticsdata object
+(for example, a custom field) will only be stored in analytics for this Flow Execution.
+On the next Flow Execution, there will be a new analyticsdata object with a new Intent.

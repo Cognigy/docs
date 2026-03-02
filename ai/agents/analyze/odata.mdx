@@ -1,0 +1,764 @@
+---
+title: Cognigy.AI OData Analytics Endpoint
+sidebarTitle: OData
+description: >-
+  Cognigy.AI provides an OData analytics Endpoint for retrieving raw data via
+  GET requests. It supports enterprise analytics needs, enabling detailed
+  queries for spreadsheets and dashboard creation with preferred data
+  visualization tools.
+keywords:
+  - odata
+  - analytics
+  - metrics
+  - tracking
+  - data collections
+hidden: false
+---
+
+<a href="/release-notes/2026.1"><Badge className="version-badge" color="blue">Updated in 2026.1</Badge></a>
+
+[Open Data Protocol (OData)](https://www.odata.org/) is a standard for building and using RESTful APIs. This protocol simplifies data access for web clients by providing a consistent way to describe data models and perform CRUD operations (create, read, update, delete) using standard HTTP methods and URLs.
+
+Based on the OData protocol version 4,
+Cognigy.AI offers an _OData Analytics endpoint_ to retrieve raw data using `GET` requests.
+This endpoint meets all your enterprise analytics needs,
+enabling you to make fine-grained queries in your spreadsheets
+or build rich dashboards for AI Agents with your favorite data visualization tool.
+
+Watch this video to get a quick overview of what the OData Analytics endpoint is, how it works, and in which scenarios you can use it:
+
+<iframe width="701" height="438" src="https://www.youtube.com/embed/D18JNjUPvN4?si=UJYuFYZzEovHg83Z&amp;start=1857" title="Cognigy Sessions: Cognigy Insights & OData" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="centered-iframe"></iframe>
+
+To analyze your AI Agent's performance, you can use the [built-in Insights reports](/insights/overview) as an alternative to OData or in addition to it.
+
+## Restrictions
+
+- The Cognigy.AI OData endpoint supports only the [OData protocol version 4](https://www.odata.org/documentation/).
+- The Cognigy.AI OData endpoint only supports `GET` requests and doesn't support any other request types, such as `PATCH`, `DELETE`, or `POST`.
+- The data retrieved through the Cognigy.AI OData endpoint isn't updated in real time and may not reflect the current state.
+- The `$skip` query at high values, such as `10000`, may impact performance and cause API timeouts. In these cases, use [keyset pagination](#keyset-pagination), for example, with the `timestamp` or `_id` field.
+
+## Supported Versions
+
+| Cognigy.AI version | Cognigy.AI OData endpoint version | Status                                   |
+|--------------------|-----------------------------------|------------------------------------------|
+| 4.65 and later     | 2.4                               | Supported                                |
+| 4.48 and later     | 2.3                               | Supported; deprecation in February, 2026 |
+| 4.31-4.47          | 2.0–2.3                           | Not supported                            |
+| 4.30 and earlier   | 2.0–2.2                           | Not supported                            |
+
+## Data Protection
+
+You can control the data available through the OData endpoint at both the [Endpoint](/ai/agents/deploy/endpoints/overview) and [Flow](/ai/agents/develop/projects-and-flows/overview) levels:
+
+- [Endpoint](/ai/agents/deploy/endpoints/overview) — go to the [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics) section in the Endpoint settings:
+  - If you disable the **Collect Analytics** setting, no analytics data is logged or available in OData.
+  - If you enable the **Mask Sensitive Analytics** setting, the `inputText` and `inputData` fields are masked.
+- [Flow](/ai/agents/develop/projects-and-flows/overview) — add a [Blind Mode](/ai/agents/develop/node-reference/analytics/blind-mode) Node to your Flow. This Node disables or masks analytics data available to the OData endpoint.
+
+### OData Endpoint Access
+
+You can access the OData endpoint through a different domain than Cognigy.AI:
+
+- Trial — `https://odata-trial.cognigy.ai`.
+- Shared SaaS — `https://odata-<your-domain>.cognigy.ai`.
+- Dedicated SaaS — contact your Customer Success Manager or Cognigy.AI Support to get the OData endpoint URL.
+- On-premises — `https://odata-<backend-url>`, where `<backend-url>` refer to the URL assigned to the `BACKEND_BASE_URL_WITH_PROTOCOL` in `values.yaml`.
+
+### Authentication
+
+To connect to the OData endpoint, you need to have the `odata` [global role](/ai/administer/access/admin-center/access-control#before-you-begin) and an [API Key](/ai/administer/user-menu/my-profile#api-keys).
+
+To authenticate your API requests to the OData endpoint, you need the following parameters:
+
+- The Cognigy.AI OData base domain. It is the root URL where your OData service is hosted.
+- The API version of the Cognigy.AI OData endpoint. Currently, Cognigy.AI supports OData 2.3 and 2.4.
+- The [collection](#collections) in the OData service you want to access.
+- The API key that authenticates and authorizes the API access. Generate the API key in your [profile](/ai/administer/user-menu/my-profile#api-keys).
+
+#### Authentication Methods
+
+You can use the following methods to authenticate your requests to the OData endpoint:
+
+- [HTTP Headers](#http-headers-examples) — this method provides more security to access the OData endpoint. HTTP header authentication prevents API keys from exposure in the URL, server access logs, and other security risks. This method doesn't support Microsoft Excel and Power BI integrations.
+- [Query Parameters](#query-parameters-example) — allows for [Microsoft Excel and Power BI integrations](#authentication-for-microsoft-excel-and-power-bi). For this method, ensure appropriate access controls and security measures to prevent security risks.
+
+##### Examples
+
+The following examples use the following parameters:
+
+- Cognigy.AI OData base domain — `odata-trial.cognigy.ai`
+- Cognigy.AI OData endpoint version — `v2.4`
+- OData collection — `Analytics`
+- API key — `123abc`
+
+<Tabs>
+  <Tab title="HTTP Headers">
+    <CodeGroup>
+    ```curl cURL
+    curl -H "apikey: 123abc" \
+    "https://odata-trial.cognigy.ai/v2.4/Analytics"
+    ```
+
+    ```javascript JavaScript
+    fetch('https://odata-trial.cognigy.ai/v2.4/Analytics', {
+      headers: {
+        'apikey': '123abc'
+      }
+    });
+    ```
+
+    ```python Python
+    import requests
+    requests.get('https://odata-trial.cognigy.ai/v2.4/Analytics', headers={'apikey': '123abc'})
+    ```
+
+    ```nodejs Node.js
+    const axios = require('axios');
+    axios.get('https://odata-trial.cognigy.ai/v2.4/Analytics', { headers: { 'apikey': '123abc' } });
+    ```
+    </CodeGroup>
+  </Tab>
+  <Tab title="Query Parameters">
+    `https://odata-trial.cognigy.ai/v2.4/Analytics?apikey=123abc`
+  </Tab>
+</Tabs>
+
+If you are using the query parameters method to authenticate your requests to the OData endpoint, you can migrate to the HTTP headers method without breaking changes as follows:
+
+<Accordion title="Migrate from Query Parameters to HTTP Headers">
+
+  If you currently use query parameters authentication with `https://odata-trial.cognigy.ai/v2.4/Analytics?apikey=123abc`, you can migrate to HTTP headers authentication by using the following HTTP headers:
+  <CodeGroup>
+    ```curl cURL
+    curl -H "apikey: 123abc" \
+    "https://odata-trial.cognigy.ai/v2.4/Analytics"
+    ```
+
+    ```javascript JavaScript
+    fetch('https://odata-trial.cognigy.ai/v2.4/Analytics', {
+      headers: {
+        'apikey': '123abc'
+      }
+    });
+    ```
+
+    ```python Python
+    import requests
+    requests.get('https://odata-trial.cognigy.ai/v2.4/Analytics', headers={'apikey': '123abc'})
+    ```
+
+    ```nodejs Node.js
+    const axios = require('axios');
+    axios.get('https://odata-trial.cognigy.ai/v2.4/Analytics', { headers: { 'apikey': '123abc' } });
+    ```
+  </CodeGroup>
+</Accordion>
+
+#### Authentication for Microsoft Excel and Power BI
+
+When using Microsoft Excel and Power BI, you might be prompted to authenticate. In this case, select **Anonymous Authentication**.
+
+## System Query Options
+
+The OData endpoint supports the following [OData system query options](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptions):
+
+- `$filter`
+- `$skip`
+- `$top`
+- `$orderby`
+- `$select`
+- `$count`<sup>[1](#footnote1)</sup>
+
+### Examples
+
+The tables contain examples of requests using system query options.
+Select the OData endpoint version [compatible with your Cognigy.AI version](#supported-versions).
+
+<Tabs>
+  <Tab title="OData 2.4">
+    | Request Description                                                                                                                                                                                      | OData 2.4 Request                                                                                                                                                  |
+    |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Returns total count of Analytics records (not supported in Microsoft Excel or Power BI).                                                                                                                 | `https://odata-trial.cognigy.ai/v2.4/Analytics/$count?apikey=<your-api-key>`                                                                                       |
+    | Returns all Analytics records for the given API Key.                                                                                                                                                     | `https://odata-trial.cognigy.ai/v2.4/Analytics?apikey=<your-api-key>`                                                                                              |
+    | Returns the first 10 Analytics records.                                                                                                                                                                  | `https://odata-trial.cognigy.ai/v2.4/Analytics/?$top=10&apikey=<your-api-key>`                                                                                     |
+    | Returns the top 5 Analytics records where `executionTime` is less than 50ms, ordered by `executionTime`.                                                                                                 | `https://odata-trial.cognigy.ai/v2.4/Analytics/?$filter=executionTime lt 50&$top=5&$orderby=executionTime&apikey=<your-api-key>`                                   |
+    | Returns all Analytics records for a specific Cognigy.AI Project filtered by `projectId`                                                                                                                  | `https://odata-trial.cognigy.ai/v2.4/Analytics/?$filter=projectId eq '<project-id>'&apikey=<your-api-key>`                                                         |
+    | Returns Project and session IDs for a specific Cognigy.AI project. The request filters the data based on the `projectId` field and selects only the `projectId` and `sessionId` for each matching entry. | `https://odata-trial.cognigy.ai/v2.4/Analytics/?$filter=projectId eq '<project-id>'&$select=projectId,sessionId&apikey=<your-api-key>`                             |
+    | Returns all Analytics records between two dates, for example, 1st Jan 2021 and 1st July 2021.                                                                                                            | `https://odata-trial.cognigy.ai/v2.4/Analytics/?$filter=timestamp gt '2021-01-01T00:00:00.000Z' and timestamp lt '2021-07-01T00:00:00.000Z'&apikey=<your-api-key>` |
+  </Tab>
+
+  <Tab title="OData 2.3">
+    | Request Description                                                                                                                                                                                          | OData 2.3 Request                                                                                                                                                  |
+    |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Returns total count of Analytics records (not supported in Microsoft Excel or Power BI).                                                                                                                     | `https://odata-trial.cognigy.ai/v2.3/Analytics/$count?apikey=<your-api-key>`                                                                                       |
+    | Returns all Analytics records for the given API Key.                                                                                                                                                         | `https://odata-trial.cognigy.ai/v2.3/Analytics?apikey=<your-api-key>`                                                                                              |
+    | Returns the first 10 Analytics records.                                                                                                                                                                      | `https://odata-trial.cognigy.ai/v2.3/Analytics/?$top=10&apikey=<your-api-key>`                                                                                     |
+    | Returns the top 5 Analytics records where `executionTime` is less than 50ms, ordered by `executionTime`.                                                                                                     | `https://odata-trial.cognigy.ai/v2.3/Analytics/?$filter=executionTime lt 50&$top=5&$orderby=executionTime&apikey=<your-api-key>`                                   |
+    | Returns all Analytics records for a specific Cognigy.AI Project filtered by `projectId`                                                                                                                      | `https://odata-trial.cognigy.ai/v2.3/Analytics/?$filter=projectId eq '<project-id>'&apikey=<your-api-key>`                                                         |
+    | Returns Project IDs and session IDs for a specific Cognigy.AI project. The request filters the data based on the `projectId` field and selects only the `projectId` and `sessionId` for each matching entry. | `https://odata-trial.cognigy.ai/v2.3/Analytics/?$filter=projectId eq '<project-id>'&$select=projectId,sessionId&apikey=<your-api-key>`                             |
+    | Returns all Analytics records between two dates, for example, 1st Jan 2021 and 1st July 2021.                                                                                                                | `https://odata-trial.cognigy.ai/v2.3/Analytics/?$filter=timestamp gt '2021-01-01T00:00:00.000Z' and timestamp lt '2021-07-01T00:00:00.000Z'&apikey=<your-api-key>` |
+  </Tab>
+</Tabs>
+
+For a full reference,
+refer to the extensive collection of resources at [OData.org](https://www.odata.org/) and the [Oasis OData URL Convention](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html) documentation.
+
+## Cognigy.AI OData Collections
+
+The OData endpoint provides access to several data collections containing information about your interactions and workflows.
+The set of collections varies depending on which version you are using:
+
+<Tabs>
+  <Tab title="Version 2.4">
+    The current version of the OData endpoint is `v2.4`. In this version, the following OData collections are available:
+
+    - [Analytics](#analytics) (`/Analytics`)
+    - [Conversations](#conversations) (`/Conversations`)
+    - [Steps](#steps) (`/Steps`)
+    - [ExecutedSteps](#executedsteps) (`/ExecutedSteps`)
+    - [Sessions](#sessions) (`/Sessions`)
+    - [LiveAgentEscalations](#liveagentescalations) (`/LiveAgentEscalations`)
+    - [Goals](#goals) (`/Goals`)
+    - [GoalSteps](#goalsteps) (`/GoalSteps`)
+    - [GoalStepMetrics](#goalstepmetrics) (`/GoalStepMetrics`)
+    - [GoalEvents](#goalevents) (`/GoalEvents`)
+
+    The URL for accessing the OData endpoint 2.4 is as follows:
+    `https://<odata-domain>/v2.4/<collection>?apikey=<your-api-key>`
+  </Tab>
+
+  <Tab title="Version 2.3">
+    The previous version of the OData endpoint is `2.3`. In this version, the following OData collections are available:
+
+    - [Analytics](#analytics) (`/Analytics`)
+    - [Conversations](#conversations) (`/Conversations`)
+    - [Steps](#steps) (`/Steps`)
+    - [ExecutedSteps](#executedsteps) (`/ExecutedSteps`)
+    - [Sessions](#sessions) (`/Sessions`)
+    - [LiveAgentEscalations](#liveagentescalations) (`/LiveAgentEscalations`)
+
+    The URL for accessing the OData endpoint 2.3 is as follows:
+    `https://<odata-domain>/v2.3/<collection>?apikey=<your-api-key>`
+  </Tab>
+</Tabs>
+
+Each collection can be filtered by its fields, which are often retrieved directly from the [Input](/ai/agents/develop/ai-agent-memory/input) object results.
+
+## Collections
+
+A collection is similar to a database table or a set of entities containing data.
+
+### Analytics
+
+The Analytics collection offers a log of comprehensive details such as organizational information, Project identifiers, Flow specifics, and essential performance metrics. Each chat or voice AI Agent session in Cognigy.AI creates an Analytics record for an interaction. Each interaction is logged as a single record. The information is saved only after the end of the session. You can change this data using the [Overwrite Analytics Node](/ai/agents/develop/node-reference/analytics/overwrite-analytics).
+
+### Requests
+
+Select an API request to extract data from the collection. The API version in the request must match [your Cognigy.AI version](#supported-versions).
+
+<Tabs>
+  <Tab title="OData 2.4">
+    `https://odata-trial.cognigy.ai/v2.4/Analytics?apikey=<your-api-key>`
+  </Tab>
+
+  <Tab title="OData 2.3">
+    `https://odata-trial.cognigy.ai/v2.3/Analytics?apikey=<your-api-key>`
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name         | <div style={ {width: '330px'} }>Description</div>                                                                                                | Type     | Example                                                          |
+  |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|----------|------------------------------------------------------------------|
+  | id                 | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.                                                                      | String   | 5a91d194fde28b0011ce2423                                         |
+  | _id                | The unique ID of the record. Applicable to the OData endpoint 2.3 or earlier.                                                                    | String   | 5a91d194fde28b0011ce2423                                         |
+  | organisation       | The name of your organization.                                                                                                                   | String   | cognigy                                                          |
+  | projectId          | The ID of the Project related to the record.                                                                                                     | String   | 5a91d194fde28b0011ce2422                                         |
+  | flowReferenceId    | The ID of the Flow.                                                                                                                              | String   | 66ceb9cc-ac5b-4cdd-9f4b-8a48dfbb35d9                             |
+  | entrypoint         | The ID of the Project or Snapshot used by the Endpoint.                                                                                          | String   | 621d3deb87016d3855ec0c92                                         |
+  | ip                 | The IP address from which the request originated.                                                                                                | String   | 78.143.45.111                                                    |
+  | contactId          | The hash of the user ID.                                                                                                                         | String   | 99ea95befe61812656bf963ba7d44ab7                                 |
+  | sessionId          | The session ID.                                                                                                                                  | String   | 5a91d194fde28b0011ce2425                                         |
+  | inputId            | The ID of the input message.                                                                                                                     | String   | 5a91d194fde28b0011ce2424                                         |
+  | inputText          | The input text.                                                                                                                                  | String   | Hello World!                                                     |
+  | inputData          | The input data object as a string.                                                                                                               | String   | `{"key":"value"}`                                                |
+  | state              | The state of the Flow at input.                                                                                                                  | String   | default                                                          |
+  | mode               | The [mode](/ai/agents/develop/ai-agent-memory/input#properties) of the input.                                                                    | String   | TextOnly                                                         |
+  | userType           | The type of the connecting user. Either `external` for external user or `admin` for admin user.                                                  | String   | external                                                         |
+  | channel            | The channel through which the record was received.                                                                                               | String   | facebook                                                         |
+  | flowLanguage       | The language of the Flow.                                                                                                                        | String   | en-EN                                                            |
+  | intent             | The found Intent. This field can be empty.                                                                                                       | String   | orderFood                                                        |
+  | intentFlow         | The Parent ID of the Flow in which the Intent was found. This field can be empty.                                                                | String   | 5e33b160e6236da3aa54221461a53f04                                 |
+  | intentScore        | The numerical score of the input against a recognized Intent. This field can be empty.                                                           | Number   | 0.836322430892043                                                |
+  | completedGoalsList | A list of completed [tasks](/ai/agents/analyze/goals-and-tasks/tasks) in this session. If you have the [goals](/ai/agents/analyze/goals-and-tasks/tasks) feature enabled, use the [Goals collection](/ai/agents/analyze/odata#goals) through the OData 2.4 endpoint. | String   | orderedFood                                                      |
+  | foundSlots         | Found Slot tags.                                                                                                                                 | String   | DATE                                                             |
+  | foundSlotDetails   | Found Slot tags with details.                                                                                                                    | String   | DATE[2018-2-25T12:32:32.000]                                     |
+  | timestamp          | The date and time of the input.                                                                                                                  | DateTime | 2018-2-25T12:32:32.000Z                                          |
+  | executionTime      | The time it took to execute the Flow in milliseconds.                                                                                            | Number   | 32                                                               |
+  | execution          | The Flow execution count.                                                                                                                        | Number   | 3                                                                |
+  | custom1            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom2            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom3            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom4            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom5            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom6            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom7            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom8            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom9            | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | custom10           | The custom value created by the Flow. The custom field has a maximum character limit of 1024.                                                    | String   | custom value                                                     |
+  | localeReferenceId  | The reference ID for the locale.                                                                                                                 | String   | 4bfdcf40-a605-4686-8e92-b17fa9f178af                             |
+  | localeName         | The name of the locale.                                                                                                                          | String   | English                                                          |
+  | endpointUrlToken   | The URL token for the Endpoint.                                                                                                                  | String   | ea30b8f20db52f9d86ea36fd55a7d66bd2c4c60eb24ac7ad52f1c9e173dd4cdb |
+  | endpointName       | The name of the Endpoint.                                                                                                                        | String   | MyEndpoint                                                       |
+  | rating             | The rating for the session: -1 for a negative rating or 1 for a positive rating.                                                                 | Number   | 1                                                                |
+  | ratingComment      | The comment left when given a rating.                                                                                                            | String   | Great service!                                                   |
+  | snapshotName       | The name for the Snapshot used by the Endpoint.                                                                                                  | String   | Bot Release 2.2                                                  |
+
+  <Note>
+    The Analytics step label can be updated from the Cognigy.AI UI at any time.
+    Therefore, to ensure compatibility between past and future data records, the `entityReferenceId` field is used.
+    This field corresponds to either the Node ID or Intent ID assigned as an Analytics step.
+    The current Analytics step label can be retrieved
+    by mapping the `entityReferenceID` field to the [`Steps`](#steps) record.
+  </Note>
+</Accordion>
+
+### Conversations
+
+The Conversations collection offers a log of all session messages, including messages from the end user, AI Agent, and human agent.
+Each time one of these sources sends a message to a Flow, Cognigy.AI creates a record to log the interaction.
+Each interaction is logged as a single record.
+
+**Requests**
+
+Select an API request to extract data from the collection. The API version in the request must match [your Cognigy.AI version](#supported-versions).
+
+<Tabs>
+  <Tab title="OData 2.4">
+    `https://odata-trial.cognigy.ai/v2.4/Conversations?apikey=<your-api-key>`
+  </Tab>
+
+  <Tab title="OData 2.3">
+    `https://odata-trial.cognigy.ai/v2.3/Conversations?apikey=<your-api-key>`
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name             | <div style={ {width: '330px'} }>Description</div>                                                                                                                                                                                                                                                                    | Type     | Example                                                                                                                |
+  |------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------|
+  | id                     | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.                                                                                                                                                                                                                                          | String   | 5a91d194fde28b0011ce2423                                                                                               |
+  | _id                    | The unique ID of the record. Applicable to the OData endpoint 2.3 or earlier.                                                                                                                                                                                                                                        | String   | 5a91d194fde28b0011ce2423                                                                                               |
+  | projectId              | The ID of the Project related to the record.                                                                                                                                                                                                                                                                         | String   | 5a91d194fde28b0011ce2422                                                                                               |
+  | projectName            | The name of the Project.                                                                                                                                                                                                                                                                                             | String   | Project 1                                                                                                              |
+  | inputId                | The ID of the input message.                                                                                                                                                                                                                                                                                         | String   | 5a91d194fde28b0011ce2424                                                                                               |
+  | sessionId              | The session ID.                                                                                                                                                                                                                                                                                                      | String   | 5a91d194fde28b0011ce2425                                                                                               |
+  | contactId              | The ID of the connecting user.                                                                                                                                                                                                                                                                                       | String   | myContactID                                                                                                            |
+  | organisation           | The name of your organization.                                                                                                                                                                                                                                                                                       | String   | cognigy                                                                                                                |
+  | inputText              | The input text.                                                                                                                                                                                                                                                                                                      | String   | Hello World!                                                                                                           |
+  | inputData              | The input data object as a string.                                                                                                                                                                                                                                                                                   | String   | `{"key":"value"}`                                                                                                      |
+  | type                   | Whether the message is an input or output of the Flow.                                                                                                                                                                                                                                                               | String   | "input" or "output"                                                                                                    |
+  | source                 | The source of the message.                                                                                                                                                                                                                                                                                           | String   | "user" or "bot" or "agent" or "suggestion"                                                                             |
+  | timestamp              | The date and time of the input.                                                                                                                                                                                                                                                                                      | DateTime | 2018-2-25T12:32:32.000Z                                                                                                |
+  | flowName               | The name of the Flow.                                                                                                                                                                                                                                                                                                | String   | MainFlow                                                                                                               |
+  | flowParentId           | The Parent ID of the Flow.                                                                                                                                                                                                                                                                                           | String   | 5e33b160e6236da3aa54221461a53f04                                                                                       |
+  | channel                | The channel through which the record was received.                                                                                                                                                                                                                                                                   | String   | facebook                                                                                                               |
+  | inHandoverRequest      | A flag indicating whether the session is in a handover request.                                                                                                                                                                                                                                                      | Boolean  | false                                                                                                                  |
+  | inHandoverConversation | A flag indicating whether the session is in a handover session.                                                                                                                                                                                                                                                      | Boolean  | true                                                                                                                   |
+  | outputId               | The output ID.                                                                                                                                                                                                                                                                                                       | String   | f514b7b2-7dc0-4e75-be62-a53fed5b2bb7                                                                                   |
+  | inputAttachments       | The list of attachments that the end user uploads to the chat. Each attachment will contain the URL of the file, file name, and file type. <br/><br/> When a human agent uploads a file, it will be recorded in the OData format as follows, without any specific information about the file: `[{"*****":"*****"}]`. | Object   | `{"url":"https://files-api-trial.cognigy.ai/v1.0/63babf6e92add771923e87b7/","name":"abandon-rate.png","type":"image"}` |
+  | reference              | The Reference ID. For example, to reference a suggestion.                                                                                                                                                                                                                                                            | String   | null                                                                                                                   |
+  | localeReferenceId      | The ID of the locale.                                                                                                                                                                                                                                                                                                | String   | 7eff993c-b801-4556-b111-1c319e8577cf                                                                                   |
+  | endpointUrlToken       | The URL token for the Endpoint.                                                                                                                                                                                                                                                                                      | String   | ea30b8f20db52f9d86ea36fd55a7d66bd2c4c60eb24ac7ad52f1c9e173dd4cdb                                                       |
+  | endpointName           | The name of the Endpoint.                                                                                                                                                                                                                                                                                            | String   | MyEndpoint                                                                                                             |
+  | snapshotId             | The ID of the Snapshot.                                                                                                                                                                                                                                                                                              | String   | 63ff0cc47a466cab278fd19b                                                                                               |
+  | snapshotName           | The name of the Snapshot.                                                                                                                                                                                                                                                                                            | String   | Bot Release 2.2                                                                                                        |
+  | rating                 | The rating for the session: -1 for a negative rating or 1 for a positive rating.                                                                                                                                                                                                                                     | Number   | 1                                                                                                                      |
+  | ratingComment          | The comment left when given a rating.                                                                                                                                                                                                                                                                                | String   | Great service!                                                                                                         |
+</Accordion>
+
+### Steps
+
+The Steps collection provides a list of all entities,
+which are either Nodes or Intents, assigned as [Analytics steps](/ai/agents/analyze/collecting-data#analytics-data-flow) within any Flow. 
+An Analytics step appear in this OData collection only after it has been triggered at least once in a session within the Flow.
+Each step is logged as a single record.
+
+**Requests**
+
+Select an API request to extract data from the collection. The API version in the request must match [your Cognigy.AI version](#supported-versions).
+
+<Tabs>
+  <Tab title="OData 2.4">
+    `https://odata-trial.cognigy.ai/v2.4/Steps?apikey=<your-api-key>`
+  </Tab>
+
+  <Tab title="OData 2.3">
+    `https://odata-trial.cognigy.ai/v2.3/Steps?apikey=<your-api-key>`
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name        | <div style={ {width: '330px'} }>Description</div>                               | Type   | Example                          |
+  |-------------------|---------------------------------------------------------------------------------|--------|----------------------------------|
+  | id                | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.     | String | 5a91d194fde28b0011ce2423         |
+  | _id               | The unique ID of the record. Applicable to the OData endpoint 2.3 or earlier.   | String | 5a91d194fde28b0011ce2423         |
+  | label             | The Analytics step label defined for the entity (Node or Intent) in Cognigy.AI. | String | Question (2)                     |
+  | type              | The type of entity.                                                             | String | `node` or `intent`               |
+  | entityReferenceId | The unique ID for the entity (Node ID or Flow ID).                              | String | 5a91d194fde28b0011ce2423         |
+  | flowReferenceId   | The ID of the Flow.                                                             | String | 5a91d194fde28b0011ce2423         |
+  | flowName          | The name of the Flow where the Analytics step is configured.                    | String | Main Flow                        |
+  | projectName       | The name of the  Project.                                                       | String | Project 1                        |
+  | snapshotId        | The ID of the Snapshot.                                                         | String | 5e33b160e6236da3aa54221461a53f04 |
+  | snapshotName      | The name of the Snapshot.                                                       | String | Bot Release 2.2                  |
+</Accordion>
+
+    <Check>
+      The [Step Monitoring with OData](https://support.cognigy.com/hc/en-us/articles/360021089180-Step-Monitoring-with-OData) article explains how these records can be manipulated in BI software to build insightful session path analytics.
+    </Check>
+
+### ExecutedSteps
+
+The ExecutedSteps collection logs all step events in sessions, including a reference to the prior (parent) step. 
+Whenever a Node or Intent with an assigned step is executed, the collection creates a record for that step.
+Each step is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/ExecutedSteps?apikey=<your-api-key>`
+
+  </Tab>
+
+  <Tab title="OData 2.3">
+
+    `https://odata-trial.cognigy.ai/v2.3/ExecutedSteps?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name        | <div style={ {width: '330px'} }>Description</div>                             | Type     | Example                                                          |
+  |-------------------|-------------------------------------------------------------------------------|----------|------------------------------------------------------------------|
+  | id                | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.   | String   | 5a91d194fde28b0011ce2423                                         |
+  | _id               | The unique ID of the record. Applicable to the OData endpoint 2.3 or earlier. | String   | 5a91d194fde28b0011ce2423                                         |
+  | userId            | The ID of the connecting user.                                                | String   | myContactID                                                      |
+  | sessionId         | The session ID.                                                               | String   | 5a91d194fde28b0011ce2425                                         |
+  | inputId           | The ID of the input message.                                                  | String   | 5a91d194fde28b0011ce2425                                         |
+  | stepLabel         | The Analytics step label defined for the entity (Node or Intent)              | String   | Question (2)                                                     |
+  | parentStep        | The ID of the step that occurred prior to this step.                          | String   | 5a91d194fde28b0011ce2425                                         |
+  | type              | The type of entity.                                                           | String   | `node` or `intent`                                               |
+  | entityReferenceId | The unique ID for the entity (Node ID or Intent ID).                          | String   | 5a91d194fde28b0011ce2423                                         |
+  | flowReferenceId   | The ID of the Flow.                                                           | String   | 5a91d194fde28b0011ce2423                                         |
+  | flowName          | The name of the Flow where the step exists.                                   | String   | Main Flow                                                        |
+  | timestamp         | The date and time when the step was executed.                                 | DateTime | 2018-2-25T12:32:32.000Z                                          |
+  | projectName       | The name of the Project.                                                      | String   | Project 1                                                        |
+  | projectId         | The ID of the Project related to the record.                                  | String   | 6067352c18887e471da4e392                                         |
+  | organisationId    | The ID of the organization associated with the record.                        | String   | 5f8833dae72b850ad2ed4d53                                         |
+  | snapshotId        | The ID of the Snapshot.                                                       | String   | 5e33b160e6236da3aa54221461a53f04                                 |
+  | snapshotName      | The name of the Snapshot.                                                     | String   | Bot Release 2.2                                                  |
+  | localeReferenceId | The ID of the locale.                                                         | String   | 7eff993c-b801-4556-b111-1c319e8577cf                             |
+  | localeName        | The name of the locale.                                                       | String   | English                                                          |
+  | endpointUrlToken  | The URL token for the Endpoint.                                               | String   | ea30b8f20db52f9d86ea36fd55a7d66bd2c4c60eb24ac7ad52f1c9e173dd4cdb |
+  | endpointName      | The name of the Endpoint.                                                     | String   | MyEndpoint                                                       |
+</Accordion>
+
+### Sessions
+
+The Sessions collection contains a list of all sessions that have occurred.
+The primary objective of this collection is
+to provide a list of the Analytics steps that took place in any given session, along with the order of execution.
+This information is included as a comma-separated list within a field called `stepPath`.
+Each session is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/Sessions?apikey=<your-api-key>`
+
+  </Tab>
+
+  <Tab title="OData 2.3">
+
+    `https://odata-trial.cognigy.ai/v2.3/Sessions?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name          | <div style={ {width: '330px'} }>Description</div>                                | Type     | Example                                                                        |
+  |---------------------|----------------------------------------------------------------------------------|----------|--------------------------------------------------------------------------------|
+  | id                  | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.      | String   | 5a91d194fde28b0011ce2423                                                       |
+  | _id                 | The unique ID of the record. Applicable to the OData endpoint 2.3 or earlier.    | String   | 5a91d194fde28b0011ce2423                                                       |
+  | goals               | All the goals that were achieved in the session.                                 | String   | Goal1, Goal2                                                                   |
+  | stepPath            | A comma-separated list of executed steps.                                        | String   | 9ac4f679-beae-4461-b9e3-43aece8b3430,f1e72fe3-f04b-48f5-b862-1e35ad253f18, ... |
+  | stepsCount          | The count of the number of steps.                                                | Number   | 10                                                                             |
+  | handoverEscalations | The number of times the session triggered a handover.                            | Number   | 3                                                                              |
+  | startedAt           | The date and time when first message was received.                               | DateTime | 2018-2-25T12:32:32.000Z                                                        |
+  | userId              | The ID of the connecting user.                                                   | String   | myContactID                                                                    |
+  | sessionId           | The session ID.                                                                  | String   | 5a91d194fde28b0011ce2425                                                       |
+  | localeReferenceId   | The ID of the locale.                                                            | String   | 7eff993c-b801-4556-b111-1c319e8577cf                                           |
+  | localeName          | The name of the locale.                                                          | String   | English                                                                        |
+  | endpointReferenceId | The ID of the Endpoint.                                                          | String   | 5e33b160e6236da3aa54221461a53f04                                               |
+  | endpointName        | The name of the Endpoint.                                                        | String   | Webchat                                                                        |
+  | projectName         | The name of the Project.                                                         | String   | Project 1                                                                      |
+  | projectId           | The ID of the Project related to the record.                                     | String   | 6067352c18887e471da4e392                                                       |
+  | organisationId      | The ID of the organization associated with the record.                           | String   | 5f8833dae72b850ad2ed4d53                                                       |
+  | snapshotId          | The ID of the Snapshot.                                                          | String   | 5e33b160e6236da3aa54221461a53f04                                               |
+  | snapshotName        | The name of the Snapshot.                                                        | String   | Bot Release 2.2                                                                |
+  | endpointUrlToken    | The URL token for the Endpoint.                                                  | String   | ea30b8f20db52f9d86ea36fd55a7d66bd2c4c60eb24ac7ad52f1c9e173dd4cdb               |
+  | rating              | The rating for the session: -1 for a negative rating or 1 for a positive rating. | Number   | 1                                                                              |
+  | ratingComment       | The comment left when given a rating.                                            | String   | Great service!                                                                 |
+</Accordion>
+
+### LiveAgentEscalations
+
+The LiveAgentEscalations collection contains records from [Cognigy Live Agent](/live-agent/overview) and includes the related data about handovers to Live Agent.
+Each handover (escalation) is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/LiveAgentEscalations?apikey=<your-api-key>`
+
+  </Tab>
+
+  <Tab title="OData 2.3">
+
+    `https://odata-trial.cognigy.ai/v2.3/LiveAgentEscalations?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name        | <div style={ {width: '330px'} }>Description</div>                                                                                                                                   | Type     | Example                                                          |
+  |-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------|------------------------------------------------------------------|
+  | id                | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.                                                                   | String   | 5a91d194fde28b0011ce2423                                         |
+  | _id               | The unique ID of the record. Applicable to the OData endpoint 2.3 or earlier.                                                                 | String   | 5a91d194fde28b0011ce2423                                         |
+  | organisationId    | The ID of the organization associated with the record.                                                                                        | String   | 5eb4a49d426cd3d05f2892a9                                         |
+  | projectId         | The ID of the Project related to the record.                                                                                                  | String   | 6409b6c53c9687b5e78e6403                                         |
+  | sessionId         | The session ID.                                                                                                                               | String   | session-2a38246e-0395-49a5-876d-dd5133fd5418                     |
+  | timestamp         | The date and time when the record was created.                                                                                                | DateTime | 2023-06-28T07:59:04.628Z                                         |
+  | localeName        | The name of the locale.                                                                                                                       | String   | en                                                               |
+  | status            | The current status of the escalated conversation in Live Agent. The possible statures are: `opened`, `assigned`, `resolved`, and `abandoned`. | String   | opened                                                           |
+  | inboxId           | The ID of the inbox associated with the record.                                                                                               | String   | 7983                                                             |
+  | inboxName         | The name of the inbox.                                                                                                                        | String   | LA Chatbot-default                                               |
+  | teamId            | The ID of the team assigned to the conversation.                                                                                              | String   | 8                                                                |
+  | teamName          | The name of the team assigned to the conversation.                                                                                            | String   | IT Support                                                       |
+  | labels            | The list of labels assigned to the conversation.                                                                                              | Array    | [Hardware]                                                       |
+  | agentId           | The ID of the human agent assigned to the conversation.                                                                                       | String   | 618cf7687614774ba028dcac                                         |
+  | agentName         | The name of the human agent assigned to the conversation. This field is supported from Cognigy.AI 4.80.                                       | String   | John Doe                                                         |
+  | contactId         | The ID of the connecting user.                                                                                                                | String   | 649ba8450d5df5cadf8b75b8                                         |
+  | endpointName      | The name of the Endpoint.                                                                                                                     | String   | LA Chatbot                                                       |
+  | endpointType      | The type of the Endpoint.                                                                                                                     | String   | webchat2                                                         |
+  | endpointUrlToken  | The URL token for the Endpoint.                                                                                                               | String   | ea30b8f20db52f9d86ea36fd55a7d66bd2c4c60eb24ac7ad52f1c9e173dd4cdb |
+  | channel           | The channel through which the record was received.                                                                                            | String   | admin-webchat                                                    |
+  | localeReferenceId | The ID of the locale.                                                                                                                         | String   | 7eff993c-b801-4556-b111-1c319e8577cf                             |
+  | snapshotId        | The ID of the Snapshot.                                                                                                                       | String   | 63ff0cc47a466cab278fd19b                                         |
+  | snapshotName      | The name of the Snapshot.                                                                                                                     | String   | Prod-Snapshot 26.7.23                                            |
+</Accordion>
+
+### Goals
+
+The Goals collection contains records from [goals](/ai/agents/analyze/goals-and-tasks/overview).
+Each goal is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/Goals?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name     | <div style={ {width: '330px'} }>Description</div>                                                                                                                                 | Field Type | Example                                                      |
+  |----------------|---------------------------------------------------------------------------------------------------------------------------------------------|------------|--------------------------------------------------------------|
+  | goalId         | The goal ID.                                                                                                                                | String     | 66ebf71693dfb26c3ca4c827                                     |
+  | name           | The name of the goal.                                                                                                                       | String     | Goal_07                                                      |
+  | version        | The UUID for tracking the current version of the goal configuration. Each update or change of the goal configuration creates a new version. | String     | 8ec4de84-71e2-4c98-a7c3-b18173f36223                         |
+  | description    | The description of the goal.                                                                                                                | String     | The goal is to gather metrics for a flight booking use case. |
+  | referenceId    | The Reference ID associated with the goal.                                                                                                  | String     | 04dd272f-6c8c-4957-9714-937e6f0847c2                         |
+  | projectId      | The ID of the Project related to the record.                                                                                                | String     | 5a91d194fde28b0011ce2422                                     |
+  | organisationId | The ID of the organization associated with the record.                                                                                      | String     | 5eb4a49d426cd3d05f2892a9                                     |
+  | createdAt      | Timestamp indicating when the goal was created.                                                                                             | Timestamp  | 2024-09-19T10:04:06.000Z                                     |
+  | lastChanged    | Timestamp of the last update to the goal.                                                                                                   | Timestamp  | 2024-09-19T10:04:06.000Z                                     |
+  | createdBy      | The identifier for the user who created the goal.                                                                                           | String     | 63bff78cd74f7c7f7dd12944                                     |
+  | lastChangedBy  | The identifier for the user who last modified the goal.                                                                                     | String     | 63bff78cd74f7c7f7dd12944                                     |
+</Accordion>
+
+### GoalSteps
+
+The GoalSteps collection contains records about a specific Goal step from [goals](/ai/agents/analyze/goals-and-tasks/overview).
+Each goal is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/GoalSteps?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name     | <div style={ {width: '330px'} }>Description</div>                                                                                                                                                                                                             | Field Type | Example                                                      |
+  |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|--------------------------------------------------------------|
+  | goalStepId     | The goal step ID.                                                                                                                                                                                                       | String     | 66eac7950dc3fd6e4b3bcd8c                                     |
+  | name           | The name of the goal step.                                                                                                                                                                                              | String     | Start                                                        |
+  | version        | The UUID for tracking step the version of the specific step configuration within the goal. Each update or change of the goal configuration creates a new version.                                                       | String     | 6cb467d0-9f79-4df0-ad31-991d1bb91910                         |
+  | description    | The description of the goal step.                                                                                                                                                                                       | String     | The goal is to gather metrics for a flight booking use case. |
+  | order          | The order of the step within the goal configuration.                                                                                                                                                                    | Integer    | null                                                         |
+  | text           | Additional text information for the goal step                                                                                                                                                                           | String     | null                                                         |
+  | type           | The type of the goal step: <br/>`start` — the initial (first) step of the goal. It shows the beginning of the process.<br/>`completion` — the completion (last) step of the goal. It shows that the objectives are met. | String     | start                                                        |
+  | goalId         | The goal ID for the goal associated with the step.                                                                                                                                                                      | String     | 66eac7950dc3fdb39c3bcd8b                                     |
+  | projectId      | The ID of the Project related to the record.                                                                                                                                                                            | String     | 5a91d194fde28b0011ce2422                                     |
+  | organisationId | The ID of the organization associated with the record.                                                                                                                                                                  | String     | 5eb4a49d426cd3d05f2892a9                                     |
+</Accordion>
+
+### GoalStepMetrics
+
+The GoalStepMetrics collection contains records about specific goal-related events from [goals](/ai/agents/analyze/goals-and-tasks/overview).
+Each metric is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/GoalStepMetrics?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name       | <div style={ {width: '330px'} }>Description</div>                                                                                                                                                         | Field Type | Example                              |
+  |------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|--------------------------------------|
+  | goalStepMetricId | The metric ID for the goal step.                                                                                                                                    | String     | 66ebf5a2cabacf6ecb0b5a81             |
+  | name             | The name of the metric.                                                                                                                                             | String     | null                                 |
+  | version          | The UUID for tracking step the version of the specific metric configuration within the goal. Each update or change of the goal configuration creates a new version. | String     | 6cb467d0-9f79-4df0-ad31-991d1bb91910 |
+  | description      | The description of the metric.                                                                                                                                      | String     | null                                 |
+  | type             | The category of metrics that can be tracked for goals:<br/>- `duration` — time in minutes or hours.<br/>- `currency` — currency specified in the Project settings.  | String     | currency                             |
+  | value            | The value of the metric.                                                                                                                                            | Integer    | 20                                   |
+  | goalId           | The goal ID.                                                                                                                                                        | String     | 66ebf5a2cabacf2ac70b5a7e             |
+  | goalStepId       | The goal step ID.                                                                                                                                                   | String     | 66ebf5a2cabacf7c810b5a80             |
+  | projectId        | The ID of the Project related to the record.                                                                                                                        | String     | 5a91d194fde28b0011ce2422             |
+  | organisationId   | The ID of the organization associated with the record.                                                                                                              | String     | 5eb4a49d426cd3d05f2892a9             |
+</Accordion>
+
+### GoalEvents
+
+The GoalEvents collection contains records about specific goal-related events from [goals](/ai/agents/analyze/goals-and-tasks/overview).
+Each event is logged as a single record.
+
+<Tabs>
+  <Tab title="OData 2.4">
+
+    `https://odata-trial.cognigy.ai/v2.4/GoalEvents?apikey=<your-api-key>`
+
+  </Tab>
+</Tabs>
+
+**Response**
+
+When retrieving this collection, the endpoint returns the following fields:
+
+<Accordion title="Response Fields">
+  | Field Name        | <div style={ {width: '330px'} }>Description</div>                                                                                                            | Field Type | Example                                                          |
+  |-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|------------------------------------------------------------------|
+  | id                | The unique ID of the record. Applicable to the OData endpoint 2.4 or later.                                                                                  | String     | 5a91d194fde28b0011ce2423                                         |
+  | version           | The UUID for tracking the current version of the goal configuration. Each update or change of the goal configuration creates a new version.                  | String     | 8ec4de84-71e2-4c98-a7c3-b18173f36223                             |
+  | timestamp         | The date and time indicating when a specific event related to the goal occurred.                                                                             | Timestamp  | 2024-09-19T10:00:02.322Z                                         |
+  | goalCycleId       | The ID of the goal cycle to track each iteration of a goal. The cycle groups different goal tracking events into one attempt to complete a goal.             | String     | a0da54a5-ee2e-43be-b743-23d4bccf513c                             |
+  | stepId            | The ID of the specific goal step.                                                                                                                            | String     | 66ebeca3cabacf41170b4a6d                                         |
+  | goalId            | The goal ID.                                                                                                                                                 | String     | 66ebeca3cabacf6c820b4a6c                                         |
+  | sessionId         | The session ID.                                                                                                                                              | String     | session-2a38246e-0395-49a5-876d-dd5133fd5418                     |
+  | projectId         | The ID of the Project related to the record.                                                                                                                 | String     | 5a91d194fde28b0011ce2422                                         |
+  | organisationId    | The ID of the organization associated with the record.                                                                                                       | String     | 5eb4a49d426cd3d05f2892a9                                         |
+  | expiresAt         | The [expiration date](/ai/administer/access/management-ui) for the goal record. After that time, the goal record will be removed from the Analytics database. | Timestamp  | null                                                             |
+  | localeName        | The name of the locale.                                                                                                                                      | String     | English                                                          |
+  | endpointName      | The name of the Endpoint.                                                                                                                                    | String     | LA Chatbot                                                       |
+  | endpointType      | The type of the Endpoint.                                                                                                                                    | String     | webchat2                                                         |
+  | endpointUrlToken  | The URL token for the Endpoint.                                                                                                                              | String     | ea30b8f20db52f9d86ea36fd55a7d66bd2c4c60eb24ac7ad52f1c9e173dd4cdb |
+  | channel           | The channel through which the record was received.                                                                                                           | String     | admin-webchat                                                    |
+  | localeReferenceId | The ID of the locale.                                                                                                                                        | String     | 7eff993c-b801-4556-b111-1c319e8577cf                             |
+  | snapshotId        | The ID of the Snapshot.                                                                                                                                      | String     | 63ff0cc47a466cab278fd19b                                         |
+  | snapshotName      | The name for the Snapshot used by the Endpoint.                                                                                                              | String     | Bot Release 2.2                                                  |
+</Accordion>
+
+## Cognigy.AI OData Collections: Entity Relationship Diagram (ERD)
+
+The Entity Relationship Diagram (ERD) describes the relationships between the collection entities.
+
+<Frame>
+    <img class="image-center" src="/_assets/ai/analyze/insights-odata-entities.drawio.svg" style={{ width: 'auto' }} /> 
+    <figcaption>
+        Entity Relationship Diagram
+    </figcaption>
+</Frame>
+
+## Integrations
+
+The Cognigy.AI OData endpoint can integrate with all tools compatible with the OData protocol version 4.
+The table outlines popular integration tools, including data visualization tools, recommended for integration.
+
+| Tool                                                                | Description                                                                                                                                                                                                                                                             |
+|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Microsoft Excel                                                     | Microsoft Excel is a spreadsheet application widely used for data analysis and reporting. When connecting from Microsoft Excel 2016, use the PowerQuery feature, which can be found under `Data > Get & Transform > New Query > From Other Sources > From OData Feed`.                                        |
+| Microsoft Power BI                                                  | Microsoft Power BI is a business analytics service that provides interactive visualizations and business intelligence capabilities. For for integrating with the Cognigy.AI OData endpoint, refer to the [Microsoft Power BI](https://docs.microsoft.com/en-us/power-bi/desktop-connect-odata) documentation. |
+| OData Consumer Ecosystem                                            | The OData Consumer Ecosystem encompasses a variety of tools and applications that support the consumption of OData services. For a full list of available OData Consumer options, refer to the [OData](https://www.odata.org/ecosystem/#consumers) documentation.                                             |
+| Client Libraries in .NET, Java, JavaScript, C++ and other platforms | Client libraries are available in multiple programming languages and platforms, providing developers with OData protocol implementations. For a full list of available libraries, refer to the [OData](https://www.odata.org/libraries/) documentation.                                                       |
+
+If you want to use another tool not listed in the table, verify its compatibility with the OData endpoint on the [OData website](https://www.odata.org/) and in the tool's documentation before integrating. For example, the data visualization tool Tableau can't be used for integration because it [doesn't support the OData protocol version 4](https://help.tableau.com/current/pro/desktop/en-us/examples_odata.htm) on which the OData endpoint is based.
+
+## Keyset Pagination
+
+Keyset pagination is a more efficient way to retrieve data from large datasets where you need to set `$skip` to high values, such as `10000`. To use keyset pagination, follow these steps:
+
+
+<Accordion title="Keyset Pagination">
+  1. Retrieve the first page with the `$top` and `$orderby` query options, for example, `https://odata-trial.cognigy.ai/v2.4/Conversations?apikey=<your-api-key>&$top=10000&$orderby=timestamp asc`.
+  2. Use the last `timestamp` value from the previous page in the next page request, for example, `https://odata-trial.cognigy.ai/v2.4/Conversations?apikey=<your-api-key>&$filter=timestamp gt <LAST_TIMESTAMP_FROM_PREVIOUS_PAGE>&$top=10000&$orderby=timestamp asc`.
+  3. Repeat step 2 until you have retrieved all the records.
+</Accordion>
+
+## More Information
+
+- [Collecting Data](/ai/agents/analyze/collecting-data)
+- [Insights](/ai/agents/analyze/insights)
+
+---
+
+<span style={{fontSize: '0.8rem'}}><sup id="footnote1">1</sup>: Microsoft Excel and Power BI do not support for the `$count` query. Use Postman or other options. To perform this query, consider using tools such as Postman or other applications that support advanced API querying.</span>

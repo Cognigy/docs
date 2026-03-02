@@ -1,0 +1,73 @@
+---
+title: Execution and Flow Control
+sidebarTitle: Overview
+hidden: false
+seo:
+  metatags:
+    description: Execution and Flow Control functions let you manage how a Flow runs.
+      You can stop or restart a Flow, track node executions, run other Flows, and
+      set which Node executes next. .
+keywords: ['execution control', 'execution control functions']
+---
+
+The _Execution and Flow Control_ functions let you manage how a Flow runs. You can stop or restart a Flow, track node executions, run other Flows, and set which Node executes next.
+
+## [`executeFlow`](/ai/for-developers/function-reference/execution-control/executeFlow)
+
+**Syntax:** `executeFlow(config)`
+
+Executes a target Flow starting from a specified Entrypoint Node.
+
+## [`setNextNode`](/ai/for-developers/function-reference/execution-control/setNextNode)
+
+**Syntax:** `setNextNode(nodeId, flowId)`
+
+Sets a custom Node with the given `nodeId` to be executed immediately after the current one.
+
+## [`resetNextNodes`](/ai/for-developers/function-reference/execution-control/resetNextNodes)
+
+**Syntax:** `resetNextNodes()`
+
+Clears any active overrides for the next Node in the Flow.
+
+## [`addConditionalEntrypoint`](/ai/for-developers/function-reference/execution-control/addConditionalEntrypoint)
+
+**Syntax:** `addConditionalEntrypoint(params)`
+
+Adds a conditional Entrypoint for the current conversation. This condition is used by the Optional Question Node.
+
+## _(Deprecated)_ [think](/ai/for-developers/function-reference/execution-control/think)
+
+**Syntax:** `think(text, data)`
+
+Restarts Flow execution with a simulated input.
+
+## [thinkV2](/ai/for-developers/function-reference/execution-control/thinkV2)
+
+**Syntax:** `thinkV2(text, data)`
+
+Restarts Flow execution with a simulated input using the provided text and data.
+
+## [`stopExecution`](/ai/for-developers/function-reference/execution-control/stopExecution)
+
+**Syntax:** `stopExecution()`
+
+Stops processing the current input after this Node.
+
+## [`getExecutionAmount`](/ai/for-developers/function-reference/execution-control/getExecutionAmount)
+
+**Syntax:** `getExecutionAmount(nodeId)`
+
+Retrieves the number of times a Node with the given `nodeId` has been executed during this conversation.
+
+## [`setExecutionAmount`](/ai/for-developers/function-reference/execution-control/setExecutionAmount)
+
+**Syntax:** `setExecutionAmount(nodeId, value)`
+
+Returns the number of times the Node with the given `nodeId` has been executed in the current conversation.
+
+## [`resetExecutionAmount`](/ai/for-developers/function-reference/execution-control/resetExecutionAmount)
+
+**Syntax:** `resetExecutionAmount(nodeId)`
+
+Resets the number of executions to 0 for the Node with the given `nodeId`.

@@ -1,0 +1,115 @@
+---
+title: '4.62'
+
+---
+
+import ReleaseNotesNluMigration from '/snippets/release-notes/nlu-migration.mdx'
+import ReleaseNotesNodejsComponent16EndOfSupport from '/snippets/release-notes/nodejs-16-end-of-support.mdx'
+import ReleaseNotesTwilioAutopilotDeprecation from '/snippets/release-notes/twilio-autopilot-deprecation.mdx'
+
+<ReleaseNotesNodejsComponent16EndOfSupport/>
+
+<ReleaseNotesTwilioAutopilotDeprecation/>
+
+<ReleaseNotesNluMigration/>
+
+## 4.62.1
+
+### Cognigy AI
+
+**Released** October 19, 2023
+
+### Bug Fixes
+
+- Fixed the issue where `service-api` crashed during startup in environments that skipped version 4.61 and were updated from earlier versions to version 4.62
+
+### Cognigy Live Agent
+
+**Released** October 17, 2023
+
+#### Bug Fixes
+
+- Fixed the issue related to the account index in the Live Agent database
+
+## 4.62.0
+
+### Cognigy.AI
+
+**Released** October 17, 2023
+
+#### Features
+
+- Added the [Context-Aware Search](/ai/agents/develop/node-reference/other-nodes/search-extract-output) option to the Search settings in the Search Extract Output Node. This feature considers the transcript's context for the search, allowing AI Agents to address follow-up questions
+
+#### Improvements
+
+- Added the TTS Label and STT Label fields to the Session Speech Parameters Node, Voice Gateway Set Session Config Node, Voice Gateway Transfer Node, Cognigy Voice Gateway Endpoint. This setting allows for the definition of preferred speech credentials configured on the Voice Gateway Self-Service portal directly within the Flow
+- Added the Google Model field to the Session Speech Parameters Node, Voice Gateway Set Session Config Node, Voice Gateway Transfer Node, Cognigy Voice Gateway Endpoint. This setting allows selecting a specific speech model used for transcription
+- Improved the TTS error handling by adding more logging and a warning message
+- Removed the Google Actions Endpoint and related code integration from the Dialogflow Endpoint
+- Improved the Snapshot upload functionality by allowing resumable uploads
+- Improved by updating OpenAPI docs for Knowledge AI resources
+- Improved the default chunking strategy for PDF parsing in Knowledge AI
+- Added the Dirty State for chunks in Knowledge AI. Now, if a chunk has been modified but not yet saved, it provides a mechanism to track changes before saving
+
+#### Bug Fixes
+
+- Fixed the issue where the `TRANSFER_DIAL_SUCCESS` and `TRANSFER_DIAL_ERROR` events were no longer being received
+- Fixed the issue where DTMF was not captured when enabling it from the Activity Parameters of the Question Node
+- Fixed the issue where Knowledge AI task types were not included in the height calculation helper and resolved the line wrap problem for long Flow names
+- Fixed the issue where the foreign session IDs used from Cognigy Live Agent and Chatwoot handover providers were not unique per tenant, which could lead to problems during the handover process
+
+### Cognigy Insights
+
+**Released** October 17, 2023
+
+#### Improvements
+
+- Renamed the Live Agent Escalations chart to [Live Agent Handovers](/insights/reports/live-agent#live-agent-handovers) chart in the Live Agent dashboard
+- Improved precision in number reports by rounding to tenths
+
+#### Bug Fixes
+
+- Fixed the issue where transcript details remained open, and agent-related filters were retained when changing agents
+- Fixed a bug where the detailed view of the Handovers by time of the day chart displayed the Show details option
+
+### Cognigy Live Agent
+
+**Released** October 17, 2023
+
+#### Improvements
+
+- Added the option to [filter conversations based on their priority](/live-agent/conversation/assign-conversations#assign-priority)
+- Improved system performance by updating Tailwind
+- Enhanced user experience by displaying explicit errors in notifications when creating or editing canned responses, labels, and skills
+- Improved system functionality by enforcing Cognigy `organisationId` uniqueness
+
+### Cognigy Voice Gateway
+
+**Released** October 17, 2023
+
+#### Features
+
+- Added the opportunity to access the Voice Gateway Self-Service Portal [via Cognigy.AI user credentials](/voice-gateway/getting-started#set-up-voice-gateway-for-your-organization). This feature is available to users with the [Account](/voice-gateway/webapp/users#account) role
+
+#### Improvements
+
+- Added the TTS Label and STT Label fields to the [Session Speech Parameters](/ai/agents/develop/node-reference/voice/generic/session-speech-parameters-config) Node, [Voice Gateway Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/set-session-config) Node, [Voice Gateway Transfer](/ai/agents/develop/node-reference/voice/voice-gateway/transfer) Node, [Cognigy Voice Gateway](/ai/agents/deploy/endpoint-reference/voice-gateway) Endpoint. This allows for the definition of preferred speech credentials configured on the Voice Gateway Self-Service portal directly within the Flow
+- Added the Google Model field to the  [Session Speech Parameters](/ai/agents/develop/node-reference/voice/generic/session-speech-parameters-config) Node, [Voice Gateway Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/set-session-config) Node, [Voice Gateway Transfer](/ai/agents/develop/node-reference/voice/voice-gateway/transfer) Node, [Cognigy Voice Gateway](/ai/agents/deploy/endpoint-reference/voice-gateway) Endpoint. This allows selecting a specific speech model used for transcription.
+- Improved the TTS error handling by adding more logging and a warning message
+
+####  Bug Fixes
+
+- Fixed the issue where the `TRANSFER_DIAL_SUCCESS` and `TRANSFER_DIAL_ERROR` events were no longer being received
+- Fixed the issue where DTMF was not captured when enabling it from the Activity Parameters of the Question Node
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI and Insights](/ai/administer/installation/version-compatibility-matrix)
+- [Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Agent Assist Workspace](/agent-copilot/installation/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

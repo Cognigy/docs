@@ -1,0 +1,149 @@
+---
+title: Inboxes
+---
+
+<a href="/release-notes/2026.4"><Badge className="version-badge" color="blue">Updated in 2026.4</Badge></a>
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+_Inboxes_ are workspaces where human agents handle real-time chat interactions with customers and manage related tasks. Each Inbox ID represents the connection from Cognigy.AI to Live Agent. 
+
+You can have an unlimited number of Inboxes in your Live Agent account, and you can view conversations specific to an Inbox by clicking on it. 
+
+Within the Inbox setting, you can edit the Inbox, add and remove agents, configure message visibility for them, set up conversation routing, and add assistant bots.
+
+## Create Inboxes
+
+To create an Inbox in Live Agent, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. In the upper-right corner, click **+ Add Inbox**. Live Agent will show you a screen to set up your Inbox. 
+3. On the **Inbox setup** page, fill in the following fields:
+    - **Inbox Name** — create a unique Inbox name. For example, `Cognigy Handover`. The name can contain any characters, but can't start with `=`.
+    - **Webhook URL** — enter the Cognigy.AI Endpoint Config URL domain name, extended by `/handover/liveagent`. For example, `https://endpoint-trial.cognigy.ai/handover/liveagent`. You can find the Endpoint Config URL in the **Configuration Information** section of your Endpoint.
+4. In the **Pick agents for the inbox** list, select agents by either clicking it or hovering your cursor over it and then pressing <kbd>Enter</kbd>. You can select multiple agents from the list. Agents can belong to different inboxes simultaneously.
+5. Click the **Create Cognigy.AI Inbox** button. Once you have successfully set up the Inbox, you are prompted to assign your agents to the new Inbox in the next step.
+6. Select the required agents from the selection list, then click **Add Agents**.
+
+A new Live Agent Inbox has been created. You can configure the Inbox settings by clicking **More settings**.
+
+<Note>
+  Users with the `Agent` or `Supervisor` role can view only the Inboxes to which they are assigned. Users with the `Administrator` role can view all Inboxes. For more information on user permissions, refer to [Roles](/live-agent/roles).
+</Note>
+
+## Edit Inboxes
+
+If you want to change how an Inbox works or reuse an Inbox from a deleted Project, you need to edit the Inbox.
+
+To edit an Inbox, follow these steps:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. On the **Inboxes** page, click ![gear](/_assets/icons/black-and-white/gear.svg) next to the Inbox you want to edit.
+3. In the **Inboxes Settings** section, update the following fields:
+    - **Channel Avatar** — upload an image that represents the Inbox. The Channel Avatar helps you visually identify the Inbox. 
+    - **Inbox Name** — enter a unique Inbox name.
+    - **Cognigy Project ID** — this field is pre-populated for [Inboxes created through Cognigy.AI](/live-agent/getting-started/live-agent-setup/live-agent-setup-additional-inbox). Enter a valid Project ID. The Project ID allows Live Agent to retrieve [Contact Profile](/ai/agents/analyze/contact-profiles) data from Cognigy.AI and binds the Inbox to the respective Project. You can [copy the Project ID](/ai/agents/develop/projects-and-flows/projects) from the Cognigy.AI interface. After you assign the Inbox to a Project, [copy the Inbox ID](#copy-inbox-id) and enter it in the respective Cognigy.AI Nodes of the Project, for example, the [Handover Agent](/ai/agents/develop/node-reference/service/handover-to-agent) and [Check Agent Availability](/ai/agents/develop/node-reference/service/check-agent-availability) Nodes. If you delete the Project to which the Project ID refers, Live Agent can still communicate with Cognigy.AI Nodes, but the system cannot retrieve Contact Profile data through this Inbox.
+    - **Webhook URL** — enter the Cognigy.AI Endpoint Config URL domain name, extended by `/handover/liveagent`. For example, `https://endpoint-trial.cognigy.ai/handover/liveagent`. You can find the Endpoint Config URL in the **Configuration Information** section of your Endpoint.
+4. Click **Update**.
+
+## Copy Inbox ID
+
+Each Inbox ID represents the connection between Cognigy.AI and Live Agent and is used in API and UI URL paths.
+
+To connect an Inbox to Cognigy.AI,
+copy the ID of the Inbox
+and specify it in the **Live Agent Settings** section in the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node on the Cognigy.AI side.
+
+To copy an Inbox ID, follow these steps:
+
+1. Go to Live Agent.
+2. On the left side of the screen, select **Settings**.
+3. In the settings column, select **Inboxes**.
+4. On the **Configuration** tab, go to the **Inbox ID** section.
+5. Click **Copy**.
+
+## Delete Inboxes
+
+Deleting an Inbox is irreversible and will cause a loss of synchronization with Cognigy.AI.
+
+To delete an Inbox within Live Agent, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**. 
+2. On the **Inboxes** page, to the right of the team you want to delete, click **Delete**. 
+3. You are prompted to enter the Inbox name you want to delete. 
+4. Click **Yes, Delete**.
+
+The selected Inbox will be deleted.
+
+## Control Conversation Routing within Inboxes
+
+To configure the conversation assignments within Live Agent, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**. 
+2. On the **Inboxes** page, to the right of the Inbox you want to change, click **Settings** and open the **Collaborators** tab. 
+3. In the **Conversation Assignment** sections, update the conversation assignment settings:
+    - [Allow auto assignment](/live-agent/conversation/conversation-routing/automatic-mode#automatic-assignment)
+    - [Allow conversations to be reassigned](/live-agent/conversation/conversation-routing/automatic-mode#automatic-reassignment)
+
+The changes will be applied successfully.
+
+## Escalate Conversations to Supervisors
+
+To allow agents to escalate conversations to supervisors within an Inbox, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. On the **Inboxes** page, to the right of the Inbox you want to change, click **Settings** and open the **Collaborators** tab.
+3. In the **Supervisors** section, select supervisors by either clicking it or hovering your cursor over it and then pressing <kbd>Enter</kbd>. You can select multiple supervisors from the list. Supervisors can belong to different inboxes simultaneously.
+4. Once supervisors are added, configure escalation settings:
+    - **Allow agents to escalate conversations to supervisors** — activate the option to let agents escalate conversations directly from the [Conversation Actions](/live-agent/conversation/assign-conversations) section.
+    - **Send push notifications to supervisors** — activate the option to let supervisors receive real-time notifications when a conversation is escalated.
+    - **Send email notifications to supervisors** — activate the option to let supervisors receive email notifications when a conversation is escalated.
+5. Click **Update**. After applying these settings, the **↑ Escalate to Supervisor** button appears in the **Conversation Actions** section on the conversation page, allowing the agent to start an escalation. Refer to [Manual Assignment](/live-agent/conversation/conversation-routing/manual-mode) to learn more about supervisor assignment rules, and to [Conversation Queue](/live-agent/conversation/conversation-queue/overview) to see an example of conversation assignment.
+
+## Add Agents to Inboxes
+
+To add agents to an Inbox, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. On the **Inboxes** page, to the right of the Inbox you want to change, click **Settings**.
+3. On the **Collaborators** tab, go to the **Agents** section.
+4. In the agent list, select agents by either clicking it or hovering your cursor over it and then pressing <kbd>Enter</kbd>. You can select multiple agents from the list. Agents can belong to different inboxes simultaneously.
+5. Click **Update**.
+
+The changes will be applied.
+
+## Configure Agent Access to all Inbox Conversations
+
+By default, your agents can see all messages within an Inbox. 
+To change this behavior for agents with the `Agent` role, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. On the **Inboxes** page, to the right of the Inbox you want to change, click **Settings** and open the **Collaborators** tab.
+3. In the **Conversation Assignment** section, disable the **Allow Agents to see all conversations in this inbox** setting.
+
+The changes will be applied. Note that this setting will not affect agents with the `Administrator` or `Supervisor` roles.
+They will still be able to see all messages within the Inbox.
+
+## Remove Agents from Inboxes
+
+To remove the Inbox appearance, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. On the **Inboxes** page, to the right of the Inbox you want to change, click **Settings**.
+3. On the **Collaborators** tab, go to the **Agents** section.
+4. In the agent list, remove an agent by clicking **x** on the right side of the agent's name.
+5. Click **Update**.
+
+## Add Agent Copilot Bots
+
+Within an Inbox, you can add one or more Agent Copilot Bots to assist your human agents.
+To create such a bot, you need to have a separate Flow and Endpoint on the Cognigy.AI side.
+For more details, refer to [Agent Copilot Bot](/live-agent/assistants/agent-copilot-bot). 
+
+## More Information
+
+- [Agents](/live-agent/settings/agents)
+- [Agent Copilot Bot](/live-agent/assistants/agent-copilot-bot)
+- [Conversation Routing](/live-agent/conversation/conversation-routing/overview)

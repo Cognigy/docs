@@ -1,0 +1,31 @@
+---
+title: Continuous ASR - Config
+hidden: false
+keywords:
+  - ' Voice Gateway'
+  - ' ASR'
+---
+
+import AiNodeReferenceVoiceAcAndGenericNodeDeprecation from '/snippets/ai/node-reference/voice/ac-and-generic-node-deprecation.mdx'
+
+<a href="/release-notes/4.90"><Badge className="version-badge" color="blue">Updated in 4.90</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/generic-voice/continuous-asr-config.png" style={{ width: 'auto' }} />
+  <figcaption>Generic Continuous ASR - Config Node</figcaption>
+</Frame>
+
+## Description
+
+<AiNodeReferenceVoiceAcAndGenericNodeDeprecation/>
+
+Continuous ASR allows the system to combine multiple STT recognitions from the user and send them as a single textual message to the voice agent.
+
+Once the Node is executed, the settings will remain active for the rest of the session
+
+| Parameter                   | Type          | Description                                                                                                                                                   |
+|-----------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Enable Continuous ASR       | Toggle        | Enables or disables Continuous ASR.                                                                                                                           |
+| Continuous ASR Submit Digit | CognigyScript | Defines a special DTMF key that sends the accumulated recognitions to the Flow.                                                                               |
+| Continuous ASR Timeout      | Number        | Defines the number of milliseconds of silence before the accumulated recognitions are sent to the Flow. The default value is 3000. The minimum value is 2000. |

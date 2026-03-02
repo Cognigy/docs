@@ -1,0 +1,44 @@
+---
+title: No NLU
+hidden: false
+keywords:
+  - ' No NLU'
+  - ' NLU Connectors'
+seo:
+  metatags:
+    description: >-
+      The No NLU connector disables build-in Cognigy NLU for the selected
+      Endpoint, meaning no Intents or Slots are detected.
+---
+
+The _No NLU_ connector disables build-in Cognigy NLU for the selected Endpoint, meaning no Intents or Slots are detected.
+
+The No NLU connector lets you handle the NLU process directly within your Flow logic for the following purposes:
+
+- You need very fine-grained control over how NLU requests are made. 
+- You want to dynamically switch between different NLU services based on the conversation context.
+
+## Use Flow Logic for NLU Execution
+
+Within a Flow, you can control NLU execution by enabling the No NLU connector and using the following Nodes:
+
+<AccordionGroup>
+  <Accordion title="HTTP Request Node">
+    Use an [HTTP Request](/ai/agents/develop/node-reference/service/http-request) Node
+    to send the user input to your external NLU service
+    and then process the response.
+  </Accordion>
+
+  <Accordion title="Extension Nodes">
+    You can put the HTTP request and response logic in an [Extension Node](/ai/for-developers/extensions) to avoid repeating it in every Flow. This approach makes your Flows cleaner, easier to maintain, and avoids code duplication. So that the Extension Node becomes your custom NLU connector on the Flow level, even though you're not using the built-in [Code NLU](/ai/platform-features/nlu/external/nlu-connector-reference/code) connector.
+  </Accordion>
+
+  <Accordion title="Execute Cognigy NLU Node">
+    By default, Cognigy.AI NLU runs before the Flow executes. However, in some cases, you may need to process parts of the Flow before triggering NLU analysis to better control when an Intent is recognized.
+    To achieve this, add an [Execute Cognigy NLU](/ai/agents/develop/node-reference/ai/execute-cognigy-nlu) Node to your Flow to trigger Cognigy NLU when needed.
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [All NLU Connectors](/ai/platform-features/nlu/external/nlu-connector-reference/all-nlu-connectors)

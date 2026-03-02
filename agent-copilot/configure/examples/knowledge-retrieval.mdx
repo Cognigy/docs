@@ -1,0 +1,119 @@
+---
+title: "Grid Example: Knowledge Retrieval"
+sidebarTitle: "Knowledge Retrieval"
+slug: "knowledge-retrieval"
+keywords: ["knowledge retrieval", "Agent Copilot", "RAG", "retrieval-augmented generation"]
+---
+
+This guide shows how to configure Agent Copilot for knowledge retrieval using [Knowledge AI](/ai/agents/develop/knowledge-ai/overview). In this guide, you will use a [Copilot: Knowledge Tile](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile) Node to integrate RAG capabilities into your contact center platform. This allows Agent Copilot to bring up information from your knowledge base to human agents to answer user questions. The AI Agent hands over a conversation to the human agent. The human agent receives the inquiry via chat and can search the answer in an embedded knowledge widget in the Agent Copilot workspace.
+
+In this example, you can use this [CTXT sample file](/_assets/ai/empower/knowledge-ai/knowledge-ai-pdf-sample.ctxt) about Knowledge AI to create a [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview#working-with-knowledge-sources).
+
+## Prerequisites
+
+- Configure a contact center platform that you can integrate with a [handover provider](/ai/escalate/handover-reference/overview.mdx). For example, for [Live Agent](/ai/escalate/handover-reference/live-agent), you need to have an [Inbox](/live-agent/settings/inboxes) with the [Project ID and the Webhook URL set up](/live-agent/settings/inboxes#edit-inboxes) and, if necessary, the **Enable AI Copilot Workspace** option activated.
+- Create a [handover provider](/ai/escalate/handover-reference/overview) that integrates with your contact center platform.
+- Add a [Large Language Model (LLM) to your Project](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) that supports [Knowledge Search and Answer Extracting](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+- Create a [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store) and [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) in the Knowledge Store.
+
+## Configure Knowledge Retrieval for Agent Copilot
+
+### Configure the AI Agent Flow
+
+<Steps>
+  <Step title="Create a Flow and Add a Say Node for Greeting">
+    1. In **Build > Flows**, create a Flow and give it a name, for example, `Knowledge Retrieval Agent Flow`.
+    2. Add a Say Node and configure the following settings:
+        - **Text** — enter a greeting message, for example, `Hi, do you have any questions regarding Knowledge AI?`. Save the Node.
+  </Step>
+  <Step title="Add a Handover to Human Agent Node">
+    1. Below the Say Node, add a [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent) and configure the following settings:
+        - **Handover Settings** section, select your [handover provider](/ai/escalate/handover-reference/overview) from the **Handover Provider** list. Depending on the handover provider, you need to configure additional settings.
+        - **Handover Accepted Message** — enter a message to be displayed when the handover is accepted, for example, `I'll hand over to a human agent who can look into this matter for you.`. Save the Node.
+  </Step>
+</Steps>
+
+### Configure the Agent Copilot Flow
+
+The Copilot: Knowledge Tile Node requires a specific configuration to work correctly. In this example, you need an [If Node](/ai/agents/develop/node-reference/logic/if), a [Once Node](/ai/agents/develop/node-reference/logic/once) and two Copilot: Knowledge Tile Nodes. For more information, see [Copilot: Knowledge Tile Node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/agent-copilot-knowledge).
+
+<Steps>
+  <Step title="Create a Flow and Set the If Node">
+    1. In **Build > Flows**, create a Flow and give it a clear name, for example, `Knowledge Retrieval Copilot Flow`.
+    2. After the **Start** Node, add an [If Node](/ai/agents/develop/node-reference/logic/if) .Under the **Condition** field, click **Use Advanced Editor** and enter the following:
+        ```txt
+        input.data._cognigy._agentAssist.payload.tileId === "knowledge"
+        ```
+        
+        If you set this condition to `knowledge`, the ID of the Copilot: Knowledge Tile Node needs to be set to `knowledge`.
+  </Step>
+  <Step title="Add the First Copilot: Knowledge Tile Node">
+    After the **Then** Child Node of the If Node, add a [Copilot: Knowledge Tile Node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile) and configure the following settings:
+      - **Tile ID** — enter `knowledge`.
+      - **Knowledge Source** — select a Knowledge Source, for example, the Knowledge Source you created with the CTXT sample file about Knowledge AI.
+  </Step>
+  <Step title="Add a Set Grid Node">
+    1. After the **Else** Child Node, add a [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid) and set the **Copilot Grid Configuration** as follows:
+
+        ```json
+        {
+          "grid": {
+            "columns": 2,
+            "rows": 2,
+            "gap": 5
+          },
+          "tiles": {
+            "next-action": {
+              "x": 1,
+              "y": 1,
+              "rows": 1,
+              "columns": 1
+            },
+            "knowledge": {
+              "x": 1,
+              "y": 2,
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        }
+        ```
+  </Step>
+  <Step title="Add the Copilot Nodes to the Flow">
+    1. Below the Copilot: Set Grid Node, add an [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt) and configure it to generate the next best response for the agent based on the user’s latest input and to store the result in the Input object:
+
+        - **System Prompt** — enter the following:
+          ```txt
+          Based on the user's last message, suggest the most helpful next response for a human agent.
+          ```
+        - In the **Storage & Streaming** section, configure the following:
+          - **How to handle the result** — set to **Store in Input**.
+          - **Input Key to store Result** — set to `input.promptResult`.
+
+    2. Add a [Copilot: Next Action Tile Node](/ai/agents/develop/node-reference/agent-copilot/next-action-tile) after the LLM Prompt Node and configure the Node as follows:
+          - **Tile ID**: `next-action`
+          - **Text**:
+          ```txt
+          {{input.promptResult.detailedResult.choices[0].message.content}}
+          ```
+    3. Add a [Copilot: Knowledge Tile Node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile) and configure it as follows:
+        - **Tile ID**: `knowledge`
+        - **Knowledge Source**: select a Knowledge Source, for example, the Knowledge Source you created with the CTXT sample file about Knowledge AI. Save the Node.
+  </Step>
+  <Step title="Add a Once Node and the Second Copilot: Knowledge Tile Node">
+    1. Below the If Node, add a [Once Node](/ai/agents/develop/node-reference/logic/once).
+    2. Copy the first Copilot: Knowledge Tile Node by right-clicking it and selecting **Copy**.
+    3. Below the **On the First Time** Node, right-click ![flow-plus](/_assets/icons/flow-plus.svg) and select **Paste** to add a [Copilot: Knowledge Tile Node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile).
+  </Step>
+</Steps>
+
+With this grid, the Agent Copilot workspace displays a widget with LLM-generated answers and a widget where you can search the answer in the Knowledge Source. You can test the Knowledge Tile with [Agent Copilot for chat applications](/agent-copilot/getting-started/chat).
+
+## More Information
+
+- [Knowledge AI](/ai/agents/develop/knowledge-ai/overview)
+- [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview)
+- [Copilot: Knowledge Tile Node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile)
+- [Copilot: Next Action Tile Node](/ai/agents/develop/node-reference/agent-copilot/next-action-tile)
+- [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid)
+- [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent)

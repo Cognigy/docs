@@ -1,0 +1,36 @@
+---
+title: Other Functions
+sidebarTitle: Overview
+seo:
+  metatags:
+    description: These are functions that don’t belong to any specific group. They
+      let you evaluate conditions, mark conversation goals as complete, and extract
+      data from user input using regex.
+keywords: ['other functions', 'evaluateRule', 'completeGoal', 'setRegexSlot']
+---
+
+These are functions that don’t belong to any specific group. They let you evaluate conditions, mark conversation goals as complete, and extract data from user input using regex.
+
+## [`evaluateRule`](/ai/for-developers/function-reference/other/evaluateRule)
+
+**Syntax**
+
+`evaluateRule(rule)`
+
+Evaluates a condition based on a rule configuration that follows the `left`, `operator`, `right` pattern. This function works similarly to the If Node.
+
+## [`completeGoal`](/ai/for-developers/function-reference/other/completeGoal)
+
+**Syntax**
+
+`completeGoal(goal)`
+
+Marks a goal as `completed` for the conversation.
+
+## [`setRegexSlot`](/ai/for-developers/function-reference/other/setRegexSlot)
+
+**Syntax**
+
+`setRegexSlot(params)`
+
+Extracts Slots from user inputs using a regular expression and writes them to `input.slots`. This function is used by the [Regex Slot Filler](/ai/agents/develop/node-reference/ai/regex-slot-filler) Node.

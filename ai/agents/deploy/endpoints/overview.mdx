@@ -1,0 +1,81 @@
+---
+title: Overview
+hidden: false
+seo:
+  metatags:
+    description: >-
+      Cognigy.AI Endpoints support chat and voice conversations in contact
+      centers and integrate with handover provider to manage these interactions.
+keywords:
+  - endpoints
+  - integration
+  - deployment
+  - channels
+  - connectors
+  - contact center
+  - snapshots
+---
+
+_Endpoints_ are connectors between AI Agents and [external systems or platforms](/ai/agents/deploy/endpoint-reference/overview), such as Facebook (Meta) Messenger, Slack, Alexa, and others.
+
+Endpoints support chat and voice conversations in contact centers and integrate with [handover provider](/ai/escalate/handovers) to manage these interactions.
+
+Endpoints convert [channel-specific](/ai/agents/develop/nodes/channels) input and output, including images, galleries, and voice, into the structure of the [Input object](/ai/agents/develop/ai-agent-memory/input). This approach allows the development of platform-agnostic [Flows](/ai/agents/develop/projects-and-flows/overview) that require no modification when you add new channels.
+
+## Working with Endpoints
+
+<Tabs>
+  <Tab title="GUI">
+    You can create, view, edit, and delete Endpoints in **Deploy > Endpoints**.
+  </Tab>
+  <Tab title="API">
+    You can view, create, and edit Endpoints using the [Cognigy
+    API](https://api-trial.cognigy.ai/openapi#tag--Endpoints-v2.0).
+  </Tab>
+  <Tab title="CLI">
+    You can manage Endpoints using the [Cognigy
+    CLI](https://github.com/Cognigy/Cognigy-CLI).
+  </Tab>
+</Tabs>
+
+### General Endpoint Settings
+
+For every Endpoint, you have the following basics:
+
+| Setting         | Description                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Snapshot        | This setting is optional. Select the [Snapshot](/ai/agents/deploy/snapshots) of the [Project](/ai/agents/develop/projects-and-flows/projects) you want to use.<br/><br/>By default, Endpoints use the [Connections](/ai/platform-features/connections) from the Snapshot. If you select a Snapshot, the [Override Snapshot Connections](#override-snapshot-connections) toggle is displayed under the **Snapshot** list. |
+| Locale          | This setting is optional. Select the [Locale](/ai/platform-features/translation-and-localization/localization) for the Endpoint. The Locale list only appears if you've created a Locale beforehand.                                                                                                                                                                                                                             |
+| Flow            | Select the [Flow](/ai/agents/develop/projects-and-flows/overview) to use for the Endpoint.<br/><br/>You can enter manually by clicking **Manual Input** below the Flow list. Click ![jump to Flow](/_assets/icons/black-and-white/jump-to-flow.svg) next to the **Flow** list to open the selected Flow in the Flow editor.                                                                                                                |
+| Endpoint URL    | The Endpoint URL serves as the interface to the Endpoint. For most third-party platforms, you need to copy it into the channel's settings to configure the connection to Cognigy.AI.                                                                                                                                                                                                                                                  |
+| NLU Connector   | Select the [NLU Connector](/ai/platform-features/nlu/external/nlu-connectors/overview) for the Endpoint. To disable Intent and Slot recognition, select the [No NLU](/ai/platform-features/nlu/external/nlu-connector-reference/no-nlu) option.                                                                                                                                                                             |
+| Enable Endpoint | Toggle to activate or deactivate the Endpoint. This setting is enabled by default.                                                                                                                                                                                                                                                                                                                                                    |
+
+#### Override Snapshot Connections
+
+If you activate the **Override Snapshot Connections** toggle, the Endpoint overrides the [Connections](/ai/platform-features/connections) in the Snapshot with Connections from the Project. If only the Snapshot has a Connection, the Connection isn't overridden. If necessary, you need to update such Connections manually.
+
+To override the Connection of the AI Agent in production, you can:
+
+- Make the necessary changes in a staging environment, create a Snapshot of the same AI Agent, and select the Snapshot in the Endpoint settings. Deactivate the **Override Snapshot Connections** toggle.
+- Import Connections from another AI Agent using a [Package](/ai/platform-features/packages). Activate the **Override Snapshot Connections** toggle.
+
+### Mocking
+
+In the **Advanced Settings** section, you can toggle on the **Enable Mocking** setting to activate [mocking](/ai/agents/test/mocking) for the Endpoint. Mocking lets you change Node behaviors and test how they perform through the Endpoint without changing the original Node settings. Make sure that you also activate mocking at the [Node level](/ai/agents/test/mocking#at-the-node-level).
+
+## Specific Endpoint Settings
+
+You can use the following additional settings for the Endpoint configuration:
+
+- [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer Functions](/ai/for-developers/transformers/overview)
+- [Session Management](/ai/agents/deploy/endpoints/session-management)
+- [Real-Time Translation Settings](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Handover Settings](/ai/agents/deploy/endpoints/handover-settings)
+- [Agent Copilot](/agent-copilot/overview)
+- [File Storage](/ai/agents/deploy/endpoints/file-storage)
+
+## More Information
+
+- [Localization](/ai/platform-features/translation-and-localization/localization)

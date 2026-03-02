@@ -1,0 +1,62 @@
+---
+title: Get Transcript
+hidden: false
+seo:
+  metatags:
+    description: >-
+      The Get Transcript Node lets receive a real-time conversation transcript
+      and store the result in the Input or Context object.
+---
+
+<a href="/release-notes/2025.20"><Badge className="version-badge" color="blue">Updated in 2025.20</Badge></a>
+
+<Frame>
+  <img
+    class="image-center"
+    src="/_assets/ai/develop/node-reference/services/get-transcript.png"
+    style={{ width: 'auto' }}
+  />
+</Frame>
+
+## Description
+
+You can use the Get Transcript Node to provide conversation scripts to AI Agents and improve their performance or for further processing of the conversation with the user. The Get Transcript Node creates a `transcript` object in the [Input object](#storage) that you can use to:
+
+- Provide targeted context to the AI Agent and prevent LLM hallucinations when a user wants to check the status of multiple orders.
+- Send a summary of the interaction between the user and the AI Agent to your CRM system.
+
+## Restrictions
+
+- The Get Transcript Node stores only plain text in the conversation transcript. Structured data, such as [Text with Buttons, Text with Quick Replies, and adaptive cards](/ai/agents/develop/node-reference/basic/say#default-cognigy-ai-channel), images, and videos aren't included in the transcript. However, information from structured data is added to the transcript by default via [the Include Rich Media Context parameter](#advanced). You can access the full transcript in the [Transcript explorer](/insights/explorers/transcript) or with the [OData endpoint](/ai/agents/analyze/odata).
+
+## Parameters
+
+| Parameter | Type   | Description                                                                                                                                                                                                                                                                                        |
+| --------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Limit     | Slider | Sets the number of transcript steps to include. Each step is an input from any participant in the conversation. For example, if you specify `1`, only the last input is included in the transcript. This input can be, for instance, an AI Agent's message if it was the last in the conversation. |
+
+### Advanced
+
+| Parameter                  | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|----------------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Include Rich Media Context | Toggle | Controls whether the text from the [Textual Description](/ai/agents/develop/node-reference/basic/say#output-type) field in Say, Question, and Optional Questions Nodes is added to the `transcript` object. This text provides AI Agents with additional information, improving their responses.<br/><br/>If you have filled in a **Textual Description** field in other Nodes, this text is added to the transcript as context for rich media, such as Text with Quick Replies. If the **Textual Description** field is empty, the button titles and alt text from the rich media are added to the transcript. By default, the **Include Rich Media Context** parameter is active. When this parameter is inactive, nothing related to the rich media is added to the transcript.<br/><br/>**Examples**:<ul><li>If **Textual Description** is filled in:<p>Textual Description: `Select your preferred delivery option: Standard Delivery or Express Delivery`.</p><p>Quick Replies buttons: `Standard Delivery`, `Express Delivery`.</p><p>Context added to the transcript: `Select your preferred delivery option: Standard Delivery or Express Delivery`.</p></li><li>If **Textual Description** is empty:<p>Textual Description: empty.</p><p>Quick Replies buttons: `Standard Delivery`, `Express Delivery`.</p><p>Context added to the transcript: `Standard Delivery`, `Express Delivery`.</p></li><li>If **Include Rich Media Context** is inactive:<p>No information related to the rich media is added to the transcript.</p></li></ul> |
+
+### Storage
+
+| Parameter      | Type          | Description                                                                                                                                                       |
+| -------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Store Location | Selector      | Sets where to save the result:<ul><li>**Input** — stores the result in the Input object.</li><li>**Context** — stores the result in the Context object.</li></ul> |
+| Input Key      | CognigyScript | The parameter appears when **Input** is selected. The result is stored in the `transcript` Input object by default. You can specify another key.                  |
+| Context Key    | CognigyScript | The parameter appears when **Context** is selected. The result is stored in the `transcript` Context object by default. You can specify another key.              |
+
+### Provide Conversation Transcripts to AI Agents
+
+To provide the transcript to AI Agents, add the Get Transcript Node before one of the following Nodes:
+
+- [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent) — retrieve the transcript from the [Input or Context object](#storage) using CognigyScript in the **Job Description** or **Instructions and Context** field. For example, `{{input.transcript}}`.
+- [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt) — retrieve the transcript from the [Input or Context object](#storage) using CognigyScript in the **System Prompt** field. For example, `{{input.transcript}}`.
+
+## More Information
+
+- [Add Transcript Steps](/ai/agents/develop/node-reference/service/add-transcript-steps)
+- [Agentic AI](/ai/agents/overview)

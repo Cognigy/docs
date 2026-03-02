@@ -1,0 +1,84 @@
+---
+title: Flow Editor
+hidden: false
+keywords:
+  - ' flows'
+  - ' flow editor'
+  - ' nodes'
+  - ' collaborative editing'
+seo:
+  metatags:
+    description: >-
+      The Flow Editor is a user interface where you can see a graphic
+      representation of a Flow, the Flow Chart, and design AI Agents'
+      conversations.
+---
+
+<a href="/release-notes/2025.12"><Badge className="version-badge" color="blue">Updated in 2025.12.0</Badge></a>
+
+
+The _Flow Editor_ is a user interface (UI) where you can see a graphic representation of a [Flow](/ai/agents/develop/projects-and-flows/overview), the _Flow Chart_, and design AI Agents' conversations. In the Flow editor, the Flow consists of Nodes that represent various actions or decision points. The [Nodes](/ai/agents/develop/nodes/overview) are linked to one another by lines that indicate the conversation's path, from the **Start** Node to the **End** Node.
+
+The Flow editor allows for [Collaborative Editing](/ai/agents/develop/projects-and-flows/collab-editing). This means that multiple users can edit the same Flow at the same time.
+
+A green arrow next to a Node indicates the Flow Entrypoint. The Entrypoint is where the AI Agent expects a user entry. The Flow editor highlights the path of the conversation in green. The green path allows you to understand the Flow execution path at each step, depending on the input in the [Interaction Panel](/ai/agents/test/interaction-panel/overview).
+
+## Limitations
+
+- You can add up to 100 Nodes in the Flow editor.
+
+## Exploring the Flow Editor
+
+The following image shows an overview of the Flow editor:
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/flows/flow-editor.png" style={{ width: 'auto' }} />
+</Frame>
+
+<AccordionGroup>
+  <Accordion title="1. Top Bar">
+    Besides the controls from the [Project Page](/ai/overview/user-interface/project-page) top bar, the Flow editor includes the following elements from left to right:
+
+    | UI&nbsp;Element                                           | Type | Description                                                                                                                                                                                                                                                                                                                                                                              |
+    |-----------------------------------------------------------|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Flow List                                                 | List | Search for Flows by name and switch between them.                                                                                                                                                                                                                                                                                                                                        |
+    | Locale List                                               | List | Switch between Locales.                                                                                                                                                                                                                                                                                                                                                                  |
+    | Chart                                                     | Tab  | Display the Flow chart.                                                                                                                                                                                                                                                                                                                                                                  |
+    | NLU                                                       | Tab  | Display the NLU settings, where you can configure [Intents](/ai/platform-features/nlu/intents/overview), [States](/ai/agents/test/interaction-panel/state), [Slot Fillers](/ai/platform-features/nlu/slot-fillers), as well as attach [Flows](/ai/platform-features/nlu/attachments#attached-flows) and [Lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon). |
+    | Settings                                                  | Tab  | Display the [Flow Settings](/ai/agents/develop/projects-and-flows/overview#settings), [Default Context](/ai/agents/develop/ai-agent-memory/context), and [Locale Settings](/ai/platform-features/translation-and-localization/localization).                                                                                                                                                                                              |
+    | ![user-bubble](/_assets/icons/user-bubble.svg) | Icon | Shows other users who have the current Flow open and active.                                                                                                                                                                                                                                                                                                                             |
+  </Accordion>
+
+  <Accordion title="2. Flow Chart">
+    |                            Button                                 | Description                                                                             |
+    |:-----------------------------------------------------------------:|-----------------------------------------------------------------------------------------|
+    |    ![flow-plus](/_assets/icons/flow-plus.svg)                     | Click to add a new Node or [Extension Node](/ai/for-developers/extensions) to the Flow. |
+    |      ![comment](/_assets/icons/black-and-white/comment.svg)       | Click to see the comments in the Node.                                                  |
+    | ![mouse-cursor](/_assets/icons/blue/mouse-cursor.svg)             | Indicates other users who are editing the same Flow.                                    |
+    |  ![user-bubble](/_assets/icons/user-bubble.svg)                   | Indicates that other users are editing the Node to which the icon is attached.          |
+    | ![discussion-icon](/_assets/icons/black-and-white/discussion.svg) | Click to open the Discussion menu on the Node and access Discussion Threads.            |
+
+    <Note>
+      The Flow editor supports drag and drop. To copy a Node, simply hold the <kbd>Alt</kbd> or <kbd>Option</kbd> while dragging the Node to another position.
+    </Note>
+  </Accordion>
+
+  <Accordion title="3. Chart Controls">
+    |                               Control                                    | Description                                                                                                                                                             |
+    |:------------------------------------------------------------------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    |                           **-** and **+**                                | Zoom out (-) or in (+).                                                                                                                                                 |
+    |  ![flow-centralize](/_assets/icons/black-and-white/flow-centralize.svg)  | Centers the chart.                                                                                                                                                      |
+    | ![magnifying-glass](/_assets/icons/black-and-white/magnifying-glass.svg) | Search for Nodes in the Flow.                                                                                                                                           |
+    |     ![photo-camera](/_assets/icons/black-and-white/photo-camera.svg)     | Take a screenshot of the entire Flow and save it in PNG format. In the top left corner of each screenshot, the time of its creation and the Cognigy logo are displayed. |
+    |    ![voice-preview](/_assets/icons/black-and-white/voice-preview.svg)    | Test voice outputs without executing the entire Flow.                                                                                                                   |
+    |       ![arrow-back](/_assets/icons/black-and-white/arrow-back.svg)       | Undo the last step by going backward in history.                                                                                                                        |
+    |    ![arrow-forward](/_assets/icons/black-and-white/arrow-forward.svg)    | Redo the last steps by going forward in history.                                                                                                                        |
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Nodes](/ai/agents/develop/nodes/overview)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Agents](/ai/overview/ai-workforce)

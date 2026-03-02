@@ -1,0 +1,65 @@
+---
+title: Agent Copilot Whisper
+
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+import LiveAgentAssistantSetup from '/snippets/live-agent/assistant-setup.mdx'
+
+<MaintenanceMode />
+
+<LiveAgentAssistantSetup/>
+ 
+### Supported Output Types
+
+Agent Copilot Whisper supports all output types that can be selected in the [Say](/ai/agents/develop/node-reference/overview), [Question](/ai/agents/develop/node-reference/overview), or [Optional Question](/ai/agents/develop/node-reference/overview) Nodes.
+
+## Set up an Endpoint
+
+To configure your Endpoint:
+
+1. Go to **Deploy > Endpoints**.
+2. Go to your **Webchat** Endpoint.
+3. Scroll down to **Handover Settings** and select **Cognigy Live Agent** from the list.
+4. Go to the **Copilot** section.
+5. In the **Copilot Config** field, select **None**.
+6. In the **Copilot Flow** field, select the name of the Agent Copilot Flow you've created in the previous step.
+7. Click **Save**.
+
+The Endpoint setup is completed.
+
+## Test Agent Copilot Whisper
+
+To test Agent Copilot Whisper, follow these steps:
+
+1. Start a Webchat session.
+2. Complete the handover process to Live Agent.
+3. Once the handover is complete, send a message as a human agent.
+4. After that, send a message as the user in Webchat.
+
+<Frame>
+    <img class="image-center" src="/_assets/live-agent/la-agent-assist-webchat_f.png" style={{ width: 'auto' }} />
+</Frame>
+
+Once the human agent receives this message, the testing behavior will vary depending on how you configured the Endpoint beforehand:
+
+1. The human agent will receive a dropdown menu **Agent Copilot**. 
+2. In this menu, the human agent will find the results from the Flow sent via Agent Copilot Whisper.
+       <Frame>
+           <img class="image-center" src="/_assets/live-agent/la-agent-assist-agentview_f.png" style={{ width: 'auto' }} />
+       </Frame>
+3. The human agent can click the blue arrow to forward content to the user.
+      <Frame>
+           <img class="image-center" src="/_assets/live-agent/la-agent-assist-agentview-forward_f.png" style={{ width: 'auto' }} />
+      </Frame>
+
+       <Frame>
+           <img class="image-center" src="/_assets/live-agent/la-agent-assist-webchat-complete_f.png" style={{ width: 'auto' }} />
+       </Frame>
+
+If the testing is successful, the Agent Copilot Whisper setup is complete.
+
+## More Information
+
+- [Agent Copilot in Live Agent](/live-agent/assistants/agent-copilot)
+- [Agent Copilot Overview](/agent-copilot/overview)

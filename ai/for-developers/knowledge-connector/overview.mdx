@@ -1,0 +1,37 @@
+---
+title: "Knowledge Connector API"
+sidebarTitle: "Overview"
+hidden: false
+seo:
+  metatags:
+    description: The Knowledge Connector API is a toolset for developers to integrate external knowledge sources into Cognigy.AI.
+keywords: ['knowledge connector', 'knowledge api', 'knowledge source', 'knowledge chunk']
+---
+
+The _Knowledge Connector API_ is a toolset for developers to create custom [Knowledge Connectors](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-connectors) and integrate external knowledge databases into Cognigy.AI. The toolset provides functions to create, manage, and delete [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) and the relative [Knowledge Chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk).
+
+## Use Cases
+
+- **Document Import** — import documentation from SharePoint, Confluence, or other cloud-based document repositories.
+- **Database Integration** — connect to databases and schedule knowledge imports.
+- **API Integration** — automate knowledge imports from REST APIs.
+
+## Knowledge Connector API Functions
+
+### [`createKnowledgeSource`](/ai/for-developers/knowledge-connector/createKnowledgeSource)
+
+**Syntax:** `api.createKnowledgeSource(params)`
+
+Creates a new Knowledge Source with the specified name, description, Source Tags, and number of Knowledge Chunks.
+
+### [`deleteKnowledgeSource`](/ai/for-developers/knowledge-connector/deleteKnowledgeSource)
+
+**Syntax:** `api.deleteKnowledgeSource(params)`
+
+Deletes a Knowledge Source.
+
+### [`createKnowledgeChunk`](/ai/for-developers/knowledge-connector/createKnowledgeChunk)
+
+**Syntax:** `api.createKnowledgeChunk(params)`
+
+Creates a Knowledge Chunk in a Knowledge Source, containing text content and optional Chunk metadata.

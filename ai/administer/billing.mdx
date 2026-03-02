@@ -1,0 +1,155 @@
+---
+title: Billing
+keywords: ['Cognigy.AI', 'billing', 'billable conversations', 'calls', 'knowledge AI', 'concurrent lines']
+seo:
+  metatags:
+    description: >-
+      Learn about the different ways Cognigy products charge customers,
+      including billable conversations, concurrent lines for voice calls, and
+      Knowledge AI usage.
+---
+
+Cognigy supports two different billing models, depending on your license:
+
+- [Cognigy billing](#cognigy-billing). Applies to customers using Cognigy products standalone.
+- [NiCE CXone Cognigy billing](#nice-cxone-cognigy). Applies to customers using Cognigy products as part of NiCE CXone.
+
+## Cognigy Billing
+
+If you have a license agreement with Cognigy, your usage of Cognigy products is billed according to the Cognigy billing model.
+
+Cognigy products have *three different ways* to charge customers:
+
+- For *conversations* processed with Cognigy.AI.
+- For *concurrent lines* for calls handled with Cognigy Voice Gateway.
+- For *knowledge queries* and *knowledge chunks* used in Knowledge AI.
+
+### Billable Conversations
+
+Cognigy.AI charges customers based on the number of *billable conversations* processed through the platform.
+
+A *billable conversation* is an *interaction between a user and an AI Agent or a human agent that flows through the Cognigy.AI platform*. A conversation begins with the initial *input* via an Endpoint to the Cognigy.AI platform and ends when the end user stops interacting. A billable conversation is limited to up to 50 user inputs within a 24-hour period.
+
+Sending more than 50 inputs or interacting with the Cognigy.AI platform for more than 24 hours will initiate subsequent billable conversations.
+
+#### Common Scenarios
+
+<AccordionGroup>
+  <Accordion title="Scenario 1">
+    **An end user sends exactly 50 user inputs within a period of less than 24 hours.**
+
+    An end user begins interacting with a Cognigy AI Agent and sends 50 user inputs. The entire interaction takes 15 minutes. The system will record *1 billable conversation* as the end user had fewer than 51 user inputs and only interacted with the system for 15 minutes.
+  </Accordion>
+  <Accordion title="Scenario 2">
+    **An end user sends more than 50 user inputs within a period of less than 24 hours.**
+
+    An end user starts interacting with a Cognigy AI Agent and sends 101 user inputs within 2 hours. The system will record *3 billable conversations* as three multiples of 50 inputs have been processed.
+  </Accordion>
+  <Accordion title="Scenario 3">
+   **An end user starts interacting by sending a message, doesn't respond for a day, and then continues the interaction.**
+
+   An end user begins interacting with a Cognigy AI Agent by sending a single message. The user then pauses the interaction for more than 24 hours and returns the next day by sending another message. The system will record *2 billable conversations* since they extend over multiple days and exceed a duration of 24 hours.
+  </Accordion>
+</AccordionGroup>
+
+#### xApps
+
+Cognigy xApps offer multi-modality interactivity with your end users. Note that xApps are a separately licensed product feature that requires a license agreement with Cognigy. To learn more about xApps, refer to the [documentation](/xApps/overview).
+
+When data is submitted from an xApp back into the Cognigy.AI platform, it is handled the same as a standard end user interaction, such as sending a chat input or speaking an utterance in the case of a voice AI Agent.
+
+<Accordion title="Scenario 1">
+
+**An end user books a cinema ticket with a bot using xApps.**
+
+An end user begins interacting with a Cognigy.AI-powered ticket booking chatbot by sending a chat input. The bot responds by requesting the first name, last name, and ticket category. The user answers all three questions by providing the respective data and then gets a floor plan via an xApp, through which they can select a seat. The user selects a seat and submits the selection. The system will record *a single billable conversation* with the following explanation:
+
+- The end user greets the chatbot - **one user input**
+- The AI Agent asks for the first name
+- The end user provides the first name - **second user input**
+- The AI Agent asks for the last name
+- The end user provides the last name - **third user input**
+- The AI Agent asks for the ticket category
+- The end user provides the ticket category by clicking on a quick reply - **fourth user input**
+- The AI Agent presents a floor plan via an xApp
+- The end user selects a seat using the xApp and submits the selection - **fifth user input**
+
+</Accordion>
+
+#### Additional Billable Conversations
+
+Additional charges apply if you use the Endpoint [Transformers](/ai/for-developers/transformers/overview), such as:
+
+- Input Transformer
+- Inject Transformer
+- Notify Transformer
+
+If an Endpoint Transformer execution results in a `falsy` value (`null`, `undefined`, or `false`), the message processing pipeline stops, and no Flow is executed. In such cases, Cognigy.AI will charge an additional billable conversation for every 50 Endpoint Transformer executions.
+
+Note that additional billing will only apply *if no Flow is executed* after your Endpoint Transformer runs.
+
+### Calls
+
+Cognigy.AI offers the ability to build voice experiences and AI Agents that you can deploy to your telephony systems.
+Note that you will need a separate license agreement with Cognigy for a product such as Cognigy Voice Gateway.
+Customers can purchase different packages of *concurrent lines* to connect their voice-enabled AI Agents to their telephony systems. Reporting capabilities show the *peak number of concurrent lines* used on a specific day.
+
+If a customer uses more concurrent lines than purchased on a given day, overage charges will apply for that day.
+
+### Knowledge AI
+
+Knowledge AI allows Cognigy customers to build RAG-based pipelines powered by Large Language Models.
+Knowledge AI is a separately licensed product feature and requires a [license agreement](/ai/agents/develop/knowledge-ai/activate) with Cognigy.
+To learn more about Knowledge AI, refer to the [documentation](/ai/agents/develop/knowledge-ai/overview).
+
+Knowledge AI is licensed by *Knowledge Chunks* and *Knowledge Queries*. The former defines a *hard limit* on how much data can be ingested into the Knowledge AI solution, while the latter determines how often a query can be placed to retrieve a relevant Chunk of knowledge.
+
+Cognigy offers various packages that include Knowledge Chunks and Queries. For Knowledge Queries, overages will apply if more queries are performed than what is included in the originally purchased package. The Knowledge Chunk limit can't be exceeded, as the product will display an error. Customers can purchase additional Knowledge Chunk packages if required.
+
+Reporting capabilities show both the *number of Knowledge Chunks consumed* and the *number of Knowledge Queries performed*.
+
+### Ops Center
+
+Ops Center is a Cognigy product developed to manage the deployment of AI Agents at scale. It serves as the solution for gaining operational visibility and control over AI Agents.
+Ops Center is a separately licensed product feature and requires a license agreement with Cognigy.
+To learn more about Ops Center, refer to the [documentation](/ops-center/index).
+
+## NiCE CXone Cognigy
+
+If you are a NICE CXone customer, your usage of Cognigy products is billed per [conversation](#billable-conversations), similar to the Cognigy billing model. The key difference is that in the NICE CXone billing model, conversations are counted differently depending on whether they are digital or voice:
+
+- **Digital** – up to 50 end-user messages within 24 hours count as 1 conversation. Only messages from the end user are counted; AI Agent responses don't count.
+- **Voice** – up to 10 minutes per call count as 1 conversation.
+
+Exceeding these limits results in additional conversations.
+
+Products such as [xApps](#xapps), [Transformers](#additional-billable-conversations), [Knowledge AI](#knowledge-ai), and [Ops Center](#ops-center) are counted in NICE CXone billing the same way as in Cognigy billing.
+
+### Common Scenarios
+
+<AccordionGroup>
+  <Accordion title="Scenario 1">
+  **An end user sends up to 50 digital messages within 24 hours.**
+
+  An end user interacts with an AI Agent and sends 50 messages in a single day.
+  The system records *1 conversation* because the 50-message and 24-hour limits are not exceeded.
+</Accordion>
+<Accordion title="Scenario 2">
+  **An end user sends more than 50 digital messages within 24 hours.**
+
+  An end user sends 120 messages to an AI Agent in a single day.
+  The system records *3 conversations* (50 + 50 + 20), as each set of up to 50 end-user messages counts as one conversation.
+</Accordion>
+<Accordion title="Scenario 3">
+  **An end user engages in a voice call longer than 10 minutes.**
+
+  An end user speaks with an AI Agent for 12 minutes.
+  The system records *2 conversations* (10 minutes + 2 minutes) because each 10-minute interval counts as one conversation.
+</Accordion>
+<Accordion title="Scenario 4">
+  **An end user starts a conversation that lasts more than 24 hours.**
+
+  An end user begins a digital conversation with an AI Agent and continues the next day.
+  The system records *2 conversations* (first 24 hours + remaining time) because the conversation exceeds the 24-hour period.
+</Accordion>
+</AccordionGroup>

@@ -1,0 +1,228 @@
+---
+title: Roles
+---
+
+In Live Agents, human agents can have three distinct user roles:
+
+- [Agent](#agents)
+- [Supervisor](#supervisor)
+- [Administrator](#administrator)
+
+These roles define the permissions and responsibilities of individuals using the Live Agents system.
+
+## User Roles 
+
+### Agent
+
+Agents in this role can access inboxes and conversations, assign conversations to other agents or themselves, and resolve conversations. They can access only the inboxes they are part of, participate in conversations within those inboxes, edit their user profile settings, and add personal-level canned responses. Conversation assignment is limited to inbox members.
+
+### Supervisor
+
+Supervisors have unique access to the Supervisor Dashboard to monitor conversation metrics and can also view the Inbox assigned to them.
+
+### Administrator
+
+Administrators have all permissions of a normal agent and access to all Cognigy Live Agent features enabled for your account, including settings. Administrators don't have permission to:
+
+- View the supervisor dashboard. This dashboard is exclusive to the supervisor role.
+- Create and delete users. You can only do this in the [Cognigy.AI Admin Center](/ai/administer/access/admin-center/access-control).
+
+## Permissions
+
+The following tables show single role permissions of Agents, Supervisors, and Administrators.
+
+### Agents
+
+| Actions                         | Agent | Supervisor | Administrator |
+|---------------------------------|-------|------------|---------------|
+| Create an Agent<sup><a href="#footnote1">1</a></sup>            |  -    | -          | +             |
+| Edit an Agent<sup><a href="#footnote1">1</a></sup>              |  -    | -          | +             |
+| Delete an Agent<sup><a href="#footnote1">1</a></sup>             |  -    | -          | +             |
+| Assign an Agent                 |  +    | +          | +             |
+
+### Teams
+
+| Actions                             | Agent | Supervisor | Administrator |
+|-------------------------------------|-------|------------|---------------|
+| Create a team                       | -     | -          | +             |
+| Assign a team within a conversation | +     | +          | +             |
+| Edit a team                         | -     | -          | +             |
+| Delete a team                       | -     | -          | +             |
+| Allow Auto Assign for a team        | -     | -          | +             |
+
+### Inboxes
+
+| Actions                                           | Agent | Supervisor | Administrator |
+|---------------------------------------------------|-------|------------|---------------|
+| Create an Inbox                                   | -     | -          | +             |
+| Edit an Inbox                                     | -     | -          | +             |
+| Delete an Inbox                                   | -     | -          | +             |
+| Move Conversations from one Inbox to another<sup><a href="#footnote4">4</a></sup>| +     | +          | +             |
+| Create Agent Copilot Bot                          | -     | -          | +             |
+| Edit Agent Copilot Bot                            | -     | -          | +             |
+| Delete Agent Copilot Bot                          | -     | -          | +             |
+| Add Agents to the Inbox                           | -     | -          | +             |
+| Remove Agents from the Inbox                      | -     | -          | +             |
+| Configure Conversation Assignment Settings        | -     | -          | +             |
+| View assigned Inboxes                             | +     | +          | +             |
+| View all Inboxes                                  | -     | -          | +             |
+
+### Conversations
+
+| Actions                              | Agent | Supervisor | Administrator |
+|--------------------------------------|-------|------------|---------------|
+| Resolve Conversations                | +     | +          | +             |
+| Clear Conversation History           | -     | +          | +             |
+| Mute Conversation                    | +     | +          | +             |
+| Send Transcript                      | +     | +          | +             |
+| Edit User Contact Profile            | -     | +          | +             |
+| Assign an Agent                      | +     | +          | +             |
+| Assign a Team                        | +     | +          | +             |
+| Select Priority                      | +     | +          | +             |
+| Filter Conversations                 | +     | +          | +             |
+| Sort Conversations                   | +     | +          | +             |
+| Search for messages in conversations | +     | +          | +             |
+
+### Attachments
+
+| Actions                                        | Agent | Supervisor | Administrator |
+|------------------------------------------------|-------|------------|---------------|
+| Send Attachments within a conversation         | +     | +          | +             |
+| Request Attachments within a conversation<sup><a href="#footnote2">2</a></sup> | +     | +          | +             |
+| View Attachments                               | -     | -          | +             |
+| Sort Attachments                               | -     | -          | +             |
+| Filter Attachments                             | -     | -          | +             |
+| Delete Attachments                             | -     | -          | +             |
+| Download Attachments                           | -     | -          | +             |
+
+### Audit Logs
+
+| Actions                                        | Agent | Supervisor | Administrator |
+|------------------------------------------------|-------|------------|---------------|
+| Read Audit Logs                                | -     | -          | +             |
+
+### Automation Rules
+
+| Actions                                        | Agent | Supervisor | Administrator |
+|------------------------------------------------|-------|------------|---------------|
+| Add Automation Rules                           | -     | -          | +             |
+| Edit Automation Rules                          | -     | -          | +             |
+| Clone Automation Rules                         | -     | -          | +             |
+| Delete Automation Rules                        | -     | -          | +             |
+| Activate Automation Rules                      | -     | -          | +             |
+| Deactivate Automation Rules                    | -     | -          | +             |
+
+### Labels
+
+| Actions                                        | Agent | Supervisor | Administrator |
+|------------------------------------------------|-------|------------|---------------|
+| Create a Label                                 | -     | +          | +             |
+| Edit a Label                                   | -     | +          | +             |
+| Delete a Label                                 | -     | +          | +             |
+| Add a Label to a conversation                  | +     | +          | +             |
+
+### Skills
+
+| Actions                                        | Agent | Supervisor | Administrator |
+|------------------------------------------------|-------|------------|---------------|
+| Add Skills                                     | -     | +          | +             |
+| Edit Skills                                    | -     | +          | +             |
+| Delete Skills                                  | -     | +          | +             |
+| Add Skills to an Agent                         | -     | -          | +             |
+
+### Canned Responses
+
+| Actions                                     | Agent | Supervisor | Administrator |
+|---------------------------------------------|-------|------------|---------------|
+| Create a Canned Response<sup><a href="#footnote3">3</a></sup>               | +     | +          | +             |
+| Use a Canned Response within a conversation | +     | +          | +             |
+| Edit a Canned Response<sup><a href="#footnote3">3</a></sup>                 | +     | +          | +             |
+| Delete a Canned Response<sup><a href="#footnote3">3</a></sup>               | +     | +          | +             |
+| Import Canned Responses<sup><a href="#footnote3">3</a></sup>                | +     | +          | +             |
+
+### Reports
+
+| Actions                  | Agent | Supervisor | Administrator |
+|--------------------------|-------|------------|---------------|
+| View the Overview Report | -     | +          | -             |
+| View the Inbox Report    | -     | +          | +             |
+| View the Agent Report    | -     | +          | +             |
+| View the Label Report    | -     | +          | +             |
+| View the Team Report     | -     | +          | +             |
+| Download Reports         | -     | +          | +             |
+
+### Assistants
+
+| Actions                       | Agent | Supervisor | Administrator |
+|-------------------------------|-------|------------|---------------|
+| **Agent Copilot**                |       |            |               |
+| Activate Agent Copilot workspace | +     | +          | +             |
+| **Agent Copilot Bot**            |       |            |               |
+| Edit Agent Copilot Bot Settings  | +     | +          | +             |
+| Reset Session                 | +     | +          | +             |
+
+### Account and Profile Settings
+
+| Actions                               | Agent | Supervisor | Administrator  |
+|---------------------------------------|-------|------------|----------------|
+| Configure Account Settings            |   -   |     -      | +              |
+| Configure Profile Settings            |   +   |     +      | +              |
+
+## Assign Roles
+
+<a href="/release-notes/4.44"><Badge className="version-badge" color="blue">Updated in 4.44</Badge></a>
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+
+You can assign roles to human agent.
+
+To create an Agent with certain access rights, do the following steps:
+
+1. Create an Agent from the [Cognigy.AI Access Control](/ai/administer/access/admin-center/access-control).
+2. Assign one of the following roles to the Agent:
+    - `liveAgentAgent`
+    - `liveAgentSupervisor`
+    - `liveAgentAdmin` <br/>If you have an Admin role in Cognigy.AI, you do not need to add the Administrator role for your user because the Cognigy.AI role already includes the right to administer Live Agent.
+3. _(Optional)_ Add any additional roles the Agent should have. For example, if you already have a `liveAgentAgent` role, you can add a `liveAgentSupervisor` role to allow access to the Overview report.
+4. View the created user in Live Agent. Go to **Settings > Agents** in the Live Agent menu.
+
+To see the roles applied to the Agent, the specific Agent must log in once to have the roles applied.
+
+## Troubleshooting
+
+### Assigned Roles are not Applied
+
+If a human agent already has a specific role in Live Agent, assigned roles may not be applied.
+For example, if you want to assign a user with `Administrator` rights the role of `Supervisor`,
+the new role will only take effect once the user logs out of Cognigy.AI and Live Agent.
+After logging out and logging back in, the new roles should be applied successfully.
+
+## More Information
+
+- [Conversation Workflow](./conversation/overview)
+- [Account Settings](./settings/account-settings)
+
+---
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote1">1</sup> This permission is granted on the Cognigy.AI side.
+</span>
+<br />
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote2">2</sup> By default, human agents cannot request files from users. To enable this feature, you need to install the [File Upload](https://github.com/Cognigy/WebchatPlugins/tree/master/plugins/file-upload) plugin in the [Webchat Endpoint](/webchat/v2/configuration).
+</span>
+<br />
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote3">3</sup> Users with the Agent role can create canned responses for their own usage, edit, and delete canned responses that they created.
+</span>
+<br />
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote4">4</sup> Users with the `Agent` role can assign conversations to the inboxes they have access to.
+</span>
+<br />

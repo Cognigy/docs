@@ -1,0 +1,148 @@
+---
+title: "Getting Started with Agent Copilot for Voice"
+sidebarTitle: "Voice"
+slug: "voice"
+keywords: ["voice", "voice agent copilot"]
+"seo":
+  {
+    "metatags":
+      {
+        "description": "In this getting started guide, you will learn how to configure your first Agent Copilot workspace for voice applications. This configuration integrates the Agent Copilot workspace into your contact center platform and includes two widgets for a next action suggestion and conversation transcript.",
+      },
+  }
+---
+
+import InitMessage from "/snippets/agent-copilot/init-message.mdx";
+
+In this guide, you will learn how to configure your first embedded Agent Copilot workspace for a voice AI Agent. This configuration provides an Agent Copilot workspace that includes two widgets:
+
+- A [Copilot: Next Action Tile Node](/ai/agents/develop/node-reference/agent-copilot/next-action-tile) that suggests a next action to the human agent.
+- A [Copilot: Transcript Tile Node](/ai/agents/develop/node-reference/agent-copilot/transcript-tile) that displays the conversation transcript to the human agent.
+
+## Prerequisites
+
+- Access to [Voice Gateway](/voice-gateway/index).
+- Configure a speech provider in [Cognigy.AI](/ai/agents/test/voice-preview#set-up-a-speech-provider) and the [Voice Gateway Self-Service Portal](/voice-gateway/webapp/speech-services).
+- Configure the [phone number](/voice-gateway/webapp/phone-numbers) you use in your contact center in the Voice Gateway Self-Service Portal.
+- Configure a contact center platform that supports voice calls, for example, [Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging), and can integrate with a [handover provider](/ai/escalate/handover-reference/overview.mdx).
+- Add a [compatible LLM](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) for the LLM Prompt Node.
+
+## Setup Process
+
+1. Create a handover provider. The handover provider connects the AI Agent to your contact center platform.
+2. Create an Agent Copilot Flow. The Agent Copilot configures the Agent Copilot workspace and the individual widgets.
+3. Create a Voice Copilot Endpoint. The Voice Copilot Endpoint receives the transcript of the voice call and sends it to the Agent Copilot workspace.
+4. Create a Transfer Flow. The Transfer Flow configures the user interaction with the AI Agent and the handover to a human agent.
+5. Create a Voice Gateway Endpoint. The Voice Gateway Endpoint connects the AI Agent to Voice Gateway.
+6. Create an [application](/voice-gateway/webapp/applications) in the Voice Gateway Self-Service Portal. The Voice Gateway application connects your contact center phone number to the Voice Gateway Endpoint.
+7. Test the Agent Copilot workspace by calling the phone number you configured in the Voice Gateway application.
+
+## Set Up Agent Copilot for Voice
+
+<Steps>
+  <Step title="Create a Handover Provider">
+    In **Deploy > Handover Providers**, create a [handover provider](/ai/escalate/handovers) according to your contact center platform. Depending on the platform, you may need to configure different settings for the Transfer Flow.
+  </Step>
+  <Step title="Create an Agent Copilot Flow">
+    1. In **Build > Flows**, create a [Flow](/ai/agents/develop/projects-and-flows/overview) and give it a clear name, for example, `Agent Copilot`.
+    2. Add a [Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid) and set the grid as follows:
+
+        ```json
+        {
+          "grid": {
+            "columns": 2,
+            "rows": 2,
+            "gap": 5
+          },
+          "tiles": {
+            "next-action": {
+              "x": 1,
+              "y": 1,
+              "rows": 1,
+              "columns": 1
+            },
+            "transcript": {
+              "x": 1,
+              "y": 2,
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        }
+        ```
+
+    3. After the Copilot: Set Grid Node, add an [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt). Configure it to generate the next best response for the agent based on the user’s latest input and to store the result in the Input object:
+        - **System Prompt** — enter the following:
+          ```txt
+          Based on the user's last message, suggest the most helpful next response for a human agent.
+          ```
+        - In the **Storage & Streaming** section, configure the following:
+          - **How to handle the result** — set to **Store in Input**.
+          - **Input Key to store Result** — set to `input.promptResult`.
+    4. Add the following Agent Copilot Nodes after the LLM Prompt Node and configure them as follows:
+        - **[Copilot: Next Action Tile Node](/ai/agents/develop/node-reference/agent-copilot/next-action-tile)**:
+          - **Tile ID** — `next-action`
+          - **Text**:
+          ```txt
+          {{input.promptResult.detailedResult.choices[0].message.content}}
+          ```
+          This expression dynamically retrieves the LLM-generated suggestion for the widget.
+        - **[Copilot: Transcript Tile Node](/ai/agents/develop/node-reference/agent-copilot/transcript-tile)**:
+          - **Tile ID** — `transcript`
+  </Step>
+  <Step title="Create a Voice Copilot Endpoint">
+    1. In **Deploy > Endpoints**, click **+ New Endpoint** and select **Voice Copilot**.
+    2. In the **New Endpoint** section, configure the following:
+        - **Name** — enter a unique name, for example, `Voice Agent Copilot Endpoint`.
+        - **Flow** — select the Agent Copilot Flow you created from the list.
+    3. Copy the Endpoint URL for later use in the Transfer Flow and save the changes.
+  </Step>
+  <Step title="Create a Transfer Flow">
+    1. In **Build > Flows**, create a [Flow](/ai/agents/develop/projects-and-flows/overview) and give it a clear name, for example, `Transfer`.
+    2. In the Flow editor, add a [Say Node](/ai/agents/develop/node-reference/basic/say) and set its **Text** parameter to `Hi, I'll transfer you to the humans.`.
+    3. Add a [Transfer Node](/ai/agents/develop/node-reference/voice/voice-gateway/transfer) and configure the following:
+        - **Transfer Type** — select `Dial`.
+        - **Transfer** — enter the phone number to redirect the call to a human agent. For testing purposes, use a phone number you have access to.
+        - Activate the **Enable Copilot** toggle.
+        - Enter the **Copilot Headers Key**. The key is provider-dependent. For example, for [Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging), the key is `User-to-User`.
+        - In the **Transcribe** section, enter the Voice Copilot Endpoint URL you copied from the Voice Copilot Endpoint settings in **Transcription Webhook**.
+  </Step>
+  <Step title="Create a Voice Gateway Endpoint">
+    1. In **Deploy > Endpoints**, click **+ New Endpoint** and select **Voice Gateway**.
+    2. In the **New Endpoint** section, configure the following:
+        - **Name** — enter a unique name.
+        - **Flow** — select the Transfer Flow from the list, in this example, `Transfer`.
+    3. Copy the Endpoint URL for later use in the Voice Gateway application and save the changes.
+  </Step>
+  <Step title="Create a Voice Gateway Application">
+    1. In the Voice Gateway Self-Service Portal, click **Application** in the left-side menu, then **Add application**.
+    2. On the **Add an application** page, configure the following:
+        - **Application name** — enter a unique name, for example, `Voice App`.
+        - **Calling webhook** — enter the Endpoint URL you copied from the Voice Gateway Endpoint settings and make sure to select the **POST** in the **METHOD** field.
+        - **Call status webhook** — enter the Endpoint URL you copied from the Voice Gateway Endpoint settings and make sure to select the **POST** in the **METHOD** field.
+        - **Speech synthesis vendor** and **Speech recognizer vendor** — make sure you configure the same speech provider as configured in [Cognigy.AI](/ai/agents/test/voice-preview#set-up-a-speech-provider).
+    3. Click **Save**, then **Phone Numbers** in the left-side menu.
+    4. Select the phone number you use in your contact center.
+    5. In the **Application** field, select **Voice App** and save the changes.
+    
+    Your voice AI Agent can now receive calls and hand them over to a human agent with access to the Agent Copilot workspace.
+  </Step>
+  <Step title="Test Agent Copilot">
+    To test Agent Copilot, follow these steps:
+
+    1. Open your contact center platform and call the number you configured in the Voice Gateway Application.
+      The voice AI Agent answers the call and creates a session in the contact center platform.
+    2. Say something to the voice AI Agent, for example, `Thanks, I'll wait for the human agent.`. The AI Agent will transfer your call to the phone number you configured in the Transfer Flow.
+    3. Pick up the call from the phone number you configured in the Transfer Flow.
+       <InitMessage />
+    4. The Agent Copilot workspace displays a widget with the conversation transcript and a widget with the next action.
+    5. Say the next action text into the phone.
+  </Step>
+</Steps>
+
+## More Information
+
+- [Agent Copilot](/agent-copilot/overview)
+- [Agent Copilot for Chat](/agent-copilot/getting-started/chat)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Agent Copilot for Voice](/agent-copilot/getting-started/voice)

@@ -1,0 +1,77 @@
+---
+title: "Agent Copilot Configuration"
+slug: "configuration"
+hidden: false
+keywords: ['agent copilot configuration', 'agent copilot flows', 'agent copilot grids', 'contact center integration']
+"seo": {
+  "metatags": {
+    "description": "Learn how to configure Agent Copilot with an AI Agent, Voice Gateway, and contact center integration."
+  }
+}
+---
+
+import AiCopilotUrlPattern from '/snippets/agent-copilot/url-pattern.mdx'
+
+To integrate Agent Copilot with an AI Agent, you need to configure different components:
+
+- [Agent Copilot](#agent-copilot)
+- [Voice Gateway](#voice-gateway), for voice implementations.
+- [Contact center integration](#contact-center-integration)
+
+## Agent Copilot
+
+The Agent Copilot configuration includes:
+
+<AccordionGroup>
+  <Accordion title="Agent Copilot Flow">
+    The Agent Copilot Flow is a Flow separate from the AI Agent Flow to which you add Agent Copilot Nodes. The Copilot: Set Grid Node is required in this Flow to set the workspace arrangement on the contact center side and the widgets in the workspace. Other Agent Copilot Nodes provide functionality to the widgets in the workspace.
+  </Accordion>
+  <Accordion title="Agent Copilot Grid">
+    The Agent Copilot Grid is a JSON object you can configure in the [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid) that defines the layout of the Agent Copilot workspace. For more information, see [Configure the Workspace](/agent-copilot/configure/workspace).
+  </Accordion>
+  <Accordion title="Agent Copilot URL">
+    To view the Agent Copilot workspace in the contact center interface, configure the Agent Copilot URL. The workspace is rendered at this URL as soon as the handover is triggered.
+
+    To configure the URL, use the following format:
+
+    <AiCopilotUrlPattern />
+
+    You need this URL for further steps in the [Deployment section](/agent-copilot/deploy/overview) where you choose how you want to deploy your Agent Copilot workspace.
+  </Accordion>
+</AccordionGroup>
+
+## Voice Gateway
+
+For voice implementations, you need to configure:
+
+<AccordionGroup>
+  <Accordion title="Voice Gateway Endpoint">
+    Set up a [Voice Gateway Endpoint](/ai/agents/deploy/endpoint-reference/voice-gateway) and [application](/voice-gateway/webapp/applications) to connect the AI Agent to Voice Gateway, and Voice Gateway to the contact center.
+  </Accordion>
+  <Accordion title="Voice Copilot Endpoint">
+    The [Voice Copilot Endpoint](/ai/agents/deploy/endpoint-reference/voice-copilot) receives the transcript of the voice call and sends it to the Agent Copilot Flow.
+  </Accordion>
+</AccordionGroup>
+
+## Contact Center Integration
+
+There are two ways to integrate Agent Copilot with a contact center:
+
+<AccordionGroup>
+  <Accordion title="Handover to Human Agents">
+    For chat applications, you need to configure the handover to human agents by adding a [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent) to the AI Agent Flow.
+  </Accordion>
+  <Accordion title="Call Transfer to Human Agents">
+    To transfer calls from the AI Agent to human agents, you need to configure the call transfer by adding a [Transfer Node](/ai/agents/develop/node-reference/voice/voice-gateway/transfer) to the AI Agent Flow.
+  </Accordion>
+</AccordionGroup>
+
+Both implementations require a [handover provider](/ai/escalate/handover-reference/overview) that supports the contact center platform you use.
+
+## More Information
+
+- [Agent Copilot Workspace](/agent-copilot/overview)
+- [Getting started with Agent Copilot for Chat](/agent-copilot/getting-started/chat)
+- [Getting started with Agent Copilot for Voice-to-Chat](/agent-copilot/getting-started/voice-to-chat)
+- [Getting started with Agent Copilot for Voice](/agent-copilot/getting-started/voice)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)

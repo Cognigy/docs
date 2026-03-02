@@ -1,0 +1,26 @@
+### Secure Access with JWT
+
+You can secure {deployment_type} access to Agent Copilot by passing a JWT in the URL. This approach ensures that only authenticated users can open the Agent Copilot workspace.
+
+```txt
+https://${AgentCopilotBaseUrl}/?userId=${userId}&sessionId=${sessionId}&URLToken=${URLToken}&auth={JWT}
+```
+
+Where `auth` is the JWT used for authentication.
+
+For the authentication to work, the contact center and Cognigy.AI need to share a 256-bit long JWT secret that is used by the Agent Copilot backend.
+
+The contact center integration needs to proceed as follows:
+
+1. Creates values for `userId` and `sessionId`.
+2. Uses `URLToken` from the respective Cognigy.AI Endpoint.
+3. Reads the JWT secret from an internal storage.
+4. Signs a JWT with payload containing the `userId` and `sessionId`.
+
+The Agent Copilot backend proceeds as follows:
+
+1. Checks if the `auth` parameter is passed in the URL.
+2. If `auth` is passed, the value is treated as a JWT and the Agent Copilot backend verifies the JWT signature.
+3. During the verification of the JWT signature, Agent Copilot decodes the payload of the JWT to retrieve the `userId`, `sessionId`, and `URLToken` parameters.
+
+For more information about JWTs, read the [JWT documentation](https://www.jwt.io/introduction).

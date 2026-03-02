@@ -1,0 +1,50 @@
+---
+title: Resolve Tool Action
+keywords: ['resolve tool action', 'tool response', 'tool call response']
+seo:
+  metatags:
+    description: >-
+      The Resolve Tool Action Node sends a response to a tool call to the AI
+      Agent after completing a tool action.
+---
+
+<a href="/release-notes/2026.4"><Badge className="version-badge" color="blue">Updated in 2026.4</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/ai/resolve-tool-action.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Resolve Tool Action Node sends an answer as the response to a tool call to the AI Agent after completing a [tool](/ai/agents/develop/node-reference/ai/ai-agent).
+
+When the AI Agent calls a tool to perform an action, the tool is executed. Once the action is completed, the Resolve Tool Action Node sends a response back to the AI Agent, indicating the result of that action. This approach helps the AI Agent process and make decisions based on the results of the tools' actions.
+
+### Restrictions
+
+- When using an [Execute Flow Node](/ai/agents/develop/node-reference/logic/execute-flow) with a Resolve Tool Action Node, consider the following: The Resolve Tool Action Node returns the interaction to the tool's AI Agent or LLM Prompt Node. That Node doesn't preserve the execution order determined by the Execute Flow Node. If the Resolve Tool Action Node is executed in a Flow after an Execute Flow Node, use a [Go To Node](/ai/agents/develop/node-reference/logic/go-to) after the Default child Node of that AI Agent or LLM Prompt Node to switch back to the original Flow.
+
+## Parameters
+
+| Parameter   | Type          | Description                                                                                                                                      |
+|-------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| Answer Text | CognigyScript | Specify the text that is sent to the AI Agent in response to the tool call to inform about the success, failure, or other details of the tool.   |
+
+### Debug Settings
+
+| Parameter     | Type   | Description                                                                     |
+|---------------|--------|---------------------------------------------------------------------------------|
+| Debug Message | Toggle | Enable sending a debug message that displays the tool name and the answer text. |
+
+### Advanced
+
+| Parameter | Type   | Description                                                                                         |
+|-----------|--------|-----------------------------------------------------------------------------------------------------|
+| Maximum Loops | Slider | The maximum number of times an AI Agent can loop back to continue processing after completing a tool action. The parameter allows the AI Agent to perform multi-step reasoning or use multiple tools in sequence while preventing infinite loops that could waste resources or slow down responses. <br/> Each Resolve Tool Action Node tracks its own loop count. When the maximum is reached, the AI Agent stops and displays an `Infinite Loop Detected` error. The default value is `4`, and the maximum value is `50`. Adjust the value based on the use case complexity:<ul><li>**1–4** – for tasks where the AI Agent only needs to call one tool or complete a single step. The default is usually sufficient.</li><li>**5–15** – for tasks that require the AI Agent to call multiple tools in sequence or perform several reasoning steps to reach a result.</li><li>**15–50** – for tasks where the AI Agent must plan and execute long sequences of actions, make decisions, or handle highly complex reasoning. Higher loop numbers let the AI Agent do more work but make it slower and use more resources, so only raise it when necessary.</li></ul>|
+
+
+## More Information
+
+- [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent)
+- [AI Agent Handover](/ai/agents/develop/node-reference/ai/ai-agent-handover)
+- [Agentic AI](/ai/agents/overview)

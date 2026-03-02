@@ -1,0 +1,45 @@
+---
+title: xApp Nodes
+hidden: false
+---
+
+import AiXappPricing from '/snippets/ai/xApp/pricing.mdx'
+
+<AiXappPricing/>
+
+The xApp Flow Nodes allow creating xApps, flexible micro-web applications for customer self-service. You can build the actual xApp pages by yourself in various ways, for example, by providing HTML code or by specifying an Adaptive Card in JSON format.
+
+Cognigy.AI supports the following Nodes:
+
+<CardGroup cols={3}>
+  <Card
+    title="xApp: Init Session"
+    href="/ai/agents/develop/node-reference/xApp/init-xApp-session"
+  >
+    This Node initializes a new xApp session.
+  </Card>
+  <Card
+    title="xApp: Get Session PIN"
+    href="/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN"
+  >
+    This Node generates a new xApp session PIN. You can access it using the [xApp: Get Session PIN](/xApps/tokens#xapp-session-pin) token or via `input.apps.session.pin`.
+  </Card>
+  <Card
+    title="xApp: Show Adaptive Card"
+    href="/ai/agents/develop/node-reference/xApp/set-AdaptiveCard-xApp-state"
+  >
+    This Node builds an xApp page by providing an Adaptive Card in JSON format.
+  </Card>
+  <Card
+    title="xApp: Show HTML"
+    href="/ai/agents/develop/node-reference/xApp/set-html-xApp-state"
+  >
+    This Node builds an xApp page by providing custom HTML code.
+  </Card>
+</CardGroup>
+
+## More Information
+
+- [xApps](/xApps/overview)
+- [xApp Tokens](/xApps/tokens)
+- [xApp Flow API](/xApps/api)

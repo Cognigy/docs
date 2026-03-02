@@ -1,0 +1,43 @@
+---
+title: "Embedded Agent Copilot"
+sidebarTitle: "Embedded"
+keywords: ["agent copilot", "embedded"]
+seo:
+  title: "Embedded Agent Copilot"
+  description: "You can embed Agent Copilot directly into your contact center interface."
+---
+
+import JWTAuth from '/snippets/agent-copilot/jwt-auth.mdx';
+
+You can embed Agent Copilot directly into your contact center interface.
+
+In this mode, Copilot runs inside the agent workspace, allowing agents to interact with AI assistance without leaving their primary contact center application. This option is useful if you want to provide a seamless in-app experience and reduce context switching for agents.
+
+All features remain available, including real-time guidance, transcript sharing, and support for both chat and voice use cases.
+
+## How to Use
+
+1. Make sure you configured an Agent Copilot URL using the following pattern: `https://${AgentCopilotBaseUrl}/?userId=${userId}&sessionId=${sessionId}&URLToken=${URLToken}`. For the configuration details, refer to the [Agent Copilot URL](/agent-copilot/configure/overview#agent-copilot-url) section.
+2. Pass this URL along with the handover to the human agent:
+
+   - For native integrations, the embedded version is supported automatically.
+   - For custom integrations, include the link in your handover configuration and embed it via **iFrame**:
+
+    ```html
+    <iframe src="https://copilot.example.com/?userId=12345&sessionId=abcde-67890&URLToken=f38791ae20d4961acf0e97d9f377c4fe3df92894e1eff1c7a774a8ed089a4590"
+            width="100%"
+            height="800px"
+            frameborder="0">
+    </iframe>
+    ```
+3. If you are using a **voice use case**, check the **Transfer Node** in your Flow and ensure the **UUIValue** is forwarded via SIP headers during the transfer to the human agent.
+
+<JWTAuth deployment_type="embedded" />
+
+## More Information
+
+- [Agent Copilot](/agent-copilot/overview)
+- [Getting started with Agent Copilot](/agent-copilot/getting-started/chat)
+- [Agent Copilot Configuration](/agent-copilot/configure/overview)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Integration with Contact Centers](/agent-copilot/configure/overview)

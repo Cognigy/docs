@@ -1,0 +1,100 @@
+---
+title: Logic
+sidebarTitle: Logic Nodes
+hidden: false
+---
+
+Logic Nodes allow you to customize your Flow's behavior. You can use them to control which parts of the Flow should run based on conditions or integrate with other Flows.
+
+<CardGroup cols={3}>
+  <Card
+    title="Add To Context"
+    href="/ai/agents/develop/node-reference/logic/add-to-context"
+  >
+    Use the Add To Context Node to store information in the [Context](/ai/agents/develop/ai-agent-memory/context) object and use this information throughout the session.
+  </Card>
+  <Card
+    title="Execute Flow"
+    href="/ai/agents/develop/node-reference/logic/execute-flow"
+  >
+    Use the Execute Flow Node to execute another Flow and return to the initial Flow afterward.
+  </Card>
+  <Card
+    title="Go To"
+    href="/ai/agents/develop/node-reference/logic/go-to"
+  >
+    Use the Go To Node to switch between Flows or between Nodes.
+  </Card>
+  <Card
+    title="If"
+    href="/ai/agents/develop/node-reference/logic/if"
+  >
+    The If Node evaluates a condition statement and triggers either the Then or Else child Nodes.
+  </Card>
+  <Card
+    title="Interval"
+    href="/ai/agents/develop/node-reference/logic/interval"
+  >
+    Use the Interval Node to add a minimal interval before other Nodes are executed.
+  </Card>
+  <Card
+    title="Lookup"
+    href="/ai/agents/develop/node-reference/logic/lookup"
+  >
+    The Lookup Node acts as a switch between different options. Based on the input value, the Node executes one of the options.
+  </Card>
+  <Card
+    title="Once"
+    href="/ai/agents/develop/node-reference/logic/once"
+  >
+    Once Nodes limit the Flow execution after them to once per session, for example, for greetings or database requests.
+  </Card>
+  <Card
+    title="Remove From Context"
+    href="/ai/agents/develop/node-reference/logic/remove-from-context"
+  >
+    The Remove From Context Node removes information from the [Context](/ai/agents/develop/ai-agent-memory/context) object.
+  </Card>
+  <Card
+    title="Set State"
+    href="/ai/agents/develop/node-reference/logic/set-state"
+  >
+    The Set State Node changes the Flow's [State](/ai/agents/test/interaction-panel/state).
+  </Card>
+  <Card
+    title="Reset State"
+    href="/ai/agents/develop/node-reference/logic/reset-state"
+  >
+    The Reset State Node resets the Flow's [State](/ai/agents/test/interaction-panel/state).
+  </Card>
+  <Card
+    title="Sleep"
+    href="/ai/agents/develop/node-reference/logic/sleep"
+  >
+    The Sleep Node pauses the Flow execution for a period you define.
+  </Card>
+  <Card
+    title="Stop and Return"
+    href="/ai/agents/develop/node-reference/logic/stop-and-return"
+  >
+    The Stop and Return Node stops the Flow execution and returns to the Start Node.
+  </Card>
+  <Card
+    title="Switch Locale"
+    href="/ai/agents/develop/node-reference/logic/switch-locale"
+  >
+    The Switch Locale Node changes [Locales](/ai/platform-features/translation-and-localization/localization) during a conversation, for example, based on language detection or user region.
+  </Card>
+  <Card
+    title="Think"
+    href="/ai/agents/develop/node-reference/logic/think"
+  >
+    Use the Think Node to inject a text into the Start Node, for example, to restart the Flow, with specific data, text, or Intent.
+  </Card>
+  <Card
+    title="Wait for Input"
+    href="/ai/agents/develop/node-reference/logic/wait-for-input"
+  >
+    The Wait for Input Node halts the Flow execution until the user input is received.
+  </Card>
+</CardGroup>

@@ -1,0 +1,1240 @@
+---
+title: "API Functions"
+keywords: ['actions', 'api functions', 'api', 'code node', 'cognigy.ai actions', 'cognigy api functions']
+seo:
+  metatags:
+    description: "In a Code Node, you can use the functions of the api classes. These functions are also available in Extension Nodes. For example, you can use the api object to execute `api.say()`."
+---
+
+<a href="/release-notes/2025.24"><Badge className="version-badge" color="blue">Updated in 2025.24</Badge></a>
+
+In a Code Node, you can use the functions of the `api` classes. These functions are also available in Extension Nodes. For example, you can use the `api` object to execute `api.say()`.
+
+<Note>
+    Previously, you could use both `actions` and `api`. Now, only `api` is supported. Use `api` functions for all implementations.
+</Note>
+
+## CognigyScript
+
+Use these functions to parse and evaluate CognigyScript expressions in text or conditions at run-time.
+
+<AccordionGroup>
+    <Accordion title="api.parseCognigyScript">
+
+    Parses CognigyScript text or conditions.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|---------|----------------------------------------------------------------|
+    | text | string | The text containing CognigyScript expressions. |
+    | condition | boolean | The CognigyScript condition to evaluate. |
+
+    **Returns**
+
+    `string`
+
+    **Example**
+
+    ```js
+    // Parse CognigyScript as text
+    const parsedText = api.parseCognigyScript(
+    "Hello {{cc.text}}, welcome!",
+    false
+    );
+    api.say(parsedText);
+
+    // Parse CognigyScript as a condition
+    const parsedCondition = api.parseCognigyScript(
+    "{{input.currentTime.year > 2024}}",
+    true
+    );
+
+    if (parsedCondition === "true") {
+    api.say("Condition is true");
+    } else {
+    api.say("Condition is false");
+    }
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.parseCognigyScriptCondition">
+
+    Evaluates a CognigyScript expression and returns a `true` or `false` value.
+
+    CognigyScript allows you to embed expressions like `{{context.value > 5}}` within strings. This function extracts and evaluates such an expression, used in logic checks for Flows, conditions, or custom functions.
+
+    This function is useful for dynamically checking conditions at run-time based on session data and information from the Input, Context, or Profile objects.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|------------------------------------------|
+    | condition | string | The CognigyScript condition to evaluate. |
+
+    **Returns**
+
+    `string`
+
+    **Example**
+
+    ```js
+    const parseCognigyScriptCondition = api.parseCognigyScriptCondition(
+    "{{input.currentTime.year > 2024}}"
+    );
+
+    api.say(`${parseCognigyScriptCondition}`);
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.parseCognigyScriptText">
+
+    Parses and renders a text string containing CognigyScript expressions. Each CognigyScript expression, for example, `{{cc.userName}}`, is evaluated using the current execution context.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|--------------------------------------|
+    | text | string | The text containing CognigyScript expressions.|
+
+    **Returns**
+
+    `string`
+
+    **Example**
+
+    ```js
+    const output = api.parseCognigyScriptText("Hello {{cc.text}}, welcome to {{cc.city}}!");
+    api.say(`The current state is: ${output}`);
+    ```
+
+
+    </Accordion>
+</AccordionGroup>
+
+## Contact Profiles
+
+Use these functions to activate, deactivate, delete, merge, and update Contact Profiles during a conversation.
+
+<AccordionGroup>
+    <Accordion title="api.activateProfile">
+
+    Activates the Contact Profile.
+    Call this function to reactivate read and write operations on a previously deactivated Contact Profile.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Reactivate a previously deactivated Profile
+    api.activateProfile();
+    ```
+
+    </Accordion>
+    <Accordion title="api.addContactMemory">
+
+    Adds an entry to the `memories` array of the [Profile](/ai/agents/develop/ai-agent-memory/profile) object.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|------------------------------------|
+    | memory | string | The text to add as a new entry in the `memories` array of the Profile object.|
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.addContactMemory("ppl");
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.deactivateProfile">
+
+    Deactivates the Contact Profile. While the Contact Profile is deactivated, no data can be read from or written to the Contact Profile.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Deactivate a Contact Profile
+    api.deactivateProfile();
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.deleteProfile">
+
+    Permanently deletes the Contact Profile from the system.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Delete the Contact Profile
+    api.deleteProfile();
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.mergeProfile">
+
+    Merges the current Contact Profile with another one.
+    This function is useful for combining duplicate Contact Profiles or moving data between users.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|------------------------------------------------------------------------------------|
+    | contactId | string | The ID of the Contact Profile to merge into. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.mergeProfile("c-89374201a7bd5a9e4");
+    ```
+    </Accordion>
+
+    <Accordion title="api.updateProfile">
+
+    Updates a value in the current Contact Profile.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    | --------- | -------- | ---------------------------------------------- |
+    | key | string | The key of the Contact Profile field to update.|
+    | value | any | The value to set for the specified key. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Update the 'email' field of the current Contact Profile
+    api.updateProfile("email", "user@example.com");
+
+    // Update a custom string field
+    api.updateProfile("subscriptionStatus", "active");
+
+    // Update a numeric field
+    api.updateProfile("loyaltyPoints", 120);
+
+    // Update a boolean field
+    api.updateProfile("marketingConsent", true);
+    ```
+
+    </Accordion>
+
+</AccordionGroup>
+
+## Context Object
+
+Use these functions to read, write, and reset the Context object so you can store and manipulate conversation-scoped data across Nodes.
+
+<AccordionGroup>
+    <Accordion title="api.addToContext">
+
+    Adds a value to the Context object, either replacing an existing value or appending to it as an array.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------------------|------------------------------------------------------------------------------------------------------|
+    | key | string | The key to add to the Context object. |
+    | value | any | The value to assign to the key. |
+    | mode | string | Determines how the value is added: <ul><li>`"simple"` – replaces any existing value.</li><li>`"array"` – appends to the existing value as an array.</li></ul> |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```javascript
+    // Simple mode: replaces existing value
+    api.addToContext("user.city", "Berlin", "simple");
+    // Context: { user: { city: "Berlin" } }
+
+    api.addToContext("user.city", "Munich", "simple");
+    // Context: { user: { city: "Munich" } }
+
+    // Array mode: appends to an array
+    api.addToContext("user.purchases", "book", "array");
+    // Context: { user: { purchases: ["book"] } }
+
+    api.addToContext("user.purchases", "laptop", "array");
+    api.addToContext("user.purchases", "coffee", "array");
+    // Context: { user: { purchases: ["book", "laptop", "coffee"] } }
+    ```
+    </Accordion>
+
+    <Accordion title="api.deleteContext">
+
+    Deletes the key and its value from the Context object.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|---------------------------------------------------|
+    | key | string | The key in the Context object to remove. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.deleteContext("user.city");
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.getContext">
+
+    Retrieves data from the specified key in the Context object.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|----------------------------------------------|
+    | key | string | The key to retrieve the data from the Context object. |
+
+    **Returns**
+
+    `any`: The requested context data.
+
+    **Example**
+
+    ```js
+    api.getContext("user.profile.name");
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.getConversationTranscript">
+
+    Retrieves the current conversation transcript, including the last 10 user inputs and the associated outputs from the AI Agent.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    | ------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | mode | string | This parameter is optional. Specifies the format of the returned transcript: <ul><li>`"string"` – returns a plain text version of the conversation.</li><li>`"json"` – returns a structured array of message objects. This format is used by default.</li></ul> |
+    | options | object | This parameter is optional. An object to configure the retrieved transcript data. |
+    | options.turnLimit | number | This parameter is optional. Limits the transcript to the most recent N conversational turns. If the parameter is omitted, the full transcript is returned. |
+
+    **Returns**
+
+    Either the JSON array of conversation entries or the string representation.
+
+    JSON:
+
+    ```json
+    [
+        { "source":"user", "text":"hello" },
+        { "source":"bot", "text":"You said: hello" },
+        { "source":"user", "text":"you are an ai agent" },
+        { "source":"bot", "text":"You said: you are an ai agent" },
+        { "source":"user", "text":"show transcript" }
+    ]
+    ```
+
+    String:
+
+    ```text
+    - USER: hello
+    - BOT: You said: hello
+    - USER: you are an ai agent
+    - BOT: You said: you are an ai agent
+    - USER: show transcript
+    ```
+
+    **Example**
+
+    JSON:
+
+    ```js
+    // Get the transcript
+    const transcriptJson = api.getConversationTranscript({ turnLimit: 5 });
+
+    // Convert the JSON array to a string
+    const transcriptJsonPrint= JSON.stringify(transcriptJson, null, 2);
+
+    // Send it to the user
+    api.say(transcriptJsonPrint);
+    ```
+
+    String:
+
+    ```js
+    // Get the transcript
+    const transcriptString = api.getConversationTranscript("string", { turnLimit: 1 });
+
+    // Send it to the user
+    api.say(transcriptString);
+    ```
+    </Accordion>
+
+    <Accordion title="api.removeFromContext">
+
+    Removes information from the Context object either by deleting a key entirely or by removing specific entries from an array stored at that key.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|---------------------------------------------------------------------------------------------------------------------|
+    | key | string | The key in the Context object to remove information from. |
+    | value | any | The value to remove when using `"array"` mode. Ignored in `"simple"` mode. |
+    | mode | string | Determines how the removal is performed: <ul><li>`"simple"` – removes the key entirely.</li><li>`"array"` – removes only matching values from an array.</li></ul> |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Simple mode: remove the entire key
+    api.removeFromContext("user.city", null, "simple");
+    // Context: { user: { city: undefined } }
+
+    // Array mode: remove specific values from an array
+    api.addToContext("user.purchases", "book", "array");
+    api.addToContext("user.purchases", "laptop", "array");
+    api.addToContext("user.purchases", "coffee", "array");
+
+    // Remove "laptop" from the purchases array
+    api.removeFromContext("user.purchases", "laptop", "array");
+    // Context: { user: { purchases: ["book", "coffee"] } }
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.resetContext">
+
+    Resets the Context object for the current conversation. All keys and values added during the conversation are removed.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Remove all context data added during the conversation
+    api.resetContext();
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.setContext">
+
+    Sets the value for a specific key in the Context object, replacing any existing value.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|--------------------------------------------|
+    | key | string | The key in the Context object to set. |
+    | value | any | The value to set for the key. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.setContext("user.city", "Berlin");
+    ```
+    </Accordion>
+</AccordionGroup>
+
+## Encoding and Decoding
+
+Use these functions to handle string encoding and decoding, such as converting text to Base64 for safe transmission or decoding Base64 strings back to UTF-8.
+
+<AccordionGroup>
+   <Accordion title="api.base64Decode">
+
+       Base64 decodes a given string.
+
+       **Parameters**
+
+       | Parameter | Type     | Description               |
+       |-----------|----------|---------------------------|
+       | data      | string   | The string to be decoded. |
+
+       **Returns**
+
+       `string`: The decoded string as UTF-8.
+
+       **Example**
+
+        ```js
+        const decoded = api.base64Decode("SGVsbG8sIFdvcmxkIQ==");
+        api.say(`Decoded string: ${decoded}`);
+        // Output: "Hello, World!"
+        ```
+   </Accordion>
+
+   <Accordion title="api.base64Encode">
+
+    Base64 encodes a given string.
+
+    **Parameters**
+
+    | Parameter | Type     | Description               |
+    |-----------|----------|---------------------------|
+    | data      | string   | The string to be encoded. |
+
+    **Returns**
+
+    `string`: The base64 encoded string.
+
+    **Example**
+
+    ```js
+    const encoded = api.base64Encode("Hello, World!");
+    api.say(`Encoded string: ${encoded}`);
+    // Output: "SGVsbG8sIFdvcmxkIQ=="
+    ```
+   </Accordion>
+</AccordionGroup>
+
+## Execution Control
+
+Use these functions to control Flow execution, including adding conditional Entrypoints, jumping to specific Nodes or Flows, resetting overrides, stopping execution, and simulating new inputs.
+
+<AccordionGroup>
+    <Accordion title="api.addConditionalEntrypoint">
+
+    Adds a conditional Entrypoint for the current conversation.
+
+    If `{condition}` is met within the next `{retentionTime}` inputs, Flow execution starts at `{entrypoint}`.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|--------------------------------------------------|
+    | entrypoint | string | The ID of the Node to execute when the condition evaluates to `true`. |
+    | retentionTime | number | The number of times this conditional Entrypoint can trigger before it is automatically removed. |
+    | condition | string | A string expression evaluated. For example, `input.text.includes('@')` checks if the user input contains `@`.|
+
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.addConditionalEntrypoint({
+    entrypoint: "c40c50f3-2f51-422c-8a3e-748e7cc92ed0",
+    retentionTime: 2,
+    condition: "input.text.includes('@')"
+    });
+    ```
+
+
+    </Accordion>
+
+
+   <Accordion title="api.resetNextNodes">
+
+   Clears any active overrides for the next Node in the Flow.
+
+   This function is useful when you've changed the next Node using the `api.setNextNode` function, and you want to return to the default Flow behavior.
+
+   **Parameters**
+
+   None
+
+   **Returns**
+
+   `void`
+
+   **Example**
+
+   ```js
+   // Imagine you previously used api.setNextNode("fallback-node") to redirect the Flow.
+   // Now, you want to clear that override so the Flow continues as originally defined.
+
+   api.resetNextNodes();
+   ```
+
+    </Accordion>
+
+    <Accordion title="api.setNextNode">
+
+    Sets the Node with the given `nodeId` to be executed immediately after the current one.
+    This function is used by If and Lookup Nodes to select child Nodes based on their configuration.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|-------------------------------------------------------|
+    | nodeId | string | The ID of the Node to execute next. |
+    | newFlowId | string | The ID of the Flow containing the target Node. This parameter is optional and is required if the target Node is in a different Flow. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // The current Node is executing inside a Flow, and you want to control which Node should be executed next based on some logic.
+    // In this example, the execution will jump to a Node with the nodeId "c4c5c267-55d8-44ae-a123-f351d237f496" immediately after the current Node finishes.
+
+    api.setNextNode("c4c5c267-55d8-44ae-a123-f351d237f496");
+
+    // To continue the conversation in a different Flow after the current Node, specify both the target nodeId and the flowId.
+    // The Node with nodeId "c4c5c267-55d8-44ae-a123-f351d237f496" must be marked as an Entrypoint in the target Flow with flowId "67f511b11acdc139f91946b8".
+    // Execution will jump directly to that Node after the current one finishes.
+
+    api.setNextNode("c4c5c267-55d8-44ae-a123-f351d237f496", "67f511b11acdc139f91946b8");
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.stopExecution">
+
+    Stops the execution of the Flow.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.stopExecution();
+    ```
+    </Accordion>
+
+    <Accordion title="api.thinkV2">
+
+    Restarts Flow execution with a simulated input using the provided text and data.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|-----------------------------------------------------------|
+    | text | string | A simulated input text |
+    | data | object | A simulated input data object with optional fields and additional keys |
+
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.thinkV2( "Hello, how's the weather?", { location: "Berlin", units: "Celsius" });
+    ```
+
+    </Accordion>
+</AccordionGroup>
+
+## Input and Output
+
+Use these functions to enrich the Input object and send text or data responses to the user from a Code or Extension Node.
+
+<AccordionGroup>
+    <Accordion title="api.addToInput">
+
+    Adds a key-value pair to the Input object.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|------------------------------------------|
+    | key | string | The key to add to the Input object. |
+    | value | string | The value to assign to the key. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.addToInput("username", "John Doe");
+    ```
+    </Accordion>
+
+    <Accordion title="api.output / api.say">
+
+    Executes a basic output to the contact, similar to the Say Node.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|----------------------------------------------|
+    | text | string | The output text that is sent to the user. |
+    | data | any | The output data that is sent to the user. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Send text with additional data
+    api.say("Hello, this is a message from the Code Node!", { customData: 123 });
+
+    // `api.output` is an alias of `api.say`
+    api.output("Hello, this is a message from the Code Node!", { customData: 123 });
+    ```
+    </Accordion>
+</AccordionGroup>
+
+## Logging and Monitoring
+
+Use these functions to write Project logs, send debug messages, inspect LLM token usage, track analytics steps, and configure sensitive logging behavior.
+
+<AccordionGroup>
+    <Accordion title="api.completeGoal">
+
+        Completes the task. The information that the task has been completed is recorded and is available in Cognigy Insights and the Cognigy.AI OData endpoint.
+
+        **Parameters**
+
+        | Parameter | Type | Description |
+        |-----------|--------|----------------------------------------------------------------------|
+        | name | string | The name of the task. |
+
+        **Returns**
+
+        `void`
+
+        **Example**
+
+        ```js
+        api.completeGoal("Order Pizza");
+        ```
+    </Accordion>
+
+    <Accordion title="api.emitToOpsCenter">
+
+        Forwards an error to the Ops Center Error page. Automatically sets the component to `Flow` and the subcomponent to `FlowNodeExecution`.
+
+
+        **Parameters**
+
+        | Parameter | Type   | Description                                  |
+        |-----------|--------|----------------------------------------------|
+        | title     | string | The title of the error to log.               |
+        | projectId | string | The ID of the Project where the error occurs.|
+
+        **Returns**
+
+        `void`
+
+        **Example**
+
+        ```js
+        api.emitToOpsCenter({
+            projectId: "6874becb018c552bc267cc51",
+            title: "Something went wrong",
+        });
+        ```
+    </Accordion>
+
+    <Accordion title="api.getLLMTokenUsageForSession">
+
+    Retrieves the LLM token usage information for the current session.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    ```json
+    {
+        "llmDisplayName": string,
+        "providerType": string,
+        "modelType": string,
+        "usage": {
+        "inputTokens": number,
+        "outputTokens": number
+        }
+    }
+    ```
+
+    **Example**
+
+    ```js
+    api.getLLMTokenUsageForSession();
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.log">
+
+    Writes a message to the Project logs.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    | --------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | level | string | The log level. Cognigy.AI includes the following log levels:<ul><li>`info` — general information about the normal operation of a Flow.</li><li>`error` — information about errors that occur during Flow execution.</li><li>`debug` — detailed information about Flow execution for debugging purposes.</li></ul> |
+    | text | string | The message to write to the logs. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.log("info", "This is an informational message.");
+    api.log("error", "An error occurred during Flow execution.");
+    api.log("debug", "Debugging details for Flow execution.");
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.logDebugMessage / api.logDebugError">
+
+    Sends a debug message. The message is visible only in the Interaction Panel with activated debug mode.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    | --------- | --------------------- | ------------------------------------------------------------------------------------------------------------ |
+    | message | string / object | The debug message to log. When logging an object, use `JSON.stringify` to make it readable in the Interaction Panel. |
+    | header | string | An optional label or header for the log message, used to categorize it in the debug panel. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Log a simple string
+    api.logDebugMessage("Flow started successfully", "Flow Info");
+
+    // Log multiple variables together
+    const sessionInfo = { sessionId: "abc123", timestamp: new Date().toISOString() };
+    const userData = { name: "Alice", age: 25 };
+
+    // Combine objects into one for logging
+    api.logDebugMessage(JSON.stringify({ sessionInfo, userData }, null, 2), "Session & User Info");
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.setSensitiveLoggingSettings">
+
+       Configures masking of sensitive data in logs, analytics, and conversation content for the session.
+
+       **Parameters**
+
+       | Parameter | Type | Description |
+       | ------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+       | maskLogging | boolean | Masks sensitive information in system logs on the Logs page. Replaces fields like `userId`, `text`, and `data` with asterisks to protect user privacy. |
+       | maskAnalytics | boolean | Masks sensitive information in Input, Insights, and Analytics (`inputText`, `inputData`, `userLanguageText`, and user IP). Disables the Intent Trainer because input text isn’t stored. Can selectively ignore analytics using a Code Node. |
+       | maskIPAddress | boolean | This parameter is optional. Masks the user’s IP address in the Input object, Insights, and Analytics. IP addresses are replaced with asterisks and aren't available via OData Analytics. |
+       | disableConversations| boolean | Disables logging of conversation content entirely. No conversation data will be stored. |
+       | disableIntentTrainer | boolean | This parameter is optional. Disables logging for the Intent Trainer, preventing user input from being stored or used for training intents. |
+       | traceId | string | This parameter is optional. A unique ID for tracing this API call. Helps track requests in logs and diagnostics without affecting masking or logging behavior. |
+
+       **Returns**
+
+       `void`
+
+       **Example**
+
+       ```js
+       api.setSensitiveLoggingSettings({
+           maskLogging: true, // Mask sensitive information in conversation logs
+           maskAnalytics: true, // Mask sensitive information in analytics and Insights
+           maskIPAddress: true, // Optional: mask user IP addresses
+           disableConversations: true, // Disable conversation logging entirely
+           disableIntentTrainer: true // Disable logging for the Intent Trainer
+           }, "trace-12345"); // Optional trace ID for debugging
+       ```
+    </Accordion>
+
+    <Accordion title="api.trackAnalyticsStep">
+
+    Tracks a custom analytics step for the session. Useful for monitoring user interactions or workflow progress.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |------------|--------|-------------------------------------|
+    | stepLabel | string | The label of the analytics step to track. |
+
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```javascript
+    // Track that the user reached the "Checkout" step
+    api.trackAnalyticsStep("Checkout");
+    ```
+
+    </Accordion>
+
+</AccordionGroup>
+
+## States
+
+Use these functions to get, set, and reset the conversation State of a Flow.
+
+<AccordionGroup>
+    <Accordion title="api.getState">
+
+    Returns the current State of the conversation.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `string`
+
+    **Example**
+
+    ```js
+    // Get the current State of the Flow
+    const currentState = api.getState();
+
+    // Send the State to the user
+    api.say(`The current state is: ${currentState}`);
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.resetState">
+
+    Resets the State of the Flow to the initial State.
+
+    **Parameters**
+
+    None
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.resetState();
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.setState">
+
+    Updates the conversation State to a specified State.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|-------------------------------------|
+    | state | string | The State that should be activated. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Set the conversation state to "awaiting_input"
+    api.setState("awaiting_input");
+
+    // Verify by getting the current state
+    const currentState = api.getState();
+    api.say(`The current state is: ${currentState}`);
+    ```
+
+    </Accordion>
+
+</AccordionGroup>
+
+## xApps
+
+Use these functions to manage conversations with xApps.
+
+<Accordion title="api.setAppState">
+
+    Updates the state of the xApp Session for the current conversation. Only works if an xApp Session was started beforehand.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | appTemplateId | string | The xApp template identifier. Can be a URL to a hosted xApp template, `generic-html` to load inline HTML with the xApp page SDK, or `null` to close the active xApp page. |
+    | appTemplateData | object | The data payload passed to the xApp page. For `generic-html`, this must include an `html` field containing the HTML to render. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Load an xApp template hosted at a URL
+    api.setAppState("https://my-xapp-template-url", {
+    my: "xapp-template-data",
+    });
+
+    // Load a generic HTML xApp page
+    const html = `
+    <html>
+    <body>
+    Hello, World!
+    <button type="button" onclick="SDK.submit({});">continue</button>
+    <script src="/sdk/app-page-sdk.js"></script>
+    </body>
+    </html>
+    `;
+
+    api.setAppState("generic-html", { html });
+
+    // Close the active xApp page
+    api.setAppState(null, {});
+    ```
+
+</Accordion>
+
+## Other
+
+Use these functions to manage conversation behavior, such as adding Keyphrases, handling handovers, and localization settings.
+
+<AccordionGroup>
+       <Accordion title="api.addLexiconKeyphrase">
+
+       Adds a new Keyphrase to a Lexicon.
+
+
+       **Parameters**
+
+       | Parameter | Type | Description |
+       | ----------- | ---------- | -------------------------------------------------------------------------------------------------------- |
+       | lexiconId | string | The ID of the Lexicon to which the Keyphrase will be added. |
+       | keyphrase | string | The primary phrase to add to the Lexicon. |
+       | tags | string[] | An array of strings used to categorize or filter the Keyphrase. |
+       | synonyms | string[] | An array of strings representing alternative phrases that should be recognized as the same Keyphrase. |
+       | data | object | This parameter is optional. The custom data associated with the Keyphrase. |
+
+       **Returns**
+
+       `void`
+
+       **Example**
+
+       ```js
+       // Add a new keyphrase to the existing Lexicon
+       api.addLexiconKeyphrase(
+         "6942550bf16d8343c6f1adec",
+         "password reset",
+         ["account", "security"], // tags
+         ["reset password", "forgot password"], // synonyms
+         {
+           priority: "high",
+           source: "dynamic",
+         }
+       );
+       ```
+
+    </Accordion>
+
+    <Accordion title="api.evaluateRule">
+
+    Evaluates a condition based on a rule configuration that follows the `left`, `operand`, `right` pattern. This function works similarly to the If Node. The `left` value is compared with the `right` value using the specified operator, for example, `!=`, `>`, `includes`. If the condition evaluates to `true`, the associated logic or transition is executed.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|--------------------------------------------------|
+    | left | string | The primary value to be evaluated. |
+    | operand | string | The comparison operator used to evaluate the relationship between the left and right values. Supported operators: <ul><li>`eq` – checks if values are equal. Example: `5 eq 5 → true`</li><li>`neq` – checks if values aren't equal. Example: `5 neq 3 → true`</li><li>`lt` – left is less than right. Example: `3 lt 5 → true`</li><li>`lte` – left is less than or equal. Example: `5 lte 5 → true`</li><li>`gt` – left is greater than right. Example: `7 gt 5 → true`</li><li>`gte` – left is greater than or equal. Example: `5 gte 5 → true`</li><li>`contains` – left contains right. Example: `"hello" contains "ell" → true`</li><li>`ncontains` – left doesn't contain right. Example: `"hello" ncontains "xyz" → true`</li><li>`exists` – checks if a value exists. Example: `x exists → true if x is defined`</li><li>`nexists` – checks if a value doesn't exist. Example: `x nexists → true if x is undefined`</li><li>`isyes` – checks if a value is `"yes"`. Example: `"yes" isyes → true`</li><li>`isno` – checks if value is `"no"`. Example: `"no" isno → true`</li></ul>.
+    | right | string | The reference value to compare against the `left` value. This parameter is ignored for operators that check only the state of the left value, such as `exists`, `nexists`, `isyes`, and `isno`. |
+
+
+    **Returns**
+
+    `boolean`
+
+    **Example**
+
+    ```js
+    api.evaluateRule({
+        left: "hello world",
+        operand: "contains",
+        right: "hello"
+    });
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.handover">
+
+    Initiates a handover to a human agent or another system.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    | --------------------| ------ | ---------------------------------------------------------------------- |
+    | text | string | The message to send to the user. |
+    | cancelIntent | string | The Intent that will be triggered if the user cancels the handover. |
+    | unavailable | string | The message shown to the user if no agent is available. |
+    | unsupportedChannel | string | The message shown if the current channel doesn't support handover. |
+    | quickReply | string | The text for a quick reply button offered to the user. |
+    | chatwootInboxId | string | The ID of the Chatwoot inbox where the conversation should be routed. |
+    | liveAgentInboxId | string | The ID of the Live Agent inbox where the conversation should be routed.|
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.handover({
+        text: "Connecting you to a human agent...",
+        cancelIntent: "CancelHandover",
+        unavailable: "No agents are available at the moment.",
+        unsupportedChannel: "This channel doesn't support handover.",
+        quickReply: "Talk to an agent",
+        chatwootInboxId: "chatwoot_123",
+        liveAgentInboxId: "liveagent_456"
+    });
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.setLocaleReferenceId">
+
+    Sets the Reference ID to specify which Locale is used for localization.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-------------------|--------|---------------------------------------|
+    | localeReferenceID | string | The Locale Reference ID to set. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.setLocaleReferenceId("b4dc8ff5-bd05-467a-a281-2514122c4aa2")
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.setRating">
+
+    Sets a rating for the conversation to prefill a rating prompt with a specific value or update it based on other actions or user inputs. Using this function, you can collect feedback at specific steps.
+
+    **Parameters**
+
+    | Parameter| Type | Description |
+    | ---------| ------ | ----------------------------------------------------------------------- |
+    | rating | number | The rating for the conversation: `-1` for negative or `1` for positive. |
+    | comment | string | Additional information about the rating. |
+
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    api.setRating({
+        rating: 1,
+        comment: "The conversation was helpful."
+    });
+    ```
+
+    </Accordion>
+
+    <Accordion title="api.setTimezoneOffset">
+
+    Sets the time zone offset from UTC for the session, allowing time-related data to be interpreted correctly. You can view the applied time zone in the Input object under `input.currentTime.timezoneOffset`.
+
+    **Parameters**
+
+    | Parameter | Type | Description |
+    |-----------|--------|---------------------------|
+    | offset | number | The time offset in hours. |
+
+    **Returns**
+
+    `void`
+
+    **Example**
+
+    ```js
+    // Set the session timezone offset to UTC+4
+    api.setTimezoneOffset(4);
+    ```
+    </Accordion>
+
+</AccordionGroup>
+
+## More Information
+
+- [Node Execution API: Function Reference](/ai/for-developers/function-reference/all-functions)

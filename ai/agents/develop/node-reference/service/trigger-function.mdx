@@ -1,0 +1,21 @@
+---
+title: Trigger Function
+hidden: false
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/services/trigger-function.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node executes a [Function](/ai/for-developers/functions).
+
+If the Function was successfully scheduled, it will execute the **On Scheduled** branch, otherwise it will execute the **On Scheduling Failed** branch.
+
+## Parameters
+
+| Parameter           | Type | Description                            |
+|---------------------|------|----------------------------------------|
+| Function            | List | Select the Function to be executed.    |
+| Function Parameters | JSON | Enter the parameters for the Function. |

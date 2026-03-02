@@ -1,0 +1,30 @@
+---
+title: Send Metadata
+keywords: ['send metadata', 'voice gateway']
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/vg/send-metadata.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Send Metadata Node sends metadata via [SIP INFO messages](https://datatracker.ietf.org/doc/html/rfc2976) to the connected SIP trunk.
+
+## Parameters
+
+| Parameter | Type | Description                                                                                                                        |
+|-----------|------|------------------------------------------------------------------------------------------------------------------------------------|
+| Metadata  | JSON | Sets the metadata to send via SIP INFO. For dynamic values, use [CognigyScript](/ai/platform-features/cognigyscript#json-editors). |
+
+### Example
+
+```json
+{
+  "callType": "refund_call",
+  "order": {
+    "orderId": "{{context.orderId}}",
+    "product": "{{context.product}}"
+  }
+}
+```

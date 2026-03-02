@@ -1,0 +1,39 @@
+---
+title: AudioCodes
+sidebarTitle: AudioCodes Nodes
+hidden: false
+---
+
+import AiNodeReferenceVoiceAcAndGenericNodeDeprecation from '/snippets/ai/node-reference/voice/ac-and-generic-node-deprecation.mdx'
+
+<AiNodeReferenceVoiceAcAndGenericNodeDeprecation/>
+
+AudioCodes Nodes help you build a voice AI Agent using [AudioCodes configuration](/ai/agents/deploy/endpoint-reference/audiocodes).
+
+### [Call Recording](/ai/agents/develop/node-reference/voice/audiocodes/call-recording)
+
+This Node controls the voice recording capabilities of the conversation.
+
+### [Hang Up](/ai/agents/develop/node-reference/voice/audiocodes/hangup)
+
+This Node instructs AudioCodes to end the call.
+
+### [Play URL](/ai/agents/develop/node-reference/voice/audiocodes/play-url)
+
+This Node lets you retrieve a WAV file from a URL location and play it back to the user.
+
+### [Send Message](/ai/agents/develop/node-reference/voice/audiocodes/send-message)
+
+This Node sends a text (optionally with SSML) to AudioCodes, which then turns this text into speech (TTS) and outputs it to the caller.
+
+### [Send Metadata](/ai/agents/develop/node-reference/voice/audiocodes/send-meta-data)
+
+This Node sends metadata via SIP INFO messages to the connected SIP trunk.
+
+### [Set Session Parameters](/ai/agents/develop/node-reference/voice/audiocodes/set-session-params)
+
+This Node configures the AudioCodes Session. All parameters set within this Node are valid for the remainder of the session unless overwritten, either directly or by activity parameters.
+
+### [Transfer](/ai/agents/develop/node-reference/voice/audiocodes/transfer-vg)
+
+This Node enables the forwarding of an active call to a Tel or SIP target.

@@ -1,0 +1,38 @@
+---
+title: AI Agent Handover
+hidden: false
+seo:
+  metatags:
+    description: >-
+      The AI Agent Handover Node is used to transfer the conversation to another
+      AI Agent Node or Flow, which will be triggered and executed as soon as
+      this Node is activated.
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/ai/ai-agent-handover.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The AI Agent Handover Node transfers the conversation to another AI Agent Node or Flow and executes it.
+
+## Parameters
+
+| Parameter   | Type     | Description                                                                                                                                                                                                 |
+|-------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Select Flow | Selector | Select the target Flow to hand over to.                                                                                                                                                                          |
+| Select Node | Selector | Select the Node to hand over to. You must set the Node as an Entrypoint before you can select it. To set the Node as an Entrypoint, use the [Set Entrypoint](/ai/agents/develop/nodes/overview#set-nodes-as-entrypoints) setting. |
+
+### Advanced
+
+| Parameter     | Type   | Description                                                                                       |
+|---------------|--------|---------------------------------------------------------------------------------------------------|
+| Parse Intents | Toggle | Enable the system to check for Intents in the correct child Flow, rather than in the parent Flow. |
+| Parse Slots   | Toggle | Enable the system to check for Slots in the correct child Flow, rather than in the parent Flow.   |
+
+## More Information
+
+- [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent)
+- [Resolve Tool Action](/ai/agents/develop/node-reference/ai/resolve-tool-action)
+- [Agentic AI](/ai/agents/overview)

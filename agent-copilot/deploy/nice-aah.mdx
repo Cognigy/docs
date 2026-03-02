@@ -1,0 +1,168 @@
+---
+title: NiCE CXone AAH
+keywords:
+  - 'nice'
+  - 'nice cxone aah'
+  - 'nice cxone aah endpoint'
+  - 'agent assist hub'
+seo:
+  metatags:
+    description: "The NiCE CXone AAH Endpoint enables you to connect your AI Agent to the NiCE CXone Agent Assist Hub platform."
+---
+
+<a href="/release-notes/2026.4"><Badge className="version-badge" color="purple">Added in 2026.4</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/deploy/endpoint-reference/nice-aah.png"/>
+</Frame>
+
+The NiCE CXone AAH Endpoint enables you to deploy [Agent Copilot](/agent-copilot/overview) directly through [NiCE CXone Agent Assist Hub (AAH)](https://help.nicecxone.com/content/aiassistantsandbots/agentassisthub/cognigyagentassist/cognigyagentassist.htm). This deployment mode lets you use Agent Copilot in the NiCE CXone Mpower contact center without a Cognigy.AI Agent.
+
+## Prerequisites
+
+- An account on the [NiCE CXone](https://cxone.niceincontact.com/) platform.
+- Access to the [CXone Mpower Agent](https://help.nicecxone.com/content/agent/agentapplicationadministration/cxoneagent/cxoneagentforadministrators.htm) in NiCE CXone AAH.
+- Install the [NiCE CXone Agent WebRTC extension](https://help.nicecxone.com/content/agent/cxoneagent/addcxawebrtcext.htm).
+- Generate a [Cognigy.AI API key](/ai/administer/user-menu/my-profile#api-keys).
+- Configure an [Agent Copilot Flow](/agent-copilot/configure/overview#agent-copilot).
+- A 256-bit string secret to sign a JSON Web Token (JWT). Both [Cognigy.AI](#setup-on-the-cognigy-ai-side) and [NiCE CXone](#setup-on-the-nice-cxone-side) use the same secret to authenticate via JWT and establish a secure connection. For more information, read the [JWT documentation](https://www.jwt.io/introduction).
+
+## Limitations
+
+- When the end user hangs up, the Agent Copilot window on the NiCE CXone AAH platform closes, and the human agent can no longer access it.
+
+## General Endpoint Settings
+
+| Setting         | Description                                                                                                                                                                                                                                                                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Flow            | Select the [Agent Copilot Flow](/agent-copilot/configure/overview#agent-copilot) to use for the Endpoint.<br/><br/>You can enter manually by clicking **Manual Input** below the Flow list. Click ![jump to Flow](/_assets/icons/black-and-white/jump-to-flow.svg) next to the **Flow** list to open the selected Flow in the Flow editor. |
+| Endpoint URL    | The Endpoint URL serves as the interface to the Endpoint. You need this URL to configure the AAH in NiCE CXone.                                                                                                                                                                                                                            |
+| Enable Endpoint | Toggle to activate or deactivate the Endpoint. This setting is enabled by default.                                                                                                                                                                                                                                                         |
+
+## Specific Endpoint Settings
+
+| Parameter                     | Description                                                                                                                                                                                                                                                                                                                                                                                            |
+|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| NiCE CXone AAH Authentication | Select a NiCE CXone AAH connection from the list.<br /> Alternatively, click ![plus-sign](/_assets/icons/black-and-white/plus-sign.svg) next to the list to configure a connection to NiCE CXone AAH by filling in the following fields:<ul><li>**Connection name** — enter a unique name.</li><li>**API Key** — enter a [Cognigy.AI API key](/ai/administer/user-menu/my-profile#api-keys).</li></ul> |
+
+## How to Set Up
+
+### Setup on the Cognigy.AI Side
+
+<Accordion title="Configure a NiCE CXone AAH Endpoint">
+
+  1. Go to **Deploy > Endpoints**. 
+  2. On the **Endpoints** page, click **+ New Endpoint**.
+  3. In the **New Endpoint** section, configure the following:
+      1. Select the **NiCE CXone AAH** Endpoint type.
+      2. Add a unique name.
+      3. Select a relevant Agent Copilot Flow from the list. Save changes.
+  4. In the **Configuration Information** section, copy the Endpoint URL and save it for later use in NiCE CXone. This URL is composed of two parts, the server address and the URL token. For example, if the Endpoint URL is `https://endpoint-trial.cognigy.ai/69ad2e3f9a1bc351eac7aa234cee41c2967d7b0b9dbbdba6b5711357bdgaa1a8`, then:
+      - The server address is `https://endpoint-trial.cognigy.ai/`.
+      - The URL token is `69ad2e3f9a1bc351eac7aa234cee41c2967d7b0b9dbbdba6b5711357bdgaa1a8`.
+  5. Activate the **Enable Endpoint** setting.
+  6. In the **NiCE CXone AAH Setup** section, click ![plus-sign](/_assets/icons/black-and-white/plus-sign.svg) next to the **NiCE CXone AAH Authentication** field and add a NiCE CXone AAH connection by filling in the following fields:
+      - **Connection name** — enter a unique name.
+      - **API Key** — enter a [Cognigy.AI API key](#prerequisites).
+  7. In the **Copilot** section, configure the following:
+      - **Copilot Type** — select **Workspace**.
+  8. Toggle on the **Enable Copilot Authentication** option.
+  9. Click ![plus-sign](/_assets/icons/black-and-white/plus-sign.svg) next to the **Agent Copilot Authentication** field to allow JWT authentication and configure the following:
+      - **Connection name** — enter a unique name.
+      - **JWT Secret** — enter the [string](#prerequisites) to be used as the JWT secret.
+  10. _(Optional)_ Activate the **Accept Only JWT Requests** option to block any requests to the Agent Copilot URL that don't contain a valid JWT. This parameter is deactivated by default. Activating this parameter is useful for security reasons because it ensures that access requests that include only the user and session IDs are blocked.
+
+</Accordion>
+
+### Setup on the NiCE CXone Side
+
+<AccordionGroup>
+  <Accordion title="1. Create an Agent Assist App in NiCE CXone">
+
+    1. On the [NiCE CXone](https://cxone.niceincontact.com/) platform, click the **Applications** selector in the upper-left corner.
+    2. Go to **Others > Automation & AI**. The **Automation & AI** window opens.
+    3. In the left-side **CXone Mpower Hubs** menu, select **Agent Assist Hub**. The **Agent Assist Hub** panel appears. Click **Add Agent Assist App**.
+    4. At **Step 1: General Information**, configure the following:
+        - **Agent Assist App Name** — enter a unique name. Copy and save the name for later use in NiCE CXone.
+        - **Select Agent Assist App Type** — select **Cognigy Assist**.
+    5. At **Step 2: Configuration**, configure the following:
+        - **Endpoint URL** — enter the server address from the Endpoint URL that you saved previously, for example, `https://endpoint-trial.cognigy.ai/`.
+        - **Agent Assist URL** — enter the base URL of Agent Copilot, for example, `https://agent-copilot-trial.cognigy.ai/`.
+        - **URL Token** — enter the URL token from the Endpoint URL that you saved previously, for example, `69ad2e3f9a1bc351eac7aa234cee41c2967d7b0b9dbbdba6b5711357bdgaa1a8`.
+        - **API Key** — enter the API key generated in NiCE CXone.
+        - **JWT Secret Key** — enter the [string](#prerequisites) to be used as the JWT secret.
+    6. Click **Create**.
+
+</Accordion>
+<Accordion title="2. Create a Transcription Profile">
+
+    1. In the **CXone Mpower Hubs** menu, select **Transcription Hub > Continuous Stream** and click **Add Transcription Profile** and configure the following:
+        1. At **Step 1: General Information**, configure the following:
+            - **Transcription Profile Name** — enter a unique name. Copy and save the name for later use in NiCE CXone.
+            - **Select Provider** — select your transcription provider.
+        2. At **Step 2: Configuration**, configure according to the selected provider.
+    2. Click **Create** and close the **Automation & AI** window.
+
+  </Accordion>
+  <Accordion title="3. Create a Campaign">
+
+    1. On the [NiCE CXone](https://cxone.niceincontact.com/) platform, click the **Applications** selector in the upper-left corner and select **ACD**.
+    2. In the left-side menu, select **Campaigns**.
+    3. In the upper-right corner, click **+ Create Campaign** and give the campaign a unique name.
+
+  </Accordion>
+  <Accordion title="4. Create a Script">
+
+    1. On the [NiCE CXone](https://cxone.niceincontact.com/) platform, click the **Applications** selector in the upper-left corner and select **Studio**.
+    2. In the upper-right corner, click **New Script** and select **Phone**.
+    3. In the left-side menu, click actions and type `Begin` in the **Search actions** field.
+    4. Drag the **Begin** action onto the canvas.
+    5. Hover over the **Begin** action and click the circle on the right. The **Choose Action** widget opens.
+    6. Type `Agent Assist` in the **Search actions** field and select the **Agent Assist** action from the list. The **Agent Assist** is set on the canvas.
+    7. Click the **Agent Assist** action and paste the Agent Assist App Name that you saved previously in the **Assist Launch Config Name** field.
+    8. Hover over the **Agent Assist** action and click the circle on the right. The **Choose Action** widget opens.
+    9. Type `Continuous Transcription` in the **Search actions** field and select the **Continuous Transcription** action from the list. The **Continuous Transcription** action is set on the canvas.
+    10. Click the **Continuous Transcription** action and configure the following:
+        - **TranscriptionProfileName** — paste the Transcription Profile Name that you saved previously.
+        - **Enabled** — enter `true`.
+        - **Participants** — enter `Both`.
+        - **GenerateUtteranceEvents** — enter `false`.
+    11. In the upper-right corner, click **Create**.
+    12. Enter a unique name in the **Name** field and click **Create**.
+
+  </Accordion>
+  <Accordion title="5. Create an ACD Skill">
+
+    1. In the left-side menu of the ACD application, select **ACD Skills**.
+    2. Click **+ Create New** and select **Single Skill**.
+    3. In the **Name & Other Details** section, configure the following:
+        - **Media Type** — select **Phone Call**.
+        - **Skill Name** — enter a unique name.
+        - **Inbound/Outbound** — select **Outbound**.
+        - **Campaign** — select the campaign you created previously.
+        - **Custom Script** — select the script you created previously.
+    4. In the upper-right corner, click **Create**.
+
+  </Accordion>
+  <Accordion title="6. Assign the Skill to the ACD User">
+
+    1. In the left-side menu of the ACD application, select **ACD Users**.
+    2. Select the ACD user you want to assign the skill to from the list. You can type their name in the **Search** field to find them.
+    3. Go to the **Skills** tab, select the skill you previously created from the **Add Skills** list and click **Add Skills**. The skill is moved to the **Assigned Skills** list.
+    4. In the **Proficiency** column of the skill you assigned, select **1 - Highest** from the list. Click **Save Proficiencies**.
+
+  </Accordion>
+</AccordionGroup>
+
+## Test the Endpoint
+
+After you've set up the Endpoint, you can test Agent Copilot by clicking the **Screen Pops** icon and making a call through the [NiCE CXone Agent interface](https://help.nicecxone.com/content/agent/cxoneagent/cxoneagent.htm?tocpath=Agents%7CAgent%20%7C_____0#TheAgentInterface).
+
+## More Information
+
+- [Cognigy in NiCE CXone](https://help.nice-incontact.com/content/aiassistantsandbots/virtualagenthub/cognigy.htm)
+- [Integrate Cognigy with NiCE CXone](https://help.nice-incontact.com/content/aiassistantsandbots/virtualagenthub/integratecognigy.htm?tocpath=Virtual%20Agent%20Hub%7CVirtual%20Agent%20Hub%7CVirtual%20Agent%20Integrations%7CCognigy%7C_____1)
+- [NiCE CXone Studio](https://help.nicecxone.com/content/studio/gettingstarted/startusingstudiocx.htm?Highlight=studio)
+- [NiCE CXone ACD](https://help.nicecxone.com/content/acd/welcometoacd.htm)
+- [NiCE CXone Automation and AI](https://help.nicecxone.com/content/aiassistantsandbots/aiassistantsandbots.htm)
+- [NiCE CXone Agent](https://help.nicecxone.com/content/agent/cxoneagent/cxoneagent.htm)

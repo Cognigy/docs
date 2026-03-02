@@ -1,0 +1,185 @@
+---
+title: "Configure the Workspace"
+slug: "workspace"
+---
+
+<a href="/release-notes/4.65"><Badge className="version-badge" color="blue">Updated in 4.65</Badge></a>
+
+The Agent Copilot workspace is the interface that displays the Agent Copilot on the contact center side. The workspace includes the widgets that represent the [Agent Copilot Nodes](/agent-copilot/configure/nodes) that you configure in the [Agent Copilot Flow](/agent-copilot/configure/overview). You can configure widget size and arrangement in the workspace, and display different types of content in it, including HTML, adaptive cards, or iframes.
+
+To configure the Agent Copilot workspace, you need to set the Agent Copilot grid. Other Agent Copilot Nodes provide functionality to the widgets in the workspace.
+
+## Agent Copilot Grid
+
+The Agent Copilot grid is a JSON object that defines the size and arrangement of the tiles, through tile IDs, in the workspace. 
+
+The following table shows the JSON properties you use to configure the Agent Copilot grid:
+
+<Accordion title="Agent Copilot Grid JSON Properties">
+  | Property |             |           | Type   | Description                                                                                                                                                                                                             |
+  |----------|-------------|-----------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | `grid`   |             |           | Object | Set the grid size and gap between tiles.                                                                                                                                                                                |
+  |          | `columns`   |           | Number | Set the number of columns in the grid. The number of columns corresponds to the grid's x-axis.                                                                                                                          |
+  |          | `rows`      |           | Number | Set the number of rows in the grid. The number of rows corresponds to the grid's y-axis.                                                                                                                                |
+  |          | `gap`       |           | Number | Set the gap size in pixels between the tiles. If you set the value to `0`, Agent Copilot uses the default value of `10`.                                                                                                |
+  | `tiles`  |             |           | Object | Set the tiles configuration.                                                                                                                                                                                            |
+  |          | `<tile ID>` |           | Object | Enter the [tile ID](#tile-id) and set the tile configuration. The tile ID must match the tile ID in the respective Agent Copilot Node.                                                                                  |
+  |          |             | `x`       | Number | Set the coordinate of the tile in the grid's x-axis.                                                                                                                                                                    |
+  |          |             | `y`       | Number | Set the coordinate of the tile in the grid's y-axis.                                                                                                                                                                    |
+  |          |             | `rows`    | Number | Set the number of rows the tile takes up.                                                                                                                                                                               |
+  |          |             | `columns` | Number | Set the number of columns the tile takes up.                                                                                                                                                                            |
+</Accordion>
+
+To configure the Agent Copilot grid, you have the following options:
+
+<Tabs>
+  <Tab title="GUI">
+    Use the [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid) to configure the grid directly in the Agent Copilot Flow:
+
+    1. In **Build > Flows**, create an [Agent Copilot Flow](/agent-copilot/configure/overview#agent-copilot)
+    2. Add a [Copilot: Set Grid Node](/ai/agents/develop/node-reference/agent-copilot/set-grid) after the **Start** Node. You can use the following example as a reference:
+
+    <Accordion title="Agent Copilot Grid Example">
+      ```json
+      "grid": {
+          "columns": 3,
+          "rows": 8,
+          "gap": 10
+      },
+      "tiles": {
+          "identity-assist": {
+            "x": 1,
+            "y": 1,
+            "rows": 4,
+            "columns": 1
+          },
+          "transcript-assist": {
+            "x": 2,
+            "y": 1,
+            "rows": 2,
+            "columns": 2
+          },
+          "next-action": {
+            "x": 2,
+            "y": 3,
+            "rows": 2,
+            "columns": 2
+          },
+          "knowledge-assist": {
+            "x": 2,
+            "y": 5,
+            "rows": 4,
+            "columns": 2
+          },
+          "event-assist": {
+            "x": 1,
+            "y": 5,
+            "rows": 4,
+            "columns": 1
+          }
+      }
+      ```
+    </Accordion>
+  </Tab>
+  <Tab title="API">
+    Use the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi) to create a configuration for the grid through an API request. You'll need to select the configuration in the Endpoint settings. This grid configuration is used only if there's no Copilot: Set Grid Node in the Agent Copilot Flow.
+
+        You can configure the grid via API and implement it by selecting it in the **Copilot** section in the [Endpoint settings](/ai/agents/deploy/endpoints/overview).
+
+    To configure the grid via API, follow these steps:
+
+    <Steps>
+      <Step title="Create an API Key">
+        1. On the [Main page](/ai/overview/user-interface/main-page), click **![user-menu](/_assets/icons/blue/user-menu.svg) > My Profile** in the upper-right corner. 
+        2. In the **API Keys** section, click **+**.
+        3. Enter a unique name for the API key and click **Confirm**. The API key will appear in the list. Copy the API key for later use.
+      </Step>
+      <Step title="Copy the Project ID">
+        On the Main page, click ![vertical-ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg)**> Copy Project ID**. Save the copied Project ID for later use.
+      </Step>
+      <Step title="Authenticate with the API Key">
+        1. In the [Cognigy.AI API](/ai/for-developers/developers/api-and-cli), go to the **AUTHENTICATION** section and paste the API key you copied earlier in the following fields:
+            - **API Key (X-API-Key)**
+            - **API Key (api_key)**
+        2. Click **Set** next to both fields.
+      </Step>
+      <Step title="Create the Grid with a POST Request">
+        1. Go to the [POST](https://api-trial.cognigy.ai/openapi#post-/v2.0/aicopilotconfigs) request and configure the JSON payload:
+            - `name` — enter a unique name for the Agent Copilot configuration. This name is displayed in the [Endpoint settings](/ai/agents/deploy/endpoints/overview).
+            - _(Optional)_ `description` — enter a description for the Agent Copilot configuration.
+            - `config` — configure the [Agent Copilot grid](#agent-copilot-grid).
+        2. Paste the Project ID you copied earlier into the `projectId` field in the JSON body of the request.
+        3. Click **Try** to send the POST request with the JSON payload. If your request is successful, you receive the `201` status code in the response body and the Agent Copilot configuration is added to the **Copilot Config** list in the Endpoint settings.
+
+        You can use the following example as a reference:
+
+        <Accordion title="Agent Copilot Grid Example">
+          ```json
+          {
+              "name": "Agent Copilot Grid Example",
+              "description": "A sample configuration for Agent Copilot showcasing the layout of tiles",
+              "config": {
+                "grid": {
+                    "columns": 3,
+                    "rows": 8,
+                    "gap": 10
+                },
+                "tiles": {
+                    "identity-assist": {
+                      "x": 1,
+                      "y": 1,
+                      "rows": 4,
+                      "columns": 1
+                    },
+                    "transcript-assist": {
+                      "x": 2,
+                      "y": 1,
+                      "rows": 2,
+                      "columns": 2
+                    },
+                    "next-action": {
+                      "x": 2,
+                      "y": 3,
+                      "rows": 2,
+                      "columns": 2
+                    },
+                    "knowledge-assist": {
+                      "x": 2,
+                      "y": 5,
+                      "rows": 4,
+                      "columns": 2
+                    },
+                    "event-assist": {
+                      "x": 1,
+                      "y": 5,
+                      "rows": 4,
+                      "columns": 1
+                    }
+                }
+              },
+              "projectId": "your-project-id"
+          }
+          ```
+        </Accordion>
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Tile ID
+
+Each tile must have a unique tile ID, for example, `transcript-tile`, because the tile ID corresponds to a JSON key. You need to use the tile ID in the respective Agent Copilot Node to map it correctly to the tile in the workspace.
+
+If Agent Copilot receives updates for a tile ID that isn't in the Agent Copilot configuration, the tile isn't rendered. Additionally, a warning indicator is displayed in the lower-right corner of the workspace, indicating that an unknown tile update has been received. In these cases, check the tile IDs in your Agent Copilot grid.
+
+## Transcript Tile
+
+The Transcript Tile acts as a chat interface and allows human agents to read messages from end users and reply to them directly in the workspace. The tile ID of the Transcript Tile is `transcript` and must be included in your Agent Copilot configuration. This tile is intended for [chat use cases](/agent-copilot/getting-started/chat) in [standalone Agent Copilot applications](/agent-copilot/deploy/standalone). For voice-related scenarios, use the [Copilot: Transcript Tile Node](/ai/agents/develop/node-reference/agent-copilot/transcript-tile).
+
+To activate the Transcript Tile, go to the **Copilot** section in the Endpoint settings and use the settings in **Transcript Tile**:
+
+| Setting                                                                                            | Description                                                                                                                 |
+|----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Enable Transcript Tile with ID 'transcript' in the Agent Copilot workspace                         | Activates the Transcript Tile.                                                                                              |
+| Enable the chat input for the Transcript Tile to enable the agent to send messages to the customer | Allows human agents to send messages to the end user from the Transcript Tile. The following handover providers don't support this setting: Genesys Cloud Open Messaging, NiCE CXone, storm, and 8x8.|
+| Enable redaction of Transcript Tile messages                                                       | Redacts credit card numbers in messages in the Transcript Tile and replaces them with the `CREDIT_CARD_NUMBER` placeholder. |
