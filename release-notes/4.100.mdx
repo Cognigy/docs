@@ -1,0 +1,152 @@
+---
+title: '4.100'
+
+---
+
+<Warning>
+  [WebSocket and HTTP Webhook](/ai/escalate/handover-reference/genesys-cloud-open-messaging#prerequisites) for Genesys Cloud Open Messaging have been deprecated. Migrate to [Amazon EventBridge](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge).
+</Warning>
+
+<Warning>
+  The AudioCodes Endpoint was deprecated in April 2025 and will be removed in Q1 2026. Migrate to the [Voice Gateway Endpoint](/ai/agents/deploy/endpoint-reference/voice-gateway) before the removal date.
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 4.100.2
+
+### Cognigy Live Agent
+
+**Released** May 22, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where editing custom fields in the Contact Profile details led to an error 
+
+## 4.100.1
+
+### Cognigy.AI
+
+**Released** May 13, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where the Steps and Tasks filters in the Transcript Explorer and the filters in the Step Explorer didn't load properly
+- Fixed the issue where the Salesforce MIAW `baseUrl` validation failed in the backend, preventing the handover process from completing successfully
+
+### Cognigy Voice Gateway
+
+**Released** May 26, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where users couldn't add phone numbers on the Phone numbers page in the Voice Gateway Self-Service Portal
+
+### Cognigy Live Agent
+
+**Released** May 22, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where editing the default fields in the Contact Profile details led to an error
+
+## 4.100.0
+
+### Cognigy.AI
+
+**Released** April 29, 2025
+
+#### Features
+
+##### Amazon EventBridge Integration for Genesys Cloud Open Messaging
+
+Implemented a new integration using [Amazon EventBridge for Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge) to receive `UserEndEvent` and `AfterCallWorkEvent` events from Genesys, improving the reliability of conversation events.
+
+##### Embedded AI Copilot in Salesforce MIAW
+
+Added support to [embed AI Copilot](/ai/escalate/handover-reference/salesforce-miaw) into the Salesforce MIAW handover provider. Now you can seamlessly embed AI Copilot into your Salesforce MIAW handover workflow for a smoother support experience
+
+#### Improvements
+
+- Added support to [embed Agent Copilot](/ai/escalate/handover-reference/salesforce-miaw) into the Salesforce MIAW handover provider
+- Implemented pre-aggregation of conversation counters, phased out of version 2 of the API routes for getting conversation counters, and introduced [version 3 of these API routes](https://api-trial.cognigy.ai/openapi#get-/v3.0/conversationcounter). The new API version improves the performance of conversation count retrieval for billing
+- Added handover errors logs to Test > Logs
+- Added [backward compatibility](/ai/agents/analyze/goals-and-tasks/tasks#compatibility-alias-to-profile-tasks) for `profile.goals`. Now, `profile.goals` points to `profile.tasks`, ensuring compatibility with all Flows
+
+#### Bug Fixes
+
+- Fixed the issue where Node editors opened in an unsaved state
+- Fixed the issue where the debugging label for LLM Entity Extract Node wasn't localized in the Node editor
+- Fixed the issue where calls on the Voice Call tab of the Interaction Panel didn't work properly in Safari
+- Fixed the issue where intervention closed event from RingCentral Engage didn't trigger a `CALL_COMPLETED` event
+- Fixed the issue where Knowledge Chunks with empty text were created when using a web page as a Knowledge Source
+- Fixed the issue where clicking outside Node editors incorrectly triggered the `Unsaved changes` pop-up
+- Fixed the issue where a postback message from Agent Copilot was forwarded to handover providers
+- Fixed the issue where the queue update validation failed for `maximumQueuePosition`
+- Fixed the issue where uploading a PDF file with empty table as a Knowledge Source resulted in an error
+- Fixed the issue where importing a Package with a Knowledge Store resulted in the `Error while loading Knowledge Source during search ...` error in the Flow execution
+- Fixed the issue where merged Contact Profiles were populated after receiving an input message
+
+### Cognigy Voice Gateway
+
+**Released** April 29, 2025
+
+#### Improvements
+
+- Added the [Profanity Filter option](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) to the Advanced section in the Set Session Config Node and to Activity Parameters. You can use this configuration to handle swear words in transcripts when using Microsoft Azure Speech Services as a speech-to-text (STT) vendor
+- Changed the default Profanity Filter option from `masked` to `raw`
+
+#### Bug Fixes
+
+- Fixed the issue where the values on the Phone numbers page in the Voice Gateway Self-Service Portal were changed after the page was fully loaded
+- Fixed the issue where the Barge In function was disabled when a new `gather` input was received
+
+### Cognigy Webchat
+
+**Released** April 29, 2025
+
+#### Improvements
+
+- Added capability to configure [aria labels](/webchat/v3/accessibility#aria-labels) for the Webchat v3 components to improve accessibility
+- Updated Webchat v3 to [v3.19.0](https://github.com/Cognigy/Webchat/releases/tag/v3.19.0)
+
+### Cognigy Live Agent
+
+**Released** April 29, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where clicking Cognigy.AI in the Profile settings menu redirected users to the Cognigy.AI login page, but assigned `undefined` to `organisationId` in the URL
+- Fixed the issue where some actions in Automation Rules were using incorrect validations
+- Fixed the issue where Live Agent stopped working due to Live Agent connecting to a read-only Redis replica instead of to `master`
+
+### Cognigy Insights
+
+**Released** April 29, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Step Explorer didn't display correctly when using pagination
+- Fixed the issue where OData queries that were canceled by client were leaving broken connections to the database
+- Fixed the issue where CognigyScript didn't parse `goals` in the Profile object correctly
+- Fixed the issue where `endpointUrlToken` wasn't in the `stepevents` table
+- Fixed the issue where setting Slots in an Overwrite Analytics Node broke the Transcript Explorer
+- Fixed the issue where the Time Span filters reset when users switched Projects. Now, the Time Span filters stay consistent across Projects
+
+### Infrastructure
+
+#### Cognigy.AI
+
+- Introduced the `pre-aggregate-conversations` cron job named that is scheduled to run daily to pre-aggregate billable conversations
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

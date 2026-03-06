@@ -1,0 +1,48 @@
+---
+title: Localization
+hidden: false
+keywords:
+  - Translation
+  - Localization
+  - Locales
+seo:
+  metatags:
+    description: >-
+      Cognigy.AI offers a robust localization feature for easy customization and
+      content reuse. You can configure multiple Locales and add localized
+      content to your Flow. Alternatively, you can use machine translation to
+      automatically translate content.
+---
+
+import AiLocalizationSwitchALocale from '/snippets/ai/localization/switch-a-locale.mdx'
+
+Cognigy.AI offers a robust localization feature for easy customization and content reuse. You can configure multiple Locales and add localized content to your Flow. Alternatively, you can use [machine translation to automatically translate content](/ai/platform-features/translation-and-localization/auto-translation). If one Locale doesn't have configured content, Cognigy.AI automatically falls back to another Locale.
+
+## Restrictions
+
+- You can't change the primary Locale after you've selected it.
+
+## Limitations
+
+- The maximum number of Locales per Project is 10.
+
+## How to Use
+
+<Tabs>
+  <Tab title="GUI">
+        You can add, edit, and delete Locales in **Manage > Localization**. Also, you can copy their Reference ID.
+  </Tab>
+  <Tab title="API">
+        You can view, create, edit, and delete Locales using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#tag--Locales-v2.0).
+  </Tab>
+</Tabs>
+### Localize Flows
+
+You can localize [Nodes](/ai/agents/develop/nodes/overview) and [Intents](/ai/platform-features/nlu/intents/overview) in the [Flow editor](/ai/agents/develop/projects-and-flows/editor) after selecting a Locale in the top bar.
+
+<AiLocalizationSwitchALocale/>
+
+## More Information
+
+- [Automatic Translation](/ai/platform-features/translation-and-localization/auto-translation)
+- [Switch Locale Node](/ai/agents/develop/node-reference/logic/switch-locale)

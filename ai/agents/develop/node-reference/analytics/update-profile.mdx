@@ -1,0 +1,28 @@
+---
+title: Update Profile
+hidden: false
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/analytics/update-profile.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node updates users' Contact Profiles.
+The available Profile Schema fields correspond to all defined fields in the Project's [Profile Schema](/ai/agents/analyze/contact-profiles#profile-schema). 
+If an invalid field is used, no action is taken.
+
+## Parameters
+
+| Parameter            | Type          | Description                                                                                                                                                                                                                                                                                    |
+|----------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Profile Schema Field | Selector      | Identify the field in the user's Contact Profile that needs to be updated. The predefined Profile Schema fields are described in [Contact Profiles](/ai/agents/analyze/contact-profiles); you can also create a [custom field](/ai/agents/analyze/contact-profiles##customize-the-profile-schema). |
+| Value                | CognigyScript | The value of the field.                                                                                                                                                                                                                                                                        |
+
+## More Information
+
+- [Activate Profile](/ai/agents/develop/node-reference/analytics/activate-profile)
+- [Deactivate Profile](/ai/agents/develop/node-reference/analytics/deactivate-profile)
+- [Delete Profile](/ai/agents/develop/node-reference/analytics/delete-profile)
+- [Merge Profile](/ai/agents/develop/node-reference/analytics/merge-profile)

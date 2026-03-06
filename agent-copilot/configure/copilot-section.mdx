@@ -1,0 +1,41 @@
+---
+title: "Copilot Section"
+keywords: ['copilot section', 'copilot settings', 'copilot configuration']
+"seo": {
+  "metatags": {
+    "description": "Learn how to configure the Copilot section in the Endpoint settings to integrate Agent Copilot with a third-party platform."
+  }
+}
+---
+
+The **Copilot** section in the [Endpoint settings](/ai/agents/deploy/endpoints/overview) is used to configure the Agent Copilot workspace.
+
+The following Endpoints include the **Copilot** section:
+
+  - [NiCE CXone Agent Assist Hub (AAH)](/agent-copilot/deploy/nice-aah)
+  - [LINE](/ai/agents/deploy/endpoint-reference/line-messenger)
+  - [Facebook (Meta) Messenger](/ai/agents/deploy/endpoint-reference/facebook-messenger)
+  - [8x8](/ai/agents/deploy/endpoint-reference/8x8)
+  - [Voice Gateway](/ai/agents/deploy/endpoint-reference/voice-gateway)
+  - [Slack](/ai/agents/deploy/endpoint-reference/slack)
+  - [Sunshine Conversations](/ai/agents/deploy/endpoint-reference/sunshine-conversations)
+  - [Socket.IO](/ai/agents/deploy/endpoint-reference/socketio)
+  - [Azure Bot Services](/ai/agents/deploy/endpoint-reference/azure-bot-services)
+  - [Genesys](/ai/agents/deploy/endpoint-reference/genesys)
+  - [Webhook](/ai/agents/deploy/endpoint-reference/webhook)
+  - [Webchat v3](/webchat/v3/configuration)
+
+## Parameters
+
+| Parameter                     | Type     | Description                              |
+|-------------------------------|----------|------------------------------------------|
+| Copilot Type                  | Selector | Sets the one of the following options:<ul><li>**None** — deactivates Agent Copilot for the Endpoint. This option is selected by default.</li><li>**Workspace** — activates Agent Copilot based on the [workspace](/agent-copilot/configure/workspace) configuration.</li><li>**Whisper** — activates [Agent Copilot Whisper](/live-agent/assistants/agent-copilot-whisper).</li></ul> |
+| Copilot Flow                  | Selector | Sets the Flow in which you the Agent Copilot workspace or the Agent Copilot Whisper is configured. |
+| Copilot Config                | Selector | Sets the configuration for the Agent Copilot workspace. Valid for workspaces configured via [API](/api-reference/aicopilotconfigs-v20/get-ai-copilot-configurations). |
+| Enable Copilot Authentication | Toggle   | Toggle to activate JSON Web Token authentication for Agent Copilot. |
+| Agent Copilot Authentication  | Selector | Sets the JWT connection to use for authentication. Click ![plus-sign](/_assets/icons/black-and-white/plus-sign.svg) next to the **Agent Copilot Authentication** field to configure the JWT connection:<ul><li>**Connection name** — enter a unique name.</li><li>**JWT Secret** — enter the [string](#prerequisites) to be used as the JWT secret.</li></ul> |
+| Accept Only JWT Requests      | Toggle   | Activate the **Accept Only JWT Requests** option to block any requests to the Agent Copilot URL that don't contain a valid JWT. This parameter is deactivated by default. Activating this parameter is useful for security reasons because it ensures that access requests that include only the user and session IDs are blocked. |
+
+## More Information
+
+- [Endpoint Settings](/ai/agents/deploy/endpoints/overview)

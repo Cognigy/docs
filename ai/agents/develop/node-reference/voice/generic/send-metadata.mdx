@@ -1,0 +1,36 @@
+---
+title: Send Metadata
+hidden: false
+---
+
+import AiNodeReferenceVoiceAcAndGenericNodeDeprecation from '/snippets/ai/node-reference/voice/ac-and-generic-node-deprecation.mdx'
+
+<a href="/release-notes/4.45"><Badge className="version-badge" color="blue">Updated in 4.45</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/generic-voice/send-metadata.png" style={{ width: 'auto' }} />
+  <figcaption>Voice Gateway Send Metadata Node</figcaption>
+</Frame>
+
+## Description
+
+<AiNodeReferenceVoiceAcAndGenericNodeDeprecation/>
+
+The Send Metadata Node sends metadata via SIP INFO messages to the connected SIP trunk.
+
+| Parameter | Type | Description                        |
+|-----------|------|------------------------------------|
+| Metadata | JSON | The metadata to send via SIP INFO. |
+
+Example:
+
+```json
+{
+  "myParamName": "myParamValue"
+}
+```
+
+<Note>
+  This Node supports Activity Parameters. You can find more information about activity parameters on the [Parameter Details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) page.
+</Note>

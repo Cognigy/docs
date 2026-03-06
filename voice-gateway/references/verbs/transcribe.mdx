@@ -1,0 +1,96 @@
+---
+title: Transcribe
+keywords: ['transcribe', 'transcription', 'speech recognition']
+---
+
+The `transcribe` verb generates real-time transcriptions of speech.
+
+This verb can be nested only within the following verbs:
+
+<Tabs>
+  <Tab title="dial">
+    When nested within a [`dial`](/voice-gateway/references/verbs/dial) verb, `transcribe` provides long-running transcription of a phone call.
+
+    ```json dial expandable highlight={18-25}
+    {
+      "verb": "dial",
+      "actionHook": "dial",
+      "callerId": "+491173331212",
+      "answerOnBridge": true,
+      "dtmfCapture": ["*2", "*3"],
+      "dtmfHook": {
+        "url": "/dtmf",
+        "method": "GET"
+      },
+      "amd": {
+        "actionHook": "amd",
+        "recognizer": {
+          "vendor": "microsoft",
+          "language": "en-US"
+        }
+      },
+      "transcribe": {
+        "transcriptionHook": "http://example.com/transcribe",
+        "recognizer": {
+          "vendor": "Google",
+          "language": "en-US",
+          "interim": true
+        }
+      },
+      "target": [
+        {
+          "type": "phone",
+          "number": "+49XXXXXXXXXXX",
+          "trunk": "Twilio"
+        },
+        {
+          "type": "sip",
+          "sipUri": "sip:49XXXXXXXXXXX@sip.myTrunk.com",
+          "auth": {
+            "username": "John",
+            "password": "Doe"
+          }
+        },
+        {
+          "type": "user",
+          "name": "jane@sip.example.com"
+        }
+      ]
+    }
+    ```
+  </Tab>
+
+  <Tab title="listen">
+    When nested within a [`listen`](/voice-gateway/references/verbs/listen) verb, `transcribe` provides a transcription of recorded messages, such as voicemail.
+
+    ```json listen highlight={5-12}
+    {
+      "verb": "listen",
+      "url": "wss://myrecorder.example.com/calls",
+      "mixType": "stereo",
+      "transcribe": {
+        "transcriptionHook": "http://example.com/transcribe",
+        "recognizer": {
+          "vendor": "Google",
+          "language": "en-US",
+          "interim": true
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Configuration
+
+The full set of configuration parameters:
+
+| Parameter                    | Description                                                                                          | Required |
+|------------------------------|------------------------------------------------------------------------------------------------------|----------|
+| transcriptionHook | A webhook to receive an HTTP POST when a partial or final transcription is received from a provider. | yes      |
+| recognizer                   | Speech recognition options.                                                                          | yes      |
+
+## More Information
+
+- [Dial](/voice-gateway/references/verbs/dial)
+- [Listen](/voice-gateway/references/verbs/listen)

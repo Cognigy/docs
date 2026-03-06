@@ -1,0 +1,58 @@
+---
+title: Voice Gateway Nodes
+---
+
+Voice Gateway Nodes help you build a voice AI Agent using [Voice Gateway configuration](/voice-gateway/overview).
+
+<CardGroup cols={3}>
+  <Card
+    title="Call Recording"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/call-recording"
+  >
+    The Call Recording Node starts or stops a conversation recording.
+  </Card>
+  <Card
+    title="DTMF"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/dtmf"
+  >
+    The DTMF Node plays DTMF digits to the caller.
+  </Card>
+  <Card
+    title="Hang Up"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/hangup"
+  >
+    The Hang Up Node instructs Voice Gateway to end the call.
+  </Card>
+  <Card
+    title="Mute Speech Input"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/mute-speech-input"
+  >
+    The Mute Speech Input Node controls when speech and DTMF user inputs are collected in your Flow.
+  </Card>
+  <Card
+    title="Play"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/play"
+  >
+    The Play Node[^1] lets you stream a sound file into the call, also in a loop. The Node supports encoded MP3 and WAV files.
+  </Card>
+  <Card
+    title="Send Metadata"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/send-metadata"
+  >
+    The Send Metadata Node sends metadata via SIP INFO messages to the connected SIP trunk.
+  </Card>
+  <Card
+    title="Set Session Config"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/set-session-config"
+  >
+    The Set Session Config Node configures the Voice Gateway session. This configuration applies for the rest of the session unless overwritten, either directly or by activity parameters.
+  </Card>
+  <Card
+    title="Transfer"
+    href="/ai/agents/develop/node-reference/voice/voice-gateway/transfer"
+  >
+    The Transfer Node lets you transfer an ongoing call to a Tel or SIP target.
+  </Card>
+</CardGroup>
+
+[^1]: This Node can be configured with [Parameter Details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details).

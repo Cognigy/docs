@@ -1,0 +1,77 @@
+---
+title: 8x8
+hidden: false
+keywords:
+  - ' contact centers'
+  - ' 8x8'
+  - ' handover provider'
+seo:
+  metatags:
+    description: >-
+      The 8x8 handover provider bridges Cognigy.AI and 8x8, enabling end users
+      to connect with human agents working within the 8x8 contact center.
+---
+
+import AiCopilotUrlPattern from '/snippets/agent-copilot/url-pattern.mdx'
+import AiProvidersX88X88Config from '/snippets/ai/providers/8x8/8x8-config.mdx'
+
+<a href="/release-notes/4.97"><Badge className="version-badge" color="blue">Updated in 4.97</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/escalate/handover-reference/8x8.svg"/>
+</Frame>
+
+## Description
+
+The 8x8 handover provider bridges Cognigy.AI and [8x8](https://www.8x8.com/),
+enabling end users to connect with human agents working in a contact center that uses 8x8.
+
+## Prerequisites
+
+- Access to [8x8](https://connect.8x8.com/login).
+- Created Endpoint [compatible with 8x8](/ai/agents/deploy/endpoints/handover-settings#endpoints-compatible-with-handover-providers).
+
+## Configuration on the Handover Provider Side
+
+<AiProvidersX88X88Config/>
+
+## Configuration on the Cognigy.AI Side
+
+<AccordionGroup>
+  <Accordion title="1. Create a Handover Provider">
+
+
+
+    1. Go to **Deploy > Handover Providers**.
+    2. Click **+ New Hanvover Provider** and select **8x8** from the list.
+    3. Fill in the following fields:
+        - **Base URL** — the URL of the 8x8 Server.
+        - **API Key** — the header value required for authenticating API calls to the 8x8 system.
+        - **8x8-Tenant** — the Tenant ID, the field is mandatory if a customer has multiple tenants in the organization.
+  </Accordion>
+
+  <Accordion title="2. Configure Handover Settings">
+    In the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node, configure the following settings:
+
+    - **8x8 Channel Id** — specify the channel ID that you created during the 8x8 configuration. You can find this ID in the 8x8 admin console. Navigate to **Channels > Chat API**. In the channel list, find the channel that you created. Copy the **ID** from the channel row.
+    - **8x8 Queue Id** — specify the header value required for authenticating API calls to the 8x8 system. You can find this ID in the 8x8 admin console. Navigate to **Channels > Chat API**. In the channel list, find the channel that you created. Copy the **Queue ID** from the channel row.
+    - **8x8 JSON properties** — extend 8x8 properties with custom JSON.
+
+    To check the handover, go to the installation that your server administrator has deployed.
+  </Accordion>
+</AccordionGroup>
+
+## Additional Configuration
+
+<Accordion title="Agent Copilot Workspace">
+
+  Within 8x8 integration, you can use the [Agent Copilot workspace](/agent-copilot/overview) as an assistant for to human agents. Agent Copilot will be available as a standalone application via the following link:
+
+  <AiCopilotUrlPattern/>
+</Accordion>
+
+## More Information
+
+- [8x8 Endpoint](/ai/agents/deploy/endpoint-reference/8x8)
+- [Agent Copilot Workspace](/agent-copilot/overview)
+- [8x8 Documentation: Configuring the Agent Handover from Cognigy to 8x8](https://support.8x8.com/contact-center/integrations/Intelligent_Customer_Assistant/Configuring_the_Agent_Handover_from_Cognigy_to_8x8)

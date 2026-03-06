@@ -1,0 +1,43 @@
+---
+title: Knowledge Store
+descriptions: >-
+  A Knowledge Store provides a centralized and structured environment for
+  managing and categorizing Knowledge Sources. Knowledge Stores help streamline
+  the knowledge management process by grouping related Knowledge Sources, making
+  it easier to search and retrieve relevant information during Run-time.
+hidden: false
+---
+
+A _Knowledge Store_ provides a centralized and structured environment for managing and categorizing [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview). Knowledge Stores help streamline the knowledge management process by grouping related Knowledge Sources, making it easier to search and retrieve relevant information during Run-time. You can select Knowledge Stores in [Search Extract Output Nodes](/ai/agents/develop/node-reference/other-nodes/search-extract-output) to retrieve information from Knowledge Sources for your AI Agents.
+
+## Prerequisites
+
+- You have added a [Large Language Model (LLM) to your Project](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) that [supports Knowledge Search](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+
+## Restrictions
+
+- All Knowledge Stores within a Project use the same embedding model. After you [configure the embedding model of your first Knowledge Store](/ai/agents/develop/knowledge-ai/overview), all other Knowledge Stores will use the same embedding model. If you want to switch to a different embedding model, delete all existing Knowledge Stores in the current Project and create new ones, or [create a new Project](/ai/agents/develop/projects-and-flows/projects).
+- When you import a [Package](/ai/platform-features/packages) including a Knowledge Store, the source and target Projects must use the same embedding model. If they use different embedding models, recreate the [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) to generate new embeddings with the target Project's model.
+
+## Working with Knowledge Stores
+
+<Tabs>
+  <Tab title="GUI">
+        You can view, create, edit, and delete Knowledge Stores in **Build > Knowledge**. Also, you can copy Knowledge Stores' Reference ID and export Knowledge Stores as Packages.
+  </Tab>
+  <Tab title="API">
+        You can view, create, edit, and delete Knowledge Stores using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#tag--KnowledgeStores).
+  </Tab>
+  <Tab title="CLI">
+        You can create Knowledge Stores using the [Cognigy.AI CLI](https://github.com/Cognigy/Cognigy-CLI/blob/main/KNOWLEDGE-AI-README).
+  </Tab>
+</Tabs>
+## More Information
+
+- [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview)
+- [Cognigy Text Format](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt)
+- [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf)
+- [Web Page](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/web-page)
+- [Search Extract Output Node](/ai/agents/develop/node-reference/other-nodes/search-extract-output)
+- [LLM](/ai/agents/develop/gen-ai-and-llms/llms)
+- [Generative AI](/ai/agents/develop/gen-ai-and-llms/generative-ai)

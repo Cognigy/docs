@@ -1,0 +1,165 @@
+---
+title: Mocking
+keywords: ['mocking', 'mock data', 'testing', 'test automation']
+seo:
+  metatags:
+    description: "Mocking is a Cognigy.AI feature that allows you to mock data in Nodes for testing different scenarios with your AI Agent."
+---
+
+<a href="/release-notes/2026.1"><Badge className="version-badge" color="blue">Added in 2026.3</Badge></a>
+
+_Mocking_ lets you change the behavior of a [Node](/ai/agents/develop/nodes/overview) by replacing its logic with mock code without changing the original Node settings. This approach allows you to keep the original Flow logic and mock Node behaviors to test specific Flow conditions in the [Simulator](/ai/agents/test/simulator/overview), the [Interaction Panel](/ai/agents/test/interaction-panel/overview), and [Endpoints](/ai/agents/deploy/endpoints/overview) without reconfiguring Nodes.
+
+## Key Benefits
+
+- **Testing Flexibility**. Replace any Node's output or function without changing Flow paths or production logic. To change the Node's behavior, you can just activate mocking and add mock code.
+- **Cost Savings**. Run simulations with lower costs or less time by mocking data to avoid sending HTTP or LLM requests.
+- **Consistent Testing Interactions**. Control interactions for AI Agent testing by mocking LLM responses with deterministic data.
+
+## Restrictions
+
+- If you activate mocking for a Node that has child Nodes, for example, the Then and Else Nodes of an [If Node](/ai/agents/develop/node-reference/logic/if), the child Nodes aren't executed. However, you can use mocking on child Nodes.
+
+## How Mocking Works
+
+Mocking provides the **Mock Code** field in every Node's settings in the Node editor. This field supports JavaScript code to access the [Input](/ai/agents/develop/ai-agent-memory/input), [Context](/ai/agents/develop/ai-agent-memory/context), and [Profile](/ai/agents/develop/ai-agent-memory/profile) objects, and `api.say` [function](/ai/for-developers/code/api-functions#api-output-api-say). The mock code entirely overrides the configured Node's execution logic at run-time. With the **Mock Code** field, you can mock:
+
+- The AI Agent output, for example, `api.say("Are there any requirements for the drilling machine?")`.
+- User input and data, and third-party requests, by storing data in:
+  - the Input object, for example, `input.text = "I would like to buy a drilling machine"`.
+  - the Context object, for example, `context.selectedProduct = "Drilling machine"`.
+  - the Profile object, for example, `profile.name = "John Doe"`.
+
+<Warning>
+  If you activate mocking for Nodes that control Flow paths, for example, the [If](/ai/agents/develop/node-reference/logic/if) and [Go To Nodes](/ai/agents/develop/node-reference/logic/go-to), the Flow execution is affected. This approach can lead to tests and simulations that don't reflect your use case, for example, one of the branches of the If Node can't be executed.
+</Warning>
+
+## How to Use Mocking
+
+To use mocking, you need to activate it at both levels:
+
+- the [Node level](/ai/agents/test/mocking#at-the-node-level). Enter the mock code to replace the Node's logic.
+- the [interface level](/ai/agents/test/mocking#at-the-interface-level). The mock code replaces the Node's logic only in the interface you activate mocking for. You can use the following interfaces to run tests with mock code:
+
+    - [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+    - [Simulator](/ai/agents/test/simulator/overview)
+    - [individual Endpoints](/ai/agents/deploy/endpoints/overview)
+
+By selecting the interface for mocking, you can limit where mocking applies. For example, you can have interactions using the original Flow logic through one Endpoint and test conversations with the mock code logic through another Endpoint or in the Simulator.
+
+### Activate Mocking
+
+<AccordionGroup>
+  <Accordion title="At the Node Level">
+    1. Go to **Build > Flows**, select the Flow you want to test.
+    2. Right-click the Node you want to mock a behavior for and select **Enable Mocking**. The ![mocking](/_assets/icons/black-and-white/code-snippet.svg) icon appears next to the Node to indicate that the Node logic is replaced by the mock code.
+    3. Click the Node. The Node editor opens.
+    4. In the **Mocking** section, enter the mock code in the **Mock Code** field, for example, `api.say("Are there any requirements for the drilling machine?")`. Save the Node.
+  </Accordion>
+  <Accordion title="At the Interface Level">
+    <Tabs>
+      <Tab title="Interaction Panel">
+        1. In the upper-right corner, click ![interaction-panel](/_assets/icons/blue/interaction-panel.svg) to open the Interaction Panel.
+        2. Click the **Settings** tab and toggle on the **Enable Mocking** setting in the **Advanced** section.
+
+        Now, you can run the Flow with the mock code in the Interaction Panel, both in [chat](/ai/agents/test/interaction-panel/chat) and [simulation](/ai/agents/test/interaction-panel/simulation) modes.
+      </Tab>
+      <Tab title="Simulator">
+        1. In **Test > Simulator**, select the scenario you want to run with the mock code.
+        2. In the **Advanced** section of the **Start Simulation** panel, toggle on the **Enable Mocking** setting.
+      </Tab>
+      <Tab title="Endpoints">
+        1. In **Deploy > Endpoints**, select the Endpoint you want to test with the mock code.
+        2. In the **Advanced Settings** section of the **Test Endpoint** panel, toggle on the **Enable Mocking** setting.
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+### Deactivate Mocking
+
+To fully deactivate mocking, deactivate it at Node and interface levels.
+
+However, you can selectively deactivate mocking:
+
+- Deactivate mocking only at the Node level — switches only the Node's execution logic back to the original Node settings. If you have other Nodes with active mocking, their mock code is executed instead of the original Node settings.
+- Deactivate mocking only at the interface level — switches the Node execution logic of all Nodes with mock code back to the original Node settings for that interface. If you have active mocking for other interfaces, the mock code is executed instead of the original Node settings.
+
+This approach provides flexibility to easily switch between mocked and original behavior.
+
+<AccordionGroup>
+  <Accordion title="Deactivate at the Node Level">
+    1. Go to **Build > Flows**, select the relevant Flow.
+    2. Right-click the Node you want to deactivate mocking for and select **Disable Mocking**.
+  </Accordion>
+  <Accordion title="Deactivate at the Interface Level">
+    <Tabs>
+      <Tab title="Interaction Panel">
+        1. In the upper-right corner, click ![interaction-panel](/_assets/icons/blue/interaction-panel.svg) to open the Interaction Panel.
+        2. Click the **Settings** tab and toggle off the **Enable Mocking** setting in the **Advanced** section.
+      </Tab>
+      <Tab title="Simulator">
+        1. In **Test > Simulator**, select the scenario you want to run with the mock code.
+        2. In the **Advanced** section of the **Start Simulation** panel, toggle off the **Enable Mocking** setting.
+      </Tab>
+      <Tab title="Endpoints">
+        1. In **Deploy > Endpoints**, select the Endpoint you want to test with the mock code.
+        2. In the **Advanced Settings** section of the **Test Endpoint** panel, toggle off the **Enable Mocking** setting.
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+## Examples
+
+The following examples show how to use mock code in different cases.
+
+<AccordionGroup>
+  <Accordion title="Mock a User Response">
+    To test how your AI Agent performs when it receives a predefined response from the user to a [Question Node](/ai/agents/develop/node-reference/basic/question), you can mock the response. Consider that you have a Question Node that stores the user's response in `input.result`. Follow these steps:
+
+    1. Right-click the Question Node you want to mock a behavior for and select **Enable Mocking**.
+    2. Open the Node editor and enter the code to mock the user's response, for example:
+       ```javascript
+       input.result = "I would like to order a drilling machine"
+       ```
+  </Accordion>
+  <Accordion title="Mock an AI Agent Response">
+    To test a predefined response instead of an LLM-generated response, for example, from an [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt), follow these steps:
+
+    1. Right-click the LLM Prompt Node you want to mock a behavior for and select **Enable Mocking**.
+    2. Open the Node editor and enter the code to mock the AI Agent's response, for example:
+       ```javascript
+       api.say("Are there any requirements for the drilling machine?")
+       ```
+  </Accordion>
+  <Accordion title="Replace Costly Requests">
+    Your Flow may contain HTTP or LLM requests that may incur costs or take a long time to complete. These requests could cause issues if you test your AI Agent with frequent simulations. To avoid these issues, you can mock a request during the simulations, for example, in an [HTTP Request Node](/ai/agents/develop/node-reference/service/http-request). Consider an HTTP Request Node that retrieves information about a movie from the [OMDB API database](https://www.omdbapi.com/) and stores it in the Input object under `input.movie`. You can mock the request of the HTTP Request Node with a predefined response. To do so, follow these steps:
+
+    1. Right-click the HTTP Request Node you want to mock a behavior for and select **Enable Mocking**.
+    2. Open the Node editor and enter the mock output in the **Mock Code** field, for example:
+       ```javascript
+       input.movie = {
+         "Title": "Inception",
+         "Year": "2010",
+         "Rated": "PG-13",
+         "Released": "16 Jul 2010",
+         "Runtime": "148 min",
+         "Genre": "Action, Adventure, Sci-Fi",
+         "Director": "Christopher Nolan",
+         "Writer": "Christopher Nolan",
+         "Actors": "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page",
+         "Plot": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
+         "Language": "English, Japanese, French",
+         "Country": "USA, UK",
+         "Awards": "Won 4 Oscars. Another 152 wins & 218 nominations."
+       }
+       ```
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Simulator](/ai/agents/test/simulator/overview)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Endpoints](/ai/agents/deploy/endpoints/overview)

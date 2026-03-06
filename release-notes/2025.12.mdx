@@ -1,0 +1,178 @@
+---
+title: '2025.12'
+
+---
+
+<Warning>
+  The [Insights Beta API](https://api-trial.cognigy.ai/openapi#get-/insights/beta/messages/report/-queryHash-) has been removed. After the removal, use the [Cognigy.AI OData endpoint](/ai/agents/analyze/odata) instead.
+
+  Refer to the list of all upcoming removals on the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2025.12.2
+
+### Cognigy.AI
+
+**Released** June 17, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where applying changes to a Question Node failed without displaying errors
+
+## 2025.12.1
+
+### Cognigy.AI
+
+**Released** June 16, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where custom attributes weren't included in the first message sent to Genesys Cloud Open Messaging. This message contained the conversation transcript between the end user and the AI Agent. As a result, the Genesys flow didn't capture the custom attributes as its first step
+- Fixed the issue where the handover restarted during the connection to MongoDB Atlas
+- Fixed the issue where Snapshots with a handover provider rendered the Handover to Agent Node’s provider field empty, causing the handover to fail
+- Fixed the issue where an update in the message processing queue caused missing user inputs
+
+## 2025.12.0
+
+### Cognigy.AI
+
+**Released** June 10, 2025
+
+#### Features
+
+##### Collaborative Editing
+
+Introduced [Collaborative Editing](/ai/agents/develop/projects-and-flows/collab-editing), a new feature designed to boost team productivity and collaboration while designing Flows. From now on, you will see other active users in the Flow and within individual Nodes, including their mouse cursors and real-time update indicators showing the number of changes made. To reduce conflicts from parallel updates, we’ve also introduced Node locking, preventing others from editing a Node while someone else is working on it. Finally, if you have questions for other project members, you can now start a discussion directly on a Node and mention teammates. This feature enables your team to work faster and more efficiently when developing AI Agents together. 
+
+The feature is activated in a shared SaaS installation.
+
+##### Native Integration with Zoom
+
+Launched a [Zoom Contact Center Endpoint](/ai/agents/deploy/endpoint-reference/zoom) for chat with AI Agents, improving collaboration and automating workflows.
+
+#### Improvements
+
+- Set a maximum limit of 1 year for Analytics Data Expiration, Insights Session Data Expiration, and Steps Data Expiration in the Management UI
+- Added support for a [custom authentication header name](/ai/agents/develop/gen-ai-and-llms/providers/openai-compatible) field to the OpenAI-compatible LLM provider settings
+- Improved the stability of the `service-handover` database connection to MongoDB and added caching for handover data while sending messages to handover providers. This change enhances the speed and reliability of the handover process
+- Updated the [Amazon EventBridge integration](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge) with the Genesys Open Messaging handover provider to prevent conversations from ending during queue transfers. If you integrate with Genesys Open Messaging via EventBridge, update your configuration to use the new `v2.detail.events.conversation.{id}.customer.end` topic. Previously, you could end conversations using WebSocket events or Trigger-based methods. These methods have been removed and are no longer supported
+
+#### Bug Fixes
+
+- Fixed the issue where the `FEATURE_DISABLE_NPM_PACKAGES_IN_SECURE_CONTEXT` flag wasn't passed to the `service-function-execution` child process
+- Fixed the issue preventing updates to handover providers imported via Snapshots
+- Fixed the issue where the `disabled` status of Knowledge Sources imported from a Package was overwritten
+- Fixed the issue where the HTTP Request Node encoded query parameters, resulting in altered query values
+- Fixed the issue where Projects using Voice Gateway Endpoints with the Live Agent handover provider stopped delivering human agent messages to end users
+- Fixed the issue where goals imported via a Package or Snapshot weren't referenced in the Track Goal Node
+
+### Cognigy Voice Gateway
+
+**Released** June 10, 2025
+
+#### Improvements
+
+- Added support for the Barge In feature to AI Agent Nodes. Now, when a Set Session Config Node precedes an AI Agent Node, the Barge In settings from the Set Session Config Node are applied to the AI Agent Node
+- Improved `feature-server` by adding the entire `say` verb content to the summary on the Tracing tab in Recent Calls within the Voice Gateway Self-Service Portal
+
+#### Bug Fixes
+
+- Fixed the issue in `feature-server` where it stopped working when attempting to play a silent overlay
+- Fixed the issue where the nested `gather` verb wasn't applied when the Repeat Question toggle was disabled under Reprompt Options in the Question or Optional Question Node
+- Fixed the issue in `feature-server` where DTMF inputs where gathered after the maximum number of digits had been reached
+- Fixed the issue of duplicate inputs due to concurrent gathers
+- Fixed the issue where the `CALL_COMPLETED` event wasn't sent to the Endpoint
+
+### Cognigy Webchat
+
+**Released** June 10, 2025
+
+#### Improvements
+
+- Added support for the [`speak`](/webchat/v3/accessibility#adaptive-cards) parameter for adaptive cards, which allows you to include spoken text summary of the adaptive card for better accessibility and user engagement
+
+#### Bug Fixes
+
+- Fixed accessibility issues in Webchat v3
+
+### Cognigy Live Agent
+
+**Released** June 10, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where skill-based routing and combined routing, which match human agents to conversations by language and other skills, didn't work as expected
+- Fixed the issue where an `invalid team name` error was shown incorrectly during team creation or editing Teams in Settings > Teams
+- Fixed the issue where the Contact Profile in conversations didn't display the Memories field after the Edit contact window was opened
+
+### Cognigy Insights
+
+**Released** June 10, 2025
+
+#### Features
+
+##### Business Dashboard
+
+Introduced the [Business Dashboard](/insights/dashboards/business). It gives you a quick overview of your key session metrics through interactive charts and tables, and includes location-based activity, active sessions by AI or human agents, and business outcomes.
+
+#### Improvements
+
+- Removed the Insights Beta API
+
+#### Bug Fixes
+
+- Fixed the issue in the Step Explorer and Transcript Explorer where applying a Snapshot filter caused Step filters to show duplicate results. Now, Explorers accurately display only the selected steps, even when a Snapshot filter is active
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + AI Copilot, Voice Gateway
+
+Traefik, the Kubernetes ingress controller, has been updated to enhance functionality and address known security vulnerabilities in the dependencies of Cognigy.AI and Cognigy Insights. This update upgrades Traefik to version 3.4.0 and includes the latest Helm chart, reflecting a commitment to continuous improvement.
+
+##### Traefik Update
+
+Make updates for Cognigy.AI and Voice Gateway separately, because they have different Helm charts and `values.yaml` files.
+
+Before installing the Helm chart, follow these steps:
+
+1. In the new Traefik Helm chart, the `traefik.ports.<port_name>.redirectTo` has been replaced with `traefik.ports.<port_name>.redirections`.  If you've modified the Traefik port redirection in your local `values.yaml` file, update it accordingly.
+
+     Before:
+
+     ```yaml
+     ports:
+       web:
+         redirectTo:
+           port: websecure
+     ```
+   
+     Now:
+
+     ```yaml
+     ports:
+       web:
+         redirections:
+           entryPoint:
+             to: websecure
+             scheme: https
+     ```
+   
+2. Deploy the latest CRDs of Traefik by executing the following command:
+
+     ```bash
+     kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/?ref=v35.4.0
+     ```
+
+For more detailed information, refer to the official [release notes](https://github.com/traefik/traefik-helm-chart/releases) provided by Traefik.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and AI Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

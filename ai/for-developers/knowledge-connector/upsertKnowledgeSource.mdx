@@ -1,0 +1,94 @@
+---
+title: upsertKnowledgeSource
+seo:
+  metatags:
+    description: Creates or updates a Knowledge Source. Use this instead of createKnowledgeChunk for Knowledge Connectors.
+keywords: ['upsertKnowledgeSource', 'knowledge api', 'knowledge source', 'knowledge connector']
+---
+
+## Syntax
+
+`api.upsertKnowledgeSource(params)`
+
+## Description
+
+Creates or updates a [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview) in a [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store). Use `upsertKnowledgeSource` in [Knowledge Connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors) to allow knowledge synchronization.
+
+The API compares `externalIdentifier`, `chunkCount`, and `contentHashOrTimestamp` to detect changes to the external source. If there are any changes, the Knowledge Source and the relative Knowledge Chunks are updated in Cognigy.AI.
+
+**Parameters:**
+
+- `params`: `UpsertKnowledgeSourceParams` — configuration object. The object contains the following parameters:
+
+| Parameter                | Type   | Required | Description                                                                                                                                             |
+| ------------------------ | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                   | String | Yes      | The name of the Knowledge Source.                                                                                                                       |
+| `description`            | String | No       | A description of the Knowledge Source.                                                                                                                  |
+| `tags`                   | Array  | No       | Source Tags associated with the Knowledge Source, used to filter searches.                                                                              |
+| `chunkCount`             | Number | Yes      | The number of Knowledge Chunks in the Knowledge Source.                                                                                                 |
+| `contentHashOrTimestamp` | String | Yes      | Used to detect content changes, for example, with a SHA-256 hash. If it changes, the Knowledge Source and the relative Knowledge Chunks are updated. |
+| `externalIdentifier`     | String | No       | Stable identifier for the Knowledge Source. The default value is the Knowledge Source name.                                                             |
+
+**Returns:** `Promise<{ knowledgeSourceId: string, ... } | null>` — resolves to the Knowledge Source when changes to the external source are detected and Knowledge Chunks need to be updated, or `null` when there are no changes, however, in this case the description and Source Tags are still updated.
+
+## Example
+
+The following Knowledge Connector uses `upsertKnowledgeSource` to create or update a source, then adds Knowledge Chunks when the source is returned:
+
+```js expandable
+import * as crypto from "node:crypto";
+import { createKnowledgeConnector } from "@cognigy/extension-tools";
+
+export const myKnowledgeImport = createKnowledgeConnector({
+	type: "myKnowledgeImport",
+	label: "My Knowledge Import",
+	summary: "My own Knowledge Extension",
+	fields: [
+		{
+			key: "name",
+			label: "Name",
+			type: "text",
+			params: {
+				required: true,
+			},
+		},
+		{
+			key: "color",
+			label: "Color",
+			type: "text",
+			params: {
+				required: true,
+			},
+		},
+	] as const,
+	function: async ({ config, api, sources }) => {
+		const text = `The color of ${config.name} is ${config.color}`;
+		const contentHash = crypto.hash("sha256", text, "hex");
+
+		const knowledgeSource = await api.upsertKnowledgeSource({
+			name: config.name,
+			description: "This is my own knowledge source",
+			tags: ["example"],
+			chunkCount: 1,
+			contentHashOrTimestamp: contentHash,
+		});
+
+		if (knowledgeSource) {
+			await api.createKnowledgeChunk({
+				knowledgeSourceId: knowledgeSource.knowledgeSourceId,
+				text,
+				data: {},
+			});
+		}
+
+		const createdSources = [config.name];
+		for (const source of sources) {
+			if (!createdSources.includes(source.externalIdentifier)) {
+				await api.deleteKnowledgeSource({
+					knowledgeSourceId: source.knowledgeSourceId,
+				});
+			}
+		}
+	},
+});
+```
