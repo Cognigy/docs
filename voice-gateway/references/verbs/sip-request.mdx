@@ -1,0 +1,43 @@
+---
+title: 'SIP:Request'
+---
+
+The `sip:request` verb is used to send a SIP `INFO`, `NOTIFY,` or `MESSAGE` request on an established call,
+which is an in-dialog request.
+This verb allows an application to send SIP messages during a call,
+such as transmitting metadata to the calling SIP endpoint using a SIP `INFO` message.
+
+```json
+{
+  "verb": "sip:request",
+  "method": "INFO",
+  "headers": {
+    "X-Metadata": "my sip metadata"
+  },
+  "actionHook": "/info"
+}
+```
+
+## Configuration
+
+The following table lists the available parameters:
+
+| Parameter  | Type             | Description                                                                                   | Required |
+| ---------- | ---------------- | --------------------------------------------------------------------------------------------- | -------- |
+| method     | string           | The SIP method, which should be one of `INFO`, `MESSAGE`, or `NOTIFY`.                        | Yes      |
+| id         | string           | A unique identifier for this verb instance. Used for event notifications when `notifyEvents` is enabled. | No       |
+| headers    | object           | An object that holds headers as key-value pairs to include in the SIP request.                | No       |
+| body       | string           | The body of the SIP request.                                                                  | No       |
+| actionHook | string \| object | A webhook to receive an HTTP POST when the SIP request has completed.                         | No       |
+
+### Send Nested Objects
+
+To send a nested object, use a string JSON notation of an object. For example:
+
+```json
+{
+"infoObject": "{\"objectLevel1\": {\"objectLevel2\": {\"objectLevel3\": \"stringValue\"}}}"
+}
+```
+
+To send a nested object in the `body`, include a `Content-Type` header with the value `application/json`. Then, in the `body` value, use a string notation of a JSON object.

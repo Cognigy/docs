@@ -1,0 +1,42 @@
+---
+title: Play
+keywords: ['Cognigy Voice Gateway', 'play verb', 'playback', 'audio streaming', 'actionHook']
+---
+
+The `play` verb is used to stream recorded audio to a call.
+
+```json
+{
+  "verb": "play",
+  "url": [
+    "https://example.com/example1.mp3",
+    "https://example.com/example2.wav"
+  ],
+  "loop": 2,
+  "earlyMedia": true,
+  "timeoutSecs": 15,
+  "seekOffset": 8000,
+  "actionHook": {
+    "url": "/play/action",
+    "playback_seconds": 12,
+    "playback_milliseconds": 12000,
+    "playback_last_offset_pos": 8000
+  }
+}
+```
+
+### Configuration
+
+You can use the following options in the `play` verb:
+
+| Parameter                           | Type             | Description                                                                                                                                                                                                                                             | Required |
+| ----------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| url                                 | string \| array  | A URL string or an array of URLs pointing to WAV or MP3 files to play sequentially. The `.mp3` or `.wav` extension isn't required at the end of the URL. For example: `https://abc.xyz/music.mp3` or `https://audio.jukehost.co.uk/N5pnlULbup8KabGRE7dsGwHTeIZAwWdr`.     | Yes      |
+| loop                                | number \| string | The number of times to play the URLs. Can be a number or string. The default value is `1`.                                                                                                                                                              | No       |
+| earlyMedia                          | boolean          | If `true` and the call hasn't yet been answered, audio will play without answering the call. The default value is `false`.                                                                                                                             | No       |
+| timeoutSecs                         | number \| string | The maximum number of seconds to play the audio. Can be a number or string.                                                                                                                                                                             | No       |
+| seekOffset                          | number \| string | The number of samples to seek into the URL before starting playback. Can be a number or string.                                                                                                                                                         | No       |
+| actionHook                          | string \| object | A webhook to receive an HTTP POST when the `play` verb completes.                                                                                                                                                                                       | No       |
+| actionHook.playback_seconds         | number           | The number of seconds that were played during the playback.                                                                                                                                                                                             | No       |
+| actionHook.playback_milliseconds    | number           | The number of milliseconds that were played during the playback.                                                                                                                                                                                        | No       |
+| actionHook.playback_last_offset_pos | number           | The last offset position in samples that was played. Useful for resuming playback if interrupted.                                                                                                                                                       | No       |

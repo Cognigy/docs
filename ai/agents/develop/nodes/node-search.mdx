@@ -1,0 +1,62 @@
+---
+title: Node Search
+hidden: false
+keywords:
+  - ' node search'
+  - ' flow editor'
+seo:
+  metatags:
+    description: Search through the Nodes in the Flow editor.
+---
+
+import { ExpandableTable } from '/snippets/expandable-table.jsx'
+
+With the _Node Search_ field, you can search through the Nodes in the [Flow editor](/ai/agents/develop/projects-and-flows/editor).
+
+## How to Use
+
+To open the Node Search field, click ![search icon](/_assets/icons/blue/search.svg) in the lower-left corner of the Flow editor.
+
+<ExpandableTable
+  headers={["Searchable Content", "Description"]}
+  rows={[
+    ["Label", "The label displayed on a Node, configured in the Settings section of the Node editor."],
+    ["Comment", "The comment made on a Node."],
+    ["Analytics Step", "The <a href=\"/ai/agents/analyze/analytics-steps\">Analytics Step</a> configured in a Node."],
+    ["Type", "The Node type, for example, Say Node or AI Agent Node."],
+    ["ID", "The unique database ID of a Node. You can obtain the Node ID number via <a href=\"/ai/agents/analyze/odata#steps\">OData</a>."],
+    ["Reference ID", "The ID you can use for setting a Node, for example, as an Entrypoint or for manipulating Nodes via the <a href=\"https://api-trial.cognigy.ai/openapi\">Cognigy.AI API</a>. You can copy the Reference ID from the <img src=\"/_assets/icons/black-and-white/vertical-ellipsis.svg\" alt=\"vertical ellipsis\" /> menu in the Node editor."],
+    ["JSON editor content", "Code, keys, or values in the JSON editor inside a Node, for example, inside a Code Node or POST data object in an HTTP Request Node."],
+    ["Output types", "Any text in the Output type settings in configured <a href=\"/ai/agents/develop/nodes/channels\">channels</a>."],
+    ["Button labels", "Button labels and values you have configured in Say, Question, and Optional Question Nodes."],
+    ["Settings fields", "Setting fields in a Node or Extension."]
+    ]}
+    initialRowsToShow={3}
+/>
+
+### Search Matches in the Flow Editor
+
+When you enter a text into the Node Search field, the Flow editor highlights matching Nodes in yellow and scrolls to the first match. Use ![up arrow](/_assets/icons/black-and-white/arrow-up.svg) and ![down arrow](/_assets/icons/black-and-white/arrow-down.svg) to navigate between matches. Click ![close button](/_assets/icons/black-and-white/close-button.svg) to reset the search.
+
+<Accordion title="Toggle Search Results">
+  To close the Node Search field but keep the matching Nodes highlighted, click
+  ![search icon](/_assets/icons/blue/search.svg) again.
+</Accordion>
+
+### Search Matches in the Node Editor
+
+The Node search also matches text in the Node editor. When you open a matching Node, the field, section, or tab that matches the search text is highlighted.
+
+<Frame>
+  <img
+    class="image-center"
+    src="/_assets/ai/develop/nodes/node-editor-with-highlighting.png"
+    style={{ width: 'auto' }}
+  />
+</Frame>
+
+## More Information
+
+- [Nodes](/ai/agents/develop/nodes/overview)
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Node Editor](/ai/agents/develop/nodes/overview#working-with-nodes)

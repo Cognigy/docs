@@ -1,0 +1,35 @@
+---
+title: deleteKnowledgeSource
+seo:
+  metatags:
+    description: Deletes a Knowledge Source and the relative Knowledge Chunks.
+keywords: ['deleteKnowledgeSource', 'knowledge api', 'knowledge source', 'delete']
+---
+
+## Syntax
+
+`api.deleteKnowledgeSource(params)`
+
+## Description
+
+Deletes a [Knowledge Source](/ai/agents/develop/knowledge-ai/knowledge-source/overview)  and the relative [Knowledge Chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk).
+
+**Parameters:**
+
+- `params`: `DeleteKnowledgeSourceParams` — configuration object containing the source ID. The object contains the following parameters:
+
+| Parameter           | Type   | Description                     |
+| ------------------- | ------ | ------------------------------- |
+| `knowledgeSourceId` | string | The ID of the Knowledge Source. |
+
+**Returns:** `Promise<{}>` — a promise that resolves to an empty object when the deletion is complete.
+
+## Example
+
+```js
+await api.deleteKnowledgeSource({
+  knowledgeSourceId: "ks_abc123def456"
+});
+
+console.log("Knowledge source deleted successfully");
+```

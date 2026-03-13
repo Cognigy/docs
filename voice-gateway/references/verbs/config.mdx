@@ -1,0 +1,176 @@
+---
+title: Config
+---
+
+The `config` verb allows developers to change the default speech settings during a session or to collect speech or DTMF input in the background while other verbs run. This verb is non-blocking, so the specified settings are changed immediately and the application proceeds with the next verb.
+
+```json expandable
+{
+  "verb": "config",
+  "synthesizer": {
+    "vendor": "microsoft",
+    "language": "de-DE",
+    "voice": "de-DE-KillianNeural"
+  },
+  "recognizer": {
+    "vendor": "google",
+    "language": "de-DE"
+  },
+  "bargeIn": {
+    "enable": true,
+    "sticky": true,
+    "input": ["speech", "digits"],
+    "actionHook": "/userInput",
+    "partialResultHook": "/partialInput",
+    "finishOnKey": "#",
+    "numDigits": 5,
+    "minDigits": 1,
+    "maxDigits": 5,
+    "interDigitTimeout": 3000,
+    "dtmfBargein": true,
+    "minBargeinWordCount": 2
+  },
+  "fillerNoise": {
+    "enable": true,
+    "url": "https://example.com/filler.wav",
+    "startDelaySecs": 2
+  },
+  "vad": {
+    "enable": true,
+    "voiceMs": 250,
+    "silenceMs": 500,
+    "strategy": "adaptive",
+    "mode": 3
+  },
+  "speechFallback": {
+    "type": "dial",
+    "reason": "recognizerFailure",
+    "dial": {
+      "number": "+49123456789"
+    },
+    "refer": {
+      "uri": "sip:user@example.com"
+    }
+  },
+  "actionHookDelayAction": {
+    "enabled": true,
+    "noResponseTimeout": 5000,
+    "noResponseGiveUpTimeout": 15000,
+    "retries": 2,
+    "actions": [
+      {
+        "verb": "say",
+        "text": "Waiting for response..."
+      }
+    ],
+    "giveUpActions": [
+      {
+        "verb": "say",
+        "text": "No response received. Moving on."
+      }
+    ]
+  },
+  "boostAudioSignal": "+3dB",
+  "listen": {
+    "startTimeout": 5000,
+    "stopTimeout": 2000
+  },
+  "notifyEvents": true,
+  "onHoldMusic": "https://example.com/hold.mp3",
+  "referHook": "/sipRefer",
+  "reset": ["recognizer", "synthesizer"],
+  "record": {
+    "action": "startCallRecording",
+    "siprecServerURL": "sip:recording@example.com",
+    "recordingID": "call12345",
+    "headers": {
+      "X-Custom-Header": "value"
+    }
+  },
+  "sipRequestWithinDialogHook": "/sipRequest",
+  "amd": true
+}
+```
+
+## Configuration
+
+The following table lists the available parameters:
+
+| Parameter                                     | Type            | Description                                                                                                                                                                        | Required      |
+| --------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| actionHookDelayAction.enabled                 | boolean         | Enables or disables the delayed action hook behavior. When enabled, the system waits for the configured action hook to respond before executing any delay or give-up actions.      | No            |
+| actionHookDelayAction.noResponseTimeout       | number          | The timeout in milliseconds to wait for a response from the action hook before executing the delay actions, such as prompting the user with a `say` verb.                          | No            |
+| actionHookDelayAction.noResponseGiveUpTimeout | number          | The timeout in milliseconds to wait before executing the give-up actions if the action hook never responds.                                                                        | No            |
+| actionHookDelayAction.retries                 | number          | The number of retry attempts to call the action hook before giving up.                                                                                                             | No            |
+| actionHookDelayAction.actions                 | array           | An array of verbs to execute while waiting for the action hook response, such as a `say` verb to provide feedback to the user.                                                     | No            |
+| actionHookDelayAction.giveUpActions           | array           | An array of verbs to execute if the action hook never responds, for example, a `say` verb to inform the user and continue the application.                                         | No            |
+| amd                                           | boolean         | Enables Answering Machine Detection (AMD) to distinguish whether the call is answered by a human or a machine.                                                                     | No            |
+| bargeIn.enable                                | boolean         | Enables background listening for speech or DTMF input while other verbs execute. If disabled, stops any background listening tasks currently running.                              | No            |
+| bargeIn.sticky                                | boolean         | If both `bargeIn.enable` and `bargeIn.sticky` are true, another background gather automatically starts after detecting speech or DTMF input, allowing continuous input collection. | No            |
+| bargeIn.actionHook                            | string          | A webhook URL to invoke when user input is collected by the background gather. The default is `voice`.                                                                             | No            |
+| bargeIn.partialResultHook                     | string          | A webhook URL to receive interim transcription results during background gathering. Useful for providing real-time feedback or logging partial input.                              | No            |
+| bargeIn.input                                 | array           | Specifies allowed input types: `['digits']`, `['speech']`, or `['digits', 'speech']`.                                                                                              | Yes           |
+| bargeIn.finishOnKey                           | string          | The DTMF key that signals the end of input in the background gather.                                                                                                               | No            |
+| bargeIn.numDigits                             | number          | The exact number of DTMF digits expected to gather.                                                                                                                                | No            |
+| bargeIn.minDigits                             | number          | The minimum number of DTMF digits expected to gather. The default is 1.                                                                                                            | No            |
+| bargeIn.maxDigits                             | number          | The maximum number of DTMF digits expected to gather.                                                                                                                              | No            |
+| bargeIn.interDigitTimeout                     | number          | The time in milliseconds to wait between DTMF digits after reaching the minimum number of digits.                                                                                  | No            |
+| bargeIn.dtmfBargein                           | boolean         | Enables DTMF barge-in so that entering a DTMF tone can interrupt audio playback during background gathering.                                                                       | No            |
+| bargeIn.minBargeinWordCount                   | number          | The minimum number of words the user must speak before triggering barge-in. Helps prevent accidental interruptions during speech prompts.                                          | No            |
+| boostAudioSignal                              | string \| number | Specifies the number of decibels to increase or decrease the outgoing audio signal level (e.g., `-6 dB` or `+3 dB`). Default is `0 dB`.                                            | No            |
+| fillerNoise.enable                            | boolean         | Enables or disables filler noise played while waiting for user input or during processing.                                                                                         | Yes (if used) |
+| fillerNoise.url                               | string          | The URL to the MP3 or WAV audio file to play as filler noise.                                                                                                                      | No            |
+| fillerNoise.startDelaySecs                    | number          | The delay in seconds before starting filler noise playback.                                                                                                                        | No            |
+| listen                                        | object          | A nested `listen` verb that streams session audio to a remote server via WebSocket.                                                                                                | No            |
+| notifyEvents                                  | boolean         | Enables event notifications over WebSocket connections. Verbs must include an `id` property to use this feature.                                                                   | No            |
+| onHoldMusic                                   | string          | The URL to an audio file to play when the session is placed on hold.                                                                                                               | No            |
+| recognizer                                    | object           | Contains configuration options for the speech recognition engine. This includes language selection, hints, diarization, and other advanced settings.                                                                                                                                                                                                                                                                       | No       |
+| recognizer.vendor                             | string           | The speech recognition provider to use, for example, Google, Amazon, or Azure. The vendor determines transcription quality, supported languages, and feature availability.                                                                                                                                                                                                                                                 | Yes      |
+| recognizer.label                              | string           | A custom label to identify this recognizer instance in logs or dashboards. Helpful when multiple recognizers are configured.                                                                                                                                                                                                                                                                                               | No       |
+| recognizer.language                           | string           | The primary language code for transcription, for example, `en-US` for English, `fr-FR` for French. Determines how speech is interpreted.                                                                                                                                                                                                                                                                                  | No       |
+| recognizer.hints                              | array            | An array of words or phrases that may appear in the audio and should be recognized more accurately. Useful for domain-specific terms, names, or technical vocabulary.                                                                                                                                                                                                                                                      | No       |
+| recognizer.hintsBoost                         | number           | A numeric value specifying how strongly the recognizer should prioritize the hint words. Higher numbers give stronger emphasis, improving accuracy for key terms.                                                                                                                                                                                                                                                          | No       |
+| recognizer.altLanguages                       | array            | An array of additional language codes that the recognizer can use for multilingual audio. Allows recognition of mixed-language content.                                                                                                                                                                                                                                                                                    | No       |
+| recognizer.profanityFilter                    | boolean          | If `true`, the recognizer will automatically remove or mask profanity from the transcription output.                                                                                                                                                                                                                                                                                                                       | No       |
+| recognizer.interim                            | boolean          | If `true`, returns partial transcription results as the audio is being processed. Useful for live captions or real-time feedback.                                                                                                                                                                                                                                                                                          | No       |
+| recognizer.punctuation                        | boolean          | If `true`, punctuation marks, for example, periods or commas, are included in the transcription to improve readability.                                                                                                                                                                                                                                                                                                   | No       |
+| recognizer.diarization                        | boolean          | If `true`, enables speaker diarization, which assigns segments of the transcript to individual speakers.                                                                                                                                                                                                                                                                                                                   | No       |
+| recognizer.diarizationMinSpeakers             | number           | The minimum number of speakers expected in the audio. Helps the diarization algorithm distinguish between speakers accurately.                                                                                                                                                                                                                                                                                             | No       |
+| recognizer.diarizationMaxSpeakers             | number           | The maximum number of speakers expected in the audio. Prevents the algorithm from splitting speech unnecessarily.                                                                                                                                                                                                                                                                                                          | No       |
+| recognizer.vad                                | object           | Voice Activity Detection settings. Determines how the system detects when someone is speaking vs. silence, improving transcription timing and accuracy.                                                                                                                                                                                                                                                                    | No       |
+| recognizer.fallbackVendor                     | string           | Specifies an alternative transcription vendor to use if the primary vendor fails. Ensures reliability in critical workflows.                                                                                                                                                                                                                                                                                               | No       |
+| recognizer.fallbackLanguage                   | string           | Language code to use for the fallback vendor. Must match a language supported by the fallback provider.                                                                                                                                                                                                                                                                                                                    | No       |
+| referHook                                     | string          | A webhook URL to invoke when a SIP REFER is received in the session.                                                                                                               | No            |
+| reset                                         | string \| array | Resets either the `recognizer` or `synthesizer` to default application settings.                                                                                                   | No            |
+| record.action                                 | string          | The call recording action: `startCallRecording`, `stopCallRecording`, `pauseCallRecording`, or `resumeCallRecording`.                                                              | Yes           |
+| record.siprecServerURL                        | string \| array | The SIP URI(s) for the SIPREC server. Required if `record.action` is `startCallRecording`.                                                                                         | Conditional   |
+| record.recordingID                            | string          | A user-defined identifier for the recording.                                                                                                                                       | No            |
+| record.headers                                | object          | SIP headers to include in the SIPREC request.                                                                                                                                      | No            |
+| sipRequestWithinDialogHook                    | string          | A webhook to invoke when a SIP request (e.g., INFO, NOTIFY, REFER) is received within a dialog.                                                                                    | No            |
+| speechFallback.type                           | string          | The type of fallback action (e.g., `dial` or `refer`).                                                                                                                             | Yes (if used) |
+| speechFallback.reason                         | string          | The reason for executing the fallback (e.g., `recognizerFailure`).                                                                                                                 | No            |
+| speechFallback.dial                           | object          | A `dial` verb to execute as fallback if speech recognition fails.                                                                                                                  | No            |
+| speechFallback.refer                          | object          | A `sip:refer` verb to execute as fallback if speech recognition fails.                                                                                                             | No            |
+| synthesizer                                   | object          | Session-level text-to-speech settings. See [Synthesizer Properties](#synthesizer-properties) for details.                                                                          | No            |
+| synthesizer.vendor                            | string           | The TTS provider to use, for example, `google`, `aws`, `microsoft`, `deepgram`, `elevenlabs`, `nuance`, or `custom:<provider-name>`. The vendor determines the available voices, languages, and engine options. See [supported speech vendors](/voice-gateway/references/tts-and-stt-vendors).                                               | Yes      |
+| synthesizer.label                             | string           | A custom label to identify this synthesizer instance. Useful when multiple TTS configurations from the same vendor are configured. Must match a label defined in the Voice Gateway [Application](/voice-gateway/webapp/applications#add-additional-tts-and-stt-vendor).                                                                       | No       |
+| synthesizer.language                          | string           | The language code for the speech output, for example, `en-US` or `de-DE`. Required if a vendor is defined.                                                                                                                                                                                                                                  | No       |
+| synthesizer.voice                             | string \| object | The specific voice to use. Can be a string representing the vendor-specific voice name (for example, `en-US-Wavenet-F` for Google TTS) or an object with advanced properties. Defaults to the Application-level TTS voice if not provided.                                                                                                   | No       |
+| synthesizer.engine                            | string           | The TTS engine type. Options are: <ul><li>**standard** — the default engine</li><li>**neural** — a high-quality natural voice</li><li>**generative** — an experimental AI voice</li><li>**long-form** — optimized for long text</li></ul>                                                                                                   | No       |
+| synthesizer.gender                            | string           | The desired voice gender: `MALE`, `FEMALE`, or `NEUTRAL`. Used for vendors that support gender selection.                                                                                                                                                                                                                                    | No       |
+| synthesizer.options                           | object           | A vendor-specific TTS options object. Common options include `speakingRate` (0.25–4.0), `pitch` (-20–20), and `volumeGainDb` (-96–16). These control the speech speed, pitch, and volume.                                                                                                                                                    | No       |
+| synthesizer.fallbackVendor                    | string           | An alternative TTS vendor to use if the primary vendor fails or returns an error.                                                                                                                                                                                                                                                            | No       |
+| synthesizer.fallbackLabel                     | string           | A label for the fallback TTS instance. Must match a label defined in the Voice Gateway [Application](/voice-gateway/webapp/applications#add-additional-tts-and-stt-vendor).                                                                                                                                                                  | No       |
+| synthesizer.fallbackLanguage                  | string           | The language code for the fallback synthesizer. Defaults to the primary language if not provided.                                                                                                                                                                                                                                            | No       |
+| synthesizer.fallbackVoice                     | string \| object | The voice for the fallback synthesizer. Can be a string or object.                                                                                                                                                                                                                                                                           | No       |
+| transcribe                                    | object          | A nested `transcribe` verb for background transcription of audio.                                                                                                                  | No            |
+| vad.enable                                    | boolean         | Enables or disables Voice Activity Detection (VAD).                                                                                                                                | Yes (if used) |
+| vad.voiceMs                                   | number          | Duration in milliseconds of voice required to trigger detection.                                                                                                                   | No            |
+| vad.silenceMs                                 | number          | Duration in milliseconds of silence required to end detection.                                                                                                                     | No            |
+| vad.strategy                                  | string          | The VAD detection strategy (e.g., `adaptive` or `fixed`).                                                                                                                          | No            |
+| vad.mode                                      | number          | Numeric value representing VAD sensitivity mode.                                                                                                                                   | No            |
+
+## More Information
+
+- [Listen](/voice-gateway/references/verbs/listen)
+- [Gather](/voice-gateway/references/verbs/gather)

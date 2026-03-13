@@ -1,0 +1,101 @@
+---
+title: Gather
+---
+
+The `gather` verb is used to collect DTMF or speech input.
+
+```json expandable
+{
+  "verb": "gather",
+  "actionHook": "http://example.com/collect",
+  "input": ["digits", "speech"],
+  "bargein": true,
+  "dtmfBargein": true,
+  "finishOnKey": "#",
+  "numDigits": 5,
+  "timeout": 8,
+  "recognizer": {
+    "vendor": "Google",
+    "language": "en-US",
+    "hints": ["sales", "support"],
+    "hintsBoost": 10
+  },
+  "say": {
+    "text": "To speak to Sales press 1 or say Sales. To speak to Customer Support press 2 or say Support",
+    "synthesizer": {
+      "vendor": "Google",
+      "language": "en-US",
+      "voice": "en-US-Wavenet-F"
+    }
+  }
+}
+```
+
+## Configuration
+
+The following table lists the available parameters:
+
+| Parameter             | Type             | Description                                                                                                                                                                                        | Required |
+| --------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| actionHook            | string \| object | A webhook to receive an HTTP POST with the collected digits or speech. The payload includes a `speech` or `dtmf` property along with the standard attributes.                                     | No       |
+| actionHookDelayAction | object           | Configures a delayed action hook behavior. See [config](/voice-gateway/references/verbs/config#actionhookdelayaction) for details.                                                                 | No       |
+| bargein               | boolean          | Enables a speech barge-in, which pauses audio playback if the caller starts speaking.                                                                                                              | No       |
+| dtmfBargein           | boolean          | Enables a DTMF barge-in, which pauses audio playback if the caller enters DTMF tones.                                                                                                              | No       |
+| fillerNoise           | object           | Configures a filler noise (background audio) while waiting for input. See [config](/voice-gateway/references/verbs/config#fillernoise) for details.                                                | No       |
+| finishOnKey           | string           | The DTMF key that signals the end of input.                                                                                                                                                        | No       |
+| input                 | array            | An array specifying the allowed types of input: `['digits']`, `['speech']`, or `['digits', 'speech']`. The default value is `['digits']`.                                                          | No       |
+| interDigitTimeout     | number           | The time to wait between digits after `minDigits` have been entered.                                                                                                                               | No       |
+| listenDuringPrompt    | boolean          | If `false`, the system won't listen for user speech until the [`say`](/voice-gateway/references/verbs/say) or [`play`](/voice-gateway/references/verbs/play) verb completes. The default value is `true`. | No       |
+| minBargeinWordCount   | number           | If `bargein` is `true`, stops the playback only after this many words are spoken. The default value is `1`.                                                                                        | No       |
+| minDigits             | number           | The minimum number of DTMF digits expected. The default value is `1`.                                                                                                                              | No       |
+| maxDigits             | number           | The maximum number of DTMF digits expected.                                                                                                                                                        | No       |
+| numDigits             | number           | The exact number of DTMF digits expected.                                                                                                                                                          | No       |
+| partialResultHook     | string \| object | A webhook that receives POST requests with interim transcription results. Partial transcriptions are only generated if this property is set.                                                       | No       |
+| play                  | object           | A nested [`play`](/voice-gateway/references/verbs/play) verb used to prompt the user.                                                                                                              | No       |
+| recognizer                        | object           | Contains configuration options for the speech recognition engine. This includes language selection, hints, diarization, and other advanced settings.                                                                                                                                                                                                                                                                       | No       |
+| recognizer.vendor                 | string           | The speech recognition provider to use, for example, Google, Amazon, or Azure. The vendor determines transcription quality, supported languages, and feature availability.                                                                                                                                                                                                                                                 | Yes      |
+| recognizer.label                  | string           | A custom label to identify this recognizer instance in logs or dashboards. Helpful when multiple recognizers are configured.                                                                                                                                                                                                                                                                                               | No       |
+| recognizer.language               | string           | The primary language code for transcription, for example, `en-US` for English, `fr-FR` for French. Determines how speech is interpreted.                                                                                                                                                                                                                                                                                  | No       |
+| recognizer.hints                  | array            | An array of words or phrases that may appear in the audio and should be recognized more accurately. Useful for domain-specific terms, names, or technical vocabulary.                                                                                                                                                                                                                                                      | No       |
+| recognizer.hintsBoost             | number           | A numeric value specifying how strongly the recognizer should prioritize the hint words. Higher numbers give stronger emphasis, improving accuracy for key terms.                                                                                                                                                                                                                                                          | No       |
+| recognizer.altLanguages           | array            | An array of additional language codes that the recognizer can use for multilingual audio. Allows recognition of mixed-language content.                                                                                                                                                                                                                                                                                    | No       |
+| recognizer.profanityFilter        | boolean          | If `true`, the recognizer will automatically remove or mask profanity from the transcription output.                                                                                                                                                                                                                                                                                                                       | No       |
+| recognizer.interim                | boolean          | If `true`, returns partial transcription results as the audio is being processed. Useful for live captions or real-time feedback.                                                                                                                                                                                                                                                                                          | No       |
+| recognizer.punctuation            | boolean          | If `true`, punctuation marks, for example, periods or commas, are included in the transcription to improve readability.                                                                                                                                                                                                                                                                                                   | No       |
+| recognizer.diarization            | boolean          | If `true`, enables speaker diarization, which assigns segments of the transcript to individual speakers.                                                                                                                                                                                                                                                                                                                   | No       |
+| recognizer.diarizationMinSpeakers | number           | The minimum number of speakers expected in the audio. Helps the diarization algorithm distinguish between speakers accurately.                                                                                                                                                                                                                                                                                             | No       |
+| recognizer.diarizationMaxSpeakers | number           | The maximum number of speakers expected in the audio. Prevents the algorithm from splitting speech unnecessarily.                                                                                                                                                                                                                                                                                                          | No       |
+| recognizer.vad                    | object           | Voice Activity Detection settings. Determines how the system detects when someone is speaking vs. silence, improving transcription timing and accuracy.                                                                                                                                                                                                                                                                    | No       |
+| recognizer.fallbackVendor         | string           | Specifies an alternative transcription vendor to use if the primary vendor fails. Ensures reliability in critical workflows.                                                                                                                                                                                                                                                                                               | No       |
+| recognizer.fallbackLanguage       | string           | Language code to use for the fallback vendor. Must match a language supported by the fallback provider.                                                                                                                                                                                                                                                                                                                    | No       |
+| say                   | object           | A nested [`say`](/voice-gateway/references/verbs/say) verb used to prompt the user.                                                                                                                | No       |
+| speechTimeout         | number           | The time in seconds to wait for speech input before timing out.                                                                                                                                    | No       |
+| timeout               | number           | The total time in seconds to wait for input before timing out.                                                                                                                                     | No       |
+
+## Example
+
+When speech input is used,
+the `actionHook` payload contains a speech object with the response from the speech provider, such as Google Speech.
+
+```json
+"speech": {
+			"stability": 0,
+			"is_final": true,
+			"alternatives": [{
+				"confidence": 0.858155,
+				"transcript": "sales please"
+			}]
+		}
+```
+
+In the case of digits input, the payload includes a `digits` property indicating the DTMF keys pressed:
+
+```json
+"digits": "0276"
+```
+
+## More Information
+
+- [RECOGNIZED_DTMF](/voice-gateway/references/events/RECOGNIZED_DTMF)
+- [RECOGNIZED_SPEECH](/voice-gateway/references/events/RECOGNIZED_SPEECH)
+- [USER_INPUT_TIMEOUT](/voice-gateway/references/events/USER_INPUT_TIMEOUT)

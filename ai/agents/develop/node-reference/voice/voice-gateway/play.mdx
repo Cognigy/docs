@@ -1,0 +1,31 @@
+---
+title: Play
+hidden: false
+---
+
+<a href="/release-notes/4.64"><Badge className="version-badge" color="blue">Updated in 4.64</Badge></a>
+
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/vg/play.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Play Node lets you stream a sound file into the call with the ability to loop it.
+
+This Node is useful for playing advertisements, pre-recorded jingles, or other sound files for callers. It supports MP3 and WAV encoded files.
+
+## Parameters
+
+| Parameter               | Type          | Description                                                                                                                                                                                                                                                                                                                                                                        |
+|-------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Media URL               | CognigyScript | Accepts URL links to MP3 and WAV tracks. The URL should point to the storage location where you want to host it and doesn't need to include the `.mp3` or `.wav` extension. For example, `https://abc.xyz/music.mp3` or `https://audio.jukehost.co.uk/N5pnlULbup8KabGRE7dsGwHTeIZAwWdr`. Make sure the file is publicly accessible.                                                |
+| Loop count              | Number        | The number of times the track will be looped.                                                                                                                                                                                                                                                                                                                                      |
+| Set Activity Parameters | Toggle        | Enables parameters which will be valid for this activity only. The available parameters are: <ul><li>[Recognizer (STT)](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)</li><li>[Barge In](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)</li><li>[DTMF](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)</li><li>[Advanced (Additional Session Parameters)](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)</li></ul> |
+
+## More Information
+
+- [Parameter Details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)
+- [AudioCodes Play URL Node](/ai/agents/develop/node-reference/voice/audiocodes/play-url)
+- [Generic Play URL Node](/ai/agents/develop/node-reference/voice/generic/play-url)

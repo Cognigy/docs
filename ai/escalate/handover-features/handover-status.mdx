@@ -1,0 +1,50 @@
+---
+title: Handover Status
+keywords: [' handovers', 'handover status', 'contact centers', 'close handover', 'user inactivity detection and handling']
+"seo": {
+  "metatags": {
+    "description": "Cognigy Inactivity Detection and Handling feature allows you to detect inactivity of end users during handovers and to handle this inactivity by auto-closing the handover, configuring automated responses or trigger further actions."
+  }
+}
+---
+
+_Handover Status_ lets you manage and respond to the state of conversations handed over to human agents. It provides real-time updates on handover progress, enabling you to design dynamic, context-aware conversational experiences.
+
+When a conversation is handed over to a human agent, your AI Agent can react to the current handover status — guiding the Flow based on whether the conversation is queued, actively handled, completed, or has encountered an issue.
+
+This capability is particularly valuable when building experiences with Agent Copilot Flows, as it allows you to deliver contextual messages and implement fallback handling tailored to the current handover state.
+
+## Key Benefits
+
+Using Handover Status in your Flows provides several benefits:
+
+- **Improved user experience**. Keep end users informed about their status, estimated wait time, and position in the queue, while preventing confusion from duplicate chats.
+- **Smarter automation**. Automatically route conversations based on real-time status, trigger fallback handling, or escalate when errors occur.
+- **Context-aware communication**. Send tailored messages depending on whether a conversation is queued, active, completed, or in progress.
+- **Flexible integration**. Compatible with multiple platforms, including Cognigy Live Agent, Genesys Cloud, and RingCentral Engage.
+
+## How it Works
+
+To react to handover statuses, use a Lookup Node directly after the Handover to Human Agent Node.
+A Lookup Node creates different Flow paths based on a chosen operand.
+
+The example shows how to structure your handover logic using a Lookup Node with Handover Status:
+
+<Frame>
+  <img src="/_assets/ai/escalate/handover-status.webp" />
+</Frame>
+
+## Supported Statuses
+
+The table  lists all handover statuses you can configure in the Case Node following a Lookup Node.
+
+| Status                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                           | Restrictions                                                                                                           |
+|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Completed                    | Conversations are resolved successfully. Agent assistance is provided.                                                                                                                                                                                                                                                                                                                                                                | –                                                                                                                      |
+| Cancelled                    | Conversations are ended by users, indicating termination before resolution.                                                                                                                                                                                                                                                                                                                                                           | –                                                                                                                      |
+| Error                        | Conversations are encountering issues. This could be technical, communicative, or due to misinformation. Human agents can step in to resolve.                                                                                                                                                                                                                                                                                         | –                                                                                                                      |
+| Events                       | Conversations are triggered by specific events, such as important updates or time-sensitive actions that guide the flow forward.                                                                                                                                                                                                                                                                                                      | –                                                                                                                      |
+| Active                       | Conversations are actively managed by a human agent.                                                                                                                                                                                                                                                                                                                                                                                  | –                                                                                                                      |
+| Queue                        | Conversations are on hold, waiting for an agent. You can inform the user with a Say Node, for example: `Estimated time: {{input?.handover?.data?.estimatedWaitTime / 1000}} seconds` and `Position: {{input?.handover?.data?.position}}`. If you use Agent Copilot, add a Handover Node, Lookup Node, and a Say Node in your Copilot Flow. In the Main Flow, add a Go To Node after the Queue Case Node to lead into the Copilot Flow.| Only available for:<ul><li>RingCentral Engage (with **Get Queue Updates** active)</li><li>Cognigy Live Agent</li></ul> |
+| Handover Already in Progress | Triggered when the same user ID opens multiple conversations. The older conversation becomes inactive and is linked to the newer one in the same agent chat window. Add a Say Node to notify the user that the older chat is now inactive.                                                                                                                                                                                            | Only available for **Genesys Cloud Messaging**                                                                         |
+| genericHandoverUpdate        | Used for messages from the Genesys Bot. Normally routed to agents, but you can configure it to also show to end users.                                                                                                                                                                                                                                                                                                                | Only available for **Genesys Cloud Messaging**                                                                         |

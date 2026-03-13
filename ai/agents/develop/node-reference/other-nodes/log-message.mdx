@@ -1,0 +1,28 @@
+---
+title: Log Message
+hidden: false
+seo:
+  metatags:
+    description: A Log Message Node writes a message into the Project Logs.
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/other/log-message.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node writes a message into the [Project Logs](/ai/agents/test/logs).
+
+## Parameters
+
+| Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                                                 |
+|-----------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Message   | CognigyScript | The message to log. The message should be a string that provides the content of the log entry. For example: `User login attempt successful`.                                                                                                                                                                                                                |
+| Log Level | Select        | The log level to use. The level determines the severity and visibility of the log message. Select one of the following options:<ul><li>**Debug** — logs detailed information for debugging purposes.</li><li>**Info** — logs general information about system operations.</li><li>**Error** — logs critical errors that need immediate attention.</li></ul> |
+
+## Alternatives
+
+To log messages, you can also use the [API](/ai/for-developers/code/api-functions) object in a [Code](/ai/for-developers/code/overview) Node.
+
+If you want to send a debug message to the Interaction Panel, use the [Debug Message](/ai/agents/develop/node-reference/basic/debug-message) Node for more precise testing.

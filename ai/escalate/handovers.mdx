@@ -1,0 +1,43 @@
+---
+title: Handover Providers
+keywords: ['handover providers', 'Handover to Human Agent', 'contact center integration']
+seo:
+  metatags:
+    description: >-
+      Cognigy.AI Handover Providers connect AI Agents to contact centers,
+      enabling seamless handoffs from automated conversations to human agents.
+---
+
+_Handover Providers_ connect AI Agents to contact centers, enabling seamless handoffs from automated conversations to human agents.
+The handover happens through the [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent) within a Flow,
+allowing escalation when human assistance is required — whether due to complexity, personalization, or AI Agent's limitations.
+With multiple Handover to Human Agent Nodes in your Flow, you can route conversations to different contact centers. For example, VIP customers can be directed to Genesys, while basic inquiries go to Cognigy Live Agent.
+
+To enable the handover process, in addition to the Handover to Human Agent Node, you'll need:
+
+- [A compatible contact center and its connector](/ai/escalate/handover-reference/overview)
+- [An Endpoint that supports handovers](/ai/agents/deploy/endpoints/handover-settings)
+
+Cognigy.AI offers a range of tools to manage this escalation effectively:
+
+- Nodes:
+    - [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) — initiates the transfer to a human agent.
+    - [Question](/ai/agents/develop/node-reference/service/handover-to-agent) — initiates the transfer to a human agent either when a [specific Intent is detected](/ai/agents/develop/node-reference/basic/question#escalation-intents) or when the [AI Agent misunderstands the user’s input](/ai/agents/develop/node-reference/basic/question#escalation-wrong-answers).
+    - [Check Agent Availability](/ai/agents/develop/node-reference/service/check-agent-availability) — verifies whether human agents are free to take over.
+    - [Lookup](/ai/agents/develop/node-reference/logic/lookup) — monitors handover status, for example, completed, canceled, error, queue.
+    - [Close Handover](/ai/agents/develop/node-reference/service/close-handover) — ends the handover process when appropriate.
+    - [Set Handover Inactivity](/ai/agents/develop/node-reference/service/set-handover-inactivity) — defines timeouts for inactive handovers.
+- Features:
+    - [User Inactivity Detection](/ai/escalate/handover-features/user-inactivity-detection) — triggers actions based on user silence.
+    - [Real-Time Queue Notifications](/live-agent/conversation/conversation-queue/real-time-queue-notifications) — provides live updates on queue status (applicable only to Cognigy Live Agent).
+
+## Working with Handover Providers
+
+<Tabs>
+  <Tab title="GUI">
+        You can create, edit, and delete handover providers in **Deploy > Handover Providers**.
+  </Tab>
+  <Tab title="API">
+         You can view, edit, and delete handover providers using the [Cognigy.AI API](https://api-trial.cognigy.ai/openapi#post-/v2.0/handover/provider).
+  </Tab>
+</Tabs>

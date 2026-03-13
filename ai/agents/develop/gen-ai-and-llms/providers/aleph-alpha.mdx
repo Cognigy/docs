@@ -1,0 +1,65 @@
+---
+title: Aleph Alpha
+hidden: false
+keywords:
+  - ' Aleph Alpha'
+  - ' llms'
+  - ' Aleph Alpha models'
+seo:
+  metatags:
+    description: >-
+      To start using an Aleph Alpha LLM with Cognigy.AI features, add the LLM
+      and apply it to the corresponding use case.
+---
+
+import AiGenerativeAiAddModelViaApi from '/snippets/ai/generative-ai/add-model-via-api.mdx'
+import AiGenerativeAiApplyModel from '/snippets/ai/generative-ai/apply-model.mdx'
+
+To start using an Aleph Alpha model with Cognigy.AI features, follow these steps:
+
+1. [Add a Model](#add-models)
+2. [Apply the Model](#apply-the-model)
+
+## Add Models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add Models via GUI
+
+You can add a model provided by Aleph Alpha to Cognigy.AI in **Build > LLM**. To add the model, you will need the following parameters:
+
+<Tabs>
+  <Tab title="Standard Model">
+
+        | Parameter  | Description                                                                                                                                                                                                                                                                                  |
+        |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Token      | Enter the key that you created in your [Aleph Alpha account](https://docs.aleph-alpha.com/).                                                                                                                                                                                                   |
+        | Custom URL | This parameter is optional. To control the connection between your clusters and the Aleph Alpha provider, you can route connections through dedicated proxy servers, creating an additional layer of security. To do this, specify the base URL. For example, `https://api.aleph-alpha.com`. |
+  </Tab>
+  <Tab title="Custom Model">
+
+        | Parameter  | Description                                                                                                                                                                                                                                                                                  |
+        |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Model Type | Select the **Completion** type.                                                                                                                                                                                                                                                              |
+        | Model Name | Enter the name of the model that you want to use as a custom model. To find model names, refer to the [Aleph Alpha](https://docs.aleph-alpha.com/docs/Deprecated%20Luminous/Deprecated-Luminous/model-card/) documentation.<br/>                                                                      |
+        | Token      | Enter the key that you created in your [Aleph Alpha account](https://docs.aleph-alpha.com/).                                                                                                                                                                                                   |
+        | Custom URL | This parameter is optional. To control the connection between your clusters and the Aleph Alpha provider, you can route connections through dedicated proxy servers, creating an additional layer of security. To do this, specify the base URL. For example, `https://api.aleph-alpha.com`. |
+
+    Apply changes. Check if the connection was set up by clicking **Test**.
+
+    <AiGenerativeAiAddModelViaApi/>
+  </Tab>
+</Tabs>
+## Apply the Model
+
+<AiGenerativeAiApplyModel/>
+
+## More Information
+
+- [Other LLM Operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Overview](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM Providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)
