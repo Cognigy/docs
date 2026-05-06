@@ -1,0 +1,22 @@
+---
+title: Merge Profile
+keywords: ['merge profile', 'contact profile', 'omnichannel', 'user identity', 'analytics']
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/analytics/merge-profile.png" alt="Merge Profile Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Merge Profile Node merges the Contact Profile of the current interaction with another Contact Profile. This is useful for omnichannel setups, where an end user can interact with your AI Agent through different platforms, but they need to be recognized as the same end user across them. After the merging, the Contact Profile merged into the current Contact Profile is deactivated.
+
+## Parameters
+
+| Parameter | Type          | Description                                                                        |
+|-----------|---------------|------------------------------------------------------------------------------------|
+| ContactId | CognigyScript | The ID of the Contact Profile you want to merge with the current Contact Profile of the user interacting with the AI Agent. |
+
+## Example
+
+A user is logged in on your website and using the Webchat widget. They have a Contact Profile where the user ID corresponds to their ID on your website. You can link their website ID, for example, to their account on Amazon. With this approach, they have the same Contact Profile when interacting with your Flow through an Alexa device. To link their data to the same Contact Profile, you only need to obtain their Amazon user ID through account linking and provide that ID to the Merge Profile Node. After this, the contact has one profile activated when they engage with your Flow through both the Webchat widget and their Alexa device.

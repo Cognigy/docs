@@ -1,0 +1,130 @@
+---
+title: "2026.7"
+---
+
+<Warning>
+  Deprecations in Cognigy.AI 2026.7.0:
+
+  - The [States](/ai/agents/test/interaction-panel/state) in the Interaction Panel, [States functions](/ai/for-developers/function-reference/states/overview), and [States API methods](/api-reference/states/) have been deprecated. The removal is planned for Cognigy.AI 2026.12.0. Delete your States and retrain your NLU model before the removal. Use [Intent Conditions](/ai/platform-features/nlu/intents/conditions) as an alternative for controlling Intent recognition.
+  - The [`GET /v2.0/projects/{projectId}/logs`](/api-reference/logs/get-log-entries) API method has been deprecated. The removal of this API method is planned for Cognigy.AI 2026.20.0. Use the `GET /v2.1/projects/{projectId}/logs` API method with `start` and `end` parameters instead.
+</Warning>
+
+<Note>
+  Introduced the [Cognigy MCP Server](/ai/for-developers/developers/cognigy-mcp-server), connecting MCP clients like Claude, Codex, Cursor, and VS Code to the Cognigy.AI REST API. The server enables creation, testing, and iterative improvement of LLM-based AI Agents through a self-improvement loop.
+</Note>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.7.2
+
+### Cognigy.AI
+
+**Released** April 22, 2026
+
+#### Improvements
+
+- Increased the LLM request timeout for the Simulator from 10,000 ms to 20,000 ms. For on-premises installations, the LLM request timeout is now configurable via the `SIMULATION_LLM_TIMEOUT_MS` environment variable. The default value is 20,000 ms
+
+#### Bug Fixes
+
+- Fixed the issue in the Transcript explorer where session transcripts for Webchat v2 and v3 Endpoints didn't show AI Agent messages that only contained buttons or quick replies
+- Fixed the issue where Extensions imported via Snapshot failed with the error `Unable to find extension module`. The stored file path in the Extension referenced the original pre-import ID instead of the new ID generated during the Snapshot import. The issue occurred after upgrading to Cognigy.AI 2026.7.1
+- Fixed the issue where users couldn't access the Simulator in a Project due to an internal infrastructure error
+
+## 2026.7.1
+
+### Cognigy.AI
+
+**Released** April 8, 2026
+
+#### Bug Fixes
+
+- Fixed the connection between Cognigy.AI and Voice Gateway, ensuring Mute Speech Input prevents speech barge-in
+
+### Cognigy Voice Gateway
+
+**Released** April 8, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where activating the Mute Speech Input setting didn't prevent speech barge-in
+
+## 2026.7.0
+
+### Cognigy.AI
+
+**Released** April 1, 2026
+
+#### Features
+
+##### Generate Scenarios from Conversation Transcripts in the Simulator
+
+Introduced a powerful alternative for generating scenarios based on Flows or AI Agent Nodes in the Simulator. Now, you can create realistic scenarios from your existing conversation data to test your AI Agents with real-world interactions and improve their accuracy. Upload [conversation transcripts in CSV format](/ai/agents/test/simulator/overview#from-transcripts) to automatically generate scenarios.
+
+##### New Models by OpenAI and Microsoft Azure OpenAI
+
+Added support for new OpenAI and Azure OpenAI models: [`gpt-5.4`, `gpt-5.4-mini`, and `gpt-5.4-nano`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature), allowing you to choose models based on performance and cost.
+
+##### NiCE CXone Handover Provider (beta)
+
+Introduced the [NiCE CXone](/ai/escalate/handover-reference/nice-cxone) handover provider, allowing end users to hand over their conversations from an AI Agent to a human agent in a contact center. This feature is available for Cognigy.AI installations integrated with NiCE CXone.
+
+#### Improvements
+
+- Updated `_.merge()` in Code Nodes so the code editor suggestions now match Lodash's behavior when you combine objects
+- Added the capability to select [a time for Knowledge Connector sync](/ai/agents/develop/knowledge-ai/knowledge-connectors#scheduled-synchronizations)
+- Removed the `Not understood` option from the filter in the Intent Trainer
+- Moved the Connector Label field to the top of the Add Knowledge window. This improvement makes it easier for users to identify and name knowledge connectors before configuring other settings
+- Improved OAuth2 handling for Azure OpenAI LLM connections. Custom headers are now sent with both the LLM request and the OAuth2 authentication request
+
+#### Bug Fixes
+
+- Fixed the Playbooks schema and description in the Cognigy.AI OpenAPI documentation
+- Fixed the issue where the Track Goal Node editor displayed extra headings and corrected the display text
+- Fixed the issue with Contact Profile data deletion. Now, selecting Delete Date correctly clears all Contact Profile data and disables the Data Collection toggle
+- Fixed the issue where LLMs returned raw JSON strings instead of parsed objects. This issue occurred with some LLM providers when the Response Format was set to JSON object in the Advanced section of the LLM Prompt Node
+- Fixed the Overwrite Analytics Node so Input Data and Slots are no longer prefilled with `{}`. Leaving these fields empty now keeps existing analytics unchanged
+- Fixed the issue where field regeneration failed after users added a goal on the New Scenario page in the Simulator
+- Fixed the Package import failure caused by Node data containing an invalid `children: null` field
+- Fixed the issue where the `<NO_USER_INPUT>` placeholder was included in the LLM context even when a real user input existed. Now, user inputs are sent correctly to the LLM
+
+### Cognigy Live Agent
+
+**Released** April 1, 2026
+
+#### Improvements
+
+- Added support for Microsoft 365 OAuth SMTP
+
+#### Bug Fixes
+
+- Fixed the Conversations Filter API method in the Live Agent OpenAPI documentation:
+  - Corrected request body structure
+  - Corrected auth header names
+  - Fixed `not_equal_to` filter with `query_operator` causing `500 Internal Server Errors`
+
+### Cognigy Insights
+
+**Released** April 1, 2026
+
+#### Bug Fixes
+
+- Fixed the `$filter` behavior for the Sessions collection in the Cognigy.AI OData endpoint when values in the `goals` field were stored as `text[]`. Now, filters using string functions, such as `contains`, `startswith`, and `endswith`, work correctly
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot
+
+##### Pagination Variable No Longer Required
+
+If you previously added the `FEATURE_USE_NEW_PAGINATION_PLUGIN` variable in `cognigyEnv` or `extraEnvVars`, remove the variable before updating to Cognigy.AI 2026.7.0. This variable is now set by default and no longer needs to be configured manually.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

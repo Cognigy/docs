@@ -1,0 +1,152 @@
+---
+title: "2026.8"
+---
+
+<Warning>
+  Introduced the new `ingress.ingresController` feature flag to controls whether Traefik middleware resources are created. For on-premises installations, refer to the [Infrastructure](#infrastructure) section.
+</Warning>
+
+<Note>
+  Introduced the [Cognigy MCP Server](/ai/for-developers/developers/cognigy-mcp-server), connecting MCP clients like Claude, Codex, Cursor, and VS Code to the Cognigy.AI REST API. The server enables creation, testing, and iterative improvement of LLM-based AI Agents through a self-improvement loop.
+</Note>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.8.3
+
+### Cognigy.AI
+
+**Released** May 6, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Simulator wasn't accessible for on-premises installations with their own ingress controller implementation
+- Fixed the issue where one end user calling AI Agents in different Projects in the same organization resulted in a single shared Contact Profile across Projects. This led to different AI Agents considering the end user as a recurring caller. Now, each Project creates their respective Contact Profiles separately in such cases
+
+## 2026.8.2
+
+### Cognigy.AI
+
+**Released** April 22, 2026
+
+#### Improvements
+
+- Increased the LLM request timeout for the Simulator from 10,000 ms to 20,000 ms. For on-premises installations, the LLM request timeout is now configurable via the `SIMULATION_LLM_TIMEOUT_MS` environment variable. The default value is 20,000 ms
+
+### Cognigy Insights
+
+**Released** April 22, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in the Transcript explorer where session transcripts for Webchat v2 and v3 Endpoints didn't show AI Agent messages that only contained buttons or quick replies
+
+## 2026.8.1
+
+### Cognigy.AI
+
+**Released** April 16, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Extensions imported via Snapshot failed with the error `Unable to find extension module`. The stored file path in the Extension referenced the original pre-import ID instead of the new ID generated during the Snapshot import. The issue occurred after upgrading to Cognigy.AI 2026.7.1
+- Fixed the issue where users couldn't access the Simulator in a Project due to internal authentication and authorization checks
+
+### Cognigy Voice Gateway
+
+**Released** April 20, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where a Say verb containing only an `<audio>` tag without any text for voice output didn't play the audio
+- Fixed the issue where storing Microsoft Azure Speech Services credentials in on-premises installations required an invalid `region` field
+
+### Cognigy Insights
+
+**Released** April 16, 2026
+
+#### Improvements
+
+- Improved Insights stability
+
+## 2026.8.0
+
+### Cognigy.AI
+
+**Released** April 14, 2026
+
+#### Features
+
+##### Retrieve Knowledge Node
+
+Introduced the [NiCE CXone Retrieve Knowledge Node](/ai/agents/develop/node-reference/cxone/retrieve-knowledge). With this Node, you can retrieve knowledge from [NiCE CXone Knowledge Hub](https://help.nicecxone.com/content/knowledgehub/knowledgehub.htm) and provide accurate information to your AI Agent. The Retrieve Knowledge Node is supported only in Cognigy.AI installations hosted in the following environments:
+
+- `cognigy-na1.nicecxone.com`
+- `cognigy-na3.nicecxone.com`
+- `cognigy-ca1.nicecxone.com`
+- `cognigy-uk1.nicecxone.com`
+- `cognigy-au1.nicecxone.com`
+- `cognigy-jp1.nicecxone.com`
+
+#### Improvements
+
+- For the NiCE CXone handover provider:
+    - Added the Display Agent Details toggle to the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) and [Question](/ai/agents/develop/node-reference/basic/question) Nodes. This toggle allows you to display the human agent's name and profile image in Webchat
+    - Added support for the On Resolve Options setting in the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node
+    - Added support for [bi-directional typing indicator](/webchat/v3/configuration#webchat-behavior) in Webchat v3
+    - Added detection of the `ONRELEASE` action to determine when a [human agent ends the conversation](/ai/escalate/handover-reference/nice-cxone#configuration-on-the-handover-provider-side)
+- Included legacy API keys on the [My Profile page](/ai/administer/user-menu/my-profile) with the Legacy tag
+- Improved error response text for failed [Create](/api-reference/handover-providers/create-a-handover-provider) and [Update](/api-reference/handover-providers/update-a-handover-provider) handover provider API requests
+- Improved the detection to determine when human agents end conversations on Salesforce MIAW by using the `CONVERSATION_SESSION_STATUS_CHANGED` event instead of `CONVERSATION_PARTICIPANT_CHANGED`
+
+#### Bug Fixes
+
+- Fixed the issue where the LLM connection set at Project-level wasn't used in attached Flows when the Override Snapshot Connections options were activated in the Endpoint
+- Fixed the issue where deactivating a Contact Profile with data deletion didn't set the Contact Profile to inactive
+- Fixed the issue where JSON API responses using the HAL convention returned the internal host URL in embedded link URLs (`hrefs`) instead of the configured custom service URL
+- Fixed the issue where messages added through the Add Transcript Step Node were ignored in LLM calls
+- Fixed the issue where autogenerated scenarios failed when goals were included in the scenario configuration
+
+### Cognigy Voice Gateway
+
+**Released** April 14, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Say Nodes with text content including only whitespace or empty speech synthesis markup language (SSML) blocked Flow execution
+
+### Cognigy Insights
+
+**Released** April 14, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where assigning `eq null` or `ne null` to the `$filter` query parameter in requests to OData endpoints returned no results. Now, null comparisons correctly filter records with missing values
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot
+
+For on-premises installations, the `.Values.traefik.enabled` feature flag is no longer used to control whether Traefik middleware resources are created. To control this mechanism, set the new `ingress.ingresController` feature flag in `values.yaml`:
+
+- To activate the creation of Traefik middleware resources, set:
+  ```yaml
+  ingress:
+      ingresController: "traefik"
+  ```
+- To prevent the creation of Traefik middleware resources, set:
+  ```yaml
+  ingress
+      ingresController: ""
+  ```
+  This option is necessary if you use non-Traefik controllers, such as NGINX, and set `traefik.enabled: false` in earlier releases.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

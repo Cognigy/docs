@@ -1,0 +1,162 @@
+---
+title: "2026.6"
+---
+
+<Warning>
+  **Deprecations:**
+
+  - Support for the Completions API for custom LLMs has been deprecated. The full removal of this support is planned for December 2026. Refer to your [LLM provider's reference](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) to switch to the appropriate API before the removal date.
+  - Support for Google's `gemini-2.0-flash` and `gemini-2.0-flash-lite` models has been deprecated. The full removal of this support is planned for June 1, 2026. Switch to the newer models, such as `gemini-2.5-flash` and `gemini-2.5-flash-lite`, before the removal date.
+  
+</Warning>
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.6.4
+
+### Cognigy.AI
+
+**Released** April 17, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where users couldn't access the Simulator in a Project due to an internal infrastructure error
+
+## 2026.6.3
+
+### Cognigy.AI
+
+**Released** April 7, 2026
+
+#### Bug Fixes
+
+- Fixed the connection between Cognigy.AI and Voice Gateway, ensuring Mute Speech Input prevents speech barge-in. This update complements the fix from [Voice Gateway patch 2026.6.2](#2026-6-2). To resolve this issue, make sure you update Cognigy.AI to this version and Voice Gateway to 2026.6.2
+
+## 2026.6.2
+
+### Cognigy.AI
+
+**Released** March 25, 2026
+
+#### Improvements
+
+- [Added redaction limit](/ai/platform-features/data-redaction#limitations). Log entries with `data` payloads over 2.5 MB are no longer redacted and now show a placeholder message
+- Improved internal log redaction for PCI compliance
+
+### Cognigy Voice Gateway
+
+**Released** April 7, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where activating the Mute Speech Input setting didn't prevent speech barge-in
+
+## 2026.6.1
+
+### Cognigy.AI
+
+**Released** March 18, 2026
+
+#### Bug Fixes
+
+- Fixed the service configuration to ensure correct deployment and operation
+
+### Cognigy Voice Gateway
+
+**Released** March 31, 2026
+
+#### Bug Fixes
+
+- Fixed the issue on the Login page in the Voice Gateway Self-Service Portal. The page displayed v2026.5.x as the current version even after the v2026.6.0 release. Now, the page displays the correct version
+
+## 2026.6.0
+
+### Cognigy.AI
+
+**Released** March 17, 2026
+
+#### Features
+
+##### New Multimodal Agent Widget: Click To Call
+
+[Click To Call](/click-to-call/overview) lets you easily embed a widget in your website or build a custom application that connects to a voice AI Agent for multimodal communication. With Click To Call, users can talk to your AI Agents directly from your website or application with a single click.
+
+##### New Models from OpenAI and Microsoft Azure OpenAI
+
+Introduced [support](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) for the `gpt-5-1` model from [OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/openai) and [Microsoft Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai).
+
+##### New Models from Anthropic
+
+Introduced [support](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) for the `claude-sonnet-4-6` model from [Anthropic](/ai/agents/develop/gen-ai-and-llms/providers/anthropic).
+
+#### Improvements
+
+- Added a [Language Configuration toggle](#2-speaking-style) to the AI Agent wizard to stop automatic language detection and prevent unintended switching
+- Added OAuth2 authentication support to the Cognigy.AI API
+- Deactivated Knowledge Connector actions when the required Extension is missing
+- Added an error message when LLMs reach the token limit
+- Added a safety context preamble to Simulator prompts, reducing content policy errors when using Azure OpenAI with personas or missions that contain terms flagged by Azure's content management filters
+- Removed the beta tag from the Data Redaction settings section
+- Renamed the Sentences API tag to Example Sentences for clarity
+
+#### Bug Fixes
+
+- Fixed the issue where the Management UI flickered when users were navigating between pages and scrolling content
+- Fixed the issue where the error message caused by LLMs reaching the token limit didn't provide the correct information
+- Fixed the issue where the Save button in the schedule configuration in the Simulator remained inactive without displaying any validation error message
+- Fixed the issue where the `sourceName` value for scheduled sources in the Input object included the `_scheduled` postfix
+- Fixed the issue where uploading Snapshots to Projects that didn't include a global LLM caused cache issues
+- Fixed the issue where setting the maximum tokens above 4000 in the LLM Prompt Node for Microsoft Azure OpenAI's `gpt-4o` and `gpt-4o-mini` models threw an error, and similar limits for Anthropic's `claude-opus-4-0, claude-sonnet-4-0` and AWS Bedrock's `claude-3-5-sonnet` models
+- Fixed the issue where setting the Transcript Turns parameter to 0 in the LLM Prompt Node transcript didn't have any effect
+- Fixed the issue where Interaction Panel calls dropped if there was a Set Session Config Node in the Flow setting Microsoft provided by NiCE as TTS or STT vendor
+- Fixed the issue where the wrong schedule date was displayed for Knowledge syncs when scheduling was previously deactivated
+- Fixed the issue where the legacy `privacy_policy` option was displayed in the Profile Schema field in the Update Profile Node
+- Fixed the issue preventing the import of Packages with Knowledge Chunks created using custom models
+- Fixed the issue where the Last Edited columns on the Connector Configuration displayed edits that didn't take place
+- Fixed the issue where the Knowledge Connectors didn't work in trial environments
+- Fixed the issue where the error responses for the `POST /persona/from-script/` API method used `message` instead of `detail` and didn't provide the correct data
+
+### Cognigy Voice Gateway
+
+**Released** March 17, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Register status wasn't updated correctly on the Carrier page in the Voice Gateway Self-Service Portal due to a race condition in the outbound authentication process
+
+### Cognigy Live Agent
+
+**Released** March 17, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the avatar image wasn't aligned properly
+- Fixed the issue where notifications for conversations escalated to supervisors weren't translated
+
+### Cognigy Insights
+
+**Released** March 17, 2026
+
+#### Improvements
+
+- Redesigned the search logic in the Transcript Explorer to improve filtering and sorting against data in MongoDB
+- Removed the default `order-by` condition in the OData query
+- Added a lower timestamp bound to optimize deletion queries and avoid timeout errors
+
+#### Bug Fixes
+
+- Fixed the issue where sorting and filtering in the Transcript Explorer didn't work correctly
+- Fixed the issue where the `PATCH /v2.0/analytics` API method failed while updating the PostgreSQL records due to a schema mismatch
+- Fixed the issue where the `GET /v2.0/conversations` API method didn't work correctly and returned missing, incorrect, or `null` rating values
+- Fixed the issue where messages sent through the WhatsApp Endpoint weren't displayed in the Transcript Explorer when the payload didn't contain top-level text
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

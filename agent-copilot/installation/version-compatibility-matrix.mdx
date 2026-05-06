@@ -1,0 +1,45 @@
+---
+title: 'Copilot: Version Compatibility Matrix'
+
+---
+
+import AiCopilotInstallationNote from '/snippets/agent-copilot/installation-note.mdx'
+import InstallationOnPremCompatibilityMatrixNote from '/snippets/installation/on-prem-compatibility-matrix-note.mdx'
+
+<AiCopilotInstallationNote/>
+
+This matrix outlines the compatibility of Cognigy Agent Copilot workspace versions with Cognigy infrastructure components,
+such as Kubernetes, MongoDB, and Redis.
+
+<InstallationOnPremCompatibilityMatrixNote/>
+
+| Agent Copilot /<br/> Infra component | Kubernetes | Redis    | MongoDB | Helm          |
+|----------------------------------|------------|----------|---------|---------------|
+| 4.64                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.63                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.62                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.61                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.60                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.59                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.58                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.57                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.56                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.55                             | 1.22-1.26  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.54                             | 1.22-1.25  | 7.0<sup>[2](#footnote2)</sup> | 5.0     | 3.9 or higher |
+| 4.53                             | 1.22-1.25  | 7.0<sup>[2](#footnote2)</sup> | 4.4-5.0 | 3.8 or higher |
+| 4.52                             | 1.22-1.25  | 7.0<sup>[1](#footnote1)</sup>  | 4.4-5.0 | 3.8 or higher |
+| 4.51                             | 1.22-1.25  | 7.0<sup>[1](#footnote1)</sup>  | 4.4-5.0 | 3.8 or higher |
+
+## More Information
+
+Version Compatibility Matrix:
+
+- [Cognigy.AI and Insights](/ai/administer/installation/version-compatibility-matrix)
+- [Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
+
+---
+
+<sup id="footnote1">1</sup>: Stand-alone deployment.
+
+<sup id="footnote2">2</sup>: Both stand-alone and High Availability (HA) with Sentinel deployments.

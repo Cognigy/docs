@@ -1,0 +1,212 @@
+---
+title: NiCE Cognigy MCP Server
+keywords: ['mcp', 'nice cognigy mcp server', 'model context protocol', 'claude', 'cursor', 'vscode', 'ai agents']
+description: "NiCE Cognigy MCP Server lets you build, test, and optimize LLM-based AI Agents via the Cognigy.AI REST API."
+tag: new
+---
+
+The _NiCE Cognigy MCP Server_ is an [npm package](https://www.npmjs.com/package/@cognigy/mcp-server) that provides a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for connecting MCP clients like Claude, Cursor, or VS Code to the Cognigy.AI REST API. With the NiCE Cognigy MCP server, you can create, test, and iteratively improve LLM-based AI Agents without leaving your development environment.
+
+<div style={{textAlign: 'center'}}>
+   <video width="500" height="300" controls autoPlay alt="type:video" style={{border: '1px solid #ccc', borderRadius: '12px', display: 'block', margin: '0 auto'}}>
+      <source src="https://docscognigyassets.blob.core.windows.net/assets/cognigy-mcp-server.mp4" />
+   </video>
+</div>
+
+## Key Benefits
+
+- **Comprehensive API coverage.** Use workflow tools in the NiCE Cognigy MCP Server to cover the Cognigy.AI API for end-to-end automation.
+- **Fast AI Agent setup and iteration.** Build an AI Agent persona, Flow, Node, and REST Endpoint in one workflow, then test, refine, and repeat until it performs as expected.
+- **Knowledge and guidance built in.** Access Knowledge Stores for RAG use cases to give your AI Agent the information it needs.
+- **Reliable and safe operations.** Configure rate limiting, Zod input validation, and standardized RFC 7807 error responses for safe operations with the NiCE Cognigy MCP Server.
+
+## Prerequisites
+
+- A [Cognigy.AI API key](/ai/administer/user-menu/my-profile#api-keys). To create one, go to **User Menu > My Profile > API Keys > Create New**.
+- A [Cognigy.AI API base URL](/ai/for-developers/developers/api-and-cli#the-api-base-url). For example, for the trial environment, use `https://api-trial.cognigy.ai`.
+- An MCP-compatible client such as [Claude Desktop](https://claude.ai/download), Claude Code, Codex, [Cursor](https://www.cursor.com/), or VS Code with GitHub Copilot.
+- Node.js 20 or later is required for command-line and manual setup.
+
+## How to Set Up
+
+<Tabs>
+  <Tab title="Claude Desktop (.mcpb)">
+    This is the easiest setup path and doesn't require Node.js.
+
+    1. Download the `.mcpb` file from the [npm package page](https://www.npmjs.com/package/@cognigy/mcp-server).
+    2. Double-click the file to open the installation dialog in Claude Desktop.
+    3. Enter your Cognigy.AI API base URL and API key.
+  </Tab>
+
+  <Tab title="CLI">
+    Run the setup command for your MCP client in the CLI. The command prompts you to enter your Cognigy.AI API base URL and API key, then automatically updates the MCP client configuration.
+
+    | MCP Client | Command |
+    |------------|---------|
+    | Claude Desktop | `npx @cognigy/mcp-server init --client claude` |
+    | Claude Code | `npx @cognigy/mcp-server init --client claude-code` |
+    | Codex | `npx @cognigy/mcp-server init --client codex` |
+    | Cursor | `npx @cognigy/mcp-server init --client cursor` |
+    | VS Code (Copilot) | `npx @cognigy/mcp-server init --client vscode` |
+
+    Restart your MCP client after setup completes.
+  </Tab>
+
+  <Tab title="Manual">
+    Add the server definition directly to your MCP client configuration file.
+
+    <AccordionGroup>
+      <Accordion title="Claude Desktop, Claude Code, and Cursor">
+        Add the following to your MCP client configuration file:
+
+        ```json
+        {
+          "mcpServers": {
+            "cognigy": {
+              "command": "npx",
+              "args": ["-y", "@cognigy/mcp-server"],
+              "env": {
+                "COGNIGY_API_BASE_URL": "your-api-base-url",
+                "COGNIGY_API_KEY": "your-api-key-here"
+              }
+            }
+          }
+        }
+        ```
+      </Accordion>
+
+      <Accordion title="Codex">
+        Add the following to your Codex configuration file:
+
+        ```toml
+        [mcp_servers.cognigy]
+        command = "npx"
+        args = ["-y", "@cognigy/mcp-server"]
+
+        [mcp_servers.cognigy.env]
+        COGNIGY_API_BASE_URL = "your-api-base-url"
+        COGNIGY_API_KEY = "your-api-key"
+        ```
+      </Accordion>
+
+      <Accordion title="VS Code (Copilot)">
+        Add the following to your VS Code MCP configuration:
+
+        ```json
+        {
+          "servers": {
+            "cognigy": {
+              "command": "npx",
+              "args": ["-y", "@cognigy/mcp-server"],
+              "env": {
+                "COGNIGY_API_BASE_URL": "your-api-base-url",
+                "COGNIGY_API_KEY": "your-api-key"
+              }
+            }
+          }
+        }
+        ```
+      </Accordion>
+    </AccordionGroup>
+    Restart your MCP client to ensure it is connected to the NiCE Cognigy MCP server.
+  </Tab>
+</Tabs>
+
+### Security
+
+- API keys are passed through environment variables and are never logged.
+- All inputs are validated with Zod schemas before reaching the API.
+- Rate limiting protects the API from excessive or abusive requests.
+
+#### Privacy
+
+The NiCE Cognigy MCP Server sends requests only to the Cognigy.AI API base URL. The server doesn't collect, store, or share any data. All data stays between your MCP client and your Cognigy.AI instance. For more information, see the [Cognigy Privacy Policy](https://www.cognigy.com/privacy-policy).
+
+## How to Use
+
+Once the server is connected to your MCP client, you can interact with Cognigy.AI using natural language prompts.
+
+The following examples show prompts for common workflows and the tools the MCP client runs in response. For a full list of available tools, refer to the [Tools](https://www.npmjs.com/package/@cognigy/mcp-server) section of the NiCE Cognigy MCP Server npm package documentation.
+
+<AccordionGroup>
+  <Accordion title="Create an AI Agent">
+    Ask your MCP client to create an AI Agent in a Cognigy.AI Project:
+
+    ```txt
+    Create a Cognigy AI Agent called "Support Bot" in Project <projectId>.
+    Give it a helpful customer support persona, set up GPT-4 as the LLM,
+    and return the endpoint URL so I can test it.
+    ```
+
+    This workflow uses the `setup_llm` tool to create the LLM resource and the `create_ai_agent` tool to provision the AI Agent, Flow, and REST Endpoint.
+  </Accordion>
+
+  <Accordion title="Test the Agent">
+    Send a message to the AI Agent through its Endpoint:
+
+    ```txt
+    Talk to my Support Bot at <endpointUrl> and ask "How do I reset my password?"
+    ```
+
+    This workflow uses the `talk_to_agent` tool and returns the response in your MCP client.
+  </Accordion>
+
+  <Accordion title="Improve the Agent">
+    Refine the AI Agent instructions and compare responses:
+
+    ```txt
+    Update the job description to make the response more concise and actionable.
+    Talk to it again and compare the responses.
+    ```
+
+    This workflow uses a self-improvement loop: `talk_to_agent` — evaluate — `update_ai_agent` — `talk_to_agent`.
+  </Accordion>
+
+  <Accordion title="Add a Knowledge Store">
+    Attach a Knowledge Store so the AI Agent can search approved content when answering questions:
+
+    ```txt
+    Create a Knowledge Store in Project <projectId>, add the URL
+    https://docs.example.com/faq as a source, then attach it to my Support Bot
+    so the AI Agent can reference it to answer questions.
+    ```
+
+    This workflow uses the `manage_knowledge` tool to create the store and ingest the source, then `create_tool` to attach it to the AI Agent Node.
+  </Accordion>
+
+  <Accordion title="Review Existing Resources">
+    List resources to inspect Projects, AI Agents, or conversations:
+
+    ```txt
+    List all my Cognigy.AI Projects and show which AI Agents exist in each one.
+    ```
+
+    This workflow uses the `list_resources` tool with resource types `project` and `agent`.
+
+    You can also ask for recent conversations and summarize the returned data.
+  </Accordion>
+  <Accordion title="Export and Import Packages">
+    Export a Package from the Project, list exportable Packages, and import the Package into another Project:
+
+    ```txt
+    Upload the package at `/absolute/path/to/support-bot.zip` into Project <projectId>,
+    show me the import preview, then import it using the default selections.
+    ```
+
+    <Tip>
+    You can also drag and drop files into some MCP clients to upload them.
+    </Tip>
+
+    This workflow uses the `manage_packages` tool with operations: `upload_and_inspect`, `list_exportable` then `import`.
+  </Accordion>
+</AccordionGroup>
+
+
+## More Information
+
+- [NiCE Cognigy MCP Server on npm](https://www.npmjs.com/package/@cognigy/mcp-server)
+- [Cognigy.AI API and CLI](/ai/for-developers/developers/api-and-cli)
+- [MCP Server Endpoint](/ai/agents/deploy/endpoint-reference/mcp-server)
+- [AI Agents Overview](/ai/agents/overview)
+- [Knowledge AI Overview](/ai/agents/develop/knowledge-ai/overview)
+

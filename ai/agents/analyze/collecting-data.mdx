@@ -1,0 +1,82 @@
+---
+title: Collecting Data
+sidebarTitle: Overview
+description: "Cognigy.AI stores AI Agent data for Insights, OData reporting, and BI tools like Power BI and Tableau."
+keywords: ['data collections']
+---
+
+<a href="/release-notes/2026.1"><Badge className="version-badge" color="blue">Updated in 2026.1</Badge></a>
+
+Cognigy.AI collects data from conversations with chat and voice AI Agents in PostgreSQL and MongoDB databases. The collected data is used in Insights to display reports and explorers, and by the OData Endpoint to create customized reports and charts in business intelligence systems, such as Power BI, Tableau, and others.
+
+## Data Collections
+
+Analytics data is accessed by connecting to the [OData Analytics Endpoint](/ai/agents/analyze/odata). The set of available collections depends on the OData endpoint version you are using.
+
+The following collections are available in OData 2.3 and 2.4:
+
+<AccordionGroup>
+  <Accordion title="Analytics">
+    This collection contains one record per user input, with detailed data about the user message, such as NLU results, tasks achieved, and input text. Records are finalized and saved at the end of the session. This collection is different from the others because you can adjust its records during the session using the [Overwrite Analytics](/ai/agents/develop/node-reference/analytics/overwrite-analytics) or [Code](/ai/for-developers/code/overview) Nodes.
+  </Accordion>
+
+
+  <Accordion title="Conversations">
+    This collection contains one record per user input, one record per AI Agent output, and one record per human agent input. Conversation records are written immediately after a message arrives from the respective source. These records are commonly used for generating conversation transcripts.
+  </Accordion>
+
+  <Accordion title="Steps">
+    This collection contains one record per [Analytics Step](/ai/agents/analyze/analytics-steps) in a Flow. You can add Analytics Steps to Nodes or Intents. Both [Question Nodes](/ai/agents/develop/node-reference/basic/question) and [Intents](/ai/platform-features/nlu/intents/overview) contain an Analytics Step by default. The primary function of this record is to keep a list of unique IDs to retrieve Analytics Steps independently of any name changes.
+  </Accordion>
+
+  <Accordion title="ExecutedSteps">
+    This collection contains one record per executed Analytics Step for every session. You can use this collection to identify the step that occurred prior to the current step.
+  </Accordion>
+
+  <Accordion title="Sessions">
+    This collection contains one record per session. The main purpose of this record is to provide a list of ordered steps that occurred in each session.
+  </Accordion>
+
+  <Accordion title="LiveAgentEscalations">
+    This collection contains one record per handover from an AI Agent to a human agent in [Cognigy Live Agent](/live-agent/overview). It includes data about the escalation, such as the session, inbox, team, and assigned agent. Use this collection to analyze handover patterns and human agent workload.
+  </Accordion>
+</AccordionGroup>
+
+
+The following collections are available in OData 2.4 only:
+
+<AccordionGroup>
+  <Accordion title="Goals">
+    This collection contains one record per [goal](/ai/agents/analyze/goals-and-tasks/goals) defined in a Project. Each record includes the goal configuration, including the goal name, description, and version. Use this collection to retrieve the reference data for all goals and link it with the Goal Steps, Goal Step Metrics, and Goal Events collections.
+  </Accordion>
+
+  <Accordion title="GoalSteps">
+    This collection contains one record per step within a [goal](/ai/agents/analyze/goals-and-tasks/goals). Each Goal consists of an initial step and one or more subsequent steps, at least one of which must be marked as a completion step. Use this collection to retrieve the structure of each goal and understand which steps lead to goal completion.
+  </Accordion>
+
+  <Accordion title="GoalStepMetrics">
+    This collection contains one record per business metric at goal step level, such as money saved, revenue earned, or time saved. These metrics are configured per goal step and measure the business impact of completing each step. Use this collection to analyze the value delivered at each stage of a goal.
+  </Accordion>
+
+  <Accordion title="GoalEvents">
+    This collection contains one record per goal-related event that occurs during a session. An event is written each time an end user triggers a goal step in a conversation via a [Track Goal Node](/ai/agents/develop/node-reference/analytics/track-goal). Use this collection to track goal progress and completion rates across sessions.
+  </Accordion>
+</AccordionGroup>
+
+## Analytics Data Flow
+
+Analytics data is generated throughout the life cycle of a user input in Cognigy.AI. The diagram shows when each type of data is generated and written to the respective collection.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/analyze/analytics-data-flow.png" alt="Analytics data flow from user input through NLU processing to database storage" style={{ width: 'auto' }} />
+</Frame>
+
+1. After the user input is processed by the NLU engine, an Analytics record is generated.
+2. While the Flow processes the user input, an [Overwrite Analytics](/ai/agents/develop/node-reference/analytics/overwrite-analytics) or [Code](/ai/for-developers/code/overview) Node can overwrite the originally generated data.
+3. When the Flow execution is complete, Cognigy.AI adds the final analytics information, for example, execution time, to the Analytics record before storing it in the database.
+
+## More Information
+
+- [Analytics Steps](/ai/agents/analyze/analytics-steps)
+- [Goals and Tasks](/ai/agents/analyze/goals-and-tasks/overview)
+- [OData Endpoint](/ai/agents/analyze/odata)

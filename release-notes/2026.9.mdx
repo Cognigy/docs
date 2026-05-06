@@ -1,0 +1,109 @@
+---
+title: "2026.9 (latest)"
+---
+
+<Warning>
+  As of Cognigy.AI 2026.8.3, the `ingress.ingresController` feature flag controls whether to create Traefik middleware resources. For on-premises installations, refer to the [Infrastructure section in the Cognigy.AI 2026.8.0 release notes](/release-notes/2026.8#infrastructure).
+</Warning>
+
+<Warning>
+   As of Cognigy.AI 2026.9.0, the [Set State](/ai/agents/develop/node-reference/logic/set-state) and [Reset State](/ai/agents/develop/node-reference/logic/reset-state) Nodes are deprecated and will be removed from the Node Selector in Cognigy.AI 2026.16.0. This deprecation doesn't affect runtime behavior. After the removal, existing Flows containing this Node will remain fully supported and continue to run as expected. As an alternative, you can use [Intent Conditions](/ai/platform-features/nlu/intents/conditions) for controlling Intent recognition.
+</Warning>
+
+<Note>
+  Introduced the [Cognigy MCP Server](/ai/for-developers/developers/cognigy-mcp-server), connecting MCP clients like Claude, Codex, Cursor, and VS Code to the Cognigy.AI REST API. The server enables creation, testing, and iterative improvement of LLM-based AI Agents through a self-improvement loop.
+</Note>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.9.2
+
+### Cognigy.AI
+
+**Released** May 6, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Simulator wasn't accessible for on-premises implementations, as in [Cognigy.AI patch 2026.8.3](/release-notes/2026.8#2026-8-3)
+- Fixed the issue where end users calling different AI Agents in different Projects of the same organization resulted in a single shared Contact Profile across Projects. This led to different AI Agents perceiving the end user as a recurring caller. Now, each Project creates their respective Contact Profiles separately in such cases
+
+## 2026.9.1
+
+### Cognigy Insights
+
+**Released** April 30, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the menu sidebar was misaligned
+- Fixed the issue where the Transcript explorer failed to load due to a database schema mismatch 
+
+## 2026.9.0
+
+### Cognigy.AI
+
+**Released** April 28, 2026
+
+#### Features
+
+##### Cognigy Serverless
+
+Introduced [Cognigy Serverless](/ai/for-developers/extensions), providing fully isolated execution environments per organization for running Extensions, improving security, stability, and performance through automatic scaling and inactivity-based shutdown. Untrusted Extensions now run with full functional parity to trusted Extensions. To ensure compatibility with the new execution environment, review the Extensions documentation.
+
+##### New Google GenAI LLMs
+
+Introduced [Google GenAI](/ai/agents/develop/gen-ai-and-llms/providers/google-genai) as a new LLM provider, adding support for the Gemini 3 model family: `gemini-3.1-pro-review`, `gemini-3-flash-review`, and `gemini-3.1-flash-lite-preview`. This feature enables more flexible, high-performance AI capabilities across different use cases.
+
+#### Improvements
+
+- Removed the [End Handover on Participant Change](/ai/agents/develop/node-reference/service/handover-to-agent#salesforce-miaw-settings) setting from the Salesforce MIAW handover provider. Handover ending is now handled automatically on the Salesforce side
+- Added NiCE branding by introducing a wordmark logo in Cognigy.AI installations integrated with the NiCE environment. A configurable CXone button was also added to the sidebar and user menu for quick access to the CXone application
+
+#### Bug Fixes
+
+- Fixed the issue with the NiCE CXone handover provider where Package and Snapshot support didn't work correctly, and Snapshot `referenceId` values were overwritten before being stored in the database
+- Fixed the issue where the Handover Providers sidebar item didn't stay highlighted when navigating to a Handover Provider Edit page
+- Fixed the issue in the MCP Server Endpoint where MCP server reconnects failed after a restored session. Now, a more stable reconnection behavior is ensured. Also updated the MCP landing page to be compatible with stricter browser [Content Security Policy (CSP) protections](/ai/agents/deploy/endpoint-reference/mcp-server#troubleshooting)
+- Fixed the issue where adding invalid Knowledge Source Tags didn't show an error message and blocked the Save button
+- Fixed the issue where stopping a simulator run mid-execution created duplicate simulation results in the Insights Transcript explorer due to metrics being recorded twice
+- Fixed the issue where special German characters broke the spelled-out alphabet in the Text Cleaner and Question Nodes
+- Fixed the issue in the Voice Preview feature where selecting a language not supported by the speech provider caused calls to fail. Now, Cognigy.AI maps to a supported language variant or deactivates the call button if none is available
+- Fixed the issue where Knowledge Sources didn't sync when the number Knowledge Sources in the Knowledge Store exceeded the pagination limit of 25
+- Fixed the issue in the Question Node where the Resolve Spelled Out Numbers option in the Answer Pre-Processing section incorrectly modified the last digit of large numbers, such as 18-digit values
+- Fixed the issue where Nodes such as the LLM Prompt Nodes using tools became unstable when a low number of transcript turns was configured
+
+### Cognigy Voice Gateway
+
+**Released** April 28, 2026
+
+#### Improvements
+
+- Added support for changing the media path [during an active transferred call via the Voice Gateway API](/ai/agents/develop/node-reference/voice/voice-gateway/transfer). This improvement lets you remove Voice Gateway from the audio stream during sensitive payment exchanges, reducing PCI data exposure.
+- Improved search in the Voice Gateway Self-Service portal. Now, results include all records, not just the current page in paginated lists
+
+### Cognigy Insights
+
+**Released** April 28, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in Transcript explorer where sessions were incorrectly ordered, placing sessions with newer last messages under older ones
+- Fixed the issue where `time_savings_seconds` was 1,000 times higher and `goal_step_metric_count` was incorrectly calculated for currency and revenue metrics
+- Fixed the issue where date range filters in Transcript explorer didn't correctly account for the user's local time zone offset
+- Fixed the issue where the Locale filter in the Transcript Explorer only considered the final session Locale. Now, the filter includes sessions where the Locale was set earlier via a Switch Locale Node
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot
+
+For on-premises installations, introduced a new YAML-based configuration for data redaction in Cognigy.AI 2026.9 and later, replacing environment variables. The new setup supports rollout percentage control and per-organization exclusions via `values.yaml`. For more information read the [Data Redaction](/ai/platform-features/data-redaction#prerequisites) article.
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

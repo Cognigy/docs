@@ -1,0 +1,94 @@
+---
+title: NiCE CXone
+keywords: ['nice cxone', 'nice cxone handover provider', 'nice cxone handover integration', 'nice cxone contact center', 'nice cxone virtual agent hub']
+description: Integration with NiCE CXone for handover of conversations to human agents in a contact center.
+tag: beta
+---
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<a href="/release-notes/2026.8"><Badge className="version-badge" color="purple">Added in 2026.8 (beta)</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/deploy/endpoint-reference/nice.svg" alt="NiCE CXone handover provider logo"/>
+</Frame>
+
+## Description
+
+<AiBeta/>
+
+The NiCE CXone handover provider bridges Cognigy.AI and [NiCE CXone](https://www.nice.com/), enabling end users to connect with human agents in a NICE CXone contact center.
+
+## Prerequisites
+
+- Access to [NiCE CXone](https://cxone.niceincontact.com/).
+- Cognigy.AI installation is integrated with [NiCE CXone environment](/ai/administer/access/management-ui#create-an-organization).
+
+## Restrictions
+
+- Voice handover via the [Transfer Node](/ai/agents/develop/node-reference/voice/generic/transfer) isn't supported.
+
+## Configuration on the Cognigy.AI Side
+
+<AccordionGroup>
+  <Accordion title="1. Create a Handover Provider">
+    1. Go to **Deploy > Handover Providers**.
+    2. Click **+ New Handover Provider** and select **NiCE CXone**.
+    3. Enter a unique name for the provider. This name will be used as a name for the channel in NiCE CXone.
+    4. Save the configuration.
+  </Accordion>
+
+  <Accordion title="2. Add a Handover to Human Agent Node">
+    1. In the Flow editor, add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node.
+    2. From the **Handover Provider** list, select the NiCE CXone provider that you created.
+    3. Configure the generic handover behavior, such as accepted messages or cancellation handling, as needed.
+    4. _(Optional)_ Configure additional settings:
+       - **Send Transcript as first message** - allow NiCE CXone to receive the conversation transcript as the first message when the handover begins. This setting is turned on by default.
+       - **Display Agent Details** - display the human agent's name and avatar from NiCE CXone in the chat for the end user. This setting is turned off by default.
+
+    <Note>
+      No NiCE CXone-specific fields are required in the Node. Routing to the correct queue or human agent team is configured on the NiCE CXone side.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Configuration on the Handover Provider Side
+
+<AccordionGroup>
+  <Accordion title="1. Configure Handover Permissions and Routing">
+   1. Go to the [NICE CXone](https://cxone.niceincontact.com/) platform.
+   2. Click the **Applications** app selector in the upper-left corner.
+   3. In the left-side **CXone Mpower Hubs** menu, select **ACD**, then **Roles**.
+   4. Select the role assigned to your account, for example, **Administrator**.
+   5. In **Assigned Channels**, select the channel with the same name as the NICE CXone handover provider you created in Cognigy.AI.
+   6. Click **Update Role Permissions** and assign either all permissions or the minimum scope:
+      - `Send Replies`
+      - `Assign / Reassign Conversations`
+      - `Reassign Conversations`
+       Save your changes.
+   7. In **Omnichannel Studio**, open the **Cognigy** folder. Inside, locate the **Cognigy Handover Script `<cognigy-handover-providerId>`**, where `<cognigy-handover-providerId>` is the ID of the handover provider in Cognigy.AI.
+      Don't rename the folder because Cognigy.AI references the script by its original name when deleting the provider.
+
+      You can adjust the script later using the [NiCE CXone Studio Scripts](https://help.nicecxone.com/content/studio/fundamentals/workwithscriptscx.htm?Highlight=scripts) documentation. In the script, make sure not to change the `ESCALATE` and `END ESCALATION` actions because Cognigy.AI uses them to start and end handovers.
+      The `ONRELEASE` action notifies the Cognigy.AI that the human agent closes the conversation.
+
+   </Accordion>
+
+ <Accordion title="2. Test the Handover">
+   Use a Cognigy.AI [Webchat v3 Endpoint](/webchat/v3/configuration) for quick testing.
+
+   1. In Cognigy.AI, go to the Webchat v3 Endpoint settings. Open **Demo Webchat** and trigger the handover.
+   2. In NICE CXone, click the **Applications** app selector in the upper-left corner.
+   3. In **CXone Mpower Hubs**, select **Agent**.
+   4. In the **Agent** window, select your preferred option for how you want to connect. For example, select **Set Phone Number**, enter a phone number, and click **Launch**.
+   5. With the correct skills assigned, the conversation will appear in the agent's queue. Otherwise, you can select **Search** in the left-side menu. 
+      1. Verify that the conversation appears in NiCE CXone. Confirm that it can be picked up by a human agent.
+      2. Send a reply from NiCE CXone and verify that it appears in the **Demo Webchat**.
+
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [All Handover Providers](/ai/escalate/handover-reference/overview)
+- [Handovers](/ai/escalate/handovers)
+- [NiCE CXone Endpoint](/ai/agents/deploy/endpoint-reference/nice)

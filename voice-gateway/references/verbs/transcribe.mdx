@@ -1,0 +1,116 @@
+---
+title: Transcribe
+keywords: ['transcribe', 'transcription', 'speech recognition']
+---
+
+The `transcribe` verb generates real-time transcriptions of speech.
+
+This verb can be nested only within the following verbs:
+
+<Tabs>
+  <Tab title="dial">
+    When nested within a [`dial`](/voice-gateway/references/verbs/dial) verb, `transcribe` provides long-running transcription of a phone call.
+
+    ```json dial expandable highlight={18-25}
+    {
+      "verb": "dial",
+      "actionHook": "dial",
+      "callerId": "+491173331212",
+      "answerOnBridge": true,
+      "dtmfCapture": ["*2", "*3"],
+      "dtmfHook": {
+        "url": "/dtmf",
+        "method": "GET"
+      },
+      "amd": {
+        "actionHook": "amd",
+        "recognizer": {
+          "vendor": "microsoft",
+          "language": "en-US"
+        }
+      },
+      "transcribe": {
+        "transcriptionHook": "http://example.com/transcribe",
+        "recognizer": {
+          "vendor": "Google",
+          "language": "en-US",
+          "interim": true
+        }
+      },
+      "target": [
+        {
+          "type": "phone",
+          "number": "+49XXXXXXXXXXX",
+          "trunk": "Twilio"
+        },
+        {
+          "type": "sip",
+          "sipUri": "sip:49XXXXXXXXXXX@sip.myTrunk.com",
+          "auth": {
+            "username": "John",
+            "password": "Doe"
+          }
+        },
+        {
+          "type": "user",
+          "name": "jane@sip.example.com"
+        }
+      ]
+    }
+    ```
+  </Tab>
+
+  <Tab title="listen">
+    When nested within a [`listen`](/voice-gateway/references/verbs/listen) verb, `transcribe` provides a transcription of recorded messages, such as voicemail.
+
+    ```json listen highlight={5-12}
+    {
+      "verb": "listen",
+      "url": "wss://myrecorder.example.com/calls",
+      "mixType": "stereo",
+      "transcribe": {
+        "transcriptionHook": "http://example.com/transcribe",
+        "recognizer": {
+          "vendor": "Google",
+          "language": "en-US",
+          "interim": true
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Configuration
+
+The following table lists the available parameters:
+
+| Parameter                         | Type             | Description                                                                                                                                                                                                                                                                                                                                                                                                                | Required |
+| --------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| transcriptionHook                 | string           | A webhook URL where the system sends an HTTP POST whenever a partial or final transcription result is available from the provider. This allows your application to process or store transcripts in real time.                                                                                                                                                                                                              | Yes      |
+| translationHook                   | string           | A webhook URL where the system sends an HTTP POST whenever a translation of the transcribed text is available. Only used if translation is enabled. Useful for multilanguage workflows.                                                                                                                                                                                                                                   | No       |
+| recognizer                        | object           | Contains configuration options for the speech recognition engine. This includes language selection, hints, diarization, and other advanced settings.                                                                                                                                                                                                                                                                       | No       |
+| recognizer.vendor                 | string           | The speech recognition provider to use, for example, Google, Amazon, or Azure. The vendor determines transcription quality, supported languages, and feature availability.                                                                                                                                                                                                                                                 | Yes      |
+| recognizer.label                  | string           | A custom label to identify this recognizer instance in logs or dashboards. Helpful when multiple recognizers are configured.                                                                                                                                                                                                                                                                                               | No       |
+| recognizer.language               | string           | The primary language code for transcription, for example, `en-US` for English, `fr-FR` for French. Determines how speech is interpreted.                                                                                                                                                                                                                                                                                  | No       |
+| recognizer.hints                  | array            | An array of words or phrases that may appear in the audio and should be recognized more accurately. Useful for domain-specific terms, names, or technical vocabulary.                                                                                                                                                                                                                                                      | No       |
+| recognizer.hintsBoost             | number           | A numeric value specifying how strongly the recognizer should prioritize the hint words. Higher numbers give stronger emphasis, improving accuracy for key terms.                                                                                                                                                                                                                                                          | No       |
+| recognizer.altLanguages           | array            | An array of additional language codes that the recognizer can use for multilingual audio. Allows recognition of mixed-language content.                                                                                                                                                                                                                                                                                    | No       |
+| recognizer.profanityFilter        | boolean          | If `true`, the recognizer will automatically remove or mask profanity from the transcription output.                                                                                                                                                                                                                                                                                                                       | No       |
+| recognizer.interim                | boolean          | If `true`, returns partial transcription results as the audio is being processed. Useful for live captions or real-time feedback.                                                                                                                                                                                                                                                                                          | No       |
+| recognizer.punctuation            | boolean          | If `true`, punctuation marks, for example, periods or commas, are included in the transcription to improve readability.                                                                                                                                                                                                                                                                                                   | No       |
+| recognizer.diarization            | boolean          | If `true`, enables speaker diarization, which assigns segments of the transcript to individual speakers.                                                                                                                                                                                                                                                                                                                   | No       |
+| recognizer.diarizationMinSpeakers | number           | The minimum number of speakers expected in the audio. Helps the diarization algorithm distinguish between speakers accurately.                                                                                                                                                                                                                                                                                             | No       |
+| recognizer.diarizationMaxSpeakers | number           | The maximum number of speakers expected in the audio. Prevents the algorithm from splitting speech unnecessarily.                                                                                                                                                                                                                                                                                                          | No       |
+| recognizer.vad                    | object           | Voice Activity Detection settings. Determines how the system detects when someone is speaking vs. silence, improving transcription timing and accuracy.                                                                                                                                                                                                                                                                    | No       |
+| recognizer.fallbackVendor         | string           | Specifies an alternative transcription vendor to use if the primary vendor fails. Ensures reliability in critical workflows.                                                                                                                                                                                                                                                                                               | No       |
+| recognizer.fallbackLanguage       | string           | Language code to use for the fallback vendor. Must match a language supported by the fallback provider.                                                                                                                                                                                                                                                                                                                    | No       |
+| earlyMedia                        | boolean          | If `true`, transcription starts as soon as audio begins, even before the call is answered. Useful for capturing pre-call audio, for example, IVR prompts. The default value is `false`.                                                                                                                                                                                                                                   | No       |
+| channel                           | number           | A number specifying which audio channel to transcribe in multichannel recordings. Each channel is a separate audio track—for example, `0` is left and `1` is `right` in stereo, or `0`, `1`, `2` for individual participants or microphones in multi-speaker recordings.                                                                                                                                                  | No       |
+
+Additional vendor-specific options are available through properties like `deepgramOptions`, `googleOptions`, `azureOptions`, `awsOptions`, `nuanceOptions`, `ibmOptions`, `nvidiaOptions`, `cobaltOptions`, `sonioxOptions`, `verbioOptions`, `speechmaticsOptions`, `assemblyAiOptions`, `openaiOptions`, and `customOptions`.
+
+## More Information
+
+- [Dial](/voice-gateway/references/verbs/dial)
+- [Listen](/voice-gateway/references/verbs/listen)

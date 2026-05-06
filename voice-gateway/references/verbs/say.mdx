@@ -1,0 +1,59 @@
+---
+title: Say
+keywords: ['cognigy voice gateway', 'say verb', 'text-to-speech', 'tts', 'synthesized speech']
+---
+
+The `say` verb converts text to speech and plays it to the caller. It supports multiple TTS vendors, languages, voices, and advanced options such as looping, early media, and fallback synthesizers.
+
+```json expandable
+{
+  "verb": "say",
+  "text": [
+    "Hi there!",
+    "Welcome to our service."
+  ],
+  "synthesizer": {
+    "vendor": "google",
+    "label": "primary-tts",
+    "language": "en-US",
+    "voice": "en-US-Wavenet-F",
+    "engine": "neural",
+    "gender": "FEMALE",
+    "fallbackVendor": "aws",
+    "fallbackLabel": "fallback-tts",
+    "fallbackLanguage": "en-GB",
+    "fallbackVoice": "Amy",
+    "options": {
+      "speakingRate": 1.0,
+      "pitch": 0.0,
+      "volumeGainDb": 0.0
+    }
+  },
+  "loop": 2,
+  "earlyMedia": true,
+  "disableTtsCache": false
+}
+```
+
+## Configuration
+
+The following table lists the available parameters:
+
+| Parameter                    | Type             | Description                                                                                                                                                                                                                                                                                                        | Required |
+| ---------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| text                         | string \| array  | The text to speak. The text may be either plain text or use SSML tags for advanced speech effects such as pauses, emphasis, or embedded audio. Can be a string or an array of strings. For example, `<speak>Hello, <break time='1s'/> welcome!</speak>`.                                                           | Yes      |
+| synthesizer                  | string \| object | Defines the text-to-speech options. Can be an object with detailed TTS settings or a string referencing a pre-configured synthesizer.                                                                                                                                                                              | No       |
+| synthesizer.vendor           | string           | The TTS service provider to use, for example, `google` or `aws`. This determines the available voices, languages, and engine options. See [supported speech vendors](/voice-gateway/references/tts-and-stt-vendors) or [add a custom speech API](/voice-gateway/webapp/speech-services#add-custom-speech-vendors). | No       |
+| synthesizer.label            | string           | A custom label for this synthesizer instance. Useful for logging or identifying multiple TTS configurations in a single flow. Can be `null` or a string.                                                                                                                                                           | No       |
+| synthesizer.language         | string           | The language code for the speech output, for example `en-US` or `de-DE`. Required if a vendor is defined.                                                                                                                                                                                                          | No       |
+| synthesizer.voice            | string \| object | The specific voice to use. Can be a string representing the vendor-specific voice name or an object with advanced properties. Defaults to the Application-level TTS voice if not provided. For example, `en-US-Wavenet-F` for Google TTS.                                                                          | No       |
+| synthesizer.engine           | string           | The TTS engine type. Options are: <ul><li>**standard** – the default engine</li><li>**neural** – a high-quality natural voice</li><li>**generative** – an experimental AI voice</li><li>**long-form** – optimized for long text</li></ul>                      | No       |
+| synthesizer.gender           | string           | The desired voice gender: `MALE`, `FEMALE`, or `NEUTRAL`. Used for vendors that support gender selection.                                                                                                                                                                                                          | No       |
+| synthesizer.fallbackVendor   | string           | An alternative TTS vendor to use if the primary vendor fails or returns an error. For example, `aws`.                                                                                                                                                                                                              | No       |
+| synthesizer.fallbackLabel    | string           | A label for the fallback TTS instance. Helps distinguish the primary and fallback synthesizers in logs.                                                                                                                                                                                                            | No       |
+| synthesizer.fallbackLanguage | string           | The language code for the fallback synthesizer, for example `en-US` or `de-DE`. Defaults to the primary language if not provided.                                                                                                                                                                                  | No       |
+| synthesizer.fallbackVoice    | string \| object | The voice for the fallback synthesizer. Can be a string or object. For example, `Amy` for AWS.                                                                                                                                                                                                                     | No       |
+| synthesizer.options          | object           | A vendor-specific TTS options object, such as `speakingRate` from 0.25 to 4.0, `pitch` from -20 to 20, or `volumeGainDb` from -96 to 16. These options control the speech speed, pitch, and volume.                                                                                                                | No       |
+| loop                         | number           | The number of times to repeat the utterance. Set 0 for infinite repetition. The default value is 1. Useful for hold music or repeated prompts.                                                                                                                                                                     | No       |
+| earlyMedia                   | boolean          | If true and the call isn't yet answered, plays the audio without officially answering the call. Useful for IVR previews or ringback messages. The default value is false.                                                                                                                                         | No       |
+| disableTtsCache              | boolean          | If true, disables caching of the synthesized audio for this utterance. The default value is false.                                                                                                                                                                                                                 | No       |

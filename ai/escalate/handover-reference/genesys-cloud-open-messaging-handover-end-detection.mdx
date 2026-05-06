@@ -1,0 +1,128 @@
+---
+title: 'Genesys Cloud Open Messaging: Handover End Detection with HTTP webhooks'
+sidebarTitle: HTTP Webhooks
+search: null
+boost: 2
+keywords: ['genesys cloud open messaging', 'handover provider', 'genesys om', 'genesys event detection', 'handover end detection', 'http webhooks']
+seo:
+  metatags:
+    description: >-
+      By default, Cognigy.AI uses a WebSocket connection through the
+      Notifications API to detect handover completion. Alternatively, you can
+      use HTTP webhooks with Triggers and Web Services Data Actions to send
+      requests to Cognigy.AI.
+---
+
+<Warning>
+  The handover end detection with HTTP webhooks applies to Cognigy.AI 4.99 and earlier versions. 
+  If you use Cognigy.AI 4.100 or later versions, migrate to [Amazon EventBridge](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge). Remove the previous [configuration steps](#configuration-steps) after migration to Amazon EventBridge.
+
+  In Cognigy.AI 4.100, the handover end detection configuration with HTTP webhooks will continue to work only if it was set up before updating to Cognigy.AI 4.100.
+</Warning>
+
+By default, to detect the end of a handover with Genesys Cloud Open Messaging, Cognigy.AI establishes a WebSocket connection that subscribes to a channel created through the [Notifications API](https://developer.genesys.cloud/notificationsalerts/notifications/notifications-apis). However, this approach has [limitations](https://developer.genesys.cloud/notificationsalerts/notifications/#usage-limitations) and may not always be reliable. 
+
+As an alternative, you can use HTTP webhooks, which require creating triggers in a workflow and using the Web Services Data Actions extension on the Genesys platform to send requests to Cognigy.AI. This approach ensures that events from ongoing conversations are reliably captured, especially during high volumes or complex flows with multiple queue transfers in Genesys.
+
+In this guide, you will configure HTTP webhooks in Genesys Cloud Open Messaging for the following Genesys analytics events:
+
+- [AfterCallWorkEvent](https://developer.genesys.cloud/analyticsdatamanagement/analytics/detail/analytics-detail-events#aftercallworkevent). The event is triggered when a human agent finishes after-call work by applying a wrap-up.
+- [UserEndEvent](https://developer.genesys.cloud/analyticsdatamanagement/analytics/detail/analytics-detail-events#userendevent). The event is triggered when a user or human agent session ends, indicating that the interaction has been completed. Cognigy.AI uses this event to detect when a session ends, which helps avoid prematurely wrapping up the chat in the middle of a transfer or after receiving an `AfterCallWorkEvent` event.
+
+## Prerequisites
+
+- [Configured Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging).
+- Applies to Cognigy.AI 4.99 and earlier versions. If you use Cognigy.AI 4.100 or later, migrate to [Amazon EventBridge](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge).
+
+## Configuration Steps
+
+<AccordionGroup>
+  <Accordion title="1. Install the Web Services Data Actions Extension">
+    1. In the Genesys Cloud interface, click **Menu** in the upper-left corner and go to **IT and Integrations > Integrations**.
+    2. Click **Add Integration**, find **Web Services Data Actions**, then click **Install**. 
+    3. Enter a name for your connection, for example, `Web Services Data Actions Integration`.
+    4. Click **Save & Activate**.
+  </Accordion>
+
+  <Accordion title="2. Create an Action">
+    1. In the left-side menu, select **Data Actions**.
+    2. Click **+ Add Action** and select the integration you created.
+    3. Enter a name for the action, for example, `Send Event to Cognigy`.
+  </Accordion>
+
+  <Accordion title="3. Configure the Action">
+    1. On the **Setup** tab, go to the **Contracts** section.
+    2. In **Input Contract > JSON**, select **JSON** and paste the following JSON:
+    ```json
+    {
+      "title": "properties",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "topic": {
+          "type": "string"
+        },
+        "disconnectType": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+    ```
+    4. In the **Configuration** section, follow these steps:
+       1. Select **POST** from the **HTTP Method** list.
+       2. In the **Request URL Template**, enter the Cognigy API URL in the following format: `https://endpoint-<cognigy-instance-domain>/handover/genesysCloudOM`. For example, `https://endpoint-trial.cognigy.ai/handover/genesysCloudOM`.
+    5. Go to the **Test** tab, enter a value in the provided fields, for example `123`. Click **Run Test**.
+    6. If the test is successful, click **Save & Publish**. Otherwise, review and correct the previous steps.
+  </Accordion>
+
+  <Accordion title="4. Create Workflows">
+    1. Go to **Orchestration > Architect**, hover over the ![vertical-ellipsis-icon](/_assets/icons/black-and-white/vertical-ellipsis.svg) icon on the **Flows** tab and select **Workflow**.
+    2. Create a new flow for the `AfterCallWorkEvent` event and name it `Workflow conversation.id.acw`. 
+    3. In the left-side menu, select **Resources > Data** and create the following String-type variables in the **Add Variable** section:
+        - `addressTo`
+        - `disconnectType`
+    4. In the left-side menu, select **Initial State**, then click the **Data** section on the **Toolbox** tab. Drag **Call Data Action** to the desired location in the flow editor.
+    5. Name your action and select **Web Services Data Action** from the **Category** list.
+    6. From the **Data Action** list, select the action you created previously.
+    7. Fill in the following fields:
+        - `userId` — enter `Flow.addressTo` and select **Literal** from the list next to the field.
+        - `topic` — enter `v2.detail.events.conversation.id.acw` and select **Literal** from the list next to the field.
+        - `disconnectType` — enter `Flow.disconnectType` and select **Literal** from the list next to the field.
+        Save and publish your flow.
+    8. Create a new flow for the `UserEndEvent` event and repeat steps 1–7 with the following changes:
+        1. Name the workflow `Workflow conversation.id.user.end`.
+        2. For the `topic` field, select **Literal** and enter `v2.detail.events.conversation.id.user.end`.
+  </Accordion>
+
+  <Accordion title="5. Create Triggers">
+    1. Go to **Orchestration > Triggers**.
+    2. Create a trigger for the `AfterCallWorkEvent` event and name it `Trigger conversation.id.acw`.
+    3. Configure the following fields:
+        - **Topic Name** — select `v2.detail.events.conversation.{id}.acw`.
+        - **Workflow Target** — select `Workflow conversation.id.acw`.
+    4. Click **+ Add Condition** and define the criteria:
+        - Criterion 1:
+            - **JSON Path** — enter `mediaType`.
+            - **Operator** — select **Equals (==)**.
+            - **Value** — enter `MESSAGE`.
+        - Criterion 2:
+            - **JSON Path** — enter `messageType`.
+            - **Operator** — select **Equals (==)**.
+            - **Value** — enter `OPEN`.
+    5. Click **Save** and toggle the **Inactive** option next to the trigger name to activate it.
+    6. Create a new trigger for the `UserEndEvent` event and repeat steps 1–5 with these changes:
+        - **Topic Name** — select `v2.detail.events.conversation.{id}.user.end`.
+        - **Workflow Target** — select `Workflow conversation.id.user.end`.
+
+    The integration is complete, ensuring more reliable detection of conversation endings.
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Genesys Cloud Open Messaging Documentation: Create a flow](https://help.mypurecloud.com/articles/create-call-flow/)
+- [Genesys Cloud Open Messaging Documentation: Create a custom action for integrations](https://help.mypurecloud.com/articles/create-custom-action-integrations/)
+- [Genesys Cloud Open Messaging Documentation: Add a data actions integration](https://help.mypurecloud.com/articles/add-a-data-actions-integration/)

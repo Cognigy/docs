@@ -1,0 +1,53 @@
+---
+title: 'SIP:REFER'
+keywords: ['cognigy voice gateway', 'sip', 'refer', 'call transfer', 'sip trunk', 'sip phone']
+---
+
+The `sip:refer` verb is used to transfer a call and disconnect it.
+
+This verb sends a `REFER` message to the carrier (SIP trunk) or SIP phone. For the transfer to succeed, the carrier or SIP phone must support the `REFER` message. Once the `sip:refer` completes successfully, the call is transferred and disconnected from Voice Gateway.
+
+```json expandable
+{
+  "verb": "sip:refer",
+  "referTo": "+49XXXXXXXXXXX",
+  "id": "unique-id-123",
+  "referredBy": "sip:caller@example.com",
+  "actionHook": {
+    "url": "/action",
+    "referStatus": "202",
+    "final_referred_call_status": "200",
+    "eventHook": {
+      "event": "transfer-status",
+      "call_status": "180"
+    }
+  },
+  "eventHook": "/event",
+  "headers": {
+    "X-Custom-Header": "Value"
+  }
+}
+```
+
+## Configuration
+
+The following table lists the available parameters:
+
+| Parameter                             | Type             | Description                                                                                                                                                                                                     | Required |
+| ------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| referTo                               | string           | The target of the call transfer. A SIP URI, phone number, or user identifier specifying who should receive the call.                                                                                            | Yes      |
+| id                                    | string           | A unique identifier for this verb instance. Used for event notifications when `notifyEvents` is enabled.                                                                                                        | No       |
+| referredBy                            | string           | The source or initiator of the call transfer. A SIP URI, phone number, or user identifier specifying who is transferring the call. If the value isn't provided, it defaults to the identity of the party being transferred. | No       |
+| actionHook                            | string \| object | A webhook to receive an HTTP POST when the call is completed. The default value is `refer`.                                                                                                                     | No       |
+| actionHook.referStatus                | string           | The SIP status response to the `REFER` request.                                                                                                                                                                 | No       |
+| actionHook.final_referred_call_status | string           | The final SIP status of the subsequent call to the transferee. Provided only when the `REFER` is accepted and `NOTIFY` messages are received from the remote party.                                             | No       |
+| actionHook.eventHook.event            | string           | The transfer event status. Indicates the state of the follow-on call.                                                                                                                                           | No       |
+| actionHook.eventHook.call_status      | string           | The SIP status received in a `NOTIFY` after a successful `REFER`, for example, `180 Ringing` or `200 OK`.                                                                                                       | No       |
+| eventHook                             | string \| object | A webhook that receives an HTTP POST when `NOTIFY` messages about the follow-on call status are received.                                                                                                       | No       |
+| headers                               | object           | An object containing additional SIP headers to include in the response.                                                                                                                                         | No       |
+
+The `sip:refer` verb completes when one of the following conditions is met:
+
+- A failure response is received for the `REFER` request.
+- A `202 Accepted` response is received for the `REFER`, followed by a `NOTIFY` message indicating the final status of the follow-on call.
+- An `actionHook` is configured to provide details of the final result, and optionally an `eventHook` is configured to receive each `NOTIFY` after a successful `REFER`.

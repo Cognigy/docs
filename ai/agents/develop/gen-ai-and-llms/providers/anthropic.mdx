@@ -1,0 +1,77 @@
+---
+title: Anthropic
+keywords: ['llms', 'anthropic', 'anthropic models']
+seo:
+  metatags:
+    description: >-
+      To start using an Anthropic LLM with Cognigy.AI features, add the LLM and
+      apply it to the corresponding use case.
+---
+
+import CompletionApiDeprecation from '/snippets/ai/completion-api-deprecation.mdx'
+import AiGenerativeAiAddModelViaApi from '/snippets/ai/generative-ai/add-model-via-api.mdx'
+import AiGenerativeAiApplyModel from '/snippets/ai/generative-ai/apply-model.mdx'
+
+<CompletionApiDeprecation alternative="Switch to the Messages API instead before the removal date."/>
+
+<Warning>
+  Anthropic's `claude-sonnet-4-6` model doesn't support [assistant message
+  prefilling](https://platform.claude.com/docs/en/about-claude/models/migration-guide#breaking-changes-3). If your AI Agent uses this model and a conversation ends with an assistant message, for example,
+  after a [Say Node](/ai/agents/develop/node-reference/basic/say), requests can
+  fail with the error `The conversation must end with a user message`.
+
+  To keep your Flows compatible, ensure that the last transcript step before the
+  LLM call is a user message. For example, add an [Add Transcript Step
+  Node](/ai/agents/develop/node-reference/service/add-transcript-step) before
+  the LLM call and set the role to `user`.
+</Warning>
+
+To start using an Anthropic model with Cognigy.AI features, follow these steps:
+
+1. [Add a Model](#add-models)
+2. [Apply the Model](#apply-the-model)
+
+## Add Models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add Models via GUI
+
+You can add a model provided by Anthropic to Cognigy.AI in **Build > LLM**. To add the model, you will need the following parameters:
+
+<Tabs>
+  <Tab title="Standard Model">
+    <Note>
+      The `*-latest` suffix indicates that the model you select points to the latest version of the model. For more information, read the [Anthropic's models](https://docs.anthropic.com/en/docs/about-claude/models/overview) documentation.
+    </Note>
+
+    | Parameter | Description                                                                                                                      |
+    |-----------|----------------------------------------------------------------------------------------------------------------------------------|
+    | apiKey    | Add an API Key that you generated via [Account Settings](https://platform.claude.com/docs/en/get-started) in Anthropic. |
+  </Tab>
+  <Tab title="Custom Model">
+    | Parameter  | Description                                                                                                                                                                                                                                                                                                     |
+    |------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Model Type | Select **Chat** for models that support the Messages API and **Completion** for the Completions API. For more information, refer to the [Anthropic Model Comparison (API format)](https://docs.anthropic.com/claude/docs/models-overview) documentation. |
+    | Model Name | Enter the name of the model that you want to use as a custom model. To find model names, refer to the [Anthropic](https://docs.anthropic.com/claude/docs/models-overview) documentation.                                                                                                                              |
+    | apiKey     | Add an API Key that you generated via [Account Settings](https://platform.claude.com/docs/en/get-started) in Anthropic.                                                                                                                                                                                |
+  </Tab>
+</Tabs>
+
+Apply changes. Check if the connection was set up by clicking **Test**.
+
+<AiGenerativeAiAddModelViaApi/>
+
+## Apply the Model
+
+<AiGenerativeAiApplyModel/>
+
+## More Information
+
+- [Other LLM Operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Overview](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM Providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)
