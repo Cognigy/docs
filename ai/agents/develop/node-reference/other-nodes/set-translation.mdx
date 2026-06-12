@@ -1,0 +1,30 @@
+---
+title: Set Translation
+keywords: ['set translation', 'real-time translation', 'language translation', 'localization', 'multilingual']
+---
+
+<a href="/release-notes/2026.11"><Badge className="version-badge" color="blue">Updated in 2026.11</Badge></a>
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/other/set-translation.png" alt="Set Translation Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node lets you override the real-time translation settings defined in the [Endpoint settings](/ai/agents/deploy/endpoints/real-time-translation-settings) for the ongoing session. The settings defined in this Node persist for all subsequent user inputs, including during a handover to a human agent, until another Set Translation Node is executed or the session ends.
+
+## Restrictions
+
+- Translation with the Set Translation Node is supported only for the output types of the [AI channel](/ai/agents/develop/node-reference/basic/say) in your Nodes.
+
+## Parameters
+
+| Parameter                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Translation Enabled                        | Sets how to override the real-time translation settings in the Endpoint settings:<ul><li>When turned on, overrides real-time translation set in the Endpoint settings for the rest of the session.</li><li>When turned off, deactivates real-time translation and defaults the **User Input Language** and **Flow Language** settings to English.</li></ul>                                                                                                                               |
+| User Input Language                        | Sets the language identified in the user input. Enter the respective language code supported by [the machine translation provider you configured](/ai/agents/deploy/endpoints/real-time-translation-settings). If an unsupported language code is provided, the user input language defaults to English.                                                                                                                                                                                  |
+| Flow Language                              | Sets the language to translate the output to. Enter the respective language code supported by [the machine translation provider you configured](/ai/agents/deploy/endpoints/real-time-translation-settings). If an unsupported language code is provided, the Flow language defaults to English.                                                                                                                                                                                           |
+| Don't translate Payloads                   | Avoids translating the payload content when it is returned. This parameter is activated by default.                                                                                                                                                                                                                                                                                                                                                                                       |
+| No-Translation Marker                      | Sets the no-translation marker. Any text inside two no-translation markers isn't translated in the AI Agent output. This parameter can be used for trademarks or other business terms that must not be translated. By default, the no-translation marker is `**`. For example, if you write `Willkommen, **Moin**!` in a Say Node of your Flow and the detected language is English, the AI Agent sends `Welcome, Moin!` to the user because `Moin` is inside the no-translation markers. |
+| Set user input language on execution count | This parameter works only when the **User Input Language** is set to `Auto-Detect`. Sets the number of user inputs the AI Agent uses to identify the user's language.                                                                                                                                                                                                                                                                                                                     |
+| Always remove No-translation Markers       | Removes the no-translation markers from the user-facing output, even when translation isn't enabled.                                                                                                                                                                                                                                                                                                                                                                                      |

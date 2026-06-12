@@ -1,0 +1,20 @@
+---
+title: Regex Slot Filler
+keywords: ['regex slot filler', 'regular expression', 'slots', 'nlu', 'pattern matching']
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/ai/regex-slot-filler.png" alt="Regex Slot Filler Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+Use this Node to fill Slots using regular expressions. To learn more about Slots and Tags, see [Lexicons & Slots](/ai/platform-features/nlu/slots/user-defined/lexicon).
+
+## Parameters
+
+| Parameter | Type                                                | Description                                                                                                                          |
+|-----------|-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| Regex     | Regular expression                                  | The regular expression applied to the user input. The regular expression must start and end with /, for example, `/^1\d{7}$/`. Compared to [regular expressions](/ai/platform-features/nlu/slots/user-defined/regex) in **Slot Fillers** on the **NLU** tab, the Regex Slot Filler Node also supports flags.|
+| Flags     | Regular expression flag characters in single string | Regular expression flags you want to set. When the `g` flag is used, for example, `/^1\d{7}$/g`, and the input contains multiple matches, all matched values are stored as an array. The array is stored under the `slots` key in the Input object. |
+| Tag       | CognigyScript                                       | The Tag or Slot you want to fill.                                                                                                    |

@@ -1,0 +1,4 @@
+- [Snapshots](/ai/agents/deploy/snapshots) and [Packages](/ai/platform-features/packages) aren't supported.
+- The [Transfer Node](/ai/agents/develop/node-reference/voice/generic/transfer) isn't supported.
+- If your NiCE CXone Studio script is configured to send a message to the user after a handover is initiated, the **Repeat Handover Accepted Message** setting in the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node won't work. The message sent by the Studio script is treated as a human agent response, which prevents the **Handover Accepted Message** from repeating.
+- Configuring the estimated wait time logic isn't supported on the Cognigy.AI side for the NiCE CXone integration. Instead, add an [Estimated Wait Time](https://help.nicecxone.com/content/studio/actionscx/ewtestimate/ewtestimate.htm?cshid=EWTESTIMATE) action to your NiCE CXone Studio script.

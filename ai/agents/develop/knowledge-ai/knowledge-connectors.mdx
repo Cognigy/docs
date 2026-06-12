@@ -1,0 +1,116 @@
+---
+title: Knowledge Connectors
+sidebarTitle: Knowledge Connectors
+keywords: ['knowledge connectors', 'knowledge management', 'content management', 'metadata', 'knowledge extensions', 'document processing', 'content connectors']
+seo:
+  metatags:
+    description: >-
+      Knowledge Connectors allow you to ingest knowledge from external sources
+      directly into your Flows, providing greater flexibility and control.
+---
+
+<a href="/release-notes/2026.7"><Badge className="version-badge" color="blue">Updated in 2026.7</Badge></a>
+
+_Knowledge Connectors_ integrate external services to import content directly into your Flows. This feature provides greater flexibility and control compared to other methods of uploading knowledge, such as uploading multiple PDFs or connecting to a single web page. You can schedule synchronizations to automatically import knowledge, or manually trigger knowledge imports. Knowledge Connectors are developed and delivered as part of [Extension](/ai/for-developers/extensions) packages.
+
+## Key Benefits
+
+- **Flexible Sources**. Ingest data from databases, APIs, document libraries, or Confluence, or crawl websites with Diffbot.
+- **Customizable**. Modify prebuilt Knowledge Connectors or create your own from scratch.
+- **Centralized Management**. Keep all external knowledge structured and accessible in your Flows.
+- **Automated Synchronization**. Schedule regular imports from external sources to keep the AI Agents' knowledge up to date.
+
+## Restrictions
+
+<Accordion title="Knowledge Synchronization Restrictions">
+  - Extensions that support knowledge synchronization aren't compatible with Cognigy.AI 2026.4 and earlier versions. Using an Extension with knowledge synchronization in Cognigy.AI 2026.4 and earlier versions can lead to unexpected behavior. If you update an Extension from the Marketplace to a version that supports knowledge synchronization, you can't revert the Extension to an earlier version. If needed, use [Snapshots](/ai/agents/deploy/snapshots) to back up your AI Agent with an Extension compatible with earlier versions of Cognigy.AI.
+  - Knowledge Sources imported with Knowledge Connectors that don't support knowledge synchronization can't be synchronized. To use knowledge synchronization, make sure you delete the previously imported Knowledge Sources and re-import them with a Knowledge Connector that supports knowledge synchronization.
+  - If you import a Package that includes a Knowledge Connector, the knowledge synchronization is deactivated by default. To activate it, go to the **Connector Configuration** tab in **Build > Knowledge**, click ![edit-assign](/_assets/icons/black-and-white/edit-assign.svg) next to the Knowledge Connector and set the synchronization schedule.
+</Accordion>
+
+## Working with Knowledge Connectors
+
+### Install a Knowledge Connector
+
+Select how you want to install a Knowledge Connector:
+
+<Tabs>
+  <Tab title="Install from the Marketplace">
+    Install a prebuilt Extension that includes a Knowledge Connector from the Marketplace. To do so, follow these steps:
+
+    1. Go to **Manage > Extensions**.
+    2. In the **Marketplace** section, select an Extension that includes a Knowledge Connector, for example, the Confluence Extension 6.0.0 or Diffbot Extension 2.0.0, and click **Install**.
+
+  </Tab>
+  <Tab title="Modify Existing Knowledge Connectors">
+
+    Clone the Extensions repository and modify the Knowledge Connector of an Extension, for example, the Confluence or Diffbot Extension. To do so, follow these steps:
+
+    1. Clone the [Cognigy Extensions](https://github.com/Cognigy/Extensions) repository from GitHub to your local machine and open it in your code editor.
+    2. Go to the [`extensions/confluence`](https://github.com/Cognigy/Extensions/tree/master/extensions/confluence) or [`extensions/diffbot`](https://github.com/Cognigy/Extensions/tree/master/extensions/diffbot) folder. Modify the code as needed. Run `npm install` to install all required dependencies for the Extension.
+    3. Run `npx tsc` to compile the TypeScript code. This command converts TypeScript files into JavaScript in the build folder. If the build process doesn't create a tar.gz package automatically, create one manually:
+        ```bash
+        tar -czvf extension-name.tar.gz build/* icon.png README.md package.json package-lock.json
+        ```
+    4. Go to **Manage > Extensions** in Cognigy.AI and click **+ Upload Extension**.
+    5. Select the created package and click **Open**. The installation of the Extension begins.
+
+  </Tab>
+  <Tab title="Create from Scratch">
+
+    Create a custom Knowledge Connector from scratch. To do so, follow these steps:
+
+    1. Add the [createKnowledgeConnector()](https://www.npmjs.com/package/@cognigy/extension-tools#knowledge-import) and [upsertKnowledgeConnector()](https://www.npmjs.com/package/@cognigy/extension-tools#knowledge-import) functions to your custom Extension. Use the [Extension template](https://github.com/Cognigy/Extensions/tree/master/docs/example) for structural reference and the [Knowledge Connector example](https://github.com/Cognigy/Extensions/tree/master/docs/example/src/knowledge-connectors). Run `npm install` to install all required dependencies for the Extension.
+    2. Run `npx tsc` to compile the TypeScript code. This command converts TypeScript files into JavaScript in the build folder. If the build process doesn't create a tar.gz package automatically, create one manually:
+        ```bash
+        tar -czvf extension-name.tar.gz build/* icon.png README.md package.json package-lock.json
+        ```
+    3. Go to **Manage > Extensions** in Cognigy.AI and click **+ Upload Extension**.
+    4. Select the created package and click **Open**. The installation of the Extension begins.
+
+  </Tab>
+</Tabs>
+
+### Set up the Knowledge Connector
+
+1. After the installation, go to **Build > Knowledge** and select the Knowledge Store to which you want to import knowledge.
+2. On the **Knowledge Sources** page, click **+ Add Knowledge**.
+3. In the **Add Knowledge** window, select a Knowledge Connector from the **Type** list and fill in the required fields for the connection.
+4. (Optional) In the **Schedule Sync** section, select one or more weekdays and set the sync time to schedule automatic knowledge synchronization. Click **Save and Sync**.
+
+Wait for the Knowledge Connector to ingest the knowledge from the external source and make it available for your AI Agents. Then, the results are displayed on the following tabs:
+
+- **Knowledge Sources** — displays the imported knowledge files.
+- **Connector Configuration** — displays the Knowledge Connector configuration. On this tab, you can edit the configuration by clicking ![edit-assign](/_assets/icons/black-and-white/edit-assign.svg), or trigger a manual synchronization by clicking ![refresh-icon](/_assets/icons/blue/refresh.svg).
+
+### Scheduled Synchronizations
+
+When you set up a schedule, you select the weekdays and the time of day for automatic knowledge synchronization (sync). The sync time is displayed in the time zone configured in your [Project settings](/ai/administer/access/project-settings).
+
+If you configure sync, any changes to the external source, including adding and deleting files, are imported into Cognigy.AI on the scheduled day and at the scheduled time.
+
+<Note>
+Imports might be delayed depending on system resources.
+</Note>
+
+Changes made directly to Knowledge Sources and Knowledge Chunks in Cognigy.AI aren't exported to the external source. Instead, the Knowledge Connector overwrites these changes, including the metadata, during synchronization. Edit and update files in the external source to keep your knowledge up to date.
+
+### Use Ingested Knowledge in your Flow
+
+You can now use the ingested knowledge in your Flow in the following ways:
+
+- Add a [Search Extract Output Node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/search-extract-output).
+- Add an [AI Agent Node with Grounding Knowledge selected](/ai/agents/develop/node-reference/ai/ai-agent).
+- Select a Knowledge Store when [creating an AI Agent persona](/ai/agents/develop/persona).
+- Add a [Copilot: Knowledge Tile Node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/agent-copilot-knowledge#set-up-the-copilot-knowledge-tile) to use the knowledge in the Agent Copilot dashboard for human agents.
+
+In the Node Editor, select the Knowledge Store for which you set up the Knowledge Connector. Then, test your Flow in the Interaction Panel to see how the AI Agent uses the ingested knowledge to answer user queries.
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/empower/knowledge-ai/knowledge-extraction-flow.webp" alt="Knowledge extraction Flow with a Knowledge Store selected in the Node editor" style={{ width: 'auto' }} />
+</Frame>
+
+## More Information
+
+- [Knowledge Sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview)
+- [Overview](/ai/agents/develop/knowledge-ai/overview)

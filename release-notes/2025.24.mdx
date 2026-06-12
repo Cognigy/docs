@@ -1,0 +1,133 @@
+---
+title: "2025.24"
+---
+
+<Warning>
+  In Cognigy.AI 2025.25.0, transformers will start using the `axios` library for handling HTTP requests internally instead of `request-promise`. For more details, read [Transformers Overview](/ai/for-developers/transformers/overview).
+</Warning>
+
+<Warning>
+  The following Anthropic models have been removed from Cognigy.AI because they are no longer supported by Anthropic: `claude-3-5-sonnet-20241022`, `claude-3-5-sonnet-latest`, `claude-instant-v1`, and `claude-v1-100k`.
+
+  If you use these models in your Flows, replace them with available models from the [Model Support by Feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) list to ensure your AI Agents remain stable.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2025.24.2
+
+### Cognigy.AI
+
+**Released** December 5, 2025
+
+#### Bug Fixes
+
+- Fixed SSO and inconsistent login issues in Cognigy.AI
+
+### Cognigy Voice Gateway
+
+**Released** December 3, 2025
+
+#### Bug Fixes
+
+- Fixed the issue in `api-server` and `helm chart` where `api-server` logged some errors due to an optional environment variable
+- Fixed the issue in `feature-server` where the initial connection to Cognigy.AI required more attempts than expected
+
+## 2025.24.1
+
+### Cognigy.AI
+
+**Released** December 3, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Cognigy.AI OData audit events contained sensitive information
+
+### Cognigy Voice Gateway
+
+**Released** November 26, 2025
+
+#### Bug Fixes
+
+- Fixed the issue where Microsoft Azure's speech-to-text functions didn't work properly by rolling back the FreeSWITCH image from `cognigy.azurecr.io/vg-freeswitch-mrf:2024.24.0` to `cognigy.azurecr.io/vg-freeswitch-mrf:0.9.3` 
+
+## 2025.24.0
+
+### Cognigy.AI
+
+**Released** November 25, 2025
+
+#### Features
+
+##### Simulator
+
+Introduced the [Simulator](/ai/agents/test/simulator/overview) for AI Agents. The Simulator is an LLM-powered tool in Cognigy.AI that allows users to model and test full conversational scenarios for LLM-based AI Agents. Use the Simulator to mimic real-world user interactions and evaluate the performance, behavior, and reliability of AI Agents in controlled environments. You can try the Simulator in the [trial environment](https://trial.cognigy.ai/).
+
+##### New Handover Provider for storm from Content Guru
+
+Introduced a new [handover provider for storm](/ai/escalate/handover-reference/storm), the contact center platform from Content Guru. With the storm handover connector, you can integrate Cognigy.AI with storm, enabling end users to connect with human agents working in a contact center that uses storm.
+
+### Improvements
+
+- Retired [Anthropic's](/ai/agents/develop/gen-ai-and-llms/providers/anthropic) `claude-3-5-sonnet-latest`, `claude-instant-v1`, and `claude-v1-100k` models
+- Added `base64Encode` and `base64Decode` [API functions](/ai/for-developers/code/api-functions) to Code Nodes
+- Improved the visibility of hyperlinks in the [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- Added an activity filter on the [Contact Profiles](/ai/agents/analyze/contact-profiles) page
+- Introduced a [fallback value](/ai/agents/develop/nodes/overview#fallback-value-in-node-fields) indicator in the Node editor fields. This indicator helps users understand the fallback value that is used when no value is configured for the field
+
+#### Bug Fixes
+
+- Fixed the issue where resizing the Marketplace page prevented users from scrolling and displaying all Extensions
+- Fixed the issue where icons indicating deprecation and retirement status for LLMs were hidden when the LLM name was longer than the Model Type column on the Large Language Models page
+- Fixed the issue where logging in to Cognigy.AI in a second environment with the same domain caused the user to be logged out of the first environment due to a lack of cookie isolation
+- Fixed the issue where users couldn't add Tool Nodes to LLM Prompt Nodes
+- Fixed the issue where a translation for the Generative Conversation Summary Node was missing
+- Fixed the issue where dependent Flows didn't appear in the dependency list while packaging a Voice Gateway Endpoint
+- Fixed the issue where the Global Connection page crashed when users with slow connections switched between pages
+- Fixed the issue where the collaborator icon on a Node was hidden if there were no conversations on this Node
+- Fixed the issue where real-time translations weren't working as expected when Live Agent sent messages to users
+- Fixed the issue where the positioning of the loader in the Knowledge Sources page prevented the scroll bar of the Knowledge Source list from working
+- Fixed the issue where retired models were displayed in Knowledge AI settings
+- Fixed the issue where human agent names were shown for Genesys Cloud Open Messaging without customer consent
+- Fixed the issue where Azure OpenAI models using API key connections with custom URLs didn't work properly
+
+### Cognigy Live Agent
+
+**Released** November 25, 2025
+
+#### Improvements
+
+- Added the [Profile Language option](/live-agent/profile-settings#profile-language) in the Profile settings to allow the human agent to set their preferred UI language. This option overrides the account language and translates email and push notifications into the selected language
+
+#### Bug Fixes
+
+- Fixed the issue where the right expanding arrow button of the chat panel wasn't visible when the Enable overriding AI Copilot preferences and Enable AI Copilot Workspace options were activated
+- Fixed the issue where email delivery failed due to names including commas in the From field
+
+### Cognigy AI Ops Center
+
+**Released** November 25, 2025
+
+#### Improvements
+
+- Updated the [Handover Providers](/ops-center/monitor/metrics/handover-providers) dashboard: the Provider Forwarding Errors Count and API Call Request Duration charts were removed, and the Handover Requests and Handover Messages charts were added to track the number of handover attempts and end-user messages, ensuring smooth conversation transfers
+
+#### Bug Fixes
+
+- Fixed the issue where the General indicator was highlighted red when other subcomponents' indicators were highlighted red
+
+### Infrastructure
+
+#### Voice Gateway
+
+- Improved Websocket stability for keep-alive pings, retries, and message orders
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

@@ -1,0 +1,49 @@
+---
+title: TRANSFER_REFER_SUCCESS
+description: This event triggers when a SIP REFER call is successfully transferred and accepted by the destination.
+keywords: ['transfer refer success', 'sip refer', 'call transfer', 'voice gateway', 'call event']
+---
+
+<a href="/release-notes/2026.11"><Badge className="version-badge" color="blue">Updated in 2026.11</Badge></a>
+
+This event occurs when a call transfer using the `Refer` method fails. For example, if the destination is unavailable or rejects the request. After the event is triggered, any configured failover or error hook runs automatically.
+
+A call transfer is considered successful when the system transfers the call to another destination and the destination answers the call.
+
+A call transfer fails when refer_status is `202 Accepted` and `final_referred_call_status` is any error code, for example, `410 Gone`, `408 Request Timeout`, or any `5xx` code.
+
+Payload:
+
+```json
+{
+  "payload": {
+    "call_sid": "dff0c1fa-ae84-xxxx-xxxx-xxxxxxxxxxxx",
+    "direction": "inbound",
+    "from": "+140xxxxxxxx",
+    "to": "+4417xxxxxxxx",
+    "call_id": "42aac143-dd3b-xxxx-xxxx-xxxxxxxxxxxx",
+    "sip_status": 200,
+    "sip_reason": "OK",
+    "call_status": "in-progress",
+    "account_sid": "1a3d4a19-a1e9-xxxx-xxxx-xxxxxxxxxxxx",
+    "trace_id": "64e90af2af98xxxxxxxxxxxxxxxxxxxx",
+    "application_sid": "d6a219b6-683a-xxxx-xxxx-xxxxxxxxxxxx",
+    "fs_sip_address": "10.1.192.202:5060",
+    "originating_sip_ip": "54.171.127.194",
+    "originating_sip_trunk_name": "Twilio",
+    "api_base_url": "voice-gateway-app-dev-vg.cognigy.ai/v1",
+    "refer_status": 202,
+    "final_referred_call_status": 200
+  },
+  "event": "TRANSFER_REFER_SUCCESS",
+  "numberMetaData": {
+    "number": "+140xxxxxxxx",
+    "country": "US",
+    "countryCallingCode": "1",
+    "nationalNumber": "40xxxxxxxx",
+    "valid": true,
+    "type": "FIXED_LINE_OR_MOBILE",
+    "uri": "tel:+140xxxxxxxx"
+  }
+}
+```

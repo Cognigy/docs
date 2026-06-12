@@ -1,0 +1,83 @@
+---
+title: Call Recording
+keywords: ['call recording', 'siprec', 'srs', 'session recording server']
+---
+
+<a href="/release-notes/4.45">
+  <Badge className="version-badge" color="blue">
+    Updated in 4.45
+  </Badge>
+</a>
+
+<Frame>
+  <img
+    class="image-center"
+    src="/_assets/ai/develop/node-reference/vg/call-recording.png"
+    alt="Call Recording Node"
+    style={{ width: 'auto' }}
+  />
+</Frame>
+
+## Description
+
+The Call Recording Node starts, stops, pauses, or resumes recording of the current call. Using the [SIPREC protocol (RFC 7866)](https://datatracker.ietf.org/doc/html/rfc7866), Voice Gateway streams a copy of the call audio in real time to a session recording server (SRS) that you operate. The SRS can be any server that supports the SIPREC standard.
+
+<Note>
+  The Call Recording Node uses SIPREC only. For WebSocket-based recording, use the [Call Recording](/voice-gateway/webapp/accounts#call-recording-configuration) setting in the [Voice Gateway Self-Service Portal](/voice-gateway/webapp/overview) instead.
+</Note>
+
+## Parameters
+
+| Parameter             | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Activity              | Select        | Whether to `start`, `stop`, `pause`, or `resume` the call recording.                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Call Recording Server | CognigyScript | Enter the SIP URI of your SRS. Voice Gateway uses this URI as the destination for the `SIPREC INVITE` request that carries the recorded media. You can specify either a single host that resolves to one or more SRS instances via DNS/SRV records, or a comma-separated list of SIP URIs to send recordings to multiple recorders in parallel. For more information about supported SIP URI formats, refer to the [SIP URI Formats](#sip-uri-formats) section. |
+| Call Recording ID     | CognigyScript | Defines the recording session identifier. Voice Gateway forwards the value of this parameter to the SRS, allowing you to correlate recordings. This parameter is optional.                                                                                                                                                                                                                                                                                      |
+
+### SIP URI Formats
+
+### Supported formats
+
+<AccordionGroup>
+
+<Accordion title="Valid SIP URI formats">
+
+| Use case                         | Example value                               |
+| -------------------------------- | ------------------------------------------- |
+| Single SRS by hostname           | `sip:siprec.example.com`                    |
+| Single SRS by hostname with port | `sip:siprec.example.com:5060`               |
+| Single SRS by IP address         | `sip:3.208.57.175`                          |
+| Single SRS over TLS              | `sips:siprec.example.com`                   |
+| Multiple parallel recorders      | `sip:srs1.example.com,sip:srs2.example.com` |
+
+When multiple URIs are provided, Voice Gateway opens a parallel SIPREC dialog to each URI. The recording is considered successful if at least one dialog is accepted.
+
+</Accordion>
+
+<Accordion title="Invalid SIP URI formats">
+
+Voice Gateway accepts only SIP URIs. The following formats aren't supported:
+
+- WebSocket URLs such as `wss://…` or `ws://…`.
+- HTTP URLs such as `https://…` or `http://…`.
+- Plain hostnames or IP addresses without a SIP scheme. For example, `siprec.example.com` or `10.0.0.5`.
+
+</Accordion>
+
+</AccordionGroup>
+
+## Troubleshooting
+
+| Symptom                                                                            | Likely cause                                                                                                           | Recommended Action                                                                             |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Recording never starts. SBC logs show `503` response to `startCallRecording` INFO. | `Call Recording Server` isn't a valid SIP URI, for example `wss://…`, `https://…`, or missing `sip:` / `sips:` scheme. | Use a valid `sip:` or `sips:` URI. See [Supported formats](#supported-formats).                |
+| Logs show `Cannot start recording when recording is already started`.              | The Flow triggered `start` twice without a `stop` in between.                                                          | Ensure `start` is called only once per session, or send a `stop` before calling `start` again. |
+| Logs show `discarding duplicate startCallRecording request for a call`.            | A duplicate `start` request was sent to the SBC for a call that is already being recorded.                             | Ensure the Flow issues only one `start` per recording session.                                 |
+| Logs show `startCallRecording request is missing X-Srs-Url header`.                | The `Call Recording Server` field was left empty, or a CognigyScript expression evaluated to empty.                      | Set a static value or verify your expression resolves at runtime.                              |
+| SRS receives the request but no audio arrives.                                     | Network is blocking audio between systems.                                                                             | Allow RTP traffic from SBC to SRS.                                                             |
+
+## FAQ
+
+<Accordion title="Does SIPREC count as an active session?">
+  No. A recorded call counts as one active session. Additional SIP dialogs and RTP streams are handled by the SRS. Those streams don't count against Voice Gateway quotas, even when multiple SRS instances receive the audio.
+</Accordion>

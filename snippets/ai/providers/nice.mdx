@@ -1,0 +1,56 @@
+<AccordionGroup>
+  <Accordion title="1. Configure Handover Permissions">
+   1. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+   2. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > ACD > Roles**.
+   3. Select the role assigned to your account, for example, **Administrator**.
+   4. In **Assigned Channels**, select the channel with the same name as the NiCE CXone handover provider you created in Cognigy.AI.
+   5. Click **Update Role Permissions** and assign either all permissions or the minimum scope:
+      - `Send Replies`
+      - `Assign / Reassign Conversations`
+      - `Reassign Conversations`
+       Save your changes.
+   </Accordion>
+   <Accordion title="2. Create a Skill">
+
+     To ensure that conversations are automatically assigned to human agents, create a skill and assign it to the channel and human agent.
+
+     1. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+     2. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > ACD > ACD Skills**.
+     3. Click **Create New > Single Skill**.
+     4. Configure the following fields:
+       - **Media Type** — select **Digital**.
+       - **Skill Name** — enter a name for your skill.
+       - **Inbound/Outbound** — select **Inbound**.
+       - **Campaign** — select any existing campaign.
+     5. Click **Create**. After creating the skill, assign it to the channel:
+        1. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > ACD > Digital > Points of Contact Digital**.
+        2. Find the channel with the same name as your Cognigy.AI handover provider. Click **Edit**, go to the **Skills** tab, and select the created skill from the **Select default skill** list.
+     6. Verify the skill is assigned to a human agent:
+        1. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > ACD > ACD Users**.
+        2. Select the user from the list, and check the **Skills** tab to ensure the required skill is assigned.
+    </Accordion>
+
+   <Accordion title="3. Review the Studio Script">
+    1. Click the **Applications** app selector in the upper-left corner. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > Studio**.
+    2. Open the **Cognigy** folder. Inside, locate the **Cognigy Handover Script `<cognigy-handover-providerId>`**, where `<cognigy-handover-providerId>` is the ID of the handover provider in Cognigy.AI.
+      Don't rename the folder because Cognigy.AI references the script by its original name when deleting the provider.
+
+      You can adjust the script later using the [NiCE CXone Studio Scripts](https://help.nicecxone.com/content/studio/fundamentals/workwithscriptscx.htm?Highlight=scripts) documentation. In the script, make sure not to change the `ESCALATE` and `END ESCALATION` actions because Cognigy.AI uses them to start and end handovers.
+
+      The `ONRELEASE` action notifies Cognigy.AI that the human agent has closed the conversation. Cognigy.AI then triggers the **On Resolve Options** setting configured in the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node.
+
+   </Accordion>
+
+ <Accordion title="4. Test the Handover">
+   Use a Cognigy.AI [Webchat v3 Endpoint](/webchat/v3/configuration) for quick testing.
+
+   1. In Cognigy.AI, go to the Webchat v3 Endpoint settings. Open **Demo Webchat** and trigger the handover.
+   2. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+   3. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > Agent**.
+   4. In the **Agent** window, select your preferred option for how you want to connect. For example, select **Set Phone Number**, enter a phone number, and click **Launch**.
+   5. With the [correct skill assigned](#create-a-skill), the conversation will appear in the agent's queue. Otherwise, you can select **Search** in the left-side menu and find the recent conversation that was created.
+      1. Verify that the conversation appears in NiCE CXone. Confirm that it can be picked up by a human agent.
+      2. Send a reply from NiCE CXone and verify that it appears in the **Demo Webchat**.
+
+  </Accordion>
+</AccordionGroup>

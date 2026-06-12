@@ -1,0 +1,32 @@
+---
+title: Reset State
+keywords: ['reset state', 'state', 'full intent recognition']
+tag: deprecated
+seo:
+  metatags:
+    description: >-
+      This Node resets the setting of the Set State Node to restore full Intent
+      recognition.
+---
+
+<Frame>
+  <img class="image-center" src="/_assets/ai/develop/node-reference/logic/reset-state.png" alt="Reset State Node" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+<Warning>
+ As of Cognigy.AI 2026.9.0, the Reset State Node is deprecated and will be removed from the Node selector in Cognigy.AI 2026.16.0. This deprecation doesn't affect runtime behavior. After the removal, existing Flows containing this Node will remain fully supported and continue to run as expected. As an alternative, you can use [Intent Conditions](/ai/platform-features/nlu/intents/conditions) for controlling Intent recognition.
+</Warning>
+
+This Node resets the setting of the [Set State](/ai/agents/test/interaction-panel/state) Node to the [default State](/ai/agents/test/interaction-panel/state)
+to restore full Intent recognition.
+
+<Accordion title="Reset State May Affect your Flow">
+  Resetting the State clears all stored information for the Set State Node and may interrupt your Flow. Use this action only when required.
+</Accordion>
+
+## More Information
+
+- [Set State](/ai/agents/develop/node-reference/logic/set-state)
+- [States](/ai/agents/test/interaction-panel/state)

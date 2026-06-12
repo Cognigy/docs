@@ -1,0 +1,29 @@
+---
+title: getState
+keywords: ['getstate', 'states functions']
+seo:
+  metatags:
+    description: getState returns the current state of the conversation.
+---
+
+import DeprecateState from '/snippets/release-notes/state-deprecation.mdx'
+
+<DeprecateState/>
+
+## Syntax
+
+`getState()`
+
+## Description
+
+Returns the current State of the conversation.
+
+**Returns:** `string` — the current State.
+
+## Example
+
+```js
+// Get the current conversation state
+const currentState = getState();
+console.log(`Current state is: ${currentState}`);
+```

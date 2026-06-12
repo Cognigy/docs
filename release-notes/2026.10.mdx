@@ -1,0 +1,137 @@
+---
+title: "2026.10"
+---
+
+<Warning>
+  Removals and deprecations:
+  
+  - Support for AWS Bedrock's `amazon.nova-lite-v1:0`, `amazon.nova-pro-v1:0`, and `amazon.nova-micro-v1:0` models has been deprecated.
+  - Support for Aleph Alpha's `luminous` and `luminous-embedding-128` has been deprecated.
+  - Support for Anthropic's `claude-3-haiku` model has been removed.
+</Warning>
+
+<Warning>
+  As of Cognigy.AI 2026.8.3, the `ingress.ingresController` feature flag controls whether to create Traefik middleware resources. For on-premises installations, refer to the [Infrastructure section in the Cognigy.AI 2026.8.0 release notes](/release-notes/2026.8#infrastructure).
+</Warning>
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.10.2
+
+### Cognigy Voice Gateway
+
+**Released** May 14, 2026
+
+#### Bug Fixes
+
+- Fixed the issue with barge-in where a caller's voice input was ignored if it contained fewer words than the minimum barge-in word count, causing the AI Agent to wait for the caller to speak again
+
+## 2026.10.1
+
+### Cognigy.AI
+
+**Released** May 18, 2026
+
+#### Improvements
+
+- Updated Redis container images from PhotonOS-based to Debian-based versions to ensure compliance with contractual requirements for the use of Redis
+
+### Cognigy Voice Gateway
+
+**Released** May 13, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the FreeSWITCH media server stopped responding. Now, it automatically restarts when it becomes unresponsive
+
+## 2026.10.0
+
+### Cognigy.AI
+
+**Released** May 12, 2026
+
+#### Features
+
+##### New AWS Bedrock LLMs
+
+Introduced support for [AWS Bedrock's](/ai/agents/develop/gen-ai-and-llms/providers/amazon-bedrock) `amazon.nova-premier-v1:0` and `amazon.nova-2-lite-v1:0` models. This improves performance by allowing requests to be routed within a region or worldwide.
+
+##### New OpenAI and Microsoft Azure OpenAI LLM
+
+Introduced support for the `gpt-5.5` model from [OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/openai) and [Microsoft Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai). This model allows for higher-performance AI capabilities across different use cases.
+
+#### Improvements
+
+- Increased the maximum number of success criteria in the [Simulator](/ai/agents/test/simulator/overview) from 5 to 10
+- Moved the [Enable Mocking toggle](/ai/agents/test/mocking#activate-mocking) outside of the Advanced section of the Start Simulation panel in the Simulator for more visibility
+- Added the [`GET /management/v2.0/system/license`](/api-reference/management-ui/get-the-license-via-management-ui) and [`POST /management/v2.0/system/license`](/api-reference/management-ui/set-the-license-via-management-ui) API methods to install and view licenses in the Management UI. These methods let you manage licenses in installations with single sign-on (SSO) without requiring individual user SSO credentials
+- Added support for the Response API for [OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/openai), [Microsoft Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai), and [OpenAI-compatible](/ai/agents/develop/gen-ai-and-llms/providers/openai-compatible) models
+- Added [audit events](/ai/administer/access/admin-center/audit-events) for user, tenant, and role sync between NiCE CXone and Cognigy.AI
+- Renamed Username to Access Key ID and Password to Access Key Secret in the NiCE CXone Authentication Outbound settings in the [NiCE CXone (Non-Integrated)](/ai/escalate/handover-reference/nice-cxone/nice-cxone-non-integrated) handover provider
+
+#### Bug Fixes
+
+- Fixed the issue where accessing the Simulator from the left-side menu and creating scenarios didn't work properly for installations with their own Traefik implementation
+- Fixed the issue where logging out without selecting a Project threw the `Unable to load Agents – No RefreshToken provided` error
+- Fixed the issue where Knowledge Stores didn't work with custom embedding models from OpenAI and Azure OpenAI
+- Fixed the issue where users could save the storm handover provider without selecting a connection
+- Fixed the issue where the `gpt-5.2` and `gpt-5.4` models weren't working with OpenAI-compatible providers
+- Fixed the issue where the Question Node crashed when an unknown country prefix was detected with Pattern: IBAN as the question type
+- Fixed the issue where the WhatsApp Endpoint crashed with `TypeError: formattedMessages is not iterable`. This issue occurred when a Live Agent handover provider sent an event with empty text and no message content to Cognigy.AI, causing subsequent messages in the output buffer to be dropped
+
+### Cognigy Voice Gateway
+
+**Released** May 12, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where updating Set Session Config Node settings removed the speech-to-text (STT) and text-to-speech (TTS) settings during Flow execution and changed the STT language to English
+- Fixed the issue where STT failed mid-call due to the incorrect resolution of the credential label for speech providers after switching STT vendors during Flow execution
+- Fixed the issue where inbound calls were rejected with `603 Decline` when Cognigy.AI sent a redirect within the first few milliseconds of call setup, before the media endpoint was ready
+- Fixed the issue where handover statistics under-counted successful call transfers when the carrier sent SIP `BYE` before the REFER `NOTIFY` confirmation arrived
+- Fixed the issue where Voice Gateway dropped the call without signaling the transfer outcome to Cognigy.AI when a SIP carrier took longer than 15 seconds to return `NOTIFY` status for a REFER
+- Fixed the issue in the Voice Gateway Self-Service Portal where the connection to the Microsoft Azure speech provider with a custom STT endpoint and disabled TTS was displayed as failed even though the STT connection test succeeded
+
+### Cognigy Webchat
+
+**Released** May 12, 2026
+
+#### Improvements
+
+- Added React 19 support for [Webchat v3 embedded via npm](/webchat/v3/embedding/npm)
+
+### Cognigy Live Agent
+
+**Released** May 12, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where conversations were incorrectly auto-resolved after a short period of no activity, even if a human agent had just updated the conversation, for example, by assigning it, changing the team, adding labels, or updating the priority
+- Fixed the issue where conversations were incorrectly auto-resolved when a new message was received due to a timing issue between checking for inactivity in the conversation and updating its status
+
+### Cognigy Insights
+
+**Released** May 12, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in the Transcript Explorer where using the search field while filtering results by User Messages incorrectly returned sessions where the search result appeared only in AI Agent messages
+- Fixed the issue where sessions were displayed as duplicates in the Transcript Explorer and were registered twice for session counts in OData
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + Agent Copilot
+
+- The Redis, Redis Persistent, Redis Sentinel, and Redis Exporter images were updated as follows:
+  - `redis:7.4.0-debian-12-r4` to `redis:7.4.8-photon-5-r11`
+  - `redis-sentinel:7.4.0-debian-12-r4` to `redis-sentinel:7.4.8-photon-5-r11`
+  - `redis-exporter:1.63.0-debian-12-r0` to `redis-exporter:1.83.0-photon-5-r0`
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
