@@ -1,0 +1,92 @@
+---
+title: "2026.11"
+---
+
+<Warning>
+  Removals:
+
+  - The LLM Prompt Node (legacy) has been removed. Flows that contain this Node will continue to work. However, we strongly recommend migrating to the new [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) Node. This Node offers greater flexibility and advanced AI features, including tool use, image support, and conversation transcript access.
+  - Support for Aleph Alpha's `luminous-embedding-128` has been removed. Switch to the newer models to ensure your AI Agents remain stable.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.11.1
+
+### Cognigy Voice Gateway
+
+**Released** May 29, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where calls were silenced and terminated after being transferred to enterprise carriers due to incompatible SRTP encryption suites
+
+## 2026.11.0
+
+### Cognigy.AI
+
+**Released** May 26, 2026
+
+#### Features
+
+##### Custom Models for Google GenAI
+
+Added support for custom models to the [Google GenAI LLM](/ai/agents/develop/gen-ai-and-llms/providers/google-genai) provider, allowing users to configure and use fine-tuned models based on the Gemini model family instead of being limited to predefined options.
+
+#### Improvements
+
+- Added the Agent Change Notification setting to Salesforce MIAW in the [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent#salesforce-miaw-settings) and in the [Handover to Human Agent](/ai/agents/develop/manage-ai-agents#salesforce-chat-settings) tool. The setting shows a message when a conversation is transferred from one human agent to another
+- Added support for changing the model type for standard models in the [LLM provider editor](/ai/agents/develop/gen-ai-and-llms/providers/all-providers), allowing you to switch to a different model without recreating the configuration
+- Added error messages when updating the NiCE CXone provider fails, helping you quickly identify and fix configuration issues
+- Removed the AgentAssistV1 action from the NiCE CXone handover provider's studio script to allow users without an Agent Assist license to create the provider
+
+#### Bug Fixes
+
+- Fixed the issue where the [Set Translation](/ai/agents/develop/node-reference/other-nodes/set-translation) Node didn't correctly keep its settings during session and handover, which incorrectly turned translation back on
+- Fixed the issue in the UI where copying text removed parts of the content due to incorrect HTML tag handling
+- Fixed the issue where AI Agent avatars weren't displayed in some customer browsers and instead showed a placeholder image
+- Fixed the issue where calling `createApiKeyManagement` from `@cognigy/rest-api-client` failed to create an admin API key and incorrectly returned `401/404` errors
+- Fixed the issue where the names of the AI Judge success criteria weren't validated for uniqueness, allowing duplicates that blocked saving or cause confusion in scenarios and simulations. Also fixed charts and tooltips to distinguish criteria with the same label
+- Fixed the issue where scenario generation failed when using Anthropic LLMs as the design-time LLM because the request didn't include required user input messages
+- Fixed the issue where the Create button remained inactive after selecting a valid goal for a Goal Completed success criterion on the New Scenario page
+
+### Cognigy Voice Gateway
+
+**Released** May 26, 2026
+
+#### Features
+
+##### Speechmatics in a Voice Preview
+
+Speechmatics is now available in [Voice Preview](/ai/agents/test/voice-preview). Configure it in the Speech Services settings to test real-time speech recognition in your voice Flows.
+
+#### Improvements
+
+- Increased the default value from 1 to 5 in the User No Input Retries parameter of the [Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details#user-input-timeout) Node. This change applies to newly added Nodes only; existing Nodes aren't affected
+- Removed the SIP Realm setting from the [Accounts](/voice-gateway/webapp/accounts#settings) in the Voice Gateway Self-Service Portal
+- Added a confirmation dialog requiring user approval before deleting a speech credential
+
+#### Bug Fixes
+
+- Fixed the issue where failed call transfers (`410 GONE`) were incorrectly reported as [`TRANSFER_REFER_SUCCESS`](/voice-gateway/references/events/TRANSFER_REFER_SUCCESS) instead of [`TRANSFER_REFER_ERROR`](/voice-gateway/references/events/TRANSFER_REFER_ERROR), preventing fallback and error flows from running
+- Fixed the issue where the Hang Up Node's custom `X-Reason SIP` header value was overwritten by the default call termination reason, causing incorrect termination data to be propagated downstream
+
+### Cognigy Insights
+
+**Released** May 26, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Simulation Overview dashboard displayed multiple success criteria with the same display name as a single row. Each criterion is now shown separately based on its position in the results, ensuring correct counts and percentages
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

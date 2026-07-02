@@ -1,0 +1,7 @@
+<Danger>
+  With Release 4.71.0, we have introduced an incorrect default behavior for how meta-data for Cognigy.AI Handovers are cached. This leads to flaky behavior in Handover sessions for Cognigy.AI in all versions of our 4.71 and 4.72 lineup. Immediately update to the newest patch versions or set the configuration below:
+  ```yaml
+  cognigyEnv:
+  LRU_CACHE_ENABLED: "false"
+  ```
+</Danger>

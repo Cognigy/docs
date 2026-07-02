@@ -1,0 +1,131 @@
+---
+title: "2026.12"
+---
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+<Warning>
+  - The following Gemini models have been deprecated:
+
+      - `gemini-2.0-flash`. Instead, use `gemini-3.5-flash`
+      - `gemini-2.0-flash-lite`. Instead, use `gemini-3.1-flash-lite`
+      - `gemini-3.1-flash-lite-preview`. Instead, use `gemini-3.1-flash-lite`
+
+  - The State tab in the Interaction Panel, the `POST /v2.0/sessions/{sessionId}/state/inject` and `POST /v2.0/sessions/{sessionId}/state/reset` API methods, and all `/v2.0/flow/{flowId}/states` API routes have been removed.
+</Warning>
+
+## 2026.12.2
+
+### Cognigy.AI
+
+**Released** June 12, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where selecting `Deepgram (provided by NiCE)` or `Microsoft (provided by NiCE)` as a speech provider in the Set Session Config Node changed the selection to `Deepgram` or `Microsoft` after saving the Node
+
+## 2026.12.1
+
+### Cognigy.AI
+
+**Released** June 11, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the [`GET /v2.1/projects/{projectId}/logs`](/api-reference/logs-v21/get-log-entries) API method was unavailable
+
+### Cognigy Voice Gateway
+
+**Released** June 17, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the STT language set via the Set Session Config Node wasn't applied to the speech service, leading to inaccurate transcriptions
+
+## 2026.12.0
+
+### Cognigy.AI
+
+**Released** June 9, 2026
+
+#### Features
+
+##### New Gemini Models
+
+Added support for [Gemini's](/ai/agents/develop/gen-ai-and-llms/providers/google-genai) `gemini-3.5-flash` and `gemini-3.1-flash-lite` models. These models allow for higher-performance AI capabilities across different use cases.
+
+##### OAuth 2.0 Support for MCP Server Endpoint
+
+Added OAuth 2.0 support for the [MCP server Endpoint](/ai/agents/deploy/endpoint-reference/mcp-server). With this feature, you can make sure only authenticated requests reach the MCP server.
+
+#### Improvements
+
+- Added the Custom Attributes toggle to the NiCE CXone settings section in the [Question Node](/ai/agents/develop/node-reference/basic/question), [Handover to Human Agent Node](/ai/agents/develop/node-reference/service/handover-to-agent), and [Handover to Human Agent tool](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-ai-agent-tool)
+- Removed the Set Up Cognigy Live Agent section from the [Project creation wizard](/ai/agents/develop/projects-and-flows/projects)
+- Extended the [Node search](/ai/agents/develop/nodes/node-search) to include expressions inside If-condition fields, so variables and literals used in If conditions can now be discovered via the search box
+
+#### Bug Fixes
+
+- Fixed the issue where the Simulator section was incorrectly displayed in the Management UI
+- Fixed the issue where running a simulation from a Snapshot in the Interaction Panel showed an infinite loading spinner and never rendered the simulation output
+- Fixed the issue where the Model field in the LLM editor wasn't deactivated for embedding models
+- Fixed the issue where Voice Preview and Click To Call failed with `No text-to-speech service credentials for speechmatics` when Speechmatics was selected as the speech provider
+- Fixed the issue where the AI Agent incorrectly switched from the configured Locale to the default one
+- Fixed the issue in the AI Agent editor where editing the Instructions and Context field of an AI Agent reactivated previously disabled tool Nodes in AI Agent Nodes configured with the edited AI Agent 
+- Fixed the issue where the response of `GET /management/v2.0/system/license` continued to expose `quotaMaxKnowledgeChunks` after the Knowledge AI feature was deactivated in the installed license
+- Fixed the issue where the MCP Endpoint didn't expose tools due to internal paginated API responses
+- Fixed the issue where creating a Knowledge Store from a web page failed when you entered text in the Description field
+- Fixed the issue in the Question Node where changing the Question Type field caused parsing errors
+- Fixed the issue where the inject and notify transformers didn't log errors when an error occurred
+- Fixed the issue where a cached invalid NiCE CXone handover provider configuration prevented updates from being saved
+
+### Cognigy Voice Gateway
+
+**Released** June 9, 2026
+
+#### Features
+
+##### Speechmatics for Click To Call
+
+[Speechmatics](/voice-gateway/webapp/speech-services#speechmatics) is now supported in [Click To Call](/click-to-call/overview). [Configure Speechmatics in your Click To Call application](/click-to-call/configure#voice-configuration) in the Voice Gateway Self-Service Platform to apply this speech provider to your voice widget.
+
+#### Bug Fixes
+
+- Fixed the issue in the Mute Speech Input Node where activating both Mute Speech Input and Mute DTMF Input toggles caused a `TypeError: Cannot read properties of undefined (reading 'length')` to be logged as `could not send final ping command` during the final ping in the Voice Gateway Self-Service Platform. The error didn't affect call execution or user experience
+- Fixed the issue where Cognigy.AI didn't receive AMD events when a custom HTTP URL was used as the `amd.actionHook` value
+- Fixed the issue where executing `executeFlow()` after a SIP REFER transfer delayed call-completion cleanup by the 3-minute safety timeout instead of running immediately after the final ping
+- Fixed the issue where Additional Session Parameters in the Advanced section of the Set Settings Config Node didn't override other settings in this Node
+
+### Cognigy Live Agent
+
+**Released** June 9, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where conversations were auto-resolved while a human agent was actively viewing them. Viewing a conversation now resets the inactivity timer
+
+### Cognigy Insights
+
+**Released** June 9, 2026
+
+#### Features
+
+##### Conversation Analyzer
+
+Introduced [Conversation Analyzer](/insights/conversation-analyzer/overview), a quality evaluation tool in Cognigy Insights that automatically scores your AI Agent's conversations based on predefined and custom criteria. With this feature, you can define an evaluation topic and a set of metrics, and the Conversation Analyzer processes your conversations and provides results across dashboards. The Conversation Analyzer is in beta, and we encourage you to try it and provide us with feedback.
+
+#### Improvements
+
+- Renamed the Transcript explorer to [Conversations explorer](/insights/explorers/conversations) to better represent the user experience in the scope of the Conversation Analyzer. 
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

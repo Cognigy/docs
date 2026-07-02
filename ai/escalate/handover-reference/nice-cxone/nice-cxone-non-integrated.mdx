@@ -1,0 +1,167 @@
+---
+title: NiCE CXone (Non-Integrated)
+sidebarTitle: Non-Integrated
+keywords: ['NiCE CXone', 'NiCE CXone handover provider', 'NiCE CXone non-integrated', 'NiCE CXone byoc', 'NiCE CXone bring your own channel', 'NiCE CXone contact center']
+description: Integration with NiCE CXone for handing over conversations to human agents in environments that are not pre-integrated with NiCE CXone.
+tag: beta
+---
+import AiBeta from '/snippets/ai/beta.mdx'
+import NiCE from '/snippets/ai/providers/nice.mdx'
+import NiCERestrictions from '/snippets/ai/providers/nice-cxone-restrictions.mdx'
+import NiCEAttachments from '/snippets/ai/providers/nice-cxone-attachments.mdx'
+
+<a href="/release-notes/2026.13"><Badge className="version-badge" color="blue">Updated in 2026.13</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/nice.svg" alt="NiCE CXone handover provider logo"/>
+</Frame>
+
+## Description
+
+<AiBeta/>
+
+The NiCE CXone (Non-Integrated) handover provider bridges Cognigy.AI and [NiCE CXone](https://www.nice.com/), enabling end users to connect with human agents in a NICE CXone contact center.
+
+NiCE CXone (Non-Integrated) is for Cognigy.AI installations that are deployed independently from NiCE CXone. The two systems run on separate infrastructure, so you must configure a BYOC (Bring Your Own Channel) channel and provide NiCE CXone credentials manually.
+
+## Prerequisites
+
+- Access to [NiCE CXone](https://cxone.niceincontact.com/).
+- Cognigy.AI installation isn't integrated with [NiCE CXone environment](/ai/administer/access/management-ui#create-an-organization). If your Cognigy.AI installation is already integrated with NiCE CXone at the platform level, use the standard [NiCE CXone (Integrated) handover provider](/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated).
+- An Administrator role in NiCE CXone to access the required configuration settings and create API credentials.
+- A Client ID and Client Secret obtained by submitting the [CXone Application Registration](https://forms.microsoft.com/Pages/ResponsePage.aspx?id=vdojcYcOqU2cubfsggEarfHlkRVlgSlMjqsp52ASGttUM1U2VTQ4N0pXNk5XSzROV0VNNkhBU1gzMC4u) form. NiCE sends the credentials to your registered technical contacts within 2–3 business days. You need these credentials later in Cognigy.AI.
+
+## Restrictions
+
+<NiCERestrictions/>
+
+## Configuration on the Cognigy.AI Side
+
+<AccordionGroup>
+<Accordion title="1. Create and Configure a Handover Provider">
+
+    1. In Cognigy.AI, go to **Deploy > Handover Providers**.
+    2. Click **+ New Handover Provider** and select **NiCE CXone**.
+    3. Enter a unique name for the provider. This name will be used as the channel name in NiCE CXone.
+    4. Click **Save**. The **Handover Provider Editor** page opens. In the browser address bar, locate the URL and copy the handover provider ID after `/handover-provider/`. For example, in the following URL: `https://trial.cognigy.ai/project/65ae8e3adc2d77e6e260aa37/69b009f72e3deaa53a602d66/handover-provider/69f9bba8844ecf15d07954f9`, the handover provider ID is `69f9bba8844ecf15d07954f9`. Copy and save this value. You need it when configuring the [Channel Integration ID](#channel-integration-id) field.
+    5. Configure the following fields:
+
+    <AccordionGroup>
+      <Accordion title="Tenant ID">
+        The unique identifier of your NiCE CXone instance.
+
+        1. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+        2. In the left-side **CXone Mpower Hubs** menu, go to **General > Admin**.
+        3. Open the upper-right menu, click **My Profile And More** and select **My Profile**.
+        4. On the **General** tab, copy the value from the **Tenant ID** field and enter it in Cognigy.AI.
+      </Accordion>
+
+      <Accordion title="Business Unit ID">
+        The identifier of your NiCE CXone business unit.
+
+        1. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+        2. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > ACD > ACD Configuration > Business Units**.
+        3. On the **Business Unit details** page, copy the value from the **Unit Number** field and enter it in Cognigy.AI.
+      </Accordion>
+
+      <Accordion title="NiCE CXone Authentication Outbound">
+        Credentials for authenticating outbound API calls from Cognigy.AI to NiCE CXone. Configure the following parameters:
+
+        - **Name** — a unique name for your connection.
+        - **Access Key ID** — the Access Key ID for your NiCE CXone user:
+            1. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+            2. In the left-side **CXone Mpower Hubs** menu, go to **General > Admin**.
+            3. Open the employee profile used for API access.
+            4. On the **Security** tab, click **Add Access Key**.
+            5. Click **Show Secret Key** and immediately copy the Access Key ID and Access Key Secret to a secure location. The Access Key Secret is shown only once.
+        - **Access Key Secret** — the Access Key Secret copied in the same step as the Access Key ID.
+        - **Client ID** — the Client ID received from NiCE CXone as part of [Prerequisites](#prerequisites).
+        - **Client Secret** — the Client Secret received from NiCE CXone as part of [Prerequisites](#prerequisites).
+      </Accordion>
+
+      <Accordion title="Channel Integration ID">
+        The identifier of the channel integration in NiCE CXone.
+
+        1. In NiCE CXone, click the **Applications** app selector in the upper-left corner.
+        2. In the left-side **CXone Mpower Hubs** menu, go to **Omnichannel Routing > ACD**.
+        3. Go to **Digital > Bring Your Own Channel** and click **+ Add**.
+        4. Configure the following fields:
+            <Note>
+              Replace `<cognigy-instance-domain>` in the URL with the domain of your Cognigy.AI instance. For example, if your instance URL is `https://trial.cognigy.ai`, replace `<cognigy-instance-domain>` with `trial`.
+            </Note>
+            - **Name** — a name for the integration, for example, `Cognigy.AI Integration`.
+            - **Integration box URL** — `https://endpoint-<cognigy-instance-domain>.cognigy.ai/handover/niceCxOne`.
+            - **Authorization URL** — `https://endpoint-<cognigy-instance-domain>.cognigy.ai/handover/niceCxOne/{handover-provider-id}/auth/token`, where `{handover-provider-id}` is the handover provider ID copied earlier.
+            - **Add action URL** — `https://endpoint-<cognigy-instance-domain>.cognigy.ai/handover/niceCxOne/add`.
+            - **Reconnect action URL** — `https://endpoint-<cognigy-instance-domain>.cognigy.ai/handover/niceCxOne/reconnect`.
+            - **Remove action URL** — `https://endpoint-<cognigy-instance-domain>.cognigy.ai/handover/niceCxOne/remove`.
+            - **Client ID** — a Client ID of your choice, for example, `nice-cxone-dev-tech-writers`. Save this value. You need it for the **Client ID** in [Channel Integration Authentication](#channel-integration-authentication).
+            - **Client Secret** — a 32-character string. You can generate this value using any secure random string generator. Save this value. You need it for the **Client Secret** in [Channel Integration Authentication](#channel-integration-authentication).
+        5. Click **Save**. Copy the generated **Integration ID** and enter it in Cognigy.AI.
+      </Accordion>
+
+      <Accordion title="Channel Integration Authentication">
+        Credentials for authenticating the channel integration. Configure the following parameters:
+
+        - **Name** — a unique name for your connection.
+        - **Client ID** — the Client ID you entered when creating the [channel integration in NiCE CXone](#channel-integration-id).
+        - **Client Secret** — the Client Secret you entered when creating the [channel integration in NiCE CXone](#channel-integration-id).
+      </Accordion>
+    </AccordionGroup>
+
+6. Click **Save**. A channel is created on the NiCE CXone side.
+7. Verify the created channel in NiCE CXone:
+   1. In NiCE CXone, go to **Omnichannel Routing > ACD**, then **Digital > Points of Contact Digital**.
+   2. Find the channel with the same name as your NiCE CXone handover provider in Cognigy.AI. If you don't find the channel, the connection wasn't established. Check the handover provider configuration to ensure that all credentials are valid.
+</Accordion>
+
+<Accordion title="2. Add a Handover to Human Agent Node">
+    1. In the Flow editor, add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node.
+    2. From the **Handover Provider** list, select the NiCE CXone provider that you created.
+    3. Configure the handover behavior, such as accepted messages or cancellation handling, as needed.
+    4. _(Optional)_ Configure additional settings:
+        - **Send Transcript as first message** - allow NiCE CXone to receive the conversation transcript as the first message when the handover begins. This setting is turned on by default.
+        - **Display Agent Details** - display the human agent's name and avatar from NiCE CXone in the chat for the end user. This setting is turned off by default.
+        - **Custom Attributes** — add custom attributes, which allows you to include additional information. When sending custom attributes from Cognigy.AI to NiCE CXone, you can enter them in two ways:
+
+        <CodeGroup>
+
+        ```json JSON String
+        "{\"customerType\":\"premium\",\"tags\":[\"urgent\",\"vip\"]}"
+        ```
+        ```json JSON Object
+        {
+          "customerType": "premium",
+          "tags": ["urgent","vip"],
+          "preferences": { "language": "en", "notifications": true }
+        }
+        ```
+        </CodeGroup>
+
+    <Note>
+      No NiCE CXone-specific fields are required in the Node. Routing to the correct queue or human agent team is configured on the NiCE CXone side.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Configuration on the NiCE CXone Side
+
+<NiCE/>
+
+## Additional Configuration
+
+<NiCEAttachments/>
+
+## Troubleshooting
+
+| Issue                                   | Cause                                      | Recommended Action                                                                                                   |
+| --------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| The **Save** button remains active after saving | NiCE CXone authentication or timeout issue | Verify the NiCE CXone authentication outbound credentials or try clicking the **Save** button again later because NiCE may experience timeout issues. |
+
+## More Information
+
+- [NiCE CXone (Integrated) Handover Provider](/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated)
+- [NiCE CXone Handover Provider Overview](/ai/escalate/handover-reference/nice-cxone/overview)
+- [All Handover Providers](/ai/escalate/handover-reference/overview)
+- [Handovers](/ai/escalate/handovers)
+- [NiCE CXone Endpoint](/ai/agents/deploy/endpoint-reference/nice)
