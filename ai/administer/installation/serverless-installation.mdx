@@ -1,0 +1,101 @@
+---
+title: Install Cognigy Serverless
+description: "This guide describes how to install and activate Cognigy Serverless, the new Extension runtime, for on-premises Cognigy.AI installations."
+---
+
+_Cognigy.AI serverless_ is the new Extension execution runtime, replacing `service-execution`. This runtime allows Extensions to run in isolated, on-demand execution environments. For more information, refer to [Cognigy Serverless](/ai/for-developers/extensions#cognigy-serverless).
+
+For this installation guide, consider the namespace as `cognigy-ai` and the Helm chart file name as `cognigy-ai-values.yaml`. Adjust the following instructions to match your namespace and Helm chart file name.
+
+## Prerequisites
+
+- [Migrate Extensions tenant storage](/ai/administer/installation/migration/extensions-tenant-storage-migration)
+
+## Configure Rollout for Cognigy Serverless
+
+Add the following rollout configuration to `cognigy-ai-values.yaml`. This configuration defines the initial rollout policy with Cognigy serverless disabled for all organizations, Projects, and Extensions:
+
+```yaml
+commonConfigs:
+  cognigyRollout:
+    serverless.yaml: |
+      organisations:
+        enabled: []
+        disabled: []
+      projects:
+        enabled: []
+        disabled: []
+      extensions:
+        enabled: []
+        disabled: []
+```
+
+## Install Cognigy Serverless in the Cluster
+
+Add the following Cognigy serverless configuration to your `cognigy-ai-values.yaml`:
+
+```yaml
+serverless:
+  enabled: true
+
+  router:
+    # Optional: enable HPA-based autoscaler for router pods
+    autoscaling:
+      enabled: true
+
+  # Optional: deploy executor pods to a dedicated node pool
+  global:
+    nodeSelector: "node-role=serverless-executor"
+    tolerations: "node-role.cognigy.ai=serverless-executor"
+```
+
+## Apply Configuration
+
+Deploy the updated Cognigy.AI Helm chart:
+
+```bash
+helm registry login cognigy.azurecr.io \
+    --username <your-username> \
+    --password <your-password>
+
+helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <version> --values cognigy-ai-values.yaml
+```
+
+## Verify Serverless Router Pods
+
+Make sure all `serverless-router` pods are running and healthy. Execute the following command to check the pods' status:
+
+```bash
+kubectl get pods -n cognigy-ai --watch | grep serverless-router
+```
+
+All `serverless-router` pods must display the `Running` status and all containers must be ready, for example, displaying `1/1`.
+
+## Activate Cognigy Serverless
+
+1. Once all `serverless-router` pods are running and healthy, update the rollout configuration in `cognigy-ai-values.yaml` to activate Cognigy serverless for all organizations, Projects, and Extensions:
+
+    ```yaml
+    commonConfigs:
+      cognigyRollout:
+        serverless.yaml: |
+          organisations:
+            enabled: ["*"]
+            disabled: []
+          projects:
+            enabled: ["*"]
+            disabled: []
+          extensions:
+            enabled: ["*"]
+            disabled: []
+    ```
+
+2. Deploy the updated Cognigy.AI Helm chart:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+        --username <your-username> \
+        --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <version> --values cognigy-ai-values.yaml
+    ```

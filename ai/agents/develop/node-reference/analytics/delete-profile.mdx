@@ -1,0 +1,49 @@
+---
+title: Delete Profile
+keywords: ['delete profile', 'contact profile', 'data deletion', 'analytics', 'gdpr']
+seo:
+  metatags:
+    description: >-
+      The Delete Profile Node is used to delete a specific Contact Profile if
+      the end user requests it.
+---
+
+import AiNodeReferenceAnalyticsProfileNodeUseCase from '/snippets/ai/node-reference/analytics/profile-node-use-case.mdx'
+import AiNodeReferenceAnalyticsMaskingScope from '/snippets/ai/node-reference/analytics/masking-scope.mdx'
+
+<a href="/release-notes/2026.14"><Badge className="version-badge" color="blue">Updated in 2026.14</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/analytics/delete-profile.png" alt="Delete Profile Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node is used to delete a [specific Contact Profile](/ai/agents/analyze/contact-profiles#working-with-contact-profiles).
+
+You configure this Node to keep analytics records in masked form with the _Mask and Keep analytics_ feature instead of deleting all related analytics data. This setting is useful for keeping analytics on your AI Agent interactions while avoiding any personal traceability. Use this Node to comply with data protection standards, such as the General Data Protection Regulation (GDPR), when users request to delete their data.
+
+<Danger>
+  If you delete the Contact Profile with this Node, all the Contact Profile data is deleted and is no longer available.
+</Danger>
+
+## Restrictions
+
+- Mask and keep analytics is available only for Cognigy.AI 2026.14.0 and later versions.
+
+## Parameters
+
+| Parameter                    | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mask and keep analytics data | Boolean | Applies mask and keep analytics. With this option, data from the Contact Profile is processed as follows:<ul><li>Replaces contact identifiers, such as contact and user ID, with hashes.</li><li>Keeps analytics data, such as session counts and Intents, instead of deleting them.</li><li>Clears free-text fields, such as input text and transcripts.</li></ul>This parameter is deactivated by default. Masking is processed asynchronously and may take up to 2 hours to take effect. Masked sessions are excluded from the [Conversations](/insights/explorers/conversations) and [Message](/insights/explorers/message) explorers. However, analytics data related to the masked session is still included in [Insights reports](/insights/overview#reports) and can be accessed through the [OData endpoint](/ai/agents/analyze/odata#data-protection). |
+
+<AiNodeReferenceAnalyticsMaskingScope />
+
+<AiNodeReferenceAnalyticsProfileNodeUseCase />
+
+## More Information
+
+- [Activate Profile](/ai/agents/develop/node-reference/analytics/activate-profile)
+- [Update Profile](/ai/agents/develop/node-reference/analytics/update-profile)
+- [Deactivate Profile](/ai/agents/develop/node-reference/analytics/deactivate-profile)
+- [Merge Profile](/ai/agents/develop/node-reference/analytics/merge-profile)

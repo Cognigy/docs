@@ -1,0 +1,12 @@
+### Scope of Masking
+
+When the **Mask and keep analytics data** parameter is activated, the following fields are affected:
+
+| Collection                    | Hashed fields | Cleared fields                                                                                                                                                 |
+| ----------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Analytics                     | `contactId`   | `ip`, `inputText`, `userLanguageText`, `ratingComment`, `foundSlots`, `foundSlotDetails`, `custom1`–`custom10`, `inputData`, `slots`, `geoInfo`, `slotMatches` |
+| Sessions                      | `userId`      | —                                                                                                                                                              |
+| Conversations                 | `contactId`   | `inputText`, `previousInputText`, `ratingComment`, `inputData`, `previousInputData`, `inputAttachments`, `previousInputAttachments`                            |
+| Goals, Live Agent Escalations | `contactId`   | —                                                                                                                                                              |
+| Steps                         | `userId`      | —                                                                                                                                                              |
+| Voice Gateway Events          | `userId`      | `recognizerTranscript`, `recognizerDigits`                                                                                                                     |

@@ -1,0 +1,31 @@
+---
+title: NiCE CXone
+sidebarTitle: Overview
+description: Integration with NiCE CXone for handover of conversations to human agents in a contact center.
+keywords: ['NiCE CXone', 'NiCE CXone handover provider', 'NiCE CXone integrated', 'NiCE CXone non-integrated', 'NiCE CXone contact center']
+---
+
+The NiCE CXone handover providers connect Cognigy.AI with [NiCE CXone](https://www.nice.com/), enabling end users to reach human agents in a NiCE CXone contact center.
+
+Cognigy.AI supports two NiCE CXone handover providers depending on your installation's integration with NiCE CXone at the platform level. Only one option is available at a time: either **NiCE CXone (Integrated)** or **NiCE CXone (Non-Integrated)**. Follow the setup instructions for the relevant provider:
+
+<CardGroup cols={2}>
+  <Card
+    title="NiCE CXone (Integrated)"
+    href="/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated"
+  >
+    For Cognigy.AI installations with platform-level integration with NiCE CXone.
+
+    - No additional credentials required.
+    - A NiCE CXone channel is created automatically through the platform-level integration.
+  </Card>
+  <Card
+    title="NiCE CXone (Non-Integrated)"
+    href="/ai/escalate/handover-reference/nice-cxone/nice-cxone-non-integrated"
+  >
+    For Cognigy.AI installations without platform-level integration with NiCE CXone.
+
+    - Requires Tenant ID, Business Unit ID, and API credentials from NiCE CXone.
+    - A BYOC (Bring Your Own Channel) channel is created in NiCE CXone.
+  </Card>
+</CardGroup>

@@ -1,0 +1,100 @@
+---
+title: NiCE CXone (Integrated)
+sidebarTitle: Integrated
+keywords: ['nice cxone', 'nice cxone handover provider', 'nice cxone handover integration', 'nice cxone contact center', 'nice cxone virtual agent hub']
+description: Integration with NiCE CXone for handing over conversations to human agents in environments that are pre-integrated with NiCE CXone.
+tag: beta
+---
+import AiBeta from '/snippets/ai/beta.mdx'
+import NiCE from '/snippets/ai/providers/nice.mdx'
+import NiCERestrictions from '/snippets/ai/providers/nice-cxone-restrictions.mdx'
+import NiCEAttachments from '/snippets/ai/providers/nice-cxone-attachments.mdx'
+
+<a href="/release-notes/2026.15"><Badge className="version-badge" color="blue">Updated in 2026.15</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/nice.svg" alt="NiCE CXone handover provider logo"/>
+</Frame>
+
+## Description
+
+<AiBeta/>
+
+The NiCE CXone (Integrated) handover provider bridges Cognigy.AI and [NiCE CXone](https://www.nice.com/), enabling end users to connect with human agents in a NICE CXone contact center.
+
+NiCE CXone (Integrated) is for Cognigy.AI installations that are deployed as part of the NiCE CXone platform. Both systems share the same infrastructure, so the handover provider handles authentication and channel configuration automatically.
+
+## Prerequisites
+
+- Access to [NiCE CXone](https://cxone.niceincontact.com/).
+- Cognigy.AI installation is integrated with [NiCE CXone environment](/ai/administer/access/management-ui#create-an-organization). If your Cognigy.AI installation isn't integrated with NiCE CXone at the platform level, use the [NiCE CXone (Non-Integrated)](/ai/escalate/handover-reference/nice-cxone/nice-cxone-non-integrated) handover provider instead.
+
+## Restrictions
+
+<NiCERestrictions/>
+- After importing a NICE CXone (Integrated) handover provider from a Package or Snapshot:
+  - In NiCE CXone, update the Studio script if you customized it.
+  - [Reconfigure on the NiCE CXone side](#configuration-on-the-handover-provider-side) because this configuration isn't included in the import.
+
+## Configuration on the Cognigy.AI Side
+
+<AccordionGroup>
+  <Accordion title="1. Create a Handover Provider">
+    1. Go to **Deploy > Handover Providers**.
+    2. Click **+ New Handover Provider** and select **NiCE CXone**.
+    3. Enter a unique name for the provider. This name will be used as a name for the channel in NiCE CXone.
+    4. Save the configuration.
+
+    After creating a handover provider, you'll see one of the following statuses:
+
+    - **Pending** or **Syncing** — no action needed. Wait for the process to complete.
+    - **Failed** — review the [prerequisites](#prerequisites) and try again. If the issue persists, contact [Cognigy technical support](/help/get-help).
+    - **Ready** — you can continue the setup on the NiCE CXone side.
+
+    Once the status is **Ready**, a Studio script is automatically created in NiCE CXone with the ID in the format `Cognigy\Handover from Cognigy <cognigy-handover-providerId>`, for example, `Cognigy\Handover from Cognigy 6a462ef9109c0c66eb873918`. Use this ID to identify the script that maps to the handover provider you created.
+  </Accordion>
+
+  <Accordion title="2. Add a Handover to Human Agent Node">
+    1. In the Flow editor, add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node.
+    2. From the **Handover Provider** list, select the NiCE CXone provider that you created.
+    3. Configure the generic handover behavior, such as accepted messages or cancellation handling, as needed.
+    4. _(Optional)_ Configure additional settings:
+       - **Send Transcript as first message** - allow NiCE CXone to receive the conversation transcript as the first message when the handover begins. This setting is turned on by default.
+       - **Display Agent Details** - display the human agent's name and avatar from NiCE CXone in the chat for the end user. This setting is turned off by default.
+       - **Custom Attributes** — add custom attributes, which allows you to include additional information. When sending custom attributes from Cognigy.AI to NiCE CXone, you can enter them in two ways:
+
+     <CodeGroup>
+
+     ```json JSON String
+     "{\"customerType\":\"premium\",\"tags\":[\"urgent\",\"vip\"]}"
+     ```
+     ```json JSON Object
+     {
+       "customerType": "premium",
+       "tags": ["urgent","vip"],
+       "preferences": { "language": "en", "notifications": true }
+     }
+     ```
+     </CodeGroup>
+
+    <Note>
+      No NiCE CXone-specific fields are required in the Node. Routing to the correct queue or human agent team is configured on the NiCE CXone side.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Configuration on the Handover Provider Side
+
+<NiCE/>
+
+## Additional Configuration
+
+<NiCEAttachments/>
+
+## More Information
+
+- [NiCE CXone (Non-Integrated) Handover Provider](/ai/escalate/handover-reference/nice-cxone/nice-cxone-non-integrated)
+- [NiCE CXone Handover Provider Overview](/ai/escalate/handover-reference/nice-cxone/overview)
+- [All Handover Providers](/ai/escalate/handover-reference/overview)
+- [Handovers](/ai/escalate/handovers)
+- [NiCE CXone Endpoint](/ai/agents/deploy/endpoint-reference/nice)

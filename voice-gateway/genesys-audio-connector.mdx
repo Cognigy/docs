@@ -1,0 +1,117 @@
+---
+title: Genesys Audio Connector
+description: "Connect Genesys Cloud to Voice Gateway using the Audio Connector (AudioHook) bridge. Manage integrations that authenticate and route Genesys WebSocket audio into SIP."
+keywords: ['audio connector', 'genesys', 'audiohook', 'voice gateway', 'genesys audio connector', 'sip', 'integration']
+tag: beta
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<a href="/release-notes/2026.15"><Badge className="version-badge" color="purple">Added in 2026.15 (beta)</Badge></a>
+
+<AiBeta/>
+
+The _Genesys Audio Connector_ feature allows [Genesys Cloud](https://www.genesys.com/genesys-cloud) customers to continue using Cognigy's conversational AI without relying on SIP calling. This feature connects Genesys Cloud audio to Voice Gateway through the Genesys AudioHook Protocol over WebSocket. Genesys remains in control of the call, while Voice Gateway handles audio streaming and runs the conversational AI. The connection is secured using a unique API key.
+
+Key advantages include:
+
+- **Continuity for Genesys customers.** Customers can keep their existing Cognigy.AI and Voice Gateway integration if SIP calling is no longer available in Genesys Cloud.
+- **Minimal setup.** The connector uses a predefined carrier template in the Voice Gateway interface. Required settings are preconfigured, reducing the setup steps compared to a standard carrier.
+
+## Prerequisites
+
+- Access to a [Genesys Cloud](https://login.mypurecloud.com/) instance with admin permissions.
+- A Genesys **Organization ID** from **Admin > Account Settings > Organization Settings > Advanced** in Genesys Cloud.
+- A telephone number configured in **Telephony > Phone Numbers** in Genesys Cloud.
+- The **Genesys Audio Connector** feature enabled for your Voice Gateway instance.
+
+## Restrictions
+
+Because Genesys Cloud controls the call, Voice Gateway only supports sending and receiving audio. Other features aren't supported or have limited support:
+
+- **Transfer calls** — limited support through `refer` transfer. `dial` transfer isn't supported because Genesys Cloud doesn't allow Voice Gateway to initiate outbound calls.
+- **Hang up calls** — handled by the flow in Genesys Cloud.
+- **Agent Copilot** — not supported because it requires dial capabilities unavailable with this integration.
+
+## How to Use
+
+To use the Genesys Audio Connector, configure a carrier in Voice Gateway, create the Audio Connector integration in Genesys Cloud, and set up a call flow in Architect. Then assign a phone number and test the connection.
+
+### How to Set Up
+
+<AccordionGroup>
+  <Accordion title="1. Create a carrier in Voice Gateway">
+    1. Go to **Carrier**, click **+ Create carrier**.
+    2. On the **Add a carrier** page, select **Genesys Audio Connector** from the list of predefined carrier connectors.
+    3. Make sure the carrier is set to **active**.
+    4. Under **Used By**, select either all accounts or a specific account.
+    5. Click **Save**.
+  </Accordion>
+  <Accordion title="2. Create the Audio Connector integration in Voice Gateway">
+    1. Go to **Audio Connectors**, select **Genesys** from the **Type** list, and select the account the connector belongs to.
+    2. Click **Add Audio Connector Integration**.
+    3. Configure the following fields:
+        - **Name** — enter a descriptive name for the integration. If your Genesys organization has multiple integrations for different teams, environments, or use cases, choose a name that is easy to identify.
+        - **VoIP Carrier** — select the **Genesys Audio Connector carrier** you created previously. Only Genesys Audio Connector carriers are available. The integration routes SIP traffic through this carrier, and any phone numbers in the same account must also use it.
+        - **Organization ID** — enter the UUID assigned to your Genesys organization. See [Prerequisites](#prerequisites) for details.
+    4. Click **Save**.
+    5. In the **Integration created** window, go to **Integrations > Audio Connector**, and copy the **API Key** and **Client Secret**. These values are shown once. Copy them immediately and save them for later use in Genesys Cloud.
+    6. Click **Done**.
+  </Accordion>
+  <Accordion title="3. Add the Audio Connector integration in Genesys Cloud">
+    1. In the upper-left corner, click **Menu**.
+    2. Select **IT and Integrations > Integrations**.
+    3. On the **Integrations** page, click **Add Integration** in the upper-right corner.
+    4. On the **Add Integration** page, install the Audio Connector.
+    5. On the **Configuration** tab, enter the Base Connection URI in this format:
+        ```txt
+        wss://connector-vg-<your-environment>.cognigy.dev/api/genesys/
+        ```
+
+        For example, if your Voice Gateway environment is `trial`, the URI is:
+
+        ```txt
+        wss://connector-vg-trial.cognigy.dev/api/genesys/
+        ```
+    6. Click **Save & Activate**.
+    7. On the **Audio Connector Credentials** card, click **Configure**.
+    8. In the **Configure Credentials** window, paste the **API Key** and **Client Secret** you copied from Voice Gateway.
+    9. Click **Confirm**, then **Save & Activate**.
+  </Accordion>
+  <Accordion title="4. Build the call flow in Genesys Architect">
+    1. In the navigation menu, go to **Orchestration > Architect**.
+    2. Create an Inbound Call flow by clicking **+ Add** in the upper-left corner.
+    3. Enter a **Name** for the flow. You'll need this name later when routing a phone number to it.
+    4. Click **Create Flow**.
+    5. In the flow's starting menu, go to **Main Menu**. Next to **Main Menu**, click the three dots **> Toolbox > Task > Task**.
+    6. Under **Menu Access**, go to the **Speech Recognition** field and enter the DTMF input. Each menu choice needs a DTMF or speech recognition term for each supported language. For example, `1` or `one`.
+    7. In the **Toolbox** menu, go to **Bot**, then drag the **Call Audio Connector** action into the flow editor. This action routes the call to Voice Gateway when the caller selects the relevant menu option.
+    8. In the Call Audio Connector action's configuration, configure the following fields:
+        - **Integration settings** — select the integration you created previously.
+        - **Connector ID** — enter any unique string. This value is used to identify the call in Voice Gateway logs and reports.
+    9. Click **Validate**, then save changes.
+    10. _(Optional)_ Below the **Success** branch, add a **Transfer to Number** action, and enter the `Flow.vgTransferTarget` variable in the **Number** field.
+  </Accordion>
+  <Accordion title="5. Route a phone number to the flow">
+    1. Go to **Telephony > Phone Numbers** and select a number.
+    2. On the **Call Route** page, enter the flow name that you created previously in the **Route to** field, or verify that it is already routed to the correct flow.
+  </Accordion>
+</AccordionGroup>
+
+### How to Test
+
+<AccordionGroup>
+  <Accordion title="1. Assign a number and use a test Flow">
+    1. In the Voice Gateway Self-Service portal, assign the phone number to the carrier and application.
+    2. Route the phone number to a voice Flow in Cognigy.AI to confirm the setup works end to end without affecting live traffic.
+  </Accordion>
+  <Accordion title="2. Place a test call">
+    1. Dial the phone number routed to your inbound call flow.
+    2. Confirm the Main Menu prompt plays and responds to your DTMF or speech input.
+    3. Confirm the call is handed off through the **Call Audio Connector** action and that the Cognigy.AI voice Flow starts as expected.
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Carriers](/voice-gateway/webapp/carriers)

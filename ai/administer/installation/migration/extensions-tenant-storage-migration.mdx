@@ -1,0 +1,97 @@
+---
+title: Migrate Extensions Tenant Storage
+description: This migration guide helps you migrate the storage location for Extensions in Cognigy.AI on-premises installations to use Cognigy Serverless.
+---
+
+Previously, Extensions were stored in a flat directory structure under a shared path. To improve isolation and organization, Extensions are now stored in per-tenant subdirectories. This migration copies your existing Extensions from the old flat structure to the new tenant-based structure.
+
+## Prerequisites
+
+- Cognigy.AI `2026.15.0` or later.
+- The `kubectl` utility is installed locally on a Linux or MacOS client host. Windows client hosts aren't supported.
+- Helm v3.9 or later installed on the client host.
+- Kubernetes cluster meets general Cognigy.AI prerequisites, including hardware resources.
+- Runtime file share has been deployed.
+- The [NFS migration](/ai/administer/installation/migration/nfs-migration) has been completed.
+
+## Migration Process
+
+To migrate to tenant-based extension storage, you need to:
+
+1. [Configure and run the migration job](#configure-and-run-the-migration-job) to copy existing Extensions into the tenant-based storage structure.
+2. [Disable the migration job](#disable-the-migration-job) after the migration is completed.
+
+While running the migration job, there is no downtime.
+
+## Migration Steps
+
+For this migration guide, consider the namespace as `cognigy-ai` and the Helm chart file name as `cognigy-ai-values.yaml`. You need to adjust the following instructions to match your namespace and Helm chart file name.
+
+### Configure and Run the Migration Job
+
+1. In the `cognigy-ai-values.yaml` file, add the following sections at the root level:
+
+    ```yaml
+    jobCopyNfs:
+        enabled: true
+        mountFlowModules: false
+        mountFunctions: false
+        extraEnvVars:
+          - name: COPY_EXTENSIONS_TENANT
+             value: 'true'
+          - name: EXTENSION_API_URL
+             value: 'http://service-resources.cognigy-ai.svc.cluster.local:8000/internal/v1'
+          - name: EXTENSIONS_OLD_PATH
+             value: '/app/extensions'
+          - name: EXTENSIONS_NEW_PATH
+             value: '/app/extensions/tenant'
+          - name: COPY_EXTENSIONS
+             value: 'false'
+          - name: COPY_FUNCTIONS
+             value: 'false'
+          - name: COPY_BATCH_SIZE
+             value: '10'
+          - name: API_MAX_RETRIES
+             value: '3'
+          - name: API_RETRY_DELAY
+             value: '1000'
+          - name: EXTENSIONS_PER_HOUR
+             value: '1000'
+        extraVolumeMounts:
+          - name: runtime
+             mountPath: /app/extensions
+             subPath: extensions
+    ```
+
+2. Deploy the Cognigy.AI Helm chart. Replace `<your-installed-version>` with your currently installed chart version (`2026.11.0` or later) to avoid unintentionally downgrading your installation:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+        --username <your-username> \
+        --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```
+
+The pods start running. When the migration job successfully finishes, check the logs to ensure the migration job didn't fail to copy any resources.
+
+### Disable the Migration Job
+
+After the migration job is completed and all Extensions are located in the new tenant-based paths, follow these steps:
+
+1. Update the `cognigy-ai-values.yaml` file:
+
+    ```yaml
+    jobCopyNfs:
+      enabled: false
+    ```
+
+2. Deploy the Cognigy.AI Helm chart. Replace `<your-installed-version>` with your currently installed chart version (`2026.11.0` or later) to avoid unintentionally downgrading your installation:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+        --username <your-username> \
+        --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```

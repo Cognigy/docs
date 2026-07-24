@@ -1,0 +1,819 @@
+---
+title: TTS and STT Vendors
+description: Explore the cloud-based and on-premises TTS and STT vendors supported by Cognigy Voice Gateway, including AWS, Microsoft, Google, Deepgram, and ElevenLabs. View all supported languages and voices per provider.
+keywords: ['cognigy voice gateway', 'tts', 'text-to-speech', 'stt', 'speech-to-text', 'vendors', 'providers', 'voices', 'languages']
+---
+
+<a href="/release-notes/2026.4"><Badge className="version-badge" color="blue">Updated in 2026.4</Badge></a>
+
+## Supported TTS and STT Providers
+
+The table shows the cloud-based and on-premises TTS (Text-to-Speech) and STT (Speech-to-Text) providers supported by Cognigy Voice Gateway.
+
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Provider</th>
+      <th colspan="2">Cloud-Based</th>
+      <th colspan="2">On-Premises</th>
+    </tr>
+    <tr>
+      <th>TTS</th>
+      <th>STT</th>
+      <th>TTS</th>
+      <th>STT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AWS</td>
+      <td>+</td>
+      <td>+</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Deepgram</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <td>Deepgram Flux</td>
+      <td>-</td>
+      <td>+</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>ElevenLabs</td>
+      <td>+</td>
+      <td>+</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Google</td>
+      <td>+</td>
+      <td>+</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Microsoft</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <td>Nuance</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+    </tr>
+    <tr>
+      <td>Speechmatics<sup><a href="#footnote1">1</a></sup></td>
+      <td>+</td>
+      <td>+</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Custom</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+      <td>+</td>
+    </tr>
+  </tbody>
+</table>
+
+## Supported Languages and Voices
+
+The following sections list the languages and voices available for each provider in Voice Gateway.
+
+### AWS
+
+<AccordionGroup>
+  <Accordion title="TTS">
+
+  **Amazon Polly** — 29 languages, 61 voices:
+
+  - Arabic
+  - Australian English
+  - Brazilian Portuguese
+  - British English
+  - Canadian French
+  - Castilian Spanish
+  - Chinese Mandarin
+  - Danish
+  - Dutch
+  - French
+  - German
+  - Hindi
+  - Icelandic
+  - Indian English
+  - Italian
+  - Japanese
+  - Korean
+  - Mexican Spanish
+  - Norwegian
+  - Polish
+  - Portuguese
+  - Romanian
+  - Russian
+  - Swedish
+  - Turkish
+  - US English
+  - US Spanish
+  - Welsh
+  - Welsh English
+
+  </Accordion>
+  <Accordion title="STT">
+
+  **Amazon Transcribe** — 102 languages:
+
+  - Abkhaz
+  - Afrikaans
+  - Arabic, Gulf
+  - Arabic, Modern Standard
+  - Armenian
+  - Asturian
+  - Azerbaijani
+  - Bashkir
+  - Basque
+  - Belarusian
+  - Bengali
+  - Bosnian
+  - Bulgarian
+  - Catalan
+  - Central Kurdish, Iran
+  - Central Kurdish, Iraq
+  - Chinese, Simplified
+  - Chinese, Traditional
+  - Croatian
+  - Czech
+  - Danish
+  - Dutch
+  - English, Australian
+  - English, British
+  - English, Indian
+  - English, Irish
+  - English, New Zealand
+  - English, Scottish
+  - English, South African
+  - English, US
+  - English, Welsh
+  - Estonian
+  - Farsi
+  - Finnish
+  - French
+  - French, Canadian
+  - Galician
+  - Georgian
+  - German
+  - German, Swiss
+  - Greek
+  - Gujarati
+  - Hausa
+  - Hebrew
+  - Hindi, Indian
+  - Hungarian
+  - Icelandic
+  - Indonesian
+  - Italian
+  - Japanese
+  - Kabyle
+  - Kannada
+  - Kazakh
+  - Kinyarwanda
+  - Korean
+  - Kyrgyz
+  - Latvian
+  - Lithuanian
+  - Luganda
+  - Macedonian
+  - Malay
+  - Malayalam
+  - Maltese
+  - Marathi
+  - Meadow Mari
+  - Mongolian
+  - Norwegian Bokmål
+  - Odia/Oriya
+  - Pashto
+  - Polish
+  - Portuguese
+  - Portuguese, Brazilian
+  - Punjabi
+  - Romanian
+  - Russian
+  - Serbian
+  - Sinhala
+  - Slovak
+  - Slovenian
+  - Somali
+  - Spanish
+  - Spanish, US
+  - Sundanese
+  - Swahili, Burundi
+  - Swahili, Kenya
+  - Swahili, Rwanda
+  - Swahili, Tanzania
+  - Swahili, Uganda
+  - Swedish
+  - Tagalog/Filipino
+  - Tamil
+  - Tatar
+  - Telugu
+  - Thai
+  - Turkish
+  - Ukrainian
+  - Uyghur
+  - Uzbek
+  - Vietnamese
+  - Welsh
+  - Wolof
+  - Zulu
+
+  </Accordion>
+</AccordionGroup>
+
+### Deepgram
+
+<AccordionGroup>
+  <Accordion title="TTS">
+
+  **Deepgram Aura-2** — multilingual, 7 languages (15 locales), 102 voices:
+
+  - Dutch (Netherlands)
+  - English (5 locales)
+  - French (France)
+  - German (Germany)
+  - Italian (Italy)
+  - Japanese (Japan)
+  - Spanish (5 locales)
+
+  </Accordion>
+  <Accordion title="STT">
+
+  103 languages (nova-3 model), 177 locales:
+
+  - Afrikaans
+  - Albanian
+  - Amharic
+  - Arabic
+  - Armenian
+  - Assamese
+  - Azerbaijani
+  - Bashkir
+  - Basque
+  - Belarusian
+  - Bengali
+  - Bosnian
+  - Breton
+  - Bulgarian
+  - Burmese
+  - Catalan
+  - Chinese
+  - Croatian
+  - Czech
+  - Danish
+  - Dutch
+  - English
+  - Estonian
+  - Faroese
+  - Finnish
+  - French
+  - Galician
+  - Georgian
+  - German
+  - Greek
+  - Gujarati
+  - Haitian
+  - Hausa
+  - Hawaiian
+  - Hebrew
+  - Hindi
+  - Hungarian
+  - Icelandic
+  - Indonesian
+  - Italian
+  - Japanese
+  - Javanese
+  - Kannada
+  - Kazakh
+  - Khmer
+  - Korean
+  - Lao
+  - Latin
+  - Latvian
+  - Lingala
+  - Lithuanian
+  - Luxembourgish
+  - Macedonian
+  - Malagasy
+  - Malay
+  - Malayalam
+  - Maltese
+  - Maori
+  - Marathi
+  - Mongolian
+  - Multilingual
+  - Nepali
+  - Norwegian
+  - Norwegian Nynorsk
+  - Occitan
+  - Pashto
+  - Persian
+  - Polish
+  - Portuguese
+  - Punjabi
+  - Romanian
+  - Russian
+  - Russian (Latin script)
+  - Sanskrit
+  - Serbian
+  - Shona
+  - Sindhi
+  - Sinhala
+  - Slovak
+  - Slovene
+  - Slovenian
+  - Somali
+  - Spanish
+  - Sundanese
+  - Swahili
+  - Swedish
+  - Tagalog
+  - Tajik
+  - Tamasheq
+  - Tamil
+  - Tatar
+  - Telugu
+  - Thai
+  - Tibetan
+  - Turkish
+  - Turkmen
+  - Ukrainian
+  - Urdu
+  - Uzbek
+  - Vietnamese
+  - Welsh
+  - Yiddish
+  - Yoruba
+
+  </Accordion>
+</AccordionGroup>
+
+### Deepgram Flux
+
+<AccordionGroup>
+  <Accordion title="STT">
+
+  10 languages, configured via a custom URI:
+
+  - Dutch
+  - English (10 locales)
+  - French
+  - German
+  - Hindi
+  - Italian
+  - Japanese
+  - Portuguese
+  - Russian
+  - Spanish
+
+  </Accordion>
+</AccordionGroup>
+
+### ElevenLabs
+
+<AccordionGroup>
+  <Accordion title="TTS">
+
+  Multilingual. Language support depends on the selected model:
+
+  | Model | Languages |
+  |---|---|
+  | Multilingual v2, Multilingual v1, Turbo v2, Turbo v2.5 | 30+ languages |
+  | English v1, English v2 | English only |
+
+  Built-in voices (available across all supported languages): Adam, Antoni, Arnold, Bella, Callum, Charlie, Charlotte, Clyde, Daniel, Dave, Domi, Dorothy, Elli, Emily, Ethan, Fin, Freya, Gigi, Giovanni, Glinda, Grace, Harry, James, Jeremy, Jessie, Josh, Liam, and more. Custom and cloned voices are also supported via the ElevenLabs API.
+
+  </Accordion>
+  <Accordion title="STT">
+
+  Multilingual via `stt_model_id`. Refer to the [ElevenLabs documentation](https://elevenlabs.io/docs) for supported STT languages.
+
+  </Accordion>
+</AccordionGroup>
+
+### Google
+
+<AccordionGroup>
+  <Accordion title="TTS">
+
+  63 languages, 2000+ voices (Standard, WaveNet, Neural2, Studio, and Chirp tiers):
+
+  - Afrikaans (South Africa)
+  - Amharic (Ethiopia)
+  - Arabic (Pseudo-Accents)
+  - Basque (Spain)
+  - Bengali (India)
+  - Bulgarian (Bulgaria)
+  - Catalan (Spain)
+  - Chinese (Cantonese, Hong Kong, Mandarin, Simplified, Mandarin, Traditional)
+  - Croatian (Croatia)
+  - Czech (Czech Republic)
+  - Danish (Denmark)
+  - Dutch (Belgium, Netherlands)
+  - English (Australia, India, United Kingdom, United States)
+  - Estonian (Estonia)
+  - Filipino (Philippines)
+  - Finnish (Finland)
+  - French (Canada, France)
+  - Galician (Spain)
+  - German (Germany)
+  - Greek (Greece)
+  - Gujarati (India)
+  - Hebrew (Israel)
+  - Hindi (India)
+  - Hungarian (Hungary)
+  - Icelandic (Iceland)
+  - Indonesian (Indonesia)
+  - Italian (Italy)
+  - Japanese (Japan)
+  - Kannada (India)
+  - Korean (South Korea)
+  - Latvian (Latvia)
+  - Lithuanian (Lithuania)
+  - Malay (Malaysia)
+  - Malayalam (India)
+  - Marathi (India)
+  - Norwegian Bokmål (Norway)
+  - Polish (Poland)
+  - Portuguese (Brazil, Portugal)
+  - Punjabi (India)
+  - Romanian (Romania)
+  - Russian (Russia)
+  - Serbian (Serbia)
+  - Slovak (Slovakia)
+  - Slovenian (Slovenia)
+  - Spanish (Spain, United States)
+  - Swahili (Kenya)
+  - Swedish (Sweden)
+  - Tamil (India)
+  - Telugu (India)
+  - Thai (Thailand)
+  - Turkish (Turkey)
+  - Ukrainian (Ukraine)
+  - Urdu (India)
+  - Vietnamese (Vietnam)
+
+  </Accordion>
+  <Accordion title="STT">
+
+  171 languages including:
+
+  - Afrikaans (South Africa)
+  - Albanian (Albania)
+  - Amharic (Ethiopia)
+  - Arabic (19 locales)
+  - Armenian (Armenia)
+  - Aromanian (Bulgaria)
+  - Assamese (India)
+  - Asturian (Spain)
+  - Azerbaijani (Azerbaijan)
+  - Basque (Spain)
+  - Belarusian (Belarus)
+  - Bengali (Bangladesh, India)
+  - Bosnian (Bosnia and Herzegovina)
+  - Bulgarian (Bulgaria)
+  - Burmese (Myanmar)
+  - Catalan (Spain)
+  - Cebuano (Philippines)
+  - Central Kurdish (Iraq)
+  - Chinese (Simplified, China)
+  - Chinese, Cantonese (Traditional Hong Kong)
+  - Chinese, Mandarin (Traditional, Taiwan)
+  - Croatian (Croatia)
+  - Czech (Czech Republic)
+  - Danish (Denmark)
+  - Dutch (Belgium, Netherlands)
+  - English (11 locales)
+  - Estonian (Estonia)
+  - Filipino (Philippines)
+  - Finnish (Finland)
+  - French (Belgium, Canada, France, Switzerland)
+  - Fulah (Senegal)
+  - Galician (Spain)
+  - Ganda (Uganda)
+  - Georgian (Georgia)
+  - German (Austria, Germany, Switzerland)
+  - Greek (Greece)
+  - Gujarati (India)
+  - Hausa (Nigeria)
+  - Hebrew (Israel)
+  - Hindi (India)
+  - Hungarian (Hungary)
+  - Icelandic (Iceland)
+  - Igbo (Nigeria)
+  - Indonesian (Indonesia)
+  - Irish (Ireland)
+  - Italian (Italy, Switzerland)
+  - Japanese (Japan)
+  - Javanese (Indonesia)
+  - Kabuverdianu (Cape Verde)
+  - Kamba (Kenya)
+  - Kannada (India)
+  - Kazakh (Kazakhstan)
+  - Khmer (Cambodia)
+  - Kinyarwanda (Rwanda)
+  - Korean (South Korea)
+  - Kyrgyz (Cyrillic)
+  - Lao (Laos)
+  - Latvian (Latvia)
+  - Lingala (Congo-Kinshasa)
+  - Lithuanian (Lithuania)
+  - Luo (Kenya)
+  - Luxembourgish (Luxembourg)
+  - Macedonian (North Macedonia)
+  - Malay (Malaysia)
+  - Malayalam (India)
+  - Maltese (Malta)
+  - Maori (New Zealand)
+  - Marathi (India)
+  - Mongolian (Mongolia)
+  - Nepali (Nepal)
+  - Norwegian Bokmål (Norway)
+  - Nyanja (Malawi)
+  - Occitan (France)
+  - Oriya (India)
+  - Oromo (Ethiopia)
+  - Pashto
+  - Persian (Iran)
+  - Polish (Poland)
+  - Portuguese (Brazil, Portugal)
+  - Punjabi (Gurmukhi India)
+  - Romanian (Romania)
+  - Russian (Russia)
+  - Sepedi (South Africa)
+  - Serbian (Serbia)
+  - Shona (Zimbabwe)
+  - Sindhi (India)
+  - Sinhala (Sri Lanka)
+  - Slovak (Slovakia)
+  - Slovenian (Slovenia)
+  - Somali
+  - Southern Sotho (South Africa)
+  - Spanish (20 locales)
+  - Sundanese (Indonesia)
+  - Swahili (Kenya)
+  - Swati (Latin, South Africa)
+  - Swedish (Sweden)
+  - Tajik (Tajikistan)
+  - Tamil (India)
+  - Telugu (India)
+  - Thai (Thailand)
+  - Tsonga (South Africa)
+  - Tswana (Latin, South Africa)
+  - Turkish (Turkey)
+  - Ukrainian (Ukraine)
+  - Umbundu (Angola)
+  - Urdu (Pakistan)
+  - Uzbek (Uzbekistan)
+  - Venda (South Africa)
+  - Vietnamese (Vietnam)
+  - Welsh (United Kingdom)
+  - Wolof (Senegal)
+  - Xhosa (South Africa)
+  - Yoruba (Nigeria)
+  - Zulu (South Africa)
+
+  </Accordion>
+</AccordionGroup>
+
+### Microsoft Azure
+
+<AccordionGroup>
+  <Accordion title="TTS">
+
+  154 locales, 635 neural voices including:
+
+  - Afrikaans (South Africa)
+  - Albanian (Albania)
+  - Amharic (Ethiopia)
+  - Arabic (16 locales)
+  - Armenian (Armenia)
+  - Assamese (India)
+  - Azerbaijani (Latin, Azerbaijan)
+  - Bangla (Bangladesh)
+  - Basque
+  - Bengali (India)
+  - Bosnian (Bosnia and Herzegovina)
+  - Bulgarian (Bulgaria)
+  - Burmese (Myanmar)
+  - Catalan
+  - Chinese (11 locales)
+  - Croatian (Croatia)
+  - Czech (Czechia)
+  - Danish (Denmark)
+  - Dutch (Belgium, Netherlands)
+  - English (14 locales)
+  - Estonian (Estonia)
+  - Filipino (Philippines)
+  - Finnish (Finland)
+  - French (Belgium, Canada, France, Switzerland)
+  - Galician
+  - Georgian (Georgia)
+  - German (Austria, Germany, Switzerland)
+  - Greek (Greece)
+  - Gujarati (India)
+  - Hebrew (Israel)
+  - Hindi (India)
+  - Hungarian (Hungary)
+  - Icelandic (Iceland)
+  - Indonesian (Indonesia)
+  - Inuktitut (Latin, Canada, Syllabics, Canada)
+  - Irish (Ireland)
+  - Italian (Italy)
+  - Japanese (Japan)
+  - Javanese (Latin, Indonesia)
+  - Kannada (India)
+  - Kazakh (Kazakhstan)
+  - Khmer (Cambodia)
+  - Korean (Korea)
+  - Lao (Laos)
+  - Latvian (Latvia)
+  - Lithuanian (Lithuania)
+  - Macedonian (North Macedonia)
+  - Malay (Malaysia)
+  - Malayalam (India)
+  - Maltese (Malta)
+  - Marathi (India)
+  - Mongolian (Mongolia)
+  - Nepali (Nepal)
+  - Norwegian Bokmål (Norway)
+  - Odia (India)
+  - Pashto (Afghanistan)
+  - Persian (Iran)
+  - Polish (Poland)
+  - Portuguese (Brazil, Portugal)
+  - Punjabi (India)
+  - Romanian (Romania)
+  - Russian (Russia)
+  - Serbian (Cyrillic, Serbia, Latin, Serbia)
+  - Sinhala (Sri Lanka)
+  - Slovak (Slovakia)
+  - Slovenian (Slovenia)
+  - Somali (Somalia)
+  - Spanish (22 locales)
+  - Sundanese (Indonesia)
+  - Swahili (Kenya, Tanzania)
+  - Swedish (Sweden)
+  - Tamil (India, Malaysia, Singapore, Sri Lanka)
+  - Telugu (India)
+  - Thai (Thailand)
+  - Turkish (Türkiye)
+  - Ukrainian (Ukraine)
+  - Urdu (India, Pakistan)
+  - Uzbek (Latin, Uzbekistan)
+  - Vietnamese (Vietnam)
+  - Welsh (United Kingdom)
+  - Zulu (South Africa)
+
+  </Accordion>
+  <Accordion title="STT">
+
+  154 languages. Refer to the [Microsoft Azure STT documentation](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=stt) for the full list.
+
+  </Accordion>
+</AccordionGroup>
+
+### Nuance
+
+<AccordionGroup>
+  <Accordion title="TTS">
+
+  57 language entries, 142 named voices (standard and enhanced models):
+
+  - Arabic (Worldwide)
+  - Basque (Spain)
+  - Bengali (India)
+  - Bhojpuri (India)
+  - Bulgarian (Bulgaria)
+  - Cantonese (Hong Kong)
+  - Catalan (Spain)
+  - Croatian (Croatia)
+  - Czech (Czech Republic)
+  - Danish (Denmark)
+  - Dutch (Belgium)
+  - English (7 locales)
+  - Finnish (Finland)
+  - French (Belgium, Canada, France)
+  - Galician (Spain)
+  - German (Germany)
+  - Greek (Greece)
+  - Hebrew (Israel)
+  - Hindi (India)
+  - Hungarian (Hungary)
+  - Indonesian (Indonesia)
+  - Italian (Italy)
+  - Japanese (Japan)
+  - Kannada (India)
+  - Korean (South Korea)
+  - Malay (Malaysia)
+  - Mandarin (China, Taiwan)
+  - Marathi (India)
+  - Norwegian Bokmål (Norway)
+  - Polish (Poland)
+  - Portuguese (Brazil, Portugal)
+  - Romanian (Romania)
+  - Russian (Russia)
+  - Slovak (Slovakia)
+  - Spanish (5 locales)
+  - Swedish (Sweden)
+  - Tamil (India)
+  - Telugu (India)
+  - Thai (Thailand)
+  - Turkish (Turkey)
+  - Ukrainian (Ukraine)
+  - Valencian (Spain)
+  - Vietnamese (Vietnam)
+
+  </Accordion>
+  <Accordion title="STT">
+
+  41 languages:
+
+  - Arabic (Worldwide)
+  - Cantonese (Hong Kong)
+  - Catalan (Spain)
+  - Croatian (Croatia)
+  - Czech (Czech Republic)
+  - Danish (Denmark)
+  - Dutch (Netherlands)
+  - English (Australia, India, United Kingdom, United States)
+  - Finnish (Finland)
+  - French (Canada, France)
+  - German (Germany)
+  - Greek (Greece)
+  - Hebrew (Israel)
+  - Hindi (India)
+  - Hungarian (Hungary)
+  - Indonesian (Indonesia)
+  - Italian (Italy)
+  - Japanese (Japan)
+  - Korean (South Korea)
+  - Malay (Malaysia)
+  - Mandarin (China, Taiwan)
+  - Norwegian (Norway)
+  - Polish (Poland)
+  - Portuguese (Brazil, Portugal)
+  - Romanian (Romania)
+  - Russian (Russia)
+  - Shanghainese (China)
+  - Slovak (Slovakia)
+  - Spanish (Latin America, Spain)
+  - Swedish (Sweden)
+  - Thai (Thailand)
+  - Turkish (Turkey)
+  - Ukrainian (Ukraine)
+  - Vietnamese (Vietnam)
+
+  </Accordion>
+</AccordionGroup>
+
+### Speechmatics
+
+<AccordionGroup>
+  <Accordion title="STT">
+
+  Multilingual. Available in 3 regions:
+
+  - **EU (EU2 — On-Demand)**
+  - **EU (EU1 — Enterprise)**
+  - **US (US1 — Enterprise)**
+
+  Refer to the [Speechmatics documentation](https://docs.speechmatics.com) for the full list of supported languages.
+
+  </Accordion>
+</AccordionGroup>
+
+### Custom
+
+Supported languages and voices depend on the custom TTS or STT vendor you configure. Refer to your vendor's documentation for the available languages and voices.
+
+## More Information
+
+- [Speech Services](/voice-gateway/webapp/speech-services)
+
+---
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote1">1</sup> Access to the Speechmatics speech provider in Voice Gateway is behind a feature flag and requires additional configuration. For more information, refer to [Speech Services: Speechmatics](/voice-gateway/webapp/speech-services#speechmatics).
+</span>

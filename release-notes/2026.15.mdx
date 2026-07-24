@@ -1,0 +1,194 @@
+---
+title: "2026.15 (latest)"
+---
+
+<Warning>
+  Deprecations and removals in Cognigy.AI:
+
+  - The `gemini-2.5-pro` model has been deprecated.
+  - The `pixtral-large-latest` model has been removed because Mistral AI no longer supports it.
+  - The `gpt-4o` and `gpt-4o-mini` models have been deprecated for the Microsoft Azure OpenAI and will be retired on October 1, 2026. Migrate to `gpt-5.1` and `gpt-5-mini` respectively before the retirement date.
+  - The `gpt-4.1`, `gpt-4.1-mini`, and `gpt-4.1-nano` models have been deprecated for Microsoft Azure OpenAI and will be retired on October 14, 2026. Migrate to a more recent model before the retirement date.
+
+  If you use these models in your Flows, migrate to available models from the [Model Support by Feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) to ensure your AI Agents remain stable.
+</Warning>
+
+<Warning>
+  ElevenLabs deprecated and removed the following models used in Cognigy Voice Gateway speech services:
+
+  - The Turbo v2 and Turbo v2.5 models have been deprecated. ElevenLabs recommends migrating to Flash v2 and Flash v2.5.
+  - The Monolingual v1 and Multilingual v1 models have been removed. Migrate to Multilingual v2.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.15.2
+
+### Cognigy.AI
+
+**Released** July 24, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the logic to display deprecation icons in model lists didn't distinguish deprecation across providers. Now, for models shared across providers, such as `gpt-4o` and `gpt-4o-mini` from OpenAI and Microsoft Azure OpenAI, the deprecation icon only appears for the provider that deprecated the model
+
+### Cognigy Voice Gateway
+
+**Released** July 24, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Deepgram speech-to-text and text-to-speech could use an incorrect configuration
+
+## 2026.15.1
+
+### Cognigy.AI
+
+**Released** July 23, 2026
+
+#### Improvements
+
+- Improved the tooltip text for the Speech provider failover enabled paramter in the Voice Gateway Endpoint to clarify the behavior of the configured failover
+
+#### Bug Fixes
+
+- Fixed the issue where Extensions reported successful executions as failures because of unexpected API calls in installations where Cognigy Serverless was activated
+
+### Cognigy Voice Gateway
+
+**Released** July 23, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the configured fallback speech provider for STT wasn't used when the primary speech provider failed, causing calls to go silent and skip the configured call failover. Now, the fallback speech provider is correctly triggered for both STT and TTS when the primary speech provider fails, and the call failover configuration is executed in the following cases:
+    - If only a primary speech provider is configured, the call failover occurs after the primary speech provider fails.
+    - If both primary and fallback speech providers are configured, the call failover occurs only after both speech providers fail.
+
+## 2026.15.0
+
+### Cognigy.AI
+
+**Released** July 21, 2026
+
+#### Features
+
+##### New Azure OpenAI and OpenAI GPT-5.6 Models
+
+- Introduced support for the [GPT-5.6 model family](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) (`gpt-5.6-sol`, `gpt-5.6-terra`, and `gpt-5.6-luna`), enabling users to leverage the latest AI capabilities. These models are available with the Responses API request type
+
+#### Improvements
+
+- Improved the localization logic in the [Simulator](/ai/agents/test/simulator/overview). Now, both AI Agent and simulated user interact in the selected locale language instead of defaulting to English
+- Updated the Conversation Counter in [Admin Center](/ai/administer/access/admin-center/dashboard) and [Management UI](/ai/administer/access/management-ui) to use the v3 pre-aggregated Conversation Counter API. Conversation counts are now calculated overnight and available up to the previous day, with data available from 2025 onward
+- Improved [attachment handling for Genesys Open Messaging integrations](/ai/escalate/handover-reference/genesys-cloud-open-messaging#additional-configuration) by sending user chat attachments with the correct media types in Webchat v3 and WhatsApp
+- Added Script ID visibility for the [NiCE CXone (Integrated)](/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated) handover provider. Users can now view and copy the Script ID to distinguish between different configured scripts
+- Reordered the settings on the [Project Settings](/ai/administer/access/project-settings) page to reflect priority order
+
+#### Bug Fixes
+
+- Fixed the issue where Playbook assertions executed from the Interaction Panel always returned failed results
+- Fixed AWS Bedrock compatibility issues with Claude Sonnet 4.5 and Claude Sonnet 4.6 models caused by conflicting `temperature` and `top_p` parameters in LLM requests from AI Agent Nodes, LLM connection tests, and Simulator
+- Fixed the issue that allowed the deprecated handover provider to be selected and saved on newly created Endpoints
+- Fixed issues in Knowledge AI lists:
+   - Added details for failed Knowledge Sources
+   - Restored the Connector Sync button during sync after switching tabs
+   - Removed unnecessary hover tooltips for non-truncated titles
+- Fixed the issue where analytics events were miscounted in OData exports and reports due to shared analytics payloads between related conversation-turn publishes, causing inconsistent row counts
+- Fixed the issue where exported Packages with Endpoints using cloud file storage didn't include the storage provider connection as a dependency or relink it after import
+- Fixed the issue where editing the private key of a Google LLM connection broke the connection
+- Fixed the issue where oversized log entries were dropped due to MongoDB's 16 MB document limit. Entries are now trimmed before storage to ensure logs are preserved
+- Fixed the issue where Node execution logs were missing the session ID, making it difficult to correlate logs by conversation in external tools such as Splunk
+- Fixed the issue where selecting messages in the Interaction Panel didn't copy their text into the input field. Selecting another message now replaces the previously copied content
+- Fixed the issue where image and image-only PDF Knowledge Sources were stored as unreadable raw bytes due to Azure Document Intelligence OCR failures
+- Fixed the issue where WhatsApp attachment captions weren't shown in the chat with human agents in NiCE CXone
+
+### Cognigy Voice Gateway
+
+**Released** July 21, 2026
+
+#### Features
+
+##### Voice Gateway Speech Credentials in Voice Preview (beta)
+
+Introduced Voice Gateway speech credentials in [Voice Preview Settings](/ai/agents/test/voice-preview), allowing users to select configured Voice Gateway STT and TTS providers without creating separate local credentials. You can select providers for speech-to-text and text-to-speech separately.
+This feature is in beta.
+
+##### Genesys Audio Connector (beta)
+
+Introduced the [Genesys Audio Connector](/voice-gateway/genesys-audio-connector) integration that connects Genesys Cloud to Voice Gateway using the AudioHook protocol over WebSocket, letting Genesys Cloud customers keep using Cognigy's conversational AI without relying on SIP calling.
+
+#### Improvements
+
+- Removed the feature flag for [Call Failover](/ai/agents/deploy/endpoint-reference/voice-gateway#call-failover) in the Set Session Config Node. The feature is now generally available.
+- Improved handling of unwanted SIP traffic
+- Improved endpoint validation for the call-recording upload path
+
+#### Bug Fixes
+
+- Fixed the issue where calls terminated immediately after a SIP REFER transfer caused unnecessary AI response retries and error messages
+- Fixed the issue where ElevenLabs voice speed settings were ignored. Now, Voice Gateway correctly applies the configured speed value for ElevenLabs text-to-speech
+- Fixed the issue where the `CALL_COMPLETED` event wasn't triggered after Dial-based call transfers, preventing configured event handling Flows from executing
+- Fixed the issue where traces for programmatic outbound calls were incomplete when a notifyUrl was configured. Full call traces are now displayed correctly
+- Fixed the issue where calls with long SIP Call-ID values weren't properly terminated after a Hang Up action, leaving calls active after the bot ended the conversation
+
+### Click To Call
+
+**Released** July 21, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where an unused, invalid speech credential blocked Click To Call provisioning
+
+### Webchat
+
+**Released** July 21, 2026
+
+#### Improvements
+
+- Removed the option to create new Webchat v2 Endpoints from the Endpoints page and the Cognigy.AI API. Existing Webchat v2 Endpoints are unaffected and continue to work
+
+#### Bug Fixes
+
+- Fixed the issue where Webchat v3 embedding snippets used the demo URL instead of the correct Endpoint URL
+
+### Agent Copilot
+
+**Released** July 21, 2026
+
+#### Features
+
+##### Enhanced JWT Authentication Options for Agent Copilot
+
+Introduced expanded [JWT authentication options](/agent-copilot/configure/copilot-section) for Agent Copilot. Now, you can configure symmetric or asymmetric JWT verification in the Endpoint settings, including authentication through shared keys or public keys and JWKS endpoints for improved security and key rotation support.
+
+### Cognigy Live Agent
+
+**Released** July 21, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where auto-assigned conversations showed an empty `assigned_at` field in the Conversation collection of the Live Agent OData endpoint
+
+### Cognigy Insights
+
+**Released** July 21, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where opening a listed session from a Contact Profile incorrectly showed `This Session Transcript was deleted` instead of displaying the session
+- Fixed the issue where analytics events with the same session, input, and timestamp but different `analyticsEventId` values were incorrectly deduplicated, causing undercounted rows in OData analytics queries
+- Fixed the issue where some Flow transitions were missing from the transcript Flow switch history
+- Fixed the issue where the Conversations explorer didn't show Flow switches for Flows without output, for example, Go To redirects. Also fixed incorrect Flow reporting and prevented sessions without user input from appearing in conversation reports
+- Fixed the issue where the Conversations explorer showed the wrong Flow name for conversations that moved across multiple Flows
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

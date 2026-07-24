@@ -1,0 +1,143 @@
+---
+title: "2026.13"
+---
+
+<Danger>
+The following models have been removed:
+  - Anthropic: `claude-opus-4-0 and claude-sonnet-4-0`
+  - Google Gemini: `gemini-2.0-flash-lite`
+  - Google GenAI: `gemini-3.1-flash-lite-preview`
+  - Mistral AI: `pixtral-12b-2409`
+
+These models are no longer available. Migrate to the latest versions of these models to continue using them in your Cognigy.AI Agents.
+</Danger>
+
+<Warning>
+The following models have been deprecated:
+  - Azure OpenAI and OpenAI: `gpt-5-chat-latest`, `gpt-4.1-nano`
+  - Google Gemini: `gemini-2.5-flash-lite`
+  - Amazon Bedrock: `amazon.nova-premier-v1:0`
+  - Mistral AI: `mistral-medium-latest`
+
+These models will be removed as soon as LLM providers retire them. Before the removal, migrate to the latest versions to continue using them in your Cognigy.AI Agents.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.13.1
+
+### Cognigy.AI
+
+**Released** June 29, 2026
+
+#### Improvements
+
+- Added authenticated access for runtime file downloads, ensuring that files stored in third-party storage are accessible only through authenticated requests. For configuration steps, refer to [File Storage](/ai/agents/deploy/endpoints/file-storage)
+
+### Cognigy Voice Gateway
+
+**Released** June 29, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in the Set Session Config Node where the Disable Punctuation and Dynamic Hints fields weren't visible when the STT vendor was set to Deepgram Flux
+
+
+## 2026.13.0
+
+### Cognigy.AI
+
+**Released** June 23, 2026
+
+#### Features
+
+##### Real-Time Queue Notifications in Salesforce MIAW
+
+[Real-time queue notifications](/ai/escalate/handover-features/real-time-queue-notifications) are now supported by the Salesforce MIAW handover provider to allow end users to receive real-time updates on their queue position and estimated wait time during handovers to human agents.
+
+##### New Embedding Models in Google GenAI LLM Provider
+
+Added support for the [`gemini-embedding-2`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) model and custom embedding models for the [Google GenAI LLM provider](/ai/agents/develop/gen-ai-and-llms/providers/google-genai), giving you more flexibility in how you configure semantic search and knowledge retrieval in your Cognigy.AI Agents.
+
+##### API Key Authentication in Webhook Endpoints
+
+Added [API key authentication to Webhook Endpoints](/ai/agents/deploy/endpoint-reference/webhook#api-key-authentication), ensuring that only authorized sources can trigger your Cognigy.AI Agents.
+
+##### Attachment Support for NiCE CXone and Webchat v3
+
+Added support for sending and receiving attachments when using the NiCE CXone handover provider with a [Webchat v3 Endpoint](/webchat/v3/configuration). End users can now upload files from Webchat v3 and share them with NiCE CXone agents, and can also view file attachments sent by NiCE CXone agents directly in Webchat v3. For more information, refer to [NiCE CXone (Integrated)](/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated#configure-attachments) and [NiCE CXone (Non-Integrated)](/ai/escalate/handover-reference/nice-cxone/nice-cxone-non-integrated#configure-attachments).
+
+#### Improvements
+
+- Improved the `httpRequest` helper in [Transformer functions](/ai/for-developers/transformers/overview#limitations) to respect the configured execution timeout. When a request exceeds the timeout, an error is thrown and logged. The default timeout is 5 seconds and is configurable via `TRANSFORMER_FUNCTION_EXECUTION_TIMEOUT_MS`
+- Added support for sending LLM requests to the webhook when an error occurs for the AI Agent and LLM Prompt Nodes, such as invalid credentials, for easier LLM call debugging
+
+#### Bug Fixes
+
+- Fixed the issue where the Flow Transition debug message wasn't shown in the Interaction Panel when a Go To Node switched Flows
+- Fixed the issue where AI Agent screens became cramped or unusable when the interaction panel or pinned left navigation reduced the available width
+- Fixed the issue where leading or trailing whitespace in an AI Agent's name was saved and caused knowledge store name validation to fail on document upload
+- Fixed the issue where the Interaction Panel agent selector didn't update after creating, renaming, or deleting an AI Agent without a page reload
+- Fixed the issue where a Knowledge Store search with no results showed the onboarding wizard instead of an empty list
+- Fixed the issue where slider values of 10,000 or above overflowed the value label across nodes that use a high-range slider, such as the Maximal Tokens field in the LLM Prompt Node. Values of 10,000 or above are now displayed in compact format, for example, `16000` → `16K`, `10100 → 10.1K`. Smaller values are displayed unchanged
+- Fixed the issue where goals added via the Code Node using `analyticsData.completedGoals.push()` weren't reflected in the Tasks Completed count in the Conversations explorer
+- Fixed the issue where the LLM Prompt Node returned a `400 Bad Request` error when Gemini complied with a system instruction to produce no output in non-streaming Store in Context mode
+- Fixed the issue where clicking the token search field in the grounding knowledge configuration broke the UI
+- Fixed the issue where streamed AI Agent replies in the Interaction Panel were split across multiple chat bubbles instead of rendering as a single message
+- Fixed the issue where creating an Azure OpenAI connection with `baseCustomUrl` failed because inactive fields sent unexpected values to the backend
+- Fixed the issue where editing a Flow didn't clear the Interaction Panel chat history
+- Fixed the issue where hyperlinks in Interaction Panel chat messages weren't visually distinguished from surrounding text
+- Fixed the issue where the `httpRequest` helper inside Transformers ignored the Transformer execution timeout, allowing slow HTTP calls to exceed the configured limit
+- Fixed the issue where goals added via a Code Node using `analyticsData.completedGoals.push()` weren't reflected in the Tasks Completed count in the Conversations explorer
+- Fixed the issue where Simulator-scheduled runs drifted by 1 hour after DST transitions. Schedules now fire at the configured local time year-round, regardless of daylight saving time changes
+
+### Cognigy Voice Gateway
+
+**Released** June 23, 2026
+
+#### Improvements
+
+- Sorted ElevenLabs legacy voices to the bottom of the voice selection list so that non-legacy voices appear first
+
+#### Bug Fixes
+
+- Fixed the issue where fallback webhook URIs longer than 64 characters caused a database error. The `fallback_webhook_target` and `fallback_webhook_referred_by` columns were widened from 64 to 1,024 characters, and oversized input now returns HTTP 400 with a message identifying the affected column
+- Fixed the issue where a carrier `re-INVITE` was incorrectly sent for a `release-media` operation when the session was already in a no-media state, causing a `488 Not Acceptable` error
+- Fixed the issue where ElevenLabs `voice_settings` were reset to an empty object when not specified at the task level in a `say` or `gather` verb following a Set Session Config Node. Options now fall back correctly from the task level to the session level and then to credentials
+- Fixed the issue where the Azure speech-to-text session didn't restart after a recognizer language change mid-call, causing the original locale to persist for the rest of the call after an IVR language switch
+- Fixed the issue where the `NOTIFY` listener in the `SIP REFER` task wasn't removed on all exit paths, which could cause listener leaks when a `REFER` completed, failed, or returned a non-202 response
+- Fixed the issue where `asrTimeout` was ignored in continuous ASR mode with Deepgram because an `UtteranceEnd` event arrived before the final transcript was delivered
+- Fixed invalid regex patterns in LCR (Least Cost Routing) that could cause route lookup to terminate prematurely, leading to incorrect outbound call routing
+
+### Cognigy Webchat
+
+**Released** June 23, 2026
+
+#### Improvements
+
+- Updated the Webchat v3 widget to [v3.44.0](https://github.com/Cognigy/Webchat/releases/tag/v3.44.0):
+  - Added the `webchat/close-button` analytics event, which fires only when the user closes the chat using the header close button
+  - Added the `disableMobileScrollLock` option to disable host-page scroll locking on mobile
+
+### Cognigy Insights
+
+**Released** June 23, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Conversations explorer (expert mode) showed an incomplete and incorrectly ordered list of flow transitions for a session, causing some flows to appear missing
+- Fixed the issue where NLU Performance reports with an hourly custom time range bypassed the cache and used an incorrect time window, resulting in inflated or inconsistent counts
+- Fixed the issue where the NLU Performance Top Intents report included conversations at the exact upper boundary of a custom hourly time range, causing counts to be higher than expected
+- Fixed the issue where the Conversation Analyzer scheduler Next run hint didn't refresh when switching between Daily and Weekly without saving
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

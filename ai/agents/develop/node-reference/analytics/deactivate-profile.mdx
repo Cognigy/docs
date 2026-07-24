@@ -1,0 +1,50 @@
+---
+title: Deactivate Profile
+keywords: ['deactivate profile', 'contact profile', 'data privacy', 'analytics', 'gdpr']
+seo:
+  metatags:
+    description: >-
+      The Deactivate Profile Node is used to deactivate a specific Contact
+      Profile if the end user requests it.
+---
+
+import AiNodeReferenceAnalyticsProfileNodeUseCase from '/snippets/ai/node-reference/analytics/profile-node-use-case.mdx'
+import AiNodeReferenceAnalyticsMaskingScope from '/snippets/ai/node-reference/analytics/masking-scope.mdx'
+
+<a href="/release-notes/2026.14"><Badge className="version-badge" color="blue">Updated in 2026.14</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/analytics/deactivate-profile.png" alt="Deactivate Profile Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node deactivates a [specific Contact Profile](/ai/agents/analyze/contact-profiles#working-with-contact-profiles). By default, after the Contact Profile is deactivated, its data is kept and no new data is collected.
+
+You can configure this Node to delete all stored Contact Profile data or mask its personal data with the _Mask and Keep Analytics_ feature. With this feature, you can keep only analytics data without any personal traceability. This approach is useful for tracking your AI Agents' performance while complying with data protection standards, such as the General Data Protection Regulation (GDPR).
+
+<Danger>
+  If you delete the Contact Profile with this Node, all the Contact Profile data is deleted and is no longer available.
+</Danger>
+
+## Restrictions
+
+- The Mask and Keep Analytics feature is available only for Cognigy.AI 2026.14.0 and later versions.
+
+## Parameters
+
+| Parameter      | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Delete Data    | Boolean | Deactivates the Contact Profile and deletes stored data, including all analytics data and transcripts, from the system. This parameter is deactivated by default. The Contact Profile isn't deleted, and you can reactivate the Contact Profile using the Activate Profile Node or the Data collection inactive toggle.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Analytics data | List    | This parameter appears when you activate **Delete Data**. Sets what data is deleted:<ul><li>**Delete analytics records** — deletes the Contact Profile data, including analytics and personal data. This option is selected by default. After the data is deleted, you can't recover it.</li><li>**Keep analytics records, mask personal data** — applies mask and keep analytics. With this option, data from the Contact Profile is processed as follows:<ul><li>Clears only free-text fields, such as input text and transcripts.</li><li>Replaces contact identifiers, such as contact and user ID, with hashes.</li><li> Keeps analytics data, such as session counts and Intents.</li></ul>Masking is processed asynchronously and may take up to 2 hours to take effect. Masked sessions are excluded from the [Conversations](/insights/explorers/conversations) and [Message](/insights/explorers/message) explorers. However, analytics data related to the masked session is still included in [Insights reports](/insights/overview#reports) and can be accessed through the [OData endpoint](/ai/agents/analyze/odata#data-protection).</li></ul> |
+
+<AiNodeReferenceAnalyticsMaskingScope />
+
+<AiNodeReferenceAnalyticsProfileNodeUseCase/>
+
+## More Information
+
+- [Activate Profile](/ai/agents/develop/node-reference/analytics/activate-profile)
+- [Update Profile](/ai/agents/develop/node-reference/analytics/update-profile)
+- [Delete Profile](/ai/agents/develop/node-reference/analytics/delete-profile)
+- [Merge Profile](/ai/agents/develop/node-reference/analytics/merge-profile)

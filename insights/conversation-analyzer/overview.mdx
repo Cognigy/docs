@@ -1,0 +1,120 @@
+---
+title: Conversation Analyzer
+sidebarTitle: Overview
+keywords: ['conversation analyzer', 'quality evaluation', 'ai agent scoring', 'topic discovery', 'custom evaluation', 'cognigy insights']
+description: Learn how Conversation Analyzer automatically scores your AI Agent's conversations based on configurable criteria across Topic Discovery, Basic Analysis, and Custom Evaluation dashboards.
+---
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<a href="/release-notes/2026.12"><Badge className="version-badge" color="purple">Added in 2026.12 (beta)</Badge></a>
+
+<AiBeta/>
+
+_Conversation Analyzer_ is a quality evaluation tool in Cognigy Insights that automatically scores your AI Agent's conversations based on predefined and custom criteria. Instead of reviewing [conversation transcripts](/insights/explorers/conversations) manually, you define an evaluation topic and a set of metrics, and the analyzer processes your conversations and surfaces results across dashboards.
+
+<div style={{textAlign: 'center'}}>
+   <video width="650" height="400" controls autoPlay title="Conversation Analyzer Overview" alt="The widget shows an overview of Conversation Analyzer's three dashboards: Topic Discovery, Basic Analysis, and Custom Evaluation. The video demonstrates how to configure evaluation settings, run analysis on conversations, and check results across the dashboards." style={{border: '1px solid #ccc', borderRadius: '12px', display: 'block', margin: '0 auto'}}>
+      <source src="https://docscognigyassets.blob.core.windows.net/assets/conversation-analyzer.mp4" />
+   </video>
+</div>
+
+## When to Use it
+
+- Understand what topics your AI Agent handles most frequently and how that changes over time.
+- Measure whether your AI Agent is resolving issues, following instructions, and communicating with quality.
+- Define custom evaluation criteria specific to your business, compliance requirements, or product domain.
+- Replace manual QA spot-checks with consistent, automated scoring at scale.
+
+## Key Benefits
+
+- **Reduce manual QA effort**. Define criteria once and the analyzer scores conversations automatically at scale, replacing time-consuming manual transcript reviews.
+- **Catch issues earlier**. Scheduled runs surface declining sentiment trends, rising escalation risk, or drops in instruction-following before they become visible in support volumes.
+- **Consistent evaluation**. Unlike manual reviews, the analyzer applies the same criteria to every conversation and every run, helping reduce reviewer bias and inconsistency.
+- **Identify coverage gaps**. Find topics your AI Agent doesn't cover and expand its scope accordingly.
+
+## Prerequisites
+
+<Accordion title="Set Up your Model">
+
+Conversation Analyzer uses a large language model to evaluate conversations. Before running your first analysis, configure which model to use in your Project settings.
+
+<Tip>
+ Reasoning models can provide more accurate results, but they typically come with higher costs and longer processing times. For brief analyses, non-reasoning models may be sufficient.
+</Tip>
+
+1. In Cognigy.AI, open your Project.
+2. Go to **Manage > Settings > Generative AI Settings**.
+3. Under **Conversation Analyzer**, select a model from the list. Save changes.
+
+If you don't select a model, the default model is used.
+
+</Accordion>
+
+## Working with Conversation Analyzer
+
+<AccordionGroup>
+<Accordion title="1. Configure Evaluation Settings">
+
+In the left-side menu of the Insights interface, go to **Configuration** and set up the evaluation topic, schedule, and criteria:
+    - [Topic Discovery](/insights/conversation-analyzer/topic-discovery#configuration) — select an evaluation topic that reflects the main subject area of your AI Agent's conversations.
+    - [Basic Analysis](/insights/conversation-analyzer/basic-analysis#configuration) — activate or deactivate criteria sets in Basic Analysis based on what you want to measure.
+    - [Custom Evaluation](/insights/conversation-analyzer/custom-evaluation#configuration) — define custom evaluation criteria specific to your business needs.
+</Accordion>
+<Accordion title="2. Run Analysis">
+You can run analysis on conversations in the following ways:
+    <Tabs>
+    <Tab title="On a Schedule">
+
+    To schedule an analysis, follow these steps:
+
+    1. In the left-side menu of the Insights interface, go to **Configuration**.
+    2. In the **Topic & Scheduler** section, go to **Analysis Scheduler**.
+    3. By default, the scheduler is off. Select how often you want the analysis to run:
+       - **Daily** — runs once a day, analyzing conversations from the previous 24 hours.
+       - **Weekly** — runs once a week, analyzing conversations from the previous 7 days.
+       Each run includes only conversations that haven't yet been analyzed. The time window is calculated from when the scheduled run executes, not from when you save the scheduler settings.
+    4. In the **Filter only Analyze Transcripts Matching** section, configure which conversations to include:
+       - **Endpoint** — limit analysis to a specific Endpoint.
+       - **Snapshot** — limit to a specific Snapshot.
+       - **Channel** — limit to a specific channel.
+    5. Save changes.
+
+    The **Analysis Scheduler** section shows when the next run is scheduled. For example, `Next run: May 15, 2026, 2:00 AM`.
+
+    </Tab>
+    <Tab title="Manually">
+
+    To run an analysis manually, follow these steps:
+
+    1. In the left-side menu of the Insights interface, go to **Conversations**.
+    2. In the filter bar, select the scope of your analysis. You can filter by time span, Endpoint, and more.
+    3. Click **Run Analysis**. Select one of the following options:
+
+       | Option | Description |
+       |---|---|
+       | **Reanalyze all** | Analyzes all conversations, including those already analyzed. Overwrites previous LLM analysis results. |
+       | **Skip already analyzed** | Analyzes only conversations that haven't been analyzed yet. Adds new data to the dashboards without overwriting existing results. |
+
+    The **Analyzing conversations** progress bar appears at the top of the Conversations page.
+    4. When the analysis is complete, click **View Analysis** in the upper-right corner. The **Analysis** page opens.
+
+    </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="3. Check Results">
+   You can check the results for:
+
+   <Tabs>
+      <Tab title="All Conversations">
+
+      In the left-side menu of the Insights interface, go to **Analysis** to view topics, performance metrics, and evaluation results.
+
+      </Tab>
+      <Tab title="A Specific Conversation">
+
+      In the left-side menu of the Insights interface, go to **Conversations**. Select the entry from the table you want to review, then click **>** to open **Evaluation Details**.
+
+      </Tab>
+      </Tabs>
+   </Accordion>
+</AccordionGroup>

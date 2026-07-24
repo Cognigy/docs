@@ -1,0 +1,169 @@
+---
+title: "2026.14"
+---
+
+<Warning>
+  For all Cognigy installations, we are updating Traefik from version 3.4.0 to 3.6.0 to enhance functionality and address known security vulnerabilities in the dependencies of Cognigy.AI, Voice Gateway, and Insights. For on-premises and dedicated SaaS installations, read the [Infrastructure](#infrastructure) section.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.14.2
+
+Released **July 23, 2026**
+
+### Cognigy.AI
+
+#### Bug Fixes
+
+- Fixed the issue where Extensions reported successful executions as failures because of unexpected API calls in installations where Cognigy Serverless was activated
+
+## 2026.14.1
+
+### Cognigy.AI
+
+**Released** July 17, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Extensions could unexpectedly fail on clusters with Cognigy Serverless enabled. Extension executions now complete successfully instead of showing an error
+
+### Cognigy Voice Gateway
+
+**Released** July 15, 2026
+
+#### Bug Fixes
+
+- Fixed the failover issue with [TTS streaming](/voice-gateway/streaming)
+
+## 2026.14.0
+
+### Cognigy.AI
+
+**Released** July 7, 2026
+
+#### Features
+
+##### Mask and Keep Analytics
+
+The [Delete Profile](/ai/agents/develop/node-reference/analytics/delete-profile) and [Deactivate Profile](/ai/agents/develop/node-reference/analytics/deactivate-profile) Flow Nodes now support a Mask and keep analytics data option. Instead of permanently deleting a contact's analytics data, you can keep it with personal details replaced by a hash. Masked sessions remain counted in Analytics dashboards but are hidden from the Conversations and Message explorers.
+
+##### API-Key Authentication in REST Endpoints
+
+Added API Key authentication to [REST Endpoints](/ai/agents/deploy/endpoint-reference/rest). Inbound requests can now be secured with Endpoint-scoped API keys sent in the `x-rest-endpoint-key` header, generated and revoked from the Endpoint editor.
+
+#### Improvements
+
+- Added the capability to configure the [scenario limit per Project](/ai/agents/test/simulator/overview#limitations)
+- Added support for importing [NICE CXone handover providers](/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated) via Packages and Snapshots
+- Added a status indicator to the NiCE CXone (Integrated) handover provider that displays the connection progress between Cognigy.AI and NiCE CXone
+
+#### Bug Fixes
+
+- Fixed the issue where the Code Node editor displayed errors for valid JavaScript, for example, `String.replaceAll`
+- Fixed the issue in the API documentation where the paths for `GET /v2.0/handover/provider/{providerId}` and `POST /v2.0/handover/provider` were incorrect
+- Fixed the issue where `GET /v2.1/projects/{projectId}/logs/{logEntryId}` returned `404` for IDs returned by `GET /v2.1/projects/{projectId}/logs` when the v2.0 log model was active
+- Fixed the issue where the Flow Transition debug message wasn't shown in the Interaction Panel when a Go To Node switched Flows
+- Fixed the issue where imported Endpoints through Packages kept the Locale reference from the original Project, causing Insights to report incorrect data about the percentage of users by locale
+- Fixed the issue where user inputs and AI Agent outputs were excluded from the Conversations explorer due to a failed write batch caused by analytics records containing null bytes
+- Fixed the issue where the Search Extract Output Node returned static instruction examples alongside search results
+
+### Cognigy Voice Gateway
+
+**Released** July 7, 2026
+
+#### Features
+
+##### New TTS Streaming
+
+Introduced the [TTS streaming feature](/voice-gateway/streaming). Use TTS streaming to let your AI Agent deliver synthesized speech as it's generated, rather than waiting for the entire response to finish processing. This feature enables faster, more natural-sounding conversations.
+
+##### Register Status Section
+
+Added the [Register Status](/voice-gateway/webapp/carriers#register-status) section to the Edit Carrier page. When Require SIP Register is enabled, the section shows the latest `REGISTER` attempt details and a timeline of recent registration attempts to help identify registration failures without checking logs.
+
+#### Improvements
+
+- Removed the Use hosted Deepgram service option, making the Region setting always visible on the [Speech Service page](/voice-gateway/webapp/speech-services) in the Voice Gateway Self-Service Portal
+
+#### Bug Fixes
+
+- Fixed the issue where a possible race condition could lead to delayed cleanup of a speech-to-text connection during call transfers
+- Fixed the issue where PCAP downloads broke when SIP Call-IDs contained forward slashes (`/`)
+- Fixed the issue where trailing commas in contact data caused malformed STT hints that Deepgram Flux rejected with `400`, resulting in silent call failures
+- Fixed the issue where atmosphere sounds were reproduced with interference on calls using the Opus audio codec at 48 kHz stereo
+
+### Cognigy Live Agent
+
+**Released** July 7, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where abandoned sessions weren't displayed on the Live Agent dashboard in Insights
+
+### Cognigy Insights
+
+**Released** July 7, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where conversations containing extremely large user input messages triggered a crash loop
+- Fixed the issue where the Conversation Analyzer failed to update analysis status after completing a run
+- Fixed the issue where the Conversation Analyzer incorrectly showed `Analysis complete` as a success notification when all analyses actually failed, for example, due to an invalid LLM connection
+
+### Infrastructure
+
+#### Cognigy.AI + Insights + AI Copilot + Voice Gateway
+
+Traefik, the Kubernetes ingress controller, has been updated to version 3.6.0 to enhance functionality and address known security vulnerabilities in the dependencies of Cognigy.AI, Voice Gateway, and Insights. The bundled Helm chart is updated accordingly.
+
+##### Traefik Update
+
+Make updates to Cognigy.AI and Voice Gateway separately because they use different Helm charts and `values.yaml` files.
+
+Before installing the Helm chart, follow these steps:
+
+1. In the new Traefik Helm chart, the entry point redirection and TLS settings have moved under a new `http` key. The `traefik.ports.web.redirections` setting is now `traefik.ports.web.http.redirections`. If you've modified the Traefik port redirection in your local `values.yaml` file, update it accordingly.
+
+     Before:
+
+     ```yaml
+     ports:
+       web:
+         redirections:
+           entryPoint:
+             to: websecure
+             scheme: https
+     ```
+
+     Now:
+
+     ```yaml
+     ports:
+       web:
+         http:
+           redirections:
+             entryPoint:
+               to: websecure
+               scheme: https
+     ```
+
+2. The `globalArguments` key has been deprecated. If you need to pass any arguments to Traefik, use the `additionalArguments` key instead.
+
+3. Deploy the latest CRDs of Traefik by executing the following command:
+
+     ```bash
+     kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/?ref=v39.0.9
+     ```
+
+For more detailed information, refer to the official Traefik [release notes](https://github.com/traefik/traefik-helm-chart/releases).
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
