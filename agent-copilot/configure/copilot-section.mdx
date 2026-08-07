@@ -1,0 +1,399 @@
+---
+title: "Copilot Section"
+description: "Learn how to configure the Copilot section in Endpoint settings to integrate Agent Copilot with a contact center platform."
+keywords: ['copilot section', 'copilot settings', 'copilot configuration']
+---
+
+<a href="/release-notes/2026.15"><Badge className="version-badge" color="blue">Updated in 2026.15</Badge></a>
+
+The **Copilot** section in the [Endpoint settings](/ai/agents/deploy/endpoints/overview) is used to configure the Agent Copilot workspace.
+
+The following Endpoints include the **Copilot** section:
+
+  - [NiCE CXone Agent Assist Hub (AAH)](/agent-copilot/deploy/nice-aah)
+  - [LINE](/ai/agents/deploy/endpoint-reference/line-messenger)
+  - [Facebook (Meta) Messenger](/ai/agents/deploy/endpoint-reference/facebook-messenger)
+  - [8x8](/ai/agents/deploy/endpoint-reference/8x8)
+  - [Voice Gateway](/ai/agents/deploy/endpoint-reference/voice-gateway)
+  - [Slack](/ai/agents/deploy/endpoint-reference/slack)
+  - [Sunshine Conversations](/ai/agents/deploy/endpoint-reference/sunshine-conversations)
+  - [Socket.IO](/ai/agents/deploy/endpoint-reference/socketio)
+  - [Azure Bot Services](/ai/agents/deploy/endpoint-reference/azure-bot-services)
+  - [Genesys](/ai/agents/deploy/endpoint-reference/genesys)
+  - [Webhook](/ai/agents/deploy/endpoint-reference/webhook)
+  - [Webchat v3](/webchat/v3/configuration)
+
+## Prerequisites
+
+- If you use **Token Secret** authentication, you need a 256-bit string secret for signing.
+
+## Limitations
+
+- Cognigy.AI caches JWKS responses for up to 5 key store URLs at once. If an additional URL is used, the new URL replaces the oldest one in the cache.
+- Cognigy.AI sends up to 10 requests/minute to any single JWKS URL.
+
+## Restrictions
+
+- EdDSA (Ed25519/Ed448) keys aren't supported for **Public Key** or **Key Store** authentication.
+
+## Parameters
+
+| Parameter                    | Type     | Description                              |
+|------------------------------|----------|------------------------------------------|
+| Copilot Type                 | List     | Activates and sets how to configure Agent Copilot. Select one of the following options:<ul><li>**None** — deactivates Agent Copilot for the Endpoint. This option is selected by default.</li><li>**Workspace** — activates Agent Copilot based on the [workspace](/agent-copilot/configure/workspace) configuration.</li><li>**Whisper** — activates [Agent Copilot Whisper](/live-agent/assistants/agent-copilot-whisper).</li></ul> |
+| Copilot Flow                 | List     | Sets the Flow in which the Agent Copilot workspace or the Agent Copilot Whisper is configured. |
+| Copilot Config               | List     | Sets the configuration for the Agent Copilot workspace. Valid for workspaces configured via [API](/api-reference/agent-copilot-configurations/get-agent-copilot-configurations). |
+| Authentication               | List     | Sets the method to verify the JWT passed in the Agent Copilot URL. Enforce the method by activating **Accept Only JWT Requests**. Select one of the following methods:<ul><li>**Default (built-in)** — built-in authentication using an internal Agent Copilot secret.</li><li>**Token Secret** — symmetric authentication using a shared secret stored through a [connection](/ai/platform-features/connections).</li><li>**Public Key** — asymmetric authentication using one or more PEM-encoded public keys.</li><li>**Key Store** — asymmetric authentication using a remote JWKS endpoint.</li></ul>For more information, see [JWT Authentication Methods](#jwt-authentication-methods). |
+| Agent Copilot Authentication | List     | This parameter appears only when **Token Secret** is selected in **Authentication**. Defines the JWT connection to use for symmetric authentication. Select a JWT connection or create one by clicking ![plus-sign](/_assets/icons/black-and-white/plus-sign.svg) and configuring the connection:<ul><li>**Connection name** — enter a unique name.</li><li>**JWT Secret** — enter the string to be used as the JWT secret.</li></ul> |
+| Public Keys                  | Text     | This parameter appears only when **Public Key** is selected in **Authentication**. Defines one or more PEM-encoded public keys. A token is accepted if it verifies with any of the configured public keys. Use multiple keys to support key rotation. Remove a key to immediately invalidate tokens signed with it. |
+| Key Store URL                | Text     | This parameter appears only when **Key Store** is selected in **Authentication**. Defines the URL of your JWKS key store. The verifying key is selected by the `kid` header of the incoming token. A JWT without a `kid` header is rejected. Cognigy.AI caches the JWKS document for up to 10 minutes per URL. After rotating a key, tokens signed with the new key can fail and tokens signed with the removed key can still succeed for up to 10 minutes. |
+| Accept Only JWT Requests     | Toggle   | Activates JWT validation according to the method selected in **Authentication**. Requests that include only a user ID and session ID are blocked. This parameter is deactivated by default. Activating this parameter improves security by preventing unauthenticated access. For more information, see [JWT Authentication Methods](#jwt-authentication-methods). |
+
+<Note>
+  As of Cognigy.AI 2026.15.0, the **Authentication** list replaces the former **Enable Copilot Authentication** toggle. Previously configured Endpoints are migrated automatically. If the former toggle was:
+
+  - Turned on — **Token Secret** is selected.
+  - Turned off — **Default (built-in)** is selected.
+
+  No action is required.
+
+</Note>
+
+## JWT Authentication Methods
+
+To secure access to Agent Copilot, the contact center platform signs a JWT containing `userId` and `sessionId`, then passes that signed JWT in the Agent Copilot URL as the `auth` parameter:
+
+```txt
+https://${AgentCopilotBaseUrl}/?URLToken=${URLToken}&auth={signed_JWT}
+```
+
+Each contact center platform has its own requirements for how the JWT signature is configured. Refer to your contact center platform documentation.
+
+Depending on the option you select in the **Authentication** list, you configure the authentication method differently:
+
+<Tabs>
+  <Tab title="Default (built-in)">
+    Agent Copilot handles the JWT authentication between the contact center platform and Cognigy.AI. Activate **Accept Only JWT Requests** in the [Endpoint settings](#parameters).
+  </Tab>
+  <Tab title="Token Secret">
+    Symmetric authentication. The contact center platform and Cognigy.AI share a single secret, used to both sign and verify the JWT.
+
+    <AccordionGroup>
+      <Accordion title="1. On the Contact Center Side">
+        1. Generate a 256-bit secret to use as the shared JWT secret. For example, you can use [OpenSSL](https://openssl-library.org/):
+
+            ```sh
+            # Generate 32 random bytes (256 bits) and print them as a hex string
+            openssl rand -hex 32
+            ```
+
+            Example output: `a3f7b9c2d8e14f6a0b5c9d3e7f2a8b4c6d0e9f3a7b1c5d8e2f4a6b9c3d7e1f85`
+
+        2. Copy the secret for later use and store it securely.
+        3. Sign JWTs with this secret. Agent Copilot accepts the `HS256`, `HS384`, and `HS512` HMAC algorithms. For example, use the [`jsonwebtoken` Node.js library](https://www.npmjs.com/package/jsonwebtoken):
+
+            <CodeGroup>
+            ```js HS256
+            const jwt = require('jsonwebtoken'); // JWT signing library
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              'a3f7b9c2d8e14f6a0b5c9d3e7f2a8b4c6d0e9f3a7b1c5d8e2f4a6b9c3d7e1f85', // shared secret
+              { algorithm: 'HS256' } // HMAC using SHA-256
+            );
+            ```
+            ```js HS384
+            const jwt = require('jsonwebtoken'); // JWT signing library
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              'a3f7b9c2d8e14f6a0b5c9d3e7f2a8b4c6d0e9f3a7b1c5d8e2f4a6b9c3d7e1f85', // shared secret
+              { algorithm: 'HS384' } // HMAC using SHA-384
+            );
+            ```
+            ```js HS512
+            const jwt = require('jsonwebtoken'); // JWT signing library
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              'a3f7b9c2d8e14f6a0b5c9d3e7f2a8b4c6d0e9f3a7b1c5d8e2f4a6b9c3d7e1f85', // shared secret
+              { algorithm: 'HS512' } // HMAC using SHA-512
+            );
+            ```
+            </CodeGroup>
+      </Accordion>
+      <Accordion title="2. On the Cognigy.AI Side">
+        1. In the **Copilot** section in the Endpoint settings, select **Token Secret** in **Authentication**.
+        2. Next to **Agent Copilot Authentication**, click ![plus-sign](/_assets/icons/black-and-white/plus-sign.svg) and configure the connection:
+            - **Connection name** — enter a unique name, for example, `copilot-token-secret`.
+            - **JWT Secret** — enter the exact same 256-bit secret you previously generated for the contact center platform, for example, `a3f7b9c2d8e14f6a0b5c9d3e7f2a8b4c6d0e9f3a7b1c5d8e2f4a6b9c3d7e1f85`.
+        3. Activate **Accept Only JWT Requests**.
+        4. Click **Create**, then **Save**.
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+  <Tab title="Public Key">
+    Asymmetric authentication. The contact center signs the JWT with a private key, and Cognigy.AI verifies it with the corresponding public key.
+
+    <AccordionGroup>
+      <Accordion title="1. On the Contact Center Side">
+        1. Generate a public-private key pair. For example, you can use [OpenSSL](https://openssl-library.org/):
+
+            **RSA:**
+
+            ```sh
+            # Generate a 2048-bit RSA private key
+            openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out private.pem
+            # Derive the matching public key
+            openssl pkey -in private.pem -pubout -out public.pem
+            ```
+
+            **ECDSA P-256:**
+
+            ```sh
+            # Generate a private key on the P-256 curve
+            openssl ecparam -name prime256v1 -genkey -noout -out private.pem
+            # Derive the matching public key
+            openssl ec -in private.pem -pubout -out public.pem
+            ```
+        2. _(Optional)_ If you want to use key rotation, generate multiple public-private key pairs.
+        3. Keep `private.pem` secret and store it in your own system.
+        4. Sign JWTs with `private.pem`. The algorithm you use depends on the key type. For example, use the [`jsonwebtoken` Node.js library](https://www.npmjs.com/package/jsonwebtoken):
+
+            <CodeGroup>
+            ```js RS256
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // RSA private key
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'RS256' } // RSA key, PKCS#1 v1.5 padding, SHA-256
+            );
+            ```
+            ```js RS384
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // RSA private key
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'RS384' } // RSA key, PKCS#1 v1.5 padding, SHA-384
+            );
+            ```
+            ```js RS512
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // RSA private key
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'RS512' } // RSA key, PKCS#1 v1.5 padding, SHA-512
+            );
+            ```
+            ```js PS256
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // RSA private key
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'PS256' } // RSA key, RSA-PSS padding, SHA-256
+            );
+            ```
+            ```js PS384
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // RSA private key
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'PS384' } // RSA key, RSA-PSS padding, SHA-384
+            );
+            ```
+            ```js PS512
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // RSA private key
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'PS512' } // RSA key, RSA-PSS padding, SHA-512
+            );
+            ```
+            ```js ES256
+            const jwt = require('jsonwebtoken'); // JWT signing library
+            const fs = require('fs');
+
+            const privateKey = fs.readFileSync('private.pem'); // ECDSA private key, P-256 curve
+
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              { algorithm: 'ES256' } // ECDSA key on the P-256 curve, SHA-256
+            );
+            ```
+            </CodeGroup>
+
+            `ES384` and `ES512` work the same way, but need a key generated on the P-384 or P-521 curve instead (`openssl ecparam -name secp384r1 ...` or `-name secp521r1 ...`) — the algorithm is tied to the curve the key was generated on.
+      </Accordion>
+      <Accordion title="2. On the Cognigy.AI Side">
+        1. In the **Copilot** section in the Endpoint settings, select **Public Key** in **Authentication**.
+        2. Enter the contents of the `public.pem` file into the **Public Keys** field.
+
+          <Accordion title="Public Key">
+            ```txt
+            -----BEGIN PUBLIC KEY-----
+            MIICITANBgkqhkiG9w0BAQEFAAOCAg4AMIICCQKCAgBTPbIGqvbkfo55bY7IRJ8U
+            RUysKvl9X3qgSoJyDJhuydav7ssnxWnYFtBLziDQNeh1NsWF97bP7RkuCpyhnGYd
+            GuKfPa6NNX8bVrzDwMtI6nwQ8KShhyiYfkQAHz7hTh/yfF5W5rg1oRH0nuUtp/w4
+            ukwaOHvDuz2td9pdZO6cNq1e1K96dOd7P+VRu3W27xM0cx5u5NHSFargz2WM/6+M
+            -----END PUBLIC KEY-----
+            ```
+          </Accordion>
+
+          After you enter a public key in the field, another input field appears. Use the new input field to add another public key. 
+
+        3. Activate **Accept Only JWT Requests**.
+        4. Click **Save**.
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+  <Tab title="Key Store">
+    Asymmetric authentication. The contact center signs the JWT with a private key, and Cognigy.AI verifies it with the corresponding public key by fetching it from a JWKS (JSON Web Key Set) endpoint you host.
+
+    <AccordionGroup>
+      <Accordion title="1. On the Contact Center Side">
+        1. Generate a public-private key pair, the same way as for **Public Key**. For example, you can use [OpenSSL](https://openssl-library.org/):
+
+            ```sh
+            # Generate a 2048-bit RSA private key
+            openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out private.pem
+            # Derive the matching public key
+            openssl pkey -in private.pem -pubout -out public.pem
+            ```
+
+        2. Host a JWKS endpoint that returns your public keys as JSON, each with a unique `kid`, for example:
+
+            ```json
+            {
+              "keys": [
+                {
+                  "kty": "RSA",
+                  "use": "sig",
+                  "kid": "copilot-key-2026-01",
+                  "alg": "RS256",
+                  "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+                  "e": "AQAB"
+                }
+              ]
+            }
+            ```
+
+        3. Sign JWTs with the matching private key, and set the `kid` header to the same value published in the JWKS. A JWT without a `kid` header is rejected. The algorithm you use depends on the key type, the same as for **Public Key**:
+
+            <CodeGroup>
+            ```js RS256
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              {
+                algorithm: 'RS256', // RSA key, PKCS#1 v1.5 padding, SHA-256
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            ```js RS384
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              {
+                algorithm: 'RS384', // RSA key, PKCS#1 v1.5 padding, SHA-384
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            ```js RS512
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              {
+                algorithm: 'RS512', // RSA key, PKCS#1 v1.5 padding, SHA-512
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            ```js PS256
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              {
+                algorithm: 'PS256', // RSA key, RSA-PSS padding, SHA-256
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            ```js PS384
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              {
+                algorithm: 'PS384', // RSA key, RSA-PSS padding, SHA-384
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            ```js PS512
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey,
+              {
+                algorithm: 'PS512', // RSA key, RSA-PSS padding, SHA-512
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            ```js ES256
+            const token = jwt.sign(
+              { userId: 'user-123', sessionId: 'session-456' }, // payload
+              privateKey, // ECDSA private key, P-256 curve
+              {
+                algorithm: 'ES256', // ECDSA key on the P-256 curve, SHA-256
+                keyid: 'copilot-key-2026-01' // must match a "kid" in the JWKS
+              }
+            );
+            ```
+            </CodeGroup>
+
+            `ES384` and `ES512` work the same way, with a key generated on the P-384 or P-521 curve instead.
+      </Accordion>
+      <Accordion title="2. On the Cognigy.AI Side">
+        1. In the **Copilot** section in the Endpoint settings, select **Key Store** in **Authentication**.
+        2. Enter your JWKS URL in the **Key Store URL** field. The domain is specific to your system; the path is only a convention, not a requirement — any URL that returns a valid JWKS document works. For example:
+
+            ```txt
+            https://<your-domain>/.well-known/jwks.json
+            ```
+
+        3. Activate **Accept Only JWT Requests**.
+        4. Click **Save**.
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+</Tabs>
+
+## More Information
+
+- [Endpoint Settings](/ai/agents/deploy/endpoints/overview)

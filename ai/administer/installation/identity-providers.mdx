@@ -1,0 +1,960 @@
+---
+title: Identity Providers
+keywords: ['idp', 'single sign-on', 'sso', 'identity provider', 'authentication']
+description: Explore the identity providers to set up single sign-on in Cognigy.AI.
+---
+
+import EncodeCertificate from "/snippets/installation/encode-certificate.mdx"
+
+Cognigy.AI integrates with popular identity providers (IdPs) to let users in your organization log in with [single sign-on (SSO)](/ai/administer/installation/single-sign-on-saml2) without the need for individual credentials.
+
+You can use the following IdPs:
+
+- [Auth0 with OpenID Connect](#auth0-openid-connect)
+- [Auth0 with SAML 2.0](#auth0-saml-2-0)
+- [Microsoft Entra ID](#microsoft-entra-id)
+- [Google](#google)
+- [Okta](#okta)
+- [OneLogin](#onelogin)
+
+For more information about about protocol-level details, see [Single Sign-on with SAML 2.0](/ai/administer/installation/single-sign-on-saml2).
+
+## Prerequisites
+
+- An account with the admin role in Cognigy.AI.
+- The organization ID of your Cognigy.AI organization, referred to as `<organization-id>` in the examples. You can copy this ID from the [My Profile](/ai/administer/user-menu/my-profile) page by clicking ![vertical-ellipsis](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Copy Organization ID**.
+- The [API base URL](/ai/for-developers/developers/api-and-cli#api-base-url) of your Cognigy.AI installation, referred to as `<api-base-url>` in the examples.
+- Your Cognigy.AI URL, referred to as `<cognigy-url>` in the examples. For example, for the trial environment, this URL is `https://trial.cognigy.ai/`.
+- An [API key](/ai/administer/user-menu/my-profile) for sending configuration requests to the Cognigy.AI API.
+- Administrator access to the IdP tenant that you want to integrate with Cognigy.AI.
+- For Okta, you need an X.509 certificate. For more information, read Okta's [documentation about app certificate use](https://help.okta.com/oag/en-us/content/topics/access-gateway/about-application-certificate-use.htm).
+
+## Limitations
+
+- An organization can have only one SSO configuration. To replace an SSO configuration, delete it, then create another one. For more information, read [Change an SSO Configuration in Cognigy.AI](/ai/administer/installation/single-sign-on-saml2#change-an-sso-configuration-in-cognigy-ai).
+- Only Microsoft Entra ID and OneLogin support single logout for Cognigy.AI.
+
+## Create an IdP App
+
+To configure an IdP app, follow these steps:
+
+<Tabs>
+  <Tab title="Auth0 - OpenID Connect">
+
+    1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/) and select your tenant.
+    2. In the left-side menu, go to **Applications > Applications** and click **+ Create Application**.
+    3. Enter a name, for example, `Cognigy.AI`, select **Regular Web Applications** as the app type, and click **Create**.
+    4. Go to the **Settings** tab and copy the values from the fields in the **Basic Information** section. You will use them later to [configure the IdP in Cognigy.AI](#configure-sso-in-cognigy-ai):
+
+        - **Domain** — used in the `idpIssuer` parameter in the request payload.
+        - **Client ID** — used in the `idpClientId` parameter in the request payload.
+        - **Client Secret** — used in the `idpClientSecret` parameter in the request payload.
+
+    5. On the **Settings** tab, configure the following using the API base URL and organization ID from the [Prerequisites](#prerequisites) section:
+
+       - **Application Login URI** — enter `https://<api-base-url>/auth/oidc/callback/<organization-id>`.
+       - **Allowed Callback URLs** — enter `https://<api-base-url>/auth/oidc/login/callback/<organization-id>`.
+       - **Allowed Logout URLs** — enter `https://<api-base-url>/logout/<organization-id>`.
+       - **Allowed Web Origins** — enter `https://*.cognigy.ai`.
+       - **Allowed Origins (CORS)** — enter `https://*.cognigy.ai`.
+    
+  </Tab>
+  <Tab title="Auth0 - SAML 2.0">
+    <Steps>
+      <Step title="Set Up an App">
+      
+        1. Log in to the [Auth0 Dashboard](https://manage.auth0.com/) and select your tenant.
+        2. In the left-side menu, go to **Applications > Applications** and click **+ Create Application**.
+        3. Enter a name, for example, `Cognigy.AI`, select **Single Page Web Applications** as the app type, and click **Create**.
+        4. Go to the **Settings** tab, configure the following using the API base URL and organization ID from the [Prerequisites](#prerequisites) section:
+            
+            - **Application Login URI** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Allowed Callback URLs** — enter `https://<api-base-url>/auth/oidc/login/callback/<organization-id>`.
+        
+        5. On the **Addons** tab, activate the **SAML2 Web App** add-on. Auth0 opens the add-on settings dialog. From the **Usage** tab, copy and save the values from the following fields for later use in the API request payload to [configure the IdP in Cognigy.AI](#configure-sso-in-cognigy-ai):
+
+            - **Issuer** — used in the `idpIssuer` parameter in the request payload.
+            - **Identity Provider Login URL** — used in the `idpLoginEndpoint` parameter in the request payload.
+            - **Identity Provider Certificate** — used in the `idpCertificate` parameter in the request payload. Click **Download Auth0 certificate**. Base64-encode the certificate without line breaks. You can use the following terminal command:
+
+                <EncodeCertificate path="path-to-certificate" />
+      </Step>
+      <Step title="Map Roles">
+        For each user which you want to apply SSO to, set `user_metadata` to map the user's name and Cognigy.AI role. To do so, follow these steps: 
+
+        1. Go to **User Management > Users**, select the user, scroll to the **Metadata** section, and paste the following JSON into the **user_metadata** field:
+
+            ```json
+            {
+              "family_name": "<LAST NAME>",
+              "given_name": "<FIRST NAME>",
+              "role": "<COGNIGY_ROLE>"
+            }
+            ```
+
+            The `role` value must match a [role in Cognigy.AI](/ai/administer/access/admin-center/access-control), for example, `admin` or `base_role`.
+
+        2. Go to **Actions > Library**, click **Create Action**, and configure the following:
+        
+        - **Name** — enter a name.
+        - **Login / Post Login** — activate this option.
+        - In the editor, paste the following code:
+
+            ```javascript
+            exports.onExecutePostLogin = async (event, api) => {
+              const userMetadata = event.user.user_metadata || {};
+
+              api.samlResponse.setAttribute(
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                event.user.email
+              );
+              api.samlResponse.setAttribute("firstName", userMetadata.given_name || "");
+              api.samlResponse.setAttribute("lastName", userMetadata.family_name || "");
+              api.samlResponse.setAttribute("role", userMetadata.role || "");
+            };
+            ```
+        3. Deploy the Action.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Microsoft Entra ID">
+    <Steps>
+      <Step title="Set Up an App">
+        1. Log in to the [Azure portal](https://portal.azure.com) with an administrator account and navigate to **Microsoft Entra ID**.
+        2. In the top bar, click **+ Add** and select **Enterprise applications**. The **Browse Microsoft Entra Gallery** page opens.
+        3. In the top bar, click **+ Create your own application**.
+        4. Enter a name, for example, `Cognigy.AI`, select **Integrate any other app you don't find in the gallery (Non-gallery)**, and click **Create**.
+        5. On the new app page, open **Single sign-on** in the left navigation and select **SAML** as the sign-on method.
+        6. In the **Basic SAML Configuration** section, click **Edit** and configure the following:
+
+            - **Identifier (Entity ID)** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Reply URL (Assertion Consumer Service URL)** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Sign on URL** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - _(Optional)_ **Logout Url** — enter `https://<cognigy-url>/slo/<organization-id>`.
+        
+        7. Click **Save**.
+      </Step>
+      <Step title="Map User Attributes">
+        1. In the **User Attributes and Claims** section, click **Edit** and confirm that the following claims are mapped to the user's profile attributes:
+
+            | Claim name                                                           | Value            |
+            | -------------------------------------------------------------------- | ---------------- |
+            | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress` | `user.mail`      |
+            | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname`    | `user.givenname` |
+            | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname`      | `user.surname`   |
+
+            Cognigy.AI uses the email claim to identify the user and to create the Cognigy.AI account on the first login.
+      
+      </Step>
+      <Step title="Get Authentication Data">
+
+        1. In the **SAML Signing Certificate** section, locate **Certificate (Base64)** and click **Download**. Save the file locally. Use this certificate as `idpCertificate` in the API request to [configure the IdP in Cognigy.AI](#configure-sso-in-cognigy-ai). You need to encode the certificate as base64 without newlines beforehand. To do so, use the following terminal command:
+
+            <EncodeCertificate path="path-to-certificate" />
+
+        2. In the **Set up `<application name>`** section, copy the following values to be used in the API request to [configure the IdP in Cognigy.AI](#configure-sso-in-cognigy-ai):
+
+          - **Login URL** — used in the `idpLoginEndpoint` parameter in the request payload.
+          - _(Optional)_ **Logout URL** — used in the `idpLogoutUrl` parameter in the request payload when you enable single logout.
+      </Step>
+      <Step title="Assign Roles">
+        1. In the top bar, search for `App registrations` and select this option.
+        2. In the **All applications** tab, search for the app you created and select it.
+        3. In the left-side menu, go to **Manage > Manifest** and deactivate the default `User` and `msiam_access` roles. To do so:
+
+            1. Set `isEnabled` to `false` for the `User` and `msiam_access` roles, for example:
+                ```json
+                "appRoles": [
+                  {
+                    "allowedMemberTypes": [
+                      "User"
+                    ],
+                    "description": "User",
+                    "displayName": "User",
+                    "id": "18d14569-c3bd-439b-9a66-3a2aee01d14f",
+                    "isEnabled": false,
+                    "origin": "Application",
+                    "value": null
+                  },
+                  {
+                    "allowedMemberTypes": [
+                      "User"
+                    ],
+                    "description": "msiam_access",
+                    "displayName": "msiam_access",
+                    "id": "b9632174-c057-4f7e-951b-be3adc52bfe6",
+                    "isEnabled": false,
+                    "origin": "Application",
+                    "value": null
+                  }
+                ]
+                ```
+            2. In the left-side menu, go to **Manage > App roles**, select the **User** role, and click **Delete** on the right-side pane. Do the same for the `msiam_access` role.
+
+        4. Paste the following JSON code in the `appRoles` array:
+            <Accordion title="Roles Array">
+              ```json
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Admin",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc1",
+                "isEnabled": true,
+                "description": "The Admin role in Cognigy.AI",
+                "value": "admin"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "API Keys",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc2",
+                "isEnabled": true,
+                "description": "The apiKeys role in Cognigy.AI",
+                "value": "apiKeys"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Base",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc3",
+                "isEnabled": true,
+                "description": "The base role in Cognigy.AI",
+                "value": "base_role"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Full Support User",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc4",
+                "isEnabled": true,
+                "description": "Admin privileges, no user assignments in Cognigy.AI",
+                "value": "fullSupportUser"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "OData",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc5",
+                "isEnabled": true,
+                "description": "The OData role in Cognigy.AI",
+                "value": "odata"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Project Manager",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc6",
+                "isEnabled": true,
+                "description": "The Project Manager role in Cognigy.AI",
+                "value": "projectManager"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "User Manager",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc7",
+                "isEnabled": true,
+                "description": "The User Manager role in Cognigy.AI",
+                "value": "userManager"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Administrator",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc8",
+                "isEnabled": true,
+                "description": "The Administrator role in Live Agent",
+                "value": "liveAgentAdmin"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Agent",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bc9",
+                "isEnabled": true,
+                "description": "The Agent role in Live Agent",
+                "value": "liveAgentAgent"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Supervisor",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bd1",
+                "isEnabled": true,
+                "description": "The Supervisor role in Live Agent",
+                "value": "liveagentSupervisor"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "View user details",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bd2",
+                "isEnabled": true,
+                "description": "The role to view user details in Cognigy.AI",
+                "value": "userDetailsViewer"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Voice Gateway User",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bd3",
+                "isEnabled": true,
+                "description": "The Account scope in Voice Gateway",
+                "value": "voiceGatewayUser"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Basic Support User",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bd4",
+                "isEnabled": true,
+                "description": "Partial Admin, read-only, no assignments, no OData/API, no Knowledge AI in Cognigy.AI",
+                "value": "basicSupportUser"
+              },
+              {
+                "allowedMemberTypes": [
+                  "User"
+                ],
+                "displayName": "Project Assigner",
+                "id": "8d17fe88-c0ca-4903-ae2a-a51098998bd5",
+                "isEnabled": true,
+                "description": "Assigns Agents, read-only access, no global roles, limited features in Cognigy.AI",
+                "value": "projectAssigner"
+              }
+              ```
+            </Accordion>
+
+        5. In the left-side menu, go to **Users and groups** and assign the app to the users or groups that must have access to Cognigy.AI through SSO.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Google">
+    <Steps>
+      <Step title="Add a Custom Attribute">
+        You need to add a custom attribute that Cognigy.AI uses when the user logs in for the first time. To do so, follow these steps:
+
+        1. Log in to the [Google Admin console](https://admin.google.com/).
+        2. In the left-side menu, go to **Directory > Users**.
+        3. At the top of the **Users** list, click **More options > Manage user attributes**.
+        4. Click the **Add Custom Attribute** button and configure the following:
+
+            - **Category** — enter a unique name to identify the custom attribute, for example, `Cognigy.AI SSO`.
+            - **Description** — enter a relevant description of the custom attribute.
+            - In the **Custom fields** section, configure three custom fields with the following values:
+
+                | Name       | Info type | Visibility                | Number of values |
+                |------------|-----------|---------------------------|------------------|
+                | First Name | Text      | Visible to user and admin | Single value     |
+                | Last Name  | Text      | Visible to user and admin | Single value     |
+                | Role       | Text      | Visible to user and admin | Single value     |
+
+            <Note>
+              If a user doesn't have a role assigned, Cognigy.AI assigns `base_role` to the user.
+            </Note>
+
+        5. Click **Add**.
+      </Step>
+      <Step title="Set Up an App">
+     
+        1. In the left-side menu, go to **Apps > SAML Apps**.
+        2. Click the plus button in the lower-right corner and select **Setup My Own Custom App**.
+        3. In the **Google IdP Information** dialog, copy the **SSO URL** value and download the certificate. You'll use the SSO URL as `idpLoginEndpoint` and the certificate as `idpCertificate` in the API request to [configure the IdP in Cognigy.AI](#configure-sso-in-cognigy-ai). You need to encode the certificate as base64 without newlines beforehand. To do so, use the following terminal command:
+
+            <EncodeCertificate path="path-to-certificate" />
+
+            Click **Next**.  
+
+        4. Enter a name for the app, for example, `Cognigy.AI`, and click **Next**.
+        5. On the service provider details page, configure the following:
+
+            - **ACS URL** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Entity ID** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Signed Response** — select the checkbox.
+            - **Name ID Format** — set to `EMAIL`.
+
+            Click **Next**.  
+
+        6. On the **Attribute Mapping** page, add the following attribute mappings so that Cognigy.AI receives the user's first name, last name, and role from Google:
+
+          | Service Provider Attribute | Custom Attribute | Field      |
+          | -------------------------- | ---------------- | ---------- |
+          | `firstName`                | Cognigy.AI SSO   | First Name |
+          | `lastName`                 | Cognigy.AI SSO   | Last Name  |
+          | `role`                     | Cognigy.AI SSO   | Role       |
+
+        7. Click **Finish**, then activate the app for the users or organizational units that must have access to Cognigy.AI through Google SSO.
+
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Okta">
+    <Steps>
+      <Step title="Set Up an App">
+        1. Log in to your [Okta Admin Console](https://login.okta.com/) with an administrator account.
+        2. In the left-side menu, go to **Applications > Applications** and click **Create New App**.
+        3. Select **SAML 2.0** as the sign-on method and click **Create**.
+        4. On the **General Settings** tab, enter an app name, for example, `Cognigy.AI SSO`, optionally upload a logo, and click **Next**.
+        5. On the **Configure SAML** tab, configure the following:
+
+            - **Single sign-on URL** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Use this for Recipient URL and Destination URL** — keep selected.
+            - **Audience URI (SP Entity ID)** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **Name ID format** — select **Unspecified**.
+            - **Application username** — select **Email**.
+            - **Update application username on** — select **Create and update**.
+        6. _(Optional)_ To encrypt SAML requests, click **Show Advanced Settings**, set **Assertion Encryption** to **Encrypted**, and [upload an X.509 certificate](#prerequisites). You will need the private key of this certificate to register the IdP in Cognigy.AI.
+      </Step>
+      <Step title="Map User Attributes">
+        1. In the **Attribute Statements** section, add the following attributes so that Cognigy.AI receives the user profile data it needs to create the account:
+
+            | Name        | Name format | Value             |
+            | ----------- | ----------- | ----------------- |
+            | `email`     | Unspecified | `user.email`      |
+            | `firstName` | Unspecified | `user.firstName`  |
+            | `lastName`  | Unspecified | `user.lastName`   |
+
+            Click **Next**.
+
+        2. On the **Feedback** tab, select **I'm an Okta customer adding an internal app** and click **Finish**.
+      </Step>
+      <Step title="Get Authentication Data">
+        1. On the **Applications** page, select the app you created, then open the **Sign On** tab.
+        2. In the **SAML Signing Certificates** section, click **View Setup Instructions** or **Identity Provider metadata** and copy the following values:
+
+            - **Identity Provider Single Sign-On URL** — used in the `idpLoginEndpoint` parameter in the request payload.
+            - **Identity Provider Issuer** — used in the `idpIssuer` parameter in the request payload.
+            - **X.509 Certificate** — used in the `idpCertificate` parameter in the request payload. You need to encode the certificate as base64 without newlines beforehand. If you enabled SAML request encryption, you also need to encode the private key as base64. You can use the following terminal command:
+
+                <EncodeCertificate path="path-to-certificate-or-private-key" />
+      </Step>
+      <Step title="Assign Users">
+        1. In the left-side menu of the Admin Console, go to **Directory > Profile Editor**, and click **Profile** next to the profile of the app you created.
+        2. Click **Add Attribute** and configure the following:
+
+            - **Data type** — select **string**.
+            - **Display name** — enter `Role`.
+            - **Variable name** — enter `role`.
+            - _(Optional)_ **Description** — enter a relevant description, for example, `The role of the user in Cognigy.AI`.
+            - **Enum** — activate **Define enumerated list of values**.
+            - **Attribute member** — enter a display name and the value of the role to which SSO applies, for example, `Base Role` and `base_role`. The value must match a [role in Cognigy.AI](/ai/administer/access/admin-center/access-control).
+            - **Attribute required** — select this option.  
+            Click **Save**.
+
+        3. Go to **Applications > Applications** and select the app you created.
+        4. On the **Assignments** tab, click the Edit button next to the user's name and assign the role they should have in Cognigy.AI. This user can log in via SSO.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="OneLogin">
+    <Steps>
+      <Step title="Set Up an App">
+        1. Log in to your OneLogin Administration portal with an administrator account.
+        2. In the top bar, click **Applications**, then click **Add App** in the upper-right corner.
+        3. Search for `SAML Custom Connector (Advanced)` in the search field and select this option.
+        4. In the **Display Name** field, enter a name that identifies the integration, for example, `Cognigy.AI SSO`. Optionally upload icons. Click **Save**.
+        5. On the new app page, click the **Configuration** tab in the left-side menu and configure the following:
+
+            - **ACS (Consumer) URL** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - **ACS (Consumer) URL Validator** — enter `https://<api-base-url>/auth/saml/login/<organization-id>`.
+            - _(Optional)_ **Single Logout URL** — enter `https://<cognigy-url>/slo/<organization-id>`.
+
+            Click **Save**.
+
+        6. In the left-side menu, go to the **Parameters** tab, configure the following parameter and value pairs, and select the **Include in SAML assertion** option for each pair:
+
+            | Parameter   | Value      |
+            | ----------- | ---------- |
+            | `email`     | Email      |
+            | `firstName` | First Name |
+            | `lastName`  | Last Name  |
+            | `role`      | User Role  |
+
+            Click **Save** to apply the attribute mapping.
+      </Step>
+      <Step title="Get Authentication Data">
+        1. In the left-side menu, go to the **SSO** tab and copy the following values:
+
+            - **X.509 Certificate** — click **View Details** and download the certificate. You will use its contents as `idpCertificate`. You need to encode the certificate as base64 without newlines beforehand. You can use the following terminal command:
+
+                <EncodeCertificate path="path-to-certificate" />
+
+            - **Issuer URL** — used in the `idpIssuer` parameter in the request payload.
+            - **SAML 2.0 Endpoint (HTTP)** — used in the `idpLoginEndpoint` parameter in the request payload.
+            - _(Optional)_ **SLO Endpoint** — used in the `idpLogoutEndpoint` parameter in the request payload.
+
+        2. In the left-side menu, navigate to **Users > Roles** and click **New Role**.
+        3. Add the following Cognigy.AI roles one by one, select the app you created, and click **Save**:
+
+            - `admin`
+            - `apiKeys`
+            - `base_role`
+            - `livechat`
+            - `odata`
+            - `projectManager`
+            - `userManager`
+
+        4. In the left-side menu, go to the **Users** tab and select a user for SSO. On the user page, enter the role they have in Cognigy.AI in the **role** field. The role must match the roles you configured in step 3.
+        5. Click **Save**. The user can log in via SSO.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Configure SSO in Cognigy.AI
+
+After the SSO app is ready, use the [`POST /v2.0/identityprovider/configure`](/api-reference/identity-providers/set-up-an-identity-provider) method to register the SSO configuration in Cognigy.AI.
+
+<Tabs>
+  <Tab title="Auth0 - OpenID Connect">
+
+    Send the API request with the following parameters:
+
+    - `X-API-Key` header — the API key from the [Prerequisites](#prerequisites) section.
+    - `idpIssuer` — the Domain value you copied earlier from [the **Settings** tab](#create-an-idp-app).
+    - `idpClientId` — the Client ID value you copied earlier from [the **Settings** tab](#create-an-idp-app).
+    - `idpClientSecret` — the Client Secret value you copied earlier from [the **Settings** tab](#create-an-idp-app).
+
+    <Accordion title="API Request Example">
+    <CodeGroup>
+    
+    ```bash -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+      -H "Content-Type: application/json" \
+      -H "X-API-Key: <your-api-token>" \
+      -d '{
+        "idpType": "oidc",
+        "idpIssuer": "<DOMAIN>",
+        "idpClientId": "<CLIENT ID>",
+        "idpClientSecret": "<CLIENT SECRET>",
+        "idpIdTokenSignedResponseAlg": "RS256",
+        "idpTokenEndpointAuthMethod": "client_secret_basic"
+      }'
+    ```
+    ```javascript JavaScript
+    const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": "<your-api-token>"
+      },
+      body: JSON.stringify({
+        idpType: "oidc",
+        idpIssuer: "<DOMAIN>",              // Domain from the Auth0 app Settings tab
+        idpClientId: "<CLIENT ID>",         // Client ID from the Auth0 app Settings tab
+        idpClientSecret: "<CLIENT SECRET>", // Client Secret from the Auth0 app Settings tab
+        idpIdTokenSignedResponseAlg: "RS256",
+        idpTokenEndpointAuthMethod: "client_secret_basic"
+      })
+    });
+    ```
+    ```python Python
+    import requests
+
+    response = requests.post(
+        "https://<api-base-url>/v2.0/identityprovider/configure",
+        headers={
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+        },
+        json={
+            "idpType": "oidc",
+            "idpIssuer": "<DOMAIN>",                # Domain from the Auth0 app Settings tab
+            "idpClientId": "<CLIENT ID>",           # Client ID from the Auth0 app Settings tab
+            "idpClientSecret": "<CLIENT SECRET>",   # Client Secret from the Auth0 app Settings tab
+            "idpIdTokenSignedResponseAlg": "RS256",
+            "idpTokenEndpointAuthMethod": "client_secret_basic"
+        }
+    )
+    ```
+    </CodeGroup>
+    </Accordion>
+
+  </Tab>
+  <Tab title="Auth0 - SAML 2.0">
+
+    Send the API request with the following data:
+
+    - `X-API-Key` header — the API key from the [Prerequisites](#prerequisites) section.
+    - `idpIssuer` — the Issuer value you copied earlier from [the **Usage** tab of the **SAML2 Web App** add-on](#create-an-idp-app).
+    - `idpLoginEndpoint` — the Identity Provider Login URL you copied earlier from [the **Usage** tab of the **SAML2 Web App** add-on](#create-an-idp-app).
+    - `idpCertificate` — the Identity Provider Certificate you copied earlier from [the **Usage** tab of the **SAML2 Web App** add-on](#create-an-idp-app), including the `BEGIN`/`END` markers, with real line breaks replaced by `\n`.
+    - `idpIdentifierFormat` — the NameID format. Use `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress` to match the add-on settings.
+
+    <Accordion title="API Request Example">
+    <CodeGroup>
+    
+    ```bash -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+      -H "Content-Type: application/json" \
+      -H "X-API-Key: <your-api-token>" \
+      -d '{
+        "idpType": "saml",
+        "idpIssuer": "urn:<your-tenant>.auth0.com",
+        "idpLoginEndpoint": "https://<your-tenant>.auth0.com/samlp/<client-id>",
+        "idpCertificate": "-----BEGIN CERTIFICATE-----\n<certificate-body>\n-----END CERTIFICATE-----",
+        "idpIdentifierFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+      }'
+    ```
+    ```javascript JavaScript
+    const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": "<your-api-token>"
+      },
+      body: JSON.stringify({
+        idpType: "saml",
+        idpLoginEndpoint: "https://<your-tenant>.auth0.com/samlp/<client-id>",                          // Identity Provider Login URL from the Auth0 add-on Usage tab
+        idpIssuer: "urn:<your-tenant>.auth0.com",                                                    // Identity Provider Issuer from the Auth0 add-on Usage tab
+        idpCertificate: "-----BEGIN CERTIFICATE-----\n<certificate-body>\n-----END CERTIFICATE-----",      // Identity Provider Certificate from the Auth0 add-on Usage tab
+        idpIdentifierFormat: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+      })
+    });
+    ```
+    ```python Python
+    import requests
+
+    response = requests.post(
+        "https://<api-base-url>/v2.0/identityprovider/configure",
+        headers={
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+        },
+        json={
+            "idpType": "saml",
+            "idpLoginEndpoint": "https://<your-tenant>.auth0.com/samlp/<client-id>",                          # Identity Provider Login URL from the Auth0 add-on Usage tab
+            "idpIssuer": "urn:<your-tenant>.auth0.com",                                                    # Identity Provider Issuer from the Auth0 add-on Usage tab
+            "idpCertificate": "-----BEGIN CERTIFICATE-----\n<certificate-body>\n-----END CERTIFICATE-----",      # Identity Provider Certificate from the Auth0 add-on Usage tab
+            "idpIdentifierFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+        }
+    )
+    ```
+    </CodeGroup>
+    </Accordion>
+
+  </Tab>
+  <Tab title="Microsoft Entra ID">
+
+    Send the API request with the following data:
+
+    - `X-API-Key` header — the API key from the [Prerequisites](#prerequisites) section.
+    - `idpIssuer` — use `https://<api-base-url>/auth/saml/login/<organization-id>`.
+    - `idpLoginEndpoint` — the Login URL you copied earlier from the **Set up `<application name>`** section.
+    - `idpCertificate` — the certificate you downloaded earlier from the **SAML Signing Certificate** section, base64-encoded as a single continuous string with no line breaks.
+    - _(Optional)_ `idpLogoutUrl` — the Logout URL you copied earlier from the **Set up `<application name>`** section.
+
+    <Accordion title="API Request Example">
+    <CodeGroup>
+    ```bash cURL
+    curl -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+      -H "Content-Type: application/json" \
+      -H "X-API-Key: <your-api-token>" \
+      -d '{
+        "idpType": "saml",
+        "idpIssuer": "https://<api-base-url>/auth/saml/login/<organization-id>",
+        "idpLoginEndpoint": "https://login.microsoftonline.com/4a7853bd-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2",
+        "idpCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t...",
+        "idpLogoutUrl": "https://login.microsoftonline.com/4a7853bd-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2"
+      }'
+    ```
+    ```javascript JavaScript
+    const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": "<your-api-token>"
+      },
+      body: JSON.stringify({
+        idpType: "saml",
+        idpIssuer: "https://<api-base-url>/auth/saml/login/<organization-id>",                                // Cognigy.AI SSO URL
+        idpLoginEndpoint: "https://login.microsoftonline.com/4a7853bd-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2",    // Login URL from the Set up `<application name>` section
+        idpCertificate: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t...",                                            // Base64-encoded contents of the downloaded .crt file
+        idpLogoutUrl: "https://login.microsoftonline.com/4a7853bd-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2"          // Logout URL from the Set up `<application name>` section (optional, for SP-initiated SLO)
+      })
+    });
+    ```
+    ```python Python
+    import requests
+
+    response = requests.post(
+        "https://<api-base-url>/v2.0/identityprovider/configure",
+        headers={
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+        },
+        json={
+            "idpType": "saml",
+            "idpIssuer": "https://<api-base-url>/auth/saml/login/<organization-id>",                                # Cognigy.AI SSO URL
+            "idpLoginEndpoint": "https://login.microsoftonline.com/4a7853bd-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2",    # Login URL from the Set up `<application name>` section
+            "idpCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t...",                                            # Base64-encoded contents of the downloaded .crt file
+            "idpLogoutUrl": "https://login.microsoftonline.com/4a7853bd-xxxx-xxxx-xxxx-xxxxxxxxxxxx/saml2"          # Logout URL from the Set up `<application name>` section (optional, for SP-initiated SLO)
+        }
+    )
+    ```
+    </CodeGroup>
+    </Accordion>
+
+  </Tab>
+  <Tab title="Google">
+
+    <Warning>
+      Don't include the PEM header, the PEM footer, or any newline characters in the certificate you submit to Cognigy.AI. A malformed certificate string causes the SSO configuration request to fail.
+    </Warning>
+
+    Send the API request with the following data:
+
+    - `X-API-Key` header — the API key from the [Prerequisites](#prerequisites) section.
+    - `idpIssuer` — use `https://<api-base-url>/auth/saml/login/<organization-id>`.
+    - `idpLoginEndpoint` — the **SSO URL** value you copied earlier from the **Google IdP Information** dialog.
+    - `idpCertificate` — the certificate you downloaded earlier from the **Google IdP Information** dialog, base64-encoded as a single continuous string with no line breaks.
+
+    <Accordion title="API Request Example">
+    <CodeGroup>
+    ```bash cURL
+    curl -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+      -H "Content-Type: application/json" \
+      -H "X-API-Key: <your-api-token>" \
+      -d '{
+        "idpType": "saml",
+        "idpIssuer": "https://<api-base-url>/auth/saml/login/<organization-id>",
+        "idpLoginEndpoint": "https://accounts.google.com/o/saml2/idp?idpid=XXXX",
+        "idpCertificate": "MIIDdTCCAl2gAwIBAgIJAKx..."
+      }'
+    ```
+    ```javascript JavaScript
+    const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": "<your-api-token>"
+      },
+      body: JSON.stringify({
+        idpType: "saml",
+        idpIssuer: "https://<api-base-url>/auth/saml/login/<organization-id>",   // Cognigy.AI SSO URL
+        idpLoginEndpoint: "https://accounts.google.com/o/saml2/idp?idpid=XXXX",  // SSO URL from Google IdP Information dialog in the Google Admin console
+        idpCertificate: "MIIDdTCCAl2gAwIBAgIJAKx..."                              // Certificate from Google IdP Information dialog, base64-encoded on a single line
+      })
+    });
+    ```
+    ```python Python
+    import requests
+
+    response = requests.post(
+        "https://<api-base-url>/v2.0/identityprovider/configure",
+        headers={
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+        },
+        json={
+            "idpType": "saml",
+            "idpIssuer": "https://<api-base-url>/auth/saml/login/<organization-id>",    # Cognigy.AI SSO URL
+            "idpLoginEndpoint": "https://accounts.google.com/o/saml2/idp?idpid=XXXX",   # SSO URL from Google IdP Information dialog in the Google Admin console
+            "idpCertificate": "MIIDdTCCAl2gAwIBAgIJAKx..."                               # Certificate from Google IdP Information dialog, base64-encoded on a single line
+        }
+    )
+    ```
+    </CodeGroup>
+    </Accordion>
+
+  </Tab>
+  <Tab title="Okta">
+
+    Send the API request with the following data:
+
+    - `X-API-Key` header — the API key from the [Prerequisites](#prerequisites) section.
+    - `idpIssuer` — the Identity Provider Issuer value you copied [from the SAML setup instructions page](#create-an-idp-app).
+    - `idpLoginEndpoint` — the Identity Provider Single Sign-On URL value you copied [from the SAML setup instructions page](#create-an-idp-app).
+    - For encrypted SAML requests:
+        - `idpCertificate` — X.509 Certificate you uploaded under **Show Advanced Settings > Assertion Encryption**, base64-encoded as a single continuous string with no line breaks.
+        - `decryptionPrivateKey` — the private key matching the X.509 certificate you [uploaded](#create-an-idp-app) under **Show Advanced Settings > Assertion Encryption** and base64-encoded as a single continuous string.
+
+    <AccordionGroup>
+      <Accordion title="API Request Example (Without Encryption)">
+        <CodeGroup>
+        ```bash cURL
+        curl -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+          -H "Content-Type: application/json" \
+          -H "X-API-Key: <your-api-token>" \
+          -d '{
+            "idpType": "saml",
+            "idpIssuer": "<OKTA_IDENTITY_PROVIDER_ISSUER>",
+            "idpLoginEndpoint": "<OKTA_SINGLE_SIGN_ON_URL>"
+          }'
+        ```
+        ```javascript JavaScript
+        const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+          },
+          body: JSON.stringify({
+            idpType: "saml",
+            idpIssuer: "<OKTA_IDENTITY_PROVIDER_ISSUER>",     // Identity Provider Issuer from the Okta Sign On tab
+            idpLoginEndpoint: "<OKTA_SINGLE_SIGN_ON_URL>"        // Identity Provider Single Sign-On URL from the Okta Sign On tab
+          })
+        });
+        ```
+        ```python Python
+        import requests
+
+        response = requests.post(
+            "https://<api-base-url>/v2.0/identityprovider/configure",
+            headers={
+                "Content-Type": "application/json",
+                "X-API-Key": "<your-api-token>"
+            },
+            json={
+                "idpType": "saml",
+                "idpIssuer": "<OKTA_IDENTITY_PROVIDER_ISSUER>",     # Identity Provider Issuer from the Okta Sign On tab
+                "idpLoginEndpoint": "<OKTA_SINGLE_SIGN_ON_URL>"        # Identity Provider Single Sign-On URL from the Okta Sign On tab
+            }
+        )
+        ```
+        </CodeGroup>
+      </Accordion>
+      <Accordion title="API Request Example (With Encryption)">
+        <CodeGroup>
+        ```bash cURL
+        curl -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+          -H "Content-Type: application/json" \
+          -H "X-API-Key: <your-api-token>" \
+          -d '{
+            "idpType": "saml",
+            "idpIssuer": "<OKTA_IDENTITY_PROVIDER_ISSUER>",
+            "idpLoginEndpoint": "<OKTA_SINGLE_SIGN_ON_URL>",
+            "idpCertificate": "<OKTA_X509_CERTIFICATE>",
+            "decryptionPrivateKey": "<OKTA_PRIVATE_KEY>"
+          }'
+        ```
+        ```javascript JavaScript
+        const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+          },
+          body: JSON.stringify({
+            idpType: "saml",
+            idpIssuer: "<OKTA_IDENTITY_PROVIDER_ISSUER>",     // Identity Provider Issuer from the Okta Sign On tab
+            idpLoginEndpoint: "<OKTA_SINGLE_SIGN_ON_URL>",    // Identity Provider Single Sign-On URL from the Okta Sign On tab
+            idpCertificate: "<OKTA_X509_CERTIFICATE>",        // X.509 Certificate from the Okta Sign On tab, base64-encoded on a single line
+            decryptionPrivateKey: "<OKTA_PRIVATE_KEY>"        // Private key matching the certificate uploaded to Okta, base64-encoded on a single line
+          })
+        });
+        ```
+        ```python Python
+        import requests
+
+        response = requests.post(
+            "https://<api-base-url>/v2.0/identityprovider/configure",
+            headers={
+                "Content-Type": "application/json",
+                "X-API-Key": "<your-api-token>"
+            },
+            json={
+                "idpType": "saml",
+                "idpIssuer": "<OKTA_IDENTITY_PROVIDER_ISSUER>",     # Identity Provider Issuer from the Okta Sign On tab
+                "idpLoginEndpoint": "<OKTA_SINGLE_SIGN_ON_URL>",       # Identity Provider Single Sign-On URL from the Okta Sign On tab
+                "idpCertificate": "<OKTA_X509_CERTIFICATE>",        # X.509 Certificate from the Okta Sign On tab, base64-encoded on a single line
+                "decryptionPrivateKey": "<OKTA_PRIVATE_KEY>"        # Private key matching the certificate uploaded to Okta, base64-encoded on a single line
+            }
+        )
+        ```
+        </CodeGroup>
+      </Accordion>
+    </AccordionGroup>
+
+  </Tab>
+  <Tab title="OneLogin">
+
+    Send the API request with the following data:
+
+    - `X-API-Key` header — the API key from the [Prerequisites](#prerequisites) section.
+    - `idpIssuer` — the Issuer URL you copied earlier from [the **SSO** tab of the OneLogin app](#create-an-idp-app).
+    - `idpLoginEndpoint` — the SAML 2.0 Endpoint (HTTP) you copied earlier from [the **SSO** tab of the OneLogin app](#create-an-idp-app).
+    - `idpCertificate` — the X.509 Certificate you encoded earlier from [the **SSO** tab of the OneLogin app](#create-an-idp-app), base64-encoded as a single continuous string with no line breaks.
+    - _(Optional)_ `idpLogoutEndpoint` — the SLO Endpoint you copied earlier from [the **SSO** tab of the OneLogin app](#create-an-idp-app).
+
+    <Accordion title="API Request Example">
+    <CodeGroup>
+    ```bash cURL
+    curl -X POST "https://<api-base-url>/v2.0/identityprovider/configure" \
+      -H "Content-Type: application/json" \
+      -H "X-API-Key: <your-api-token>" \
+      -d '{
+        "idpType": "saml",
+        "idpIssuer": "https://app.onelogin.com/saml/metadata/<id>",
+        "idpLoginEndpoint": "https://<subdomain>.onelogin.com/trust/saml2/http-post/sso/<id>",
+        "idpCertificate": "<ONELOGIN_X509_CERTIFICATE>",
+        "idpLogoutEndpoint": "https://<subdomain>.onelogin.com/trust/saml2/http-redirect/slo/<id>"
+      }'
+    ```
+    ```javascript JavaScript
+    const response = await fetch("https://<api-base-url>/v2.0/identityprovider/configure", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": "<your-api-token>"
+      },
+      body: JSON.stringify({
+        idpType: "saml",
+        idpIssuer: "https://app.onelogin.com/saml/metadata/<id>",                                      // Issuer URL from the OneLogin SSO tab
+        idpLoginEndpoint: "https://<subdomain>.onelogin.com/trust/saml2/http-post/sso/<id>",           // SAML 2.0 Endpoint (HTTP) from the OneLogin SSO tab
+        idpCertificate: "<ONELOGIN_X509_CERTIFICATE>",                                                 // X.509 Certificate from the OneLogin SSO tab, base64-encoded on a single line
+        idpLogoutEndpoint: "https://<subdomain>.onelogin.com/trust/saml2/http-redirect/slo/<id>"       // SLO Endpoint from the OneLogin SSO tab (optional)
+      })
+    });
+    ```
+    ```python Python
+    import requests
+
+    response = requests.post(
+        "https://<api-base-url>/v2.0/identityprovider/configure",
+        headers={
+            "Content-Type": "application/json",
+            "X-API-Key": "<your-api-token>"
+        },
+        json={
+            "idpType": "saml",
+            "idpIssuer": "https://app.onelogin.com/saml/metadata/<id>",                                      # Issuer URL from the OneLogin SSO tab
+            "idpLoginEndpoint": "https://<subdomain>.onelogin.com/trust/saml2/http-post/sso/<id>",           # SAML 2.0 Endpoint (HTTP) from the OneLogin SSO tab
+            "idpCertificate": "<ONELOGIN_X509_CERTIFICATE>",                                                 # X.509 Certificate from the OneLogin SSO tab, base64-encoded on a single line
+            "idpLogoutEndpoint": "https://<subdomain>.onelogin.com/trust/saml2/http-redirect/slo/<id>"       # SLO Endpoint from the OneLogin SSO tab (optional)
+        }
+    )
+    ```
+    </CodeGroup>
+    </Accordion>
+
+  </Tab>
+</Tabs>
+
+A successful request returns a confirmation that the identity provider configuration has been saved. The Cognigy.AI login page now displays a **Log in with SSO** button for users in your organization.
+
+## Test the SSO Login
+
+1. On the Cognigy.AI login page, enter the email address of a user assigned to the IdP app and click **Log in with SSO**. Cognigy.AI redirects you to the IdP and prompts you for your IdP credentials. After authentication, the IdP redirects back to Cognigy.AI and logs you in.
+2. Click the user icon in the lower-left corner and select **Logout**.
+3. Enter your email address again and click **Log in with SSO**. This time, you are logged in directly without re-entering your IdP credentials.
+
+## More Information
+
+- [Single Sign-on with SAML 2.0](/ai/administer/installation/single-sign-on-saml2)
+- [Auth0: OpenID Connect Protocol](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol)
+- [Auth0: SAML Configuration](https://auth0.com/docs/authenticate/protocols/saml/saml-configuration)
+- [Microsoft Entra ID: Enable SAML single sign-on for an enterprise application](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal-setup-sso)
+- [Google Workspace: Set up your own custom SAML app](https://knowledge.workspace.google.com/admin/apps/set-up-your-own-custom-saml-app)
+- [Okta: Create SAML app integrations](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_saml.htm)
+- [OneLogin: SAML Custom Connector (Advanced)](https://support.onelogin.com/kb/4266907/saml-custom-connector-advanced)

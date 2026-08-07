@@ -1,0 +1,72 @@
+---
+title: TTS Streaming
+description: "Learn about TTS streaming in Voice Gateway for real-time text-to-speech audio delivery, enabling natural voice agent conversations with minimal latency."
+keywords: ['tts streaming', 'text-to-speech', 'voice gateway', 'real-time audio', 'speech providers']
+---
+
+<a href="/release-notes/2026.14"><Badge className="version-badge" color="blue">Updated in 2026.14.1</Badge></a>
+
+The _TTS Streaming_ feature delivers synthesized speech to your voice AI Agent as it's generated, rather than waiting for the entire response to finish processing. This feature enables faster, more natural-sounding conversations.
+
+Standard TTS systems wait for the entire text to be processed before playing any audio, which introduces a noticeable delay, especially with longer texts. TTS streaming instead processes text in segments and plays each one back as soon as it's synthesized.
+
+<div style={{textAlign: 'center'}}>
+   <video width="650" height="400" controls autoPlay title="Streaming vs. standard TTS" alt="A video comparing standard text-to-speech processing, which waits for the full text before generating audio, with streaming text-to-speech, which begins playback as segments are synthesized." style={{border: '1px solid #ccc', borderRadius: '12px', display: 'block', margin: '0 auto'}}>
+      <source src="https://docscognigyassets.blob.core.windows.net/assets/traditional-tts-vs-tts-streaming.mp4" />
+   </video>
+</div>
+
+<Note>
+  Some speech providers use `streaming` to describe their API's connection method, for example, a websocket-based API for submitting multiple texts. This concept is different from TTS streaming in Voice Gateway, which refers to audio playout: how quickly synthesized audio starts playing back to the caller.
+</Note>
+
+## Key Benefits
+
+- **Lower response latency.** Audio playback starts as soon as the first words are synthesized, instead of after the full text is processed.
+- **More natural conversation flow.** Reduced time-to-first-audio makes voice AI Agent responses feel closer to real-time human conversation, especially with longer text.
+
+## Prerequisites
+
+- A [voice AI Agent](/ai/agents/develop/voice) configured.
+- A [speech service](/voice-gateway/webapp/speech-services) configured in the Voice Gateway Self-Service Portal.
+
+## Restrictions
+
+- The following speech providers don't support TTS Streaming: AWS, Google, Nuance, Speechmatics, and Deepgram Flux.
+- For ElevenLabs, Voice Gateway uses the [ElevenLabs streaming API](https://elevenlabs.io/docs/api-reference/text-to-speech/stream). The following parameters aren't supported and can't be specified in **Extra Options**:
+    - `seed`
+    - `previous_request_ids`
+    - `next_request_ids`
+    - `apply_text_normalization`
+    - `apply_language_text_normalization`
+    - `use_pvc_as_ivc`
+    - `pronunciation_dictionary_locators`
+
+## How to Configure TTS Streaming
+
+To activate streaming for your voice AI Agent, follow these steps:
+
+<AccordionGroup>
+<Accordion title="1. Configure Speech Service in Voice Gateway Self-Service Portal">
+
+1. In the navigation menu of the Voice Gateway Self-Service Portal, select **Speech**.
+2. On the **Speech services** page, select an existing speech service or [create a new one](/voice-gateway/webapp/speech-services) by clicking **Add a speech service** in the upper-right corner.
+3. On the **Add Speech service** page, make sure that the **Use for text-to-speech** option is activated.
+4. Activate the **Enable text-to-speech streaming** option.
+5. _(Optional)_ For ElevenLabs, configure the **Extra Options** field to customize the TTS streaming behavior. See the list of unsupported parameters in the [Restrictions](#restrictions) section.
+6. Click **Save**.
+
+</Accordion>
+<Accordion title="2. Configure the Set Session Config Node in Cognigy.AI">
+
+1. Go to the Set Session Config Node in your Flow.
+2. In the **Synthesizer (TTS)** section, select your speech service from the **TTS Vendor** list.
+3. Configure **TTS Language** and **TTS Voice** as needed.
+
+</Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [Speech Services](/voice-gateway/webapp/speech-services)
+- [TTS and STT vendors](/voice-gateway/references/tts-and-stt-vendors)

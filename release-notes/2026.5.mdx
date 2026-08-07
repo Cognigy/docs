@@ -1,0 +1,154 @@
+---
+title: "2026.5"
+---
+
+<Warning>
+  Anthropic's `claude-3-7-sonnet-latest` model has been removed. Switch to the newer models to ensure your AI Agents run smoothly.
+</Warning>
+
+<Warning>
+  **Deprecations:**
+  
+  - The [`DELETE /v2.0/conversations/{sessionId}`](/api-reference/conversations/deletes-a-conversation) API method has been deprecated. The removal of the API method is planned for Cognigy.AI 2026.18.0. Use the `DELETE /v2.1/conversations/{sessionId}` API method instead.
+  - The `createKnowledgeSource` function has been deprecated. For Knowledge Connectors, use [`upsertKnowledgeSource`](/ai/for-developers/knowledge-connector/upsertKnowledgeSource) to create or update Knowledge Sources that also support knowledge synchronization.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.5.3
+
+### Cognigy Voice Gateway
+
+**Released** March 13, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where calls were incorrectly declined with 603 SIP replies due to a rare race condition in speech provider gather tasks
+
+## 2026.5.2
+
+### Cognigy Voice Gateway
+
+**Released** March 10, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where calls using Deepgram as the speech-to-text provider end unexpectedly or didn't recognize some of the caller's inputs
+
+## 2026.5.1
+
+### Cognigy.AI
+
+**Released** March 12, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Flow execution was reset to the first Entrypoint when simultaneous calls from the same phone number were directed to more than one Flow. The issue affected Endpoints set to a Flow with an Execute Flow Node to handle call events. While the second Flow was executed, the first Flow to receive the call was reset
+
+### Cognigy Voice Gateway
+
+**Released** March 5, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where STT labels set in the Set Session Config Node weren't loaded properly and fell back to `none`. This issue caused speech provider services to fail
+- Fixed issue where the Voice Gateway Self-Service Portal displayed a failed status for valid Deepgram Flux speech credentials
+
+## 2026.5.0
+
+### Cognigy.AI
+
+**Released** March 3, 2026
+
+#### Features
+
+##### Knowledge Connector Syncing
+
+Introduced the [Knowledge Connector Syncing](/ai/agents/develop/knowledge-ai/knowledge-connectors) feature to keep Knowledge Stores synchronized with external content sources, such as CMS or documentation systems. This feature reduces manual maintenance and ensures content consistency. The Confluence Extension 6.0.0 and the Diffbot Extension 2.0.0 include support for synchronization.
+
+##### MCP Server Endpoint (Experimental)
+
+Introduced the [MCP Server Endpoint](/ai/agents/deploy/endpoint-reference/mcp-server). It lets external AI clients, such as Claude Desktop and Cursor, discover and call AI Agent tools via the Model Context Protocol (MCP). This feature is experimental and isn't intended for production use.
+
+#### Improvements
+
+- Added support for [hashing user IDs in the transformers](/ai/for-developers/transformers/overview#modify-the-user-id-in-transformers) to enhance data protection and support GDPR compliance
+- Added the Custom Options section to configure a custom model or request parameters for the [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent#custom-options) and [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output#custom-options) Nodes
+- Updated the [`evaluateRule`](/ai/for-developers/function-reference/other/evaluateRule) function to return a promise, improving reliability in asynchronous workflows
+- Added the [CXone Info](/ai/administer/access/management-ui#view-user-details) section, including the NiCE CXone email address and NiCE CXone ID, to the User Details in the Management UI. The section is displayed only if the user has a NiCE CXone account and the environment is integrated with NiCE CXone
+- Improved the Salesforce MIAW handover provider stability by ignoring server-sent event (SSE) listeners after the connection was closed
+- Improved Token search by prioritizing label-based matching to make Tokens easier to find
+- Added the capability to redact the 3- and 4-digit CVV/CVC numbers using the [Credit Card Number redaction](/ai/platform-features/data-redaction#default-data-types) type in the Data Redaction Settings under Project Settings
+- Updated the error message shown when no default LLM is found for scheduling a simulation run
+
+#### Bug Fixes
+
+- Fixed the issue where ISO date formatting didn't align with the configured time zone in the Date Picker Node
+- Fixed the issue where transformer execution didn't correctly convert a `request-promise` proxy to an Axios proxy
+- Fixed the issue where `foreignSessionData` wasn't sent in requests to Salesforce MIAW
+- Fixed the issue where the Custom Model field wasn't shown for custom embedding models after being set to empty
+- Fixed the issue where triggering an AI Agent without any user input resulted in an error
+- Fixed the issue where cloned handover providers referenced non-existent providers after a user created a Snapshot or Package
+- Fixed the issue where creating re-referenced handover provider IDs incorrectly caused handover Nodes to reference non-existent providers after creating a Snapshot or Package
+- Fixed the issue where not all goals were correctly synced to Insights during Snapshot uploads
+- Fixed the issue where merging two different Contact Profiles kept both Profiles active
+- Fixed the issue where the Simulator OpenAPI documentation wasn't compatible with the latest OpenAPI version
+- Fixed a memory leak in the `service-playbook-execution` service
+- Fixed errors thrown when importing Packages containing Knowledge Connectors
+- Fixed the issue where CXone-integrated SSO login didn't work in some environments due to an incorrect domain name check and the use of the wrong API URL
+
+### Cognigy Voice Gateway
+
+**Released** March 3, 2026
+
+#### Improvements
+
+- Improved short-answer recognition by starting the listening state before the voice AI Agent finishes speaking
+- Improved voice detection accuracy by better aligning Barge-In and listening states
+- Added concurrent use of the Continuous ASR and Barge-In features
+
+#### Bug Fixes
+
+- Fixed the issue where multiple `CALL_COMPLETED` events were sent for a single session
+- Fixed synchronization issues to ensure the listening mode activates at the correct intervals
+- Fixed the issue where synthesized speech from the Microsoft Azure Speech Services TTS provider was cut off. This issue caused missing last syllables or words
+- Fixed the ElevenLabs STT provider configuration to correctly support the EU region setting
+
+### Cognigy Live Agent
+
+**Released** March 3, 2026
+
+#### Improvements
+
+- Improved the filter behavior in the Conversations list, including correct handling of AND/OR conditions, filter persistence, and folder navigation. The enhanced filter behavior prevents incorrect or missing conversation results
+
+#### Bug Fixes
+
+- Fixed issues with rendering chat components and updated the Live Agent library to align with current Cognigy.AI components, ensuring proper support for complex AI Agent message types and full compatibility with Cognigy.AI outputs
+- Fixed the issue where human agents with status online didn't receive email notifications for new messages in assigned conversations, even when the email notifications were activated in the Profile Settings
+
+### Cognigy Insights
+
+**Released** March 3, 2026
+
+#### Improvements
+
+- Removed the `GET /v1.0/insights/token-resources` API method from the Insights API documentation
+- Added the `x-api-key` authentication for Insights APIs, enabling simpler and direct API access without requiring JWT retrieval
+
+#### Bug Fixes
+
+- Fixed the issue where the `PATCH /v2.0/analytics` API method didn't work as expected
+- Fixed the issue where the Goals report returned empty results for Snapshot-based Projects due to incorrect data handling in the report logic
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

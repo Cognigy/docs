@@ -1,0 +1,256 @@
+---
+title: API and CLI
+description: Build custom integrations, manage AI Agents, and automate workflows via the Cognigy.AI REST API or CLI.
+keywords: ['api', 'cli', 'rest api', 'cognigy api', 'command line']
+---
+
+<a href="/release-notes/2025.10"><Badge className="version-badge" color="blue">Updated in 2025.10</Badge></a>
+
+
+_Cognigy.AI API and CLI_ are toolsets for developers to interact with Cognigy.AI. The API allows programmatic interaction and integration with existing systems. The CLI provides direct command-line access to manage AI Agents. Using both tools streamlines workflows, enhances productivity, and manages Cognigy.AI Projects efficiently.
+
+## Limitations
+
+- For Cognigy.AI 4.100 and earlier, you can download [Snapshots](/ai/agents/deploy/snapshots) up to 100 MB using the Cognigy.AI CLI. In later versions, there's no maximum download size for Snapshots via the CLI.
+- The `push` and `restore` CLI commands can only update resources. If you want to create a resource, use [the Cognigy.AI API](#cognigy-ai-api).
+- CLI commands don't support adding or moving Nodes in the Flow structure. For this purpose, use [the Cognigy.AI API](#cognigy-ai-api).
+
+## Cognigy.AI API
+
+For communication with the Cognigy.AI installation, the frontend uses an HTTP-based API.
+This API can also be used by developers to build custom integrations with Cognigy.AI. We also offer a library in the form of an NPM package called the "rest-api-client" which helps to lower the burden of consuming our APIs. This library is available on NPM and is written in modern JavaScript including Typescript definitions.
+
+[Our OpenAPI Documentation](https://api-trial.cognigy.ai/openapi)
+
+### What are the API capabilities?
+
+Any kind of information that is visible and any kind of action that can be performed in the frontend is queried or triggered through this API, which is 100% exposed for developers, too.
+
+### API Base URL
+
+The API Base URL is the endpoint for accessing the Cognigy.AI OpenAPI.
+The table outlines the base URLs for different environments.
+
+| Environment              | API Base URL                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Trial (trial.cognigy.ai) | `https://api-trial.cognigy.ai`                                                                                                                                                                                                                                                                                                                                                                                                |
+| SaaS                     | Choose the environment you use:<ul><li>**App (app.cognigy.ai)** - `https://api-app.cognigy.ai`</li><li>**App-US** - `https://api-app-us.cognigy.ai/openapi`</li><li>**Other SaaS** - use the `https://api-<company-name>.cognigy.cloud/openapi` pattern where `company-name` is your company name. For example, if your company name is `abc123`, the URL would be:<br />`https://api-abc123.cognigy.cloud/openapi`</li></ul> |
+| On-premises              | Specify the API URL as the value for the environment variable `BACKEND_BASE_URL_WITH_PROTOCOL` in your Cognigy.AI `values.yaml` file.                                                                                                                                                                                                                                                                                         |
+| NiCE CXone Environments  | Use the `https://cognigy-api-<region>.nicecxone.com` pattern, where `<region>` matches your NiCE CXone cluster. For example, `https://cognigy-api-na1.nicecxone.com`, `https://cognigy-api-eu1.nicecxone.com`. For a full list of available regions, refer to [NiCE CXone Shared SaaS Clusters](/ai/administer/installation/ip-ranges-shared-environments#nice-cxone-shared-saas-clusters).                                   |
+
+### Manage API Keys
+
+An API key is used to authenticate to the Cognigy.AI API as a user in the system without exposing the user's credentials.
+
+To generate an API key, read [Create API Keys](/ai/administer/user-menu/my-profile).
+
+To delete an API key, read [Revoke API Keys](/ai/administer/user-menu/my-profile).
+
+### How to Use the API
+
+Cognigy API includes an OpenAPI documentation that outlines all the different API operations in detail. For example, for the Cognigy trial environment, access `https://api-trial.cognigy.ai/openapi`, and for a NiCE CXone environment, access `https://cognigy-api-<region>.nicecxone.com/openapi`, such as `https://cognigy-api-na1.nicecxone.com/openapi`.
+
+To call the API, send an HTTP request including one of the following:
+
+- A query parameter `api_key` with your API key set as a value.
+- A header `X-API-Key` with your API key set as a value.
+
+For example, if your Cognigy.AI installation runs at `https://api-<cognigy-domain>.ai` and your API key is `<api-key>`, you can open a browser tab and go to `https://api-<cognigy-domain>.ai/projects?api_key=<api-key>` to get a list of all the Projects assigned to you, including metadata about the resources within each Project.
+
+This call is used by the frontend when you load the **Main** page.
+
+### Super API-Key
+
+Most of the APIs in Cognigy.AI are agent-bound,
+meaning that a developer using our API can only request information from Projects they have access to.
+There are certain use-cases where, for example, all Flows within a certain Organization should be listed.
+For such use-cases, we have introduced a feature called the "Super API-Key" with our 4.1.4 release.
+
+<AccordionGroup>
+  <Accordion title="Feature availability">
+    This feature is only available for on-premises customers with separate Cognigy.AI installations.
+
+    This feature is, by default, disabled in all Cognigy.AI installations. Our on-premises customers can activate this feature by setting the following environment variable to "true":
+
+    ```text
+    FEATURE_USE_SUPERAPIKEY_API
+    ```
+
+    ```text
+    https://api-trial.cognigy.ai/openapi#post-/management/v2.0/organisations/{organisationId}/apikeys
+    ```
+
+    This API-key is not bound to a specific user and lives within the scope of an Organization. It can be used to manipulate all assets and objects within the system.
+  </Accordion>
+
+  <Accordion title="Super API-Key and TTL">
+    This API-key has a default TTL (Time to Live) of 15 minutes for security reasons. Once the key has been created, it will only be valid for 15 minutes.
+  </Accordion>
+</AccordionGroup>
+
+## Cognigy.AI CLI
+
+The Cognigy.AI CLI is a command-line interface enabling users to manage Projects directly from the command line. For example, with this CLI, you can create Snapshots, manage Locales, and deploy AI Agents efficiently.
+
+To start using the Cognigy.AI CLI, refer to the [Cognigy repository on GitHub](https://github.com/Cognigy/Cognigy-CLI).
+
+You can also explore the Cognigy Help Center, including its [Cognigy CLI](https://support.cognigy.com/hc/en-us/sections/360004745359-Cognigy-CLI) section.
+
+### Examples
+
+The following examples show common CLI commands and the resources they work with.
+
+<AccordionGroup>
+  <Accordion title="Clone a Project">
+    Clone a Project or its resources of one type from Cognigy.AI to your local machine.
+
+    ```bash
+    # Clone all Project resources
+    cognigy clone
+    # Clone only Flows
+    cognigy clone --type flows
+    # Clone Flows and Endpoints
+    cognigy clone --type flows endpoints
+    ```
+
+    Supported resource types: `agent` (all Project resources), `flows`, `endpoints`, `lexicons`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Restore a Project">
+    Upload a Project or its resources from your local machine to Cognigy.AI.
+
+    ```bash
+    # Restore all Project resources
+    cognigy restore
+    # Restore only Flows
+    cognigy restore --type flows
+    ```
+
+    Supported resource types: `agent` (all Project resources), `flows`, `endpoints`, `lexicons`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Pull and Push Resources">
+    Download or upload a specific resource by name.
+
+    ```bash
+    # Download a specific Flow by name
+    cognigy pull flows myFlow
+    # Upload a specific Flow by name
+    cognigy push flows myFlow
+    ```
+
+    Supported resource types for:
+    
+    - `pull` — `flows`, `lexicons`, `endpoints`, `extensions`, `locales`, `aiAgents`.
+    - `push` — `flows`, `lexicons`, `endpoints`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Compare Local and Remote Resources">
+    Compare a local resource against its remote version.
+
+    ```bash
+    # Compare a Flow at the resource level
+    cognigy diff flows myFlow
+    # Compare a Flow at the Node level
+    cognigy diff flows myFlow --mode node
+    ```
+
+    Supported resource types: `flows`, `lexicons`, `endpoints`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Train a Flow">
+    Trigger NLU model training for a Flow.
+
+    ```bash
+    # Train a Flow with the default timeout
+    cognigy train flow myFlow
+    # Train a Flow with a custom timeout in milliseconds
+    cognigy train flow myFlow --timeout 30000
+    ```
+  </Accordion>
+
+  <Accordion title="Create a Snapshot or Locale">
+    Creates a Snapshot or Locale in the remote Project and imports the new resource to your local Project.
+
+    ```bash
+    # Create a Snapshot with an optional description
+    cognigy create snapshot mySnapshot "Optional description"
+    # Create a Locale
+    cognigy create locale myLocale
+    ```
+  </Accordion>
+
+  <Accordion title="Export and Import Multilingual Flow Texts">
+    Export a `content.csv` file with the text fields from Nodes in the Flow across all Locales, or import updated localized content back into a Flow.
+
+    ```bash
+    # Export Flow texts to content.csv
+    cognigy exportcsv flow myFlow
+    # Import updated localized content back into the Flow
+    cognigy importcsv flow myFlow
+    ```
+  </Accordion>
+
+  <Accordion title="Localize a Flow">
+    Add or remove localization for multiple Intents and Nodes at once.
+
+    ```bash
+    # Add localization for a Flow from a source locale
+    cognigy localize flow myFlow --localeName de-DE --sourceLocale en-US
+    # Remove localization for a Flow
+    cognigy localize flow myFlow --localeName de-DE --reverse
+    ```
+  </Accordion>
+
+  <Accordion title="Translate a Flow">
+    Translate Flow content using a [machine translation provider](/ai/agents/deploy/endpoints/real-time-translation-settings).
+
+    ```bash
+    # Translate a Flow using DeepL
+    cognigy translate flow myFlow --localeName de-DE --fromLanguage en --toLanguage de --translator deepl --apiKey <key>
+    ```
+
+    Supported translation providers: `google`, `microsoft`, `deepl`.
+  </Accordion>
+
+  <Accordion title="Execute a Raw API Command">
+    Pass a JSON payload directly to the Cognigy REST API client.
+
+    ```bash
+    # Run an API command with a JSON payload
+    cognigy execute <command> -d '{"key": "value"}'
+    # List all available API commands
+    cognigy execute --list
+    ```
+
+    Use `--list` to print all available API commands.
+  </Accordion>
+
+  <Accordion title="Run Playbooks">
+    Schedule Playbook runs on Cognigy.AI and poll for results. The output is written to `./playbookRunResults.json`.
+
+    ```bash
+    # Run all Playbooks in the project
+    cognigy run playbooks
+    # Run Playbooks from a specific file
+    cognigy run playbooks ./myPlaybooks.json
+    ```
+
+    Exit codes: `0` — success, `1` — failure, `2` — timeout.
+  </Accordion>
+
+  <Accordion title="Manage AI Agent Knowledge">
+    Create a Knowledge Store, extract content from source documents, and ingest `.ctxt` files into the store.
+
+    ```bash
+    # Create a Knowledge Store
+    cognigy knowledge-ai create source myStore "My store" --projectId <id> --language en-US
+    # Extract content from a PDF into a .ctxt file
+    cognigy knowledge-ai extract pdf -i ./docs/manual.pdf -o ./output/manual.ctxt
+    # Ingest .ctxt files into the Knowledge Store
+    cognigy knowledge-ai ingest --knowledgeStoreId <id> --input ./output/
+    ```
+
+    Supported extraction types: `text`, `pdf`, `docx`, `csv`, `json`, `jsonl`, `epub`, `srt`, `md`, `cheerio`, `playwright`, `diffbot`, `other`.
+  </Accordion>
+</AccordionGroup>
