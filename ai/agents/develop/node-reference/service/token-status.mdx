@@ -1,0 +1,31 @@
+---
+title: Token Status
+keywords: ['token status', 'microsoft sso', 'teams sso', 'azure bot services', 'oauth connection', 'branch']
+description: The Token Status Node checks whether a valid Microsoft SSO token exists for an Azure Bot Services OAuth connection, and branches the Flow into Granted or Not Granted child Nodes for further execution.
+---
+
+<a href="/release-notes/2026.17"><Badge className="version-badge" color="blue">Updated in 2026.17</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/token-status.webp" alt="Token Status Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Token Status Node checks whether a valid Microsoft SSO token exists for an [Azure Bot Services Endpoint](/ai/agents/deploy/endpoint-reference/azure-bot-services)'s OAuth connection, and branches the Flow into **Granted** or **Not Granted** child Nodes for further execution.
+
+Place this Node after a [Get Token](/ai/agents/develop/node-reference/service/get-token) Node to check whether the sign-in completed, before continuing with an action that requires the token.
+
+## Parameters
+
+| Parameter            | Type          | Description                                                                                                                                                                                                                                              |
+| -------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Overwrite Connection | Toggle        | Sets a different OAuth connection than the one configured in the **SSO Connection Name** parameter in the Endpoint settings. Use this toggle if you use multiple SSO connections with your Azure Bot Services. This parameter is deactivated by default. |
+| Connection Name      | CognigyScript | This parameter appears when you activate **Overwrite Connection**. Sets the name of the OAuth connection to check the token for.                                                                                                                         |
+
+## More Information
+
+- [Azure Bot Services Endpoint: Multiple SSO Connections](/ai/agents/deploy/endpoint-reference/azure-bot-services#multiple-sso-connections)
+- [Get Token](/ai/agents/develop/node-reference/service/get-token)
+- [Invalidate Token](/ai/agents/develop/node-reference/service/invalidate-token)
+- [Cognigy Help Center: SSO and Graph API Nodes](https://support.cognigy.com/hc/en-us/articles/6422300559388-Azure-Bot-Services-Advanced-Deployment-with-SSO-Microsoft-Teams-SSO-and-Graph-API-Nodes)

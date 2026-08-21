@@ -1,0 +1,29 @@
+---
+title: Invalidate Token
+keywords: ['invalidate token', 'microsoft sso', 'teams sso', 'azure bot services', 'oauth connection', 'sign out']
+description: The Invalidate Token Node signs the user out of an Azure Bot Services OAuth connection and deletes the stored token.
+---
+
+<a href="/release-notes/2026.17"><Badge className="version-badge" color="blue">Updated in 2026.17</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/services/invalidate-token.webp" alt="Invalidate Token Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+The Invalidate Token Node signs the user out of an [Azure Bot Services Endpoint](/ai/agents/deploy/endpoint-reference/azure-bot-services)'s OAuth connection and deletes the stored token. Use this Node to let the user log out, or to force a new sign-in before issuing a new token for the same connection.
+
+## Parameters
+
+| Parameter            | Type          | Description                                                                                                                                                                                                                                              |
+| -------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Overwrite Connection | Toggle        | Sets a different OAuth connection than the one configured in the **SSO Connection Name** parameter in the Endpoint settings. Use this toggle if you use multiple SSO connections with your Azure Bot Services. This parameter is deactivated by default. |
+| Connection Name      | CognigyScript | This parameter appears when you activate **Overwrite Connection**. Sets the name of the OAuth connection to revoke the token for.                                                                                                                        |
+
+## More Information
+
+- [Azure Bot Services Endpoint: Multiple SSO Connections](/ai/agents/deploy/endpoint-reference/azure-bot-services#multiple-sso-connections)
+- [Get Token](/ai/agents/develop/node-reference/service/get-token)
+- [Token Status](/ai/agents/develop/node-reference/service/token-status)
+- [Cognigy Help Center: SSO and Graph API Nodes](https://support.cognigy.com/hc/en-us/articles/6422300559388-Azure-Bot-Services-Advanced-Deployment-with-SSO-Microsoft-Teams-SSO-and-Graph-API-Nodes)

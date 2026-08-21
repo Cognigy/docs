@@ -1,0 +1,112 @@
+---
+title: "2026.16"
+---
+
+import InsightsStepAndMessageExplorerDeprecation from '/snippets/insights/step-and-message-explorer-deprecation.mdx'
+
+<Danger>
+  Removals:
+  
+  - OpenAI's and Microsoft Azure OpenAI's `gpt-5-chat-latest` models have been removed. To avoid any issues with your AI Agent, migrate to a more modern model, for example, `gpt-5.6-sol`.
+  - The **Handover Settings** section has been removed from the Endpoint settings. Consequently, the **Legacy** option was removed from the **Handover Provider** list in the Handover to Human Agent, Question, and Check Agent Availability Nodes. If you haven't migrated to the new interface for handover providers, refer to the [migration guide](/ai/escalate/migration).
+</Danger>
+
+<Warning>
+  Deprecations:
+
+  - [Cognigy Serverless](/ai/for-developers/extensions#cognigy-serverless) is required starting with Cognigy.AI 2026.21.0. The legacy Extension runtime for trusted and untrusted Extensions has been deprecated. The removal is planned for Cognigy.AI 2026.21.0.
+    - For SaaS installations, Cognigy performs the migration and no action is required. If Cognigy hasn't contacted you, your Extensions are already running on Cognigy Serverless.
+    - For on-premises installations, [install Cognigy Serverless](/ai/administer/installation/serverless-installation) before upgrading to Cognigy.AI 2026.21.0. Otherwise, all Extensions will stop working after the upgrade.
+  - The [`GET /v2.0/profiles`](/api-reference/contact-profiles/get-contact-profiles) API method has been deprecated. The removal is planned for Cognigy.AI 2026.24.0. Use [`GET /v2.1/profiles`](/api-reference/contact-profiles/get-contact-profiles-performance) instead for improved performance when retrieving Contact Profiles.
+  - As of Cognigy.AI 2026.4.0, the [Step](/insights/explorers/step) and [Message](/insights/explorers/message) explorers in Insights are deprecated. These explorers will remain functional until their full removal in Cognigy.AI 2026.18.0.
+</Warning>
+
+## 2026.16.1
+
+### Cognigy Voice Gateway
+
+**Released** August 18, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the audio connection wasn't properly updated during certain call transfers, causing audio issues after the transfer
+- Fixed the issue where DTMF-only barge-in settings weren’t restored after the system finished waiting for caller input. As a result, calls incorrectly accepted speech as an interruption when only key presses were allowed
+- Fixed the issue where speech transcription unexpectedly reconnected after a call transfer. This issue also occurred after a speech provider failover
+- Fixed the issue where the system reported a media path change as successful while the call continued using the previous path
+- Fixed the issue where audio failed to decrypt after one call side disconnected while the other remained active
+
+## 2026.16.0
+
+### Cognigy.AI
+
+**Released** August 4, 2026
+
+#### Features
+
+##### Real-Time Queue Notifications for Genesys Cloud Open Messaging
+
+Introduced real-time queue notifications for the Genesys Cloud Open Messaging handover provider. End users can now receive estimated wait-time updates while waiting for a human agent. This feature improves transparency during handovers. For more information, refer to [Real-Time Queue Notifications](/ai/escalate/handover-features/real-time-queue-notifications#configure-settings-in-genesys-cloud-open-messaging).
+
+#### Improvements
+
+- Standardized the Endpoints-specific API authentication key header for the [REST](/ai/agents/deploy/endpoint-reference/rest) and [Webhook](/ai/agents/deploy/endpoint-reference/webhook) Endpoints. Now, use the `x-cognigy-endpoint-key` request header for both Endpoints. The legacy `x-rest-endpoint-key` and `x-webhook-key` headers are still accepted for backward compatibility, but `x-cognigy-endpoint-key` takes precedence if both are provided
+- Added the `isMasked` field to the [GoalEvents](/ai/agents/analyze/odata#goalevents) collection for the Cognigy.AI OData endpoint 2.4
+- Added the [`POST /v2.1/projects/{projectId}/logs/package`](/api-reference/logs-v21/package-log-entries-into-a-downloadable-file) and [`GET /v2.1/projects/{projectId}/logs/package/{logsFileId}/download`](/api-reference/logs-v21/download-a-packaged-logs-file) API methods to package log entries into a JSON file you can download. These API methods allow you to avoid paginating through logs when using the [`GET /v2.1/projects/{projectId}/logs`](/api-reference/logs-v21/get-log-entries) API method. The methods are available to some customers via the `FEATURE_PACKAGE_LOGS` feature flag. Contact [Cognigy technical support](/help/get-help) to activate them for your installation
+- Removed the beta label from [NiCE CXone handover](/ai/escalate/handover-reference/nice-cxone/overview) providers. They are now displayed as generally available
+- Increased the default maximum upload size for UI uploads of [Snapshots](/ai/agents/deploy/snapshots#limitations) and [Packages](/ai/platform-features/packages#limitations) to 8 GB. Direct Cognigy.AI API upload limits remain unchanged
+- Increased the default size limit for the [Context](/ai/agents/develop/ai-agent-memory/context#limitations) object from 65 kB to 256 kB
+
+#### Bug Fixes
+
+- Fixed the issue where newly created Locales and Snapshots were displayed in the Locale and Snapshot lists in the Interaction Panel only after the page was reloaded
+- Fixed the issue where Cognigy Serverless unexpectedly terminated Extension executions
+- Fixed the issue where opening Flows, Endpoints, Locales, and Snapshots returned a `500` error
+- Fixed the issue where the status message for the NiCE CXone handover provider showed the incorrect text
+- Fixed the issue where the names of API keys created without a name or named `ApiKey` weren't displayed in the API Keys list on the My Profile page. Now, you must enter a name when generating an API key
+- Fixed the issue where updating or deleting an AI Agent failed with a `500 Internal Server Error`
+- Fixed the issue where fullscreen mode in the mock code editor didn't close when the user pressed `Escape` after typing in the editor
+- Fixed the issue where file-size limits weren't enforced for Snapshots and Packages uploaded through the UI
+- Fixed the issue where incorrect text was displayed in the Copilot: Set Grid Node
+- Fixed the issue where assertions always failed in a Playbook run from the Interaction Panel Test tab
+- Fixed the issue where messages from Live Agent to the end user weren't displayed when the Flow included a data-only or an empty Say Node
+
+### Cognigy Voice Gateway
+
+**Released** August 4, 2026
+
+#### Improvements
+
+- Added the Region option to the [Voice Preview settings](/ai/agents/test/voice-preview#set-up-a-speech-provider) for the Deepgram speech provider
+- Added the option to opt in to the [Deepgram Model Improvement Program](/ai/agents/test/voice-preview#set-up-a-speech-provider) for Deepgram and Deepgram Flux under **Speech > Speech Service** in the Voice Gateway Self-Service Portal. Opting in allows Deepgram to use call audio and transcripts to improve its models and may reduce per-request costs. Customers can opt out to keep their call data private
+
+#### Bug Fixes
+
+- Fixed the issue where barge-in failed after a previous barge-in was incorrectly handled
+
+### Cognigy Live Agent
+
+**Released** August 4, 2026
+
+#### Improvements
+
+- Improved service stability and performance
+
+### Cognigy Insights
+
+**Released** August 4, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the `This Session Transcript was deleted` message was displayed instead of the conversation when a session was opened from a Contact Profile
+- Fixed the issue where very large conversation messages weren't recorded in Insights
+- Fixed the issue where Conversation Analyzer failed for OpenAI's and Microsoft Azure OpenAI's `gpt-5.6` models because an unsupported parameter was sent in the request to the LLM provider
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

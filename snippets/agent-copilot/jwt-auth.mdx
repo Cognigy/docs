@@ -1,0 +1,31 @@
+### Secure Access with JWT
+
+You can secure {deployment_type} access to Agent Copilot by passing a JWT in the URL. This approach ensures that only authenticated users can open the Agent Copilot workspace.
+
+```txt
+https://${AgentCopilotBaseUrl}/?URLToken=${URLToken}&auth={JWT}
+```
+
+Where `auth` is the JWT used for authentication.
+
+In the **Copilot** section of the Endpoint settings, you can control how the JWT is verified with the **Authentication** and **Accept Only JWT Requests**. The following methods support JWT authentication:
+
+- **Default (built-in)** — Agent Copilot handles the JWT authentication between the contact center platform and Cognigy.AI. Activate **Accept Only JWT Requests** in the [Endpoint settings](/agent-copilot/configure/copilot-section#parameters).
+- **Token Secret** — the contact center and Cognigy.AI share a 256-bit JWT secret. Configure it by selecting or creating a connection in the **Agent Copilot Authentication** field. The contact center platform must sign the JWT with the shared secret before passing it in the URL.
+- **Public Key** — enter one or more PEM-encoded public keys into the **Public Keys** field. The JWT must be signed with the corresponding private key. Multiple keys are supported to allow for key rotation.
+- **Key Store** — provide a JWKS URL in the **Key Store URL** field. The Agent Copilot backend retrieves the public key from the key store using the `kid` claim in the JWT header.
+
+The contact center integration must proceed as follows:
+
+1. Creates values for `userId` and `sessionId`.
+2. Uses `URLToken` from the respective Cognigy.AI Endpoint.
+3. Reads the signing key from an internal storage.
+4. Signs a JWT with a payload containing the `userId` and `sessionId`.
+
+The Agent Copilot backend proceeds as follows:
+
+1. Checks if the `auth` parameter is passed in the URL.
+2. If `auth` is passed, the value is treated as a JWT and the Agent Copilot backend verifies the JWT signature using the configured authentication method.
+3. During verification, Agent Copilot decodes the payload of the JWT to retrieve the `userId` and `sessionId` parameters, and reads `URLToken` from the URL query string.
+
+For more information about JWTs, read the [JWT documentation](https://www.jwt.io/introduction).
