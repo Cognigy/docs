@@ -1,0 +1,122 @@
+---
+title: "2026.18 (latest)"
+---
+
+<Danger>
+  Removals:
+
+  - The Step and Message explorers in Insights have been removed. Use the [Conversations](/insights/explorers/conversations) explorer or [OData Endpoint's Steps collection](/ai/agents/analyze/odata#steps) instead.
+  - The States tab in the **NLU** settings in the Flow editor and the Set State and Reset State Nodes have been removed. After the removal, existing Flows containing these Nodes will remain fully supported and continue to run as expected. As an alternative, you can use [Intent Conditions](/ai/platform-features/nlu/intents/conditions) for controlling Intent recognition.
+</Danger>
+
+<Warning>
+  Deprecations:
+  
+  - The Blind Mode Node has been deprecated. The removal is planned for March 2027. Use the [Data Redaction](/ai/platform-features/data-redaction) feature instead.
+  - The `gpt-5-nano` and `gpt-5-mini` models have been deprecated for Microsoft Azure OpenAI. Migrate to a more recent model, such as `gpt-5-4-nano` or `gpt-5-4-mini`.
+  - Use of the **Model** field for deployment selection in [Microsoft Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai) Responses API requests has been deprecated. The removal is planned for Cognigy 2027.3.0. Use the **Deployment Name** field instead by activating the **Use deployment name as model** parameter.
+  - The following parameters have been deprecated:
+    - **Maximum Completion Tokens** and **Temperature** in the [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent) Node
+    - **Sampling Method**, **Temperature**, **Top Percentage**, **Maximal Tokens**, **Frequency Penalty**, **Presence Penalty**, **Use Stops**, **Stops**, and **Seed** in the [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) Node
+    - **Temperature**, **Maximal Tokens**, **Presence Penalty**, **Frequency Penalty**, **Use Stops**, and **Stops** in the [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output) Node
+    - **Temperature** in the [LLM Entity Extract](/ai/agents/develop/node-reference/other-nodes/llm-entity-extract) Node
+    - **Temperature** in the **LLM Entity Extraction Options** of the [Question](/ai/agents/develop/node-reference/basic/question) Node
+
+    The removal of these parameters is planned for April 2027. For more information, refer to the [Deprecations and Removals](/release-notes/deprecations-and-removals) page.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.18.1
+
+### Cognigy Voice Gateway
+
+**Released** September 2, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in the Helm chart that affected new Voice Gateway installations
+
+## 2026.18.0
+
+### Cognigy
+
+**Released** September 1, 2026
+
+#### Features
+
+##### New Model by Google Gemini
+
+Added support for the `gemini-3.7-flash` model provided by [Google Gemini](/ai/agents/develop/gen-ai-and-llms/providers/google-gemini). This model reliably follows instructions and handles multi-step planning and tool calls.
+
+#### Improvements
+
+- Moved the Logs API to its [own service](/api-reference-logs/). The endpoint routes remain the same as those used by the Cognigy API, so no migration is required
+- Removed the OAuth2 authentication option as a supported API authentication method from the [Cognigy API](/api-reference/index)
+- Added automatic login via SSO when opening a Cognigy URL in [CXone-integrated installations](/ai/administer/installation/access-to-cognigy-ai#log-in-to-cognigy-via-nice-cxone-mpower)
+
+#### Bug Fixes
+
+- Fixed the issue where `GET /v2.0/playbooks/{playbookId}/runs` returned a 500 error when listing the runs of a Playbook that already had at least one run
+- Fixed the issue where task notifications showed the internal task identifier instead of the task name
+- Fixed the issue where updating connections on the Handover Provider page didn't make the save button clickable
+- Fixed the issue where the Custom URL tooltip for LLM and embedding connections displayed a deprecated Azure `/completions` path for the 2023 API version and didn't provide a Responses API example, causing connection errors for customers who followed the example verbatim
+- Fixed the issue where editing Gallery cards in a Say or Question Node broke the Node editor in some browsers, for example, Microsoft Edge
+- Fixed the issue where opening the Endpoint settings showed an error screen
+- Fixed the issue where transient Meta Graph API failures dropped WhatsApp messages, read receipts, or media
+- Fixed the issue where a Genesys Cloud Open Messaging conversation reopened and repeatedly reconnected the end user to a human agent after the handover had already ended
+- Fixed the issue where empty values for the Update Interval parameter in the Handover to Human Agent Node resulted in failed handovers
+- Fixed the issue where users were marked as disconnected in Live Agent while in the handover queue
+- Fixed the issue where scheduled simulations targeting a Snapshot crashed in Projects where the Project settings were left unchanged
+- Fixed the issue where data redaction didn't apply to structured log payloads, for example, Voice Gateway call transcripts. Now, structured log payloads are redacted, and a redaction failure discards the content
+- Fixed the issue where deactivating all Data Redaction settings for a Project displayed a misleading warning and fetched the settings on every message instead of caching them
+
+### Cognigy Voice Gateway
+
+**Released** September 1, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where activating only DTMF barge-in still let the caller's voice input interrupt the AI Agent's output after the first AI Agent output
+- Fixed the issue where transferring a call over an encrypted (TLS/SRTP) trunk connected successfully but produced no audio in either direction
+- Fixed the issue where a `Speech to text credentials have not been provisioned` alert was incorrectly displayed
+- Fixed the issue where changing Deepgram STT settings mid-call didn't take effect until a new session started. Now, Deepgram STT settings changes take effect immediately
+- Fixed the issue where AWS STT streaming connections remained open after calls ended, increasing CPU usage and causing calls to hang. Now, streams are always closed when a session ends
+- Fixed the issue where a Transfer Node using the Dial transfer type failed to connect calls when the target was a SIP address instead of a phone number, on trunks that require encrypted audio (SRTP)
+
+### Cognigy Webchat
+
+**Released** September 1, 2026
+
+#### Improvements
+
+- Updated Webchat v3 to [v3.50.0](https://github.com/Cognigy/Webchat/releases/tag/v3.50.0)
+
+### Cognigy Live Agent
+
+**Released** September 1, 2026
+
+#### Improvements
+
+- Improved service stability and performance
+
+### Cognigy Insights
+
+**Released** September 1, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Conversation Analyzer failed to analyze conversations when a reasoning model, for example, `gpt-5`, was configured
+- Fixed the issue where triggering the Analyze all new conversations option failed with a `502` error for date ranges longer than 30 days
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
