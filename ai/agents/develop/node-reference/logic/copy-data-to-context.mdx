@@ -1,0 +1,110 @@
+---
+title: Copy Data To Context
+keywords: ['copy data to context', 'input data', 'context object', 'data payload', 'session storage']
+---
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/logic/copy-data-to-context.webp" alt="Copy Data To Context Node configuration panel" style={{ width: 'auto' }} />
+  </Frame>
+
+## Description
+
+The Copy Data To Context Node copies the contents of the `input.data` object into the [Context](/ai/agents/develop/ai-agent-memory/context) object. The `input.data` object exists only for the current input. The Context object persists for the whole session, so the copy keeps the values available on later inputs.
+
+Use this Node when a channel or an earlier Node places structured data in the Input object. The Node stores every key at once, so you don't need a separate [Add To Context](/ai/agents/develop/node-reference/logic/add-to-context) Node for each key.
+
+The Node handles the data as follows:
+
+- Copies top-level keys from input.data to Context. Nested objects and arrays retain their structure.
+- Merges into Context. Keys that are absent from `input.data` remain unchanged.
+- Replaces existing values. For example, a new `orderId` value overwrites the stored value.
+- Resolves keys that contain a dot as nested paths. For example, the data key `user.id` writes to `context.user.id`.
+- Copies nothing when `input.data` is empty. The Flow continues with the next Node.
+
+<Note>
+  The `input.data` object contains the data submitted with the input. Common sources include:
+
+   - The `data` field of a [REST Endpoint](/ai/agents/deploy/endpoint-reference/rest) request.
+   - The data payload of a [Webchat](/ai/agents/deploy/endpoint-reference/webchat) message.
+   - The **Data Payload** parameter for [Webchat start behavior](/webchat/v3/configuration#start-behavior) or [Voice Gateway call events](/ai/agents/deploy/endpoint-reference/voice-gateway#specific-endpoint-settings).
+   - Any Node that writes to the [Input](/ai/agents/develop/ai-agent-memory/input) object.
+
+</Note>
+
+## Parameters
+
+This Node has no parameters. The Input object determines which keys the Node writes and which values it stores.
+
+## Examples
+
+### Copy Customer Details at Session Start
+
+To test copying customer details from `input.data` to Context in the Interaction Panel:
+
+1. Go to **Settings > Input**.
+2. Activate **Show data input**. The **JSON data payload** field appears under the message field on the **Test** tab.
+3. In the **Debug Mode** section, activate **Debug mode** to see a `Copied <key> to context` message for each copied key.
+4. Enter the following JSON in the **JSON data payload** field and send the message. You can send the payload without message text.
+
+```json
+{
+  "customerId": "C-88213",
+  "cart": { "items": 3, "total": 49.9 },
+  "locale": "en-US"
+}
+```
+
+5. Add a Copy Data To Context Node at the start of the Flow.
+6. Go to the **Context** tab and verify that `customerId`, `cart`, and `locale` were copied.
+7. You can reference these values later with CognigyScript, for example, `{{context.customerId}}` or `{{context.cart.total}}`.
+
+Context is scoped to the session. Reset the conversation between test runs to avoid values from previous runs.
+
+### Replace Existing Context Values
+
+The Copy Data To Context Node replaces existing Context values when `input.data` contains a key with the same name.
+
+For example, before the Node runs, the Context contains:
+
+```json
+{
+  "customerId": "C-12345",
+  "locale": "de-DE",
+  "cart": {
+    "items": 1,
+    "total": 19.9
+  }
+}
+```
+
+The current input contains the following `input.data`:
+
+```json
+{
+  "customerId": "C-88213",
+  "cart": {
+    "items": 3,
+    "total": 49.9
+  }
+}
+```
+
+After the Copy Data To Context Node runs, the Context contains:
+
+```json
+{
+  "customerId": "C-88213",
+  "locale": "de-DE",
+  "cart": {
+    "items": 3,
+    "total": 49.9
+  }
+}
+```
+
+The Node replaces `customerId` and `cart` with the values from `input.data`. The `locale` key remains unchanged because it is not included in the current `input.data`.
+
+## Alternatives
+
+- To store a single value under a key that you choose, use the [Add To Context](/ai/agents/develop/node-reference/logic/add-to-context) Node.
+- To store a found Slot instead of Input data, use the [Copy Slots to Context](/ai/agents/develop/node-reference/ai/copy-slots-to-context) Node.
