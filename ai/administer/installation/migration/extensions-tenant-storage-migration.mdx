@@ -1,0 +1,238 @@
+---
+title: Migrate Extensions Tenant Storage
+description: This migration guide helps you migrate the storage location for Extensions in Cognigy on-premises installations to use Cognigy Serverless.
+---
+
+Use this guide to migrate Extensions from legacy flat-directory storage to tenant-based storage in Cognigy Serverless. Tenant-based storage improves isolation and organization with subdirectories per tenant. This migration is required for installations upgrading to versions that use tenant-based Extension storage.
+
+You can migrate directly from the current [NFS layout](/ai/administer/installation/migration/nfs-migration) or the legacy `flow-modules` layout.
+
+## Prerequisites
+
+- Cognigy 2026.11.0 or later.
+- The `kubectl` utility is installed locally on a Linux or macOS client host. Windows client hosts aren't supported.
+- Helm v3.9 or later is installed on the client host.
+- The Kubernetes cluster meets general [Cognigy prerequisites](/ai/administer/installation/prerequisites), including hardware resources.
+- The runtime file share has been deployed.
+
+## Determine Migration Path
+
+<Warning>
+  For installations with a large number of Extensions, make sure you set `activeDeadlineSeconds` to at least `1209600`. Otherwise, the migration job might end before all Extensions are migrated.
+</Warning>
+
+<Note>
+For this migration guide, consider the namespace as `cognigy-ai` and the Helm chart file name as `cognigy-ai-values.yaml`. You need to adjust the following instructions to match your namespace and Helm chart file name.
+</Note>
+
+To determine the migration path to take, check the `migrateFS` section in your `cognigy-ai-values.yaml` file:
+
+- If `migrateFS.enabled` is set to `true`, your Extensions use the current [NFS layout](/ai/administer/installation/migration/nfs-migration). In this case, follow the instructions to [migrate from new NFS layout](#migrate-from-new-nfs-layout).
+- If `migrateFS` isn't present, or `migrateFS.enabled` is `false`, your Extensions are on the legacy `flow-modules` layout. In this case, follow the instructions to [migrate from the Flow modules layout](#migrate-from-flow-modules-layout).
+
+While the migration job is running, there is no downtime.
+
+## Migrate from New NFS Layout
+
+Use this path if you have already completed the [NFS migration](/ai/administer/installation/migration/nfs-migration). Your Extension files are on the `runtime` volume at `/app/extensions`.
+
+### Configure and Run Migration Job
+
+1. In the `cognigy-ai-values.yaml` file, add the following section at the root level:
+
+    ```yaml
+    jobCopyNfs:
+      enabled: true
+      mountFlowModules: false
+      mountFunctions: false
+      activeDeadlineSeconds: 1209600
+      extraEnvVars:
+          - name: COPY_EXTENSIONS_TENANT
+            value: 'true'
+          - name: EXTENSION_API_URL
+            value: 'http://service-resources.cognigy-ai.svc.cluster.local:8000/internal/v1'
+          - name: EXTENSIONS_OLD_PATH
+            value: '/app/extensions'
+          - name: EXTENSIONS_NEW_PATH
+            value: '/app/extensions/tenant'
+          - name: COPY_EXTENSIONS
+            value: 'false'
+          - name: COPY_FUNCTIONS
+            value: 'false'
+          - name: COPY_BATCH_SIZE
+            value: '10'
+          - name: API_MAX_RETRIES
+            value: '3'
+          - name: API_RETRY_DELAY
+            value: '1000'
+          - name: EXTENSIONS_PER_HOUR
+            value: '1000'
+      extraVolumeMounts:
+          - name: runtime
+            mountPath: /app/extensions
+            subPath: extensions
+    ```
+
+2. Deploy the Cognigy Helm chart. To avoid downgrading your installation, replace `<your-installed-version>` with your currently installed chart version:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+      --username <your-username> \
+      --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```
+
+The pods start running. You can monitor the job logs to verify successful completion with the following command:
+
+```bash
+kubectl -n cognigy-ai logs job/job-copy-nfs --follow
+```
+
+The job logs report progress per batch and a summary at the end, including counts of successful, failed, skipped, and orphaned extensions.
+
+### Deactivate Migration Job
+
+After the migration job is completed and all Extensions are located in the new tenant-based paths, follow these steps:
+
+1. Update the `cognigy-ai-values.yaml` file:
+
+    ```yaml
+    jobCopyNfs:
+      enabled: false
+    ```
+
+2. Deploy the Cognigy Helm chart. To avoid unintentionally downgrading your installation, replace `<your-installed-version>` with your currently installed chart version:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+      --username <your-username> \
+      --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```
+
+## Migrate from Flow Modules Layout
+
+Use this path if you haven't completed the [NFS migration](/ai/administer/installation/migration/nfs-migration). Your Extension files are on the `flow-modules` volume at `/app/flowModules`. This path migrates directly from the legacy layout to tenant-based storage in a single pass, without requiring the NFS migration first.
+
+### Activate NFS Feature Flags
+
+1. In the `cognigy-ai-values.yaml` file, add or update the following sections at the root level:
+
+    ```yaml
+    migrateFS:
+      enabled: true
+      finished: false
+
+    persistentVolumeClaim:
+      runtime:
+          enabled: true
+    ```
+
+<Note>
+Setting `migrateFS.finished` to `false` keeps the legacy `flow-modules` volume mounted. This approach allows Extensions to continue to work during the migration.
+</Note>
+
+2. Deploy the Cognigy Helm chart. To avoid unintentionally downgrading your installation, replace `<your-installed-version>` with your currently installed chart version:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+      --username <your-username> \
+      --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```
+
+3. Verify that all pods restart successfully before proceeding.
+
+### Configure and Run Migration Job
+
+1. In the `cognigy-ai-values.yaml` file, add the following section at the root level:
+
+    ```yaml
+    jobCopyNfs:
+      enabled: true
+      mountFlowModules: true
+      mountFunctions: false
+      activeDeadlineSeconds: 1209600
+      extraEnvVars:
+          - name: COPY_EXTENSIONS_TENANT
+            value: 'true'
+          - name: EXTENSION_API_URL
+            value: 'http://service-resources.cognigy-ai.svc.cluster.local:8000/internal/v1'
+          - name: EXTENSIONS_OLD_PATH
+            value: '/app/flowModules'
+          - name: EXTENSIONS_NEW_PATH
+            value: '/app/extensions/tenant'
+          - name: COPY_EXTENSIONS
+            value: 'false'
+          - name: COPY_FUNCTIONS
+            value: 'false'
+          - name: COPY_BATCH_SIZE
+            value: '10'
+          - name: API_MAX_RETRIES
+            value: '3'
+          - name: API_RETRY_DELAY
+            value: '1000'
+          - name: EXTENSIONS_PER_HOUR
+            value: '1000'
+      extraVolumeMounts:
+          - name: runtime
+            mountPath: /app/extensions
+            subPath: extensions
+    ```
+
+2. Deploy the Cognigy Helm chart with the following command:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+      --username <your-username> \
+      --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```
+
+The pods start running.
+
+### Monitor Migration Job
+
+Check the job logs to verify successful completion:
+
+```bash
+kubectl -n cognigy-ai logs job/job-copy-nfs --follow
+```
+
+The job logs report progress per batch and a summary at the end, including counts of successful, failed, skipped, and orphaned extensions.
+
+### Deactivate Migration Job and Finalize NFS Migration
+
+After the migration job is completed and all Extensions are located in the new tenant-based paths, follow these steps:
+
+1. Update the `cognigy-ai-values.yaml` file:
+
+    ```yaml
+    migrateFS:
+      enabled: true
+      finished: true
+
+    jobCopyNfs:
+      enabled: false
+    ```
+
+2. Deploy the Cognigy Helm chart with the following command:
+
+    ```bash
+    helm registry login cognigy.azurecr.io \
+      --username <your-username> \
+      --password <your-password>
+
+    helm upgrade --install --namespace cognigy-ai cognigy-ai oci://cognigy.azurecr.io/helm/cognigy.ai --version <your-installed-version> --values cognigy-ai-values.yaml
+    ```
+
+After redeployment, the legacy `flow-modules` volume is no longer mounted. Within seven days, remove the legacy `flowModules` and `functions` persistence sections from your Helm values and delete the released volumes, following the [post-migration cleanup steps](/ai/administer/installation/migration/nfs-migration#post-migration-steps) in the NFS migration guide.
+
+## More Information
+
+- [Migration Guide for Network File Systems](/ai/administer/installation/migration/nfs-migration)
+- [Install Cognigy Serverless](/ai/administer/installation/serverless-installation)

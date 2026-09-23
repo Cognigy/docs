@@ -1,0 +1,136 @@
+---
+title: "2026.19 (latest)"
+---
+
+<Danger>
+  The ElevenLabs Monolingual v1 and Multilingual v1 models have been removed from Voice Gateway TTS. Migrate to the Multilingual v2 model.
+</Danger>
+
+<Warning>
+  The ElevenLabs Turbo v2 and Turbo v2.5 models have been deprecated for Voice Gateway TTS. Migrate to the Flash v2 and Flash v2.5 models.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.19.2
+
+### Cognigy
+
+**Released** September 18, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Voice Gateway requests used a stored account API key instead of a fresh login token
+
+## 2026.19.1
+
+### Cognigy Insights
+
+**Released** September 16, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Goal analytics events weren't stored after upgrading to 2026.19.0 in some installations. Goal analytics events are recorded again and appear in Insights reports
+
+## 2026.19.0
+
+### Cognigy
+
+**Released** September 15, 2026
+
+#### Features
+
+##### Claude Opus 5: Smarter, More Autonomous AI
+
+Added support for [`claude-opus-5`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature), Anthropic's most powerful model, with strong performance on complex instructions, multi-step planning, and tool calls. Due to its higher latency and per-token cost, we recommend using `claude-opus-5` for complex, non-real-time Flow steps rather than for the conversation itself.
+
+#### Improvements
+
+- Added the [`GET /new/v2.1/projects/{projectId}/logs/count`](/api-reference-logs/logs-v21/count-log-entries-by-level) method and the `sessionId` and `lastTimeWindow` parameters to the [`GET /v2.1/projects/{projectId}/logs/tail`](/api-reference-logs/logs-v21/get-the-latest-log-entries) method. These parameters let you filter log entries to a single session or to the last 1, 6, or 12 hours. The new method returns the number of log entries per log level and includes the new parameters
+- Increased the top k maximum value from 10 to 15 for the [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output) Node
+- Added the capability to map Custom Attributes from the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node to [NiCE CXone](/ai/escalate/handover-reference/nice-cxone/overview) custom fields, so human agents can see them in the Agent Workspace's View Details panel or fetch them with a CC Custom Fields card in a Studio script
+- Added [Project- and organization-level rate limiting](/ai/agents/analyze/odata#request-limits) to the Cognigy OData endpoint to prevent heavy usage from impacting other OData API users
+
+#### Bug Fixes
+
+- Fixed the issue where `gpt-5.1`, `gpt-5.2`, `gpt-5.4`, `gpt-5.4-mini`, `gpt-5.4-nano`, `gpt-5.5`, and `gpt-5-6-sol`/`gpt-5-6-terra`/`gpt-5-6-luna` did not receive a default `reasoning_effort` value in the Responses API
+- Fixed the issue where an explicit `top_p` override in Custom Model Options failed when the new default was applied
+- Fixed the issue where fallback activation emails weren't sent for Snapshot runs or contained incorrect LLM links
+- Fixed the issue where conversations stopped responding after their Snapshot was deleted
+- Fixed the issue where binary Extension files became corrupted and Extension icons appeared broken after Snapshot upload or restore
+- Fixed the issues with transcript request rate limiting, capacity tracking, and API error responses
+- Fixed the issue where transcript-generation failures caused incorrect Project capacity reporting
+- Fixed an issue where OData v2.4 queries using datetime filters with an hour of 20:00 UTC returned a `500` error
+- Fixed an issue where overly complex OData queries disrupted the service. Now, invalid or oversized queries return a `400` error
+- Fixed the issue where the Handover Provider field in the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent), [Check Agent Availability](/ai/agents/develop/node-reference/service/check-agent-availability), and Handover to Human Agent Tool Nodes defaulted to the legacy provider. This caused provider-specific settings to display even when no provider had been chosen. Now, no provider is selected by default, and provider-specific settings stay hidden until you select one
+
+### Cognigy Voice Gateway
+
+**Released** September 15, 2026
+
+#### Features
+
+##### New ElevenLabs Models
+
+Added support for [new ElevenLabs models](/voice-gateway/references/tts-and-stt-vendors#elevenlabs):
+
+- `Eleven v3 (alpha)` — provides highly expressive, life-like speech across 70+ languages
+- `Flash v2` and `Flash v2.5` — offer ultra-low latency (as low as ~75 ms) for real-time, conversational Voice Gateway calls
+
+#### Improvements
+
+- Added the None option to the Alternative Language list for [Recognize Language](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details#recognizer-stt) in the Set Session Config Node, letting you reset the alternative language
+
+#### Bug Fixes
+
+- Fixed the issue where the Login with SSO button was hidden for Voice Gateway users in NICE CXone-integrated environments
+
+### xApps
+
+**Released** September 15, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where xApp form submissions processed multiple times or reappeared after reconnecting. Now, xApp sessions handle submissions and session termination more reliably, with a [new Session Ended screen](/xApps/overview#session-ended-screen) when the session is no longer active
+
+### Cognigy Live Agent
+
+**Released** September 15, 2026
+
+#### Improvements
+
+- Added automatic updates to conversation activity times every 30 seconds, so users always see the latest activity without hovering
+- Added a check to determine whether a human agent is actively viewing a conversation, preventing it from being automatically resolved or abandoned
+
+### Cognigy AI Ops Center
+
+#### Bug Fixes
+
+- Fixed the issue where the Custom Flow Nodes (Extensions) Execution and Extension Processing Time charts showed missing or incorrect data for organizations using in-process or serverless Extensions
+
+### Cognigy Insights
+
+**Released** September 15, 2026
+
+#### Improvements
+
+- Added audit-trail entries to Audit Events in the Admin Center for Insights analytics updates and deletions, as well as conversation transcript deletions. The entries include the acting user, organization, project, and session ID, where applicable
+- Improved Conversations explorer performance on large date ranges, reducing report times from minutes to under a second in eligible cases
+- Updated the list of [models unsupported by Conversation Analyzer](/insights/conversation-analyzer/overview#restrictions) to include the latest Claude, Gemini, and AWS Bedrock Nova models
+
+#### Bug Fixes
+
+- Fixed the issue where Conversation Analyzer failed after a single malformed LLM response. Now, the analysis automatically retries once before failing
+- Fixed the issue where the Engagement report showed only positive ratings with direct PostgreSQL reporting. Now, the report displays both positive and negative ratings
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy.AI, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

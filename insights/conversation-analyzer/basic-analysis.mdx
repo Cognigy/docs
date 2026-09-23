@@ -1,0 +1,84 @@
+---
+title: Basic Analysis
+keywords: ['conversation analyzer', 'Basic Analysis', 'customer sentiment', 'containment', 'ai behavior', 'agent experience', 'cognigy insights']
+description: Learn how the Basic Analysis dashboard in Conversation Analyzer scores conversations against predefined criteria.
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<a href="/release-notes/2026.14"><Badge className="version-badge" color="purple">Updated in 2026.14 (beta)</Badge></a>
+
+<AiBeta/>
+
+_Basic Analysis_ scores conversations against predefined criteria, grouped into four sets. Use this dashboard to monitor customer sentiment, containment rates, AI behavior quality, and conversational experience quality across your conversations.
+
+<Frame>
+      <img src="/_assets/insights/conversation-analyzer/basic-analysis.webp" alt="Basic Analysis Dashboard Overview" style={{ width: 'auto' }} />
+</Frame>
+
+## When to Use Basic Analysis
+
+- **After each analysis run** — review how your AI Agent performs against quality and containment benchmarks.
+- **When escalation rates increase** — identify the top reasons customers are handed over to human agents.
+- **After updating your AI Agent** — verify that metrics such as Instruction Following and Tool Usage have improved.
+- **During periodic QA reviews** — spot drops in sentiment, empathy, or resolution rate that require attention.
+
+## Restrictions
+
+- Basic Analysis uses predefined criteria. To evaluate custom business-specific behaviors, use [Custom Evaluation](/insights/conversation-analyzer/custom-evaluation).
+
+## Configuration
+
+To deactivate specific criteria:
+
+1. In the left-side menu of the Insights interface, go to **Configuration**.
+2. Go to the **Basic Analysis Criteria** section.
+3. Deactivate criteria sets you don't want to include. Save changes.
+
+<Frame>
+  <img src="/_assets/insights/conversation-analyzer/basic-analysis-criteria.webp" alt="Basic Analysis Criteria Config" style={{ width: 'auto' }} />
+</Frame>
+
+## Criteria and Charts
+
+### Customer Sentiment
+
+Analyzes the emotional state of the customer across the conversation.
+
+| Criterion | Description |
+|---|---|
+| Overall Sentiment | Shows the overall sentiment of customer conversations. |
+| Sentiment Trend | Shows how customer sentiment changes over time. |
+| Emotional Intensity | Shows the emotional intensity of customer sentiment. Helps identify conversations with strong emotions that may require special attention. |
+| Escalation Risk | Shows the escalation risk of customer conversations. Helps identify conversations that may require proactive intervention. |
+
+**Example:** Analysis of a credit card dispute AI Agent shows 38% of conversations have high Emotional Intensity, and Escalation Risk is elevated where customers have contacted support more than twice in the same week. The team uses this to prioritize proactive callbacks.
+
+### Containment & Success
+
+Measures how often the AI Agent resolves customer issues without handover to a human agent.
+
+| Criterion | Description |
+|---|---|
+| Resolution Rate | Shows the percentage of conversations successfully resolved by the AI Agent without escalation. |
+| Escalations Triggered | Shows the percentage of conversations escalated to human agents. |
+| Escalation Reasons | Shows the percentage of the top reasons for escalation. |
+
+**Example:** A loan inquiry AI Agent shows a 71% resolution rate. Escalation Reasons reveal that 48% of escalations are triggered by human requests, suggesting customers frequently prefer agent assistance for complex financial topics.
+
+### AI Behaviour Quality
+
+Evaluates how well the AI Agent followed its instructions and used tools correctly.
+
+| Criterion | Description |
+|---|---|
+| Instruction Following | Shows how well the AI Agent follows the provided instructions in conversations. |
+| Tool Usage Correctness | Shows how correctly the AI Agent uses tools in conversations, based on the transcript. The Conversation Analyzer doesn't access underlying tool specifications or actual API responses. |
+
+**Example:** Instruction Following drops to 6.1 out of 10 after a policy update. The team identifies that the AI Agent is still citing outdated interest rates and updates the knowledge base.
+
+### AI Agent Experience Quality
+
+Assesses the conversational quality of the AI Agent. Politeness, Empathy, Professional Tone, and Response Clarity metrics are displayed in a radar chart.
+
+**Example:** A mortgage advisor AI Agent scores high on Politeness (8.8) and Professional Tone (9.1), but low on Empathy (6.1). Flagged conversations show the AI Agent rarely acknowledges customer frustration before moving to problem-solving.
