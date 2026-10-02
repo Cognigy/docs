@@ -1,0 +1,74 @@
+---
+title: 'Copilot: Next Action Tile'
+keywords: ['agent copilot', 'next action tile', 'conversation guidance', 'knowledge assist', 'copilot widget']
+---
+
+import AiKnowledgeAiTags from '/snippets/ai/knowledge-ai/tags.mdx'
+import AiNodesForwarder from '/snippets/ai/nodes/forwarder.mdx'
+
+<a href="/release-notes/4.72"><Badge className="version-badge" color="blue">Updated in 4.72</Badge></a>
+
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/agent-copilot/next-action-tile.png" alt="Copilot Next Action Tile Node configuration panel" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+This Node is designed to determine the appropriate next step or action in a conversation or process based on the user's input or the current context.
+This Node helps guide a conversation flow and ensures that the system responds effectively to user requests or queries.
+
+## Parameters
+
+<AccordionGroup>
+  <Accordion title="General Settings">
+    | Parameter       | Type          | Description                                                                                                                                                                                                                  |
+    |-----------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Tile ID         | CognigyScript | The ID created in the Agent Copilot configuration.                                                                                                                                                                              |
+    | Type            | Select        | Choose from the following types: <ul><li>**Text** — the text you want to display in the next action widget.</li><li>**Knowledge Assist** — the text from the Knowledge Store to display in the next action widget.</li></ul> |
+    | Text            | CognigyScript | Enter the text you want to display in the next action widget.                                                                                                                                                                |
+    | Knowledge Store | Select        | Choose a store from the list to allow the Node to retrieve the data.                                                                                                                                                         |
+  </Accordion>
+
+  <Accordion title="Enable Copy to Clipboard Button">
+    <AiNodesForwarder/>
+  </Accordion>
+
+  <Accordion title="Search Settings">
+    | Parameter                 | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+    |---------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Context-Aware Search      | Select        | Considering the transcript's context for the search. It allows an AI Agent to answer follow-up questions. You can select one of the following options:<ul><li>**On** — is the default option. When this parameter is enabled, it affects tokenization costs, which impact the amount of memory, computational power, and overall expenses needed for running an OpenAI or Azure OpenAI model.</li><li>**Off** — the setting is turned off.</li></ul> |
+    | Transcript Steps          | Indicator     | Number of prior transcript steps to use in a context-aware search. This parameter is active when the Context-Aware Search setting is enabled.                                                                                                                                                                                                                                                                                                        |
+    | Where to store the result | Select        | The storage for the search results. Select a storage:<ul><li>**default** — the content will be stored in the Input object (`input.knowledgeSearch`).</li><li>**Input** — the content will be stored in the Input object.</li><li>**Context** — the content will be stored in the Context.</li></ul>                                                                                                                                                  |
+    | String to search for      | CognigyScript | The string to search for in the Knowledge Store. A default value is stored in `input.text`.                                                                                                                                                                                                                                                                                                                                                          |
+    | Source Tags               | CognigyScript | The tags serve to refine the scope of your knowledge search, allowing you to include only the most pertinent sections of the knowledge base and, as a result, improve the accuracy of search outputs. <br/><br/> Before specifying tags, ensure that they were provided during the creation of the Knowledge Sources. Add tags by specifying each tag separately and pressing **enter**. The maximum number of tags is 5.                              |
+
+    <AiKnowledgeAiTags/>
+  </Accordion>
+
+  <Accordion title="Error Handling">
+    | Parameter                      | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                              |
+    |--------------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Select Error Handling Approach | List | Sets how Flow execution behaves if the AI Agent throws an error. You can select one of the following options:<ul><li>**Stop Flow Execution** — terminates the current Flow execution.</li><li>**Continue Flow Execution** — allows the Flow to continue executing, bypassing the error and proceeding to the next steps.</li><li>**Go to Node** — redirects Flow execution to a specific Node, which can be useful for error recovery or customized error handling.</li></ul> |
+    | Error Message (optional)       | Text   | This parameter appears when you select **Continue Flow Execution** in **Select Error Handling Approach**. Add a message to output if the AI Agent fails.                                                                                                                                                                                                                                                                                                                                                                               |
+    | Select Flow                    | List | This parameter appears when you select **Go to Node** in **Select Error Handling Approach**. Sets the Flow that includes the Node to which you want to redirect Flow execution.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Select Node                    | List | This parameter appears when **Go to Node** in **Select Error Handling Approach** is selected. Sets the Node to which you want to redirect Flow execution.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+  </Accordion>
+</AccordionGroup>
+
+## Use Case
+
+This Node helps the human agent by providing guidance and predefined instructions based on the user's question. 
+For instance, if a user asks about the latest release version, the AI Agent can give them both the answer and links to important updates in that release.
+
+<Frame>
+  <img src="/_assets/ai/develop/node-reference/agent-copilot/next-action-tile-example.png" alt="Next Action Tile widget with guidance and links in Agent Copilot" style={{ width: 'auto' }} />
+</Frame>
+
+## More Information
+
+- [Copilot: Transcript Tile](/ai/agents/develop/node-reference/agent-copilot/transcript-tile)
+- [Copilot: Sentiment Tile Node](/ai/agents/develop/node-reference/agent-copilot/sentiment-tile)
+- [Copilot: Identity Tile](/ai/agents/develop/node-reference/agent-copilot/identity-tile)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Agent Copilot](/agent-copilot/overview)

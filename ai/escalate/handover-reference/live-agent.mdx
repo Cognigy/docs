@@ -1,0 +1,76 @@
+---
+title: Live Agent
+sidebarTitle: Cognigy Live Agent
+keywords: ['contact centers', 'cognigy live agent', 'handover providers']
+seo:
+  metatags:
+    description: >-
+      The Live Agent handover provider bridges Cognigy with the native
+      contact center Cognigy Live Agent, enabling end users to connect with human
+      agents working within the Cognigy Live Agent contact center.
+---
+
+<a href="/release-notes/4.97"><Badge className="version-badge" color="blue">Updated in 4.97</Badge></a>
+
+
+The Live Agent handover provider bridges Cognigy with the native contact center [Cognigy Live Agent](/live-agent/index),
+enabling end users to connect with human agents working within the Cognigy Live Agent contact center.
+
+## Key Benefits
+
+- **Deep Cognigy Integration**. Offers superior compatibility with Cognigy compared to other handover services, creating a cohesive ecosystem for collaboration between AI Agents and human agents.
+- **Rapid Deployment**. Allows you to configure a Live Agent Inbox within a Cognigy Project quickly, reducing setup time and technical overhead.
+- **AI-Powered Support for Human Agents**. Features an AI Agent that helps human agents in real time, improving response quality and reducing agent workload.
+- **User-Friendly Administration**. Offers an intuitive interface for creating and managing accounts, as well as adding and overseeing human agents with minimal complexity.
+
+## Prerequisites
+
+- [Set up Live Agent for your organization](/live-agent/getting-started/live-agent-setup/live-agent-setup-org).
+- [Create an Inbox for your Live Agent account](/live-agent/getting-started/live-agent-setup/live-agent-setup-inbox).
+
+## Get Started with Cognigy Live Agent
+
+To get started with Cognigy Live Agent, go to the [Getting Started](/live-agent/getting-started/overview) guide.
+
+## Configuration on the Cognigy Side
+
+<AccordionGroup>
+  <Accordion title="1. Create a Handover Provider">
+    1. In the left-side menu of the Cognigy interface, select **Deploy > Handover Providers**.
+    2. Click **+ New Handover Provider** and select **Live Agent**.
+    3. Enter a unique name and click **Save**.
+    4. _(Optional)_ Activate **Handover to pre-configured Live Agent account** to transfer conversations to the Live Agent account mapped to your Cognigy organization. Otherwise, deactivate this option and fill in the following fields:
+
+        - **Base URL** — the Live Agent installation URL, extended by `/api/v1`. For example, `https://liveagent-trial.cognigy.ai/api/v1`. See [Handover Configuration](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-endpoint#handover-configuration).
+        - **Account ID** — the account ID that you find in Live Agent. See [Find an Account ID](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-endpoint#find-an-account-id).
+        - **Live Agent Authentication** — select a Live Agent connection, or create one by clicking ![add Live Agent connection](/_assets/icons/plus-simple.svg) and entering the API Key that you find in Live Agent. See [Find API Keys](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-endpoint#find-api-keys).
+
+  </Accordion>
+  <Accordion title="2. Add a Handover to Human Agent Node">
+    1. In the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node, select **Live Agent** in the **Handover Provider** list. The Live Agent-specific parameters appear.
+    2. In **Live Agent Inbox Id**, enter the Inbox ID of [the Inbox you created for your Live Agent account](#prerequisites).
+    3. (Optional) Configure the following:
+
+        - **Skills** — enter a list of skills that should be used to filter the available agents. For example, `technical support, billing`.
+        - **Languages** — enter a list of languages that should be used to filter the available agents. For example, `english, spanish`.
+        - **Priority** — select a priority for the conversation from the list. For example, `Urgent`.
+        - **Get Queue Position** — activate to allow the system to retrieve the end user's current queue position. This setting is inactive by default.
+        - **Update Interval (Queue Position)** — set the interval, in seconds, for how often to receive updates on the queue status. This setting appears if **Get Queue Position** is selected.
+        - **Get Estimated Wait Time** — activate to retrieve the estimated wait time for the end user. This setting is inactive by default.
+        - **Update Interval (Estimated Wait Time)** — set the interval, in seconds, for how often to receive updates on estimated wait time. This setting appears if **Get Estimated Wait Time** is selected.
+        - **Alternative Update** — activate alternative update options for when certain conditions are met. This setting is inactive by default.
+        - **Maximum Queue Position** — set the threshold for the maximum queue position. If this threshold is reached, the alternative text is sent. This setting appears if **Alternative Update** is selected.
+        - **Maximum Estimated Wait Time** — set the maximum estimated wait time in milliseconds. If this duration is exceeded, the alternative text is sent. This setting appears if **Alternative Update** is selected.
+        - **Alternative Text** — set the message to send when either the maximum queue position or maximum wait time is reached. This setting appears if **Alternative Update** is selected.
+        - **Enable User Connects Message** — notify human agents when an end user reconnects to the chat. Enabled by default. When enabled, the message `User joined the conversation` appears in the chat as soon as the end user returns to the chat tab after opening a new URL on the same tab.
+        - **Enable User Disconnects Message** — notify human agents when an end user disconnects from the chat. Enabled by default. When enabled, the message `User left the conversation` appears as soon as the end user closes the chat tab or switches to a new URL in the current tab.
+    4. Click **Save**.
+
+    For more information on queue position and estimated wait time settings, see [Real-Time Queue Notifications](/ai/escalate/handover-features/real-time-queue-notifications).
+  </Accordion>
+</AccordionGroup>
+
+## More Information
+
+- [All Handover Providers](/ai/escalate/handover-reference/overview)
+- [Handovers](/ai/escalate/handovers)

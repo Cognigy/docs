@@ -1,0 +1,288 @@
+---
+title: "LLM Prompt"
+keywords: ['new llm prompt node', 'llm prompt node']
+description: "The Cognigy LLM Prompt Node integrates Generative AI into your AI Agent to generate answers. This Node supports tools, including MCP tools, image recognition, and conversation transcripts."
+---
+
+import Tools from '/snippets/ai/tools.mdx';
+import ToolsExamples from '/snippets/ai/tools-examples.mdx';
+import ToolsParameterLimitation from '/snippets/ai/tools-parameter-limitation.mdx';
+
+<a href="/release-notes/2026.20"><Badge className="version-badge" color="blue">Updated in 2026.20.0</Badge></a>
+
+<Frame>
+  <img
+    src="/_assets/ai/develop/node-reference/services/llm-prompt.png"
+    alt="LLM Prompt Node" style={{ width: 'auto' }} />
+</Frame>
+
+## Description
+
+<Warning>
+As of Cognigy 2026.18.0, the following parameters are deprecated:
+
+- **Sampling Method**
+- **Temperature**
+- **Top Percentage**
+- **Maximal Tokens**
+- **Frequency Penalty**
+- **Presence Penalty**
+- **Use Stops**
+- **Stops**
+- **Seed**
+
+The removal is planned for April 2027. For models that don't support these parameters, activate the **Ignore deprecated parameters** toggle to exclude them from the request to the LLM provider. Otherwise, the request to the LLM provider might fail. If you plan to use these parameters, migrate them to the [Custom Options section](#custom-options) and activate the **Ignore deprecated parameters** toggle. Otherwise, Custom Options might not override them for every provider and model combination.
+
+For example, OpenAI models such as `gpt-5`, `gpt-5.1`, and `gpt-5.2` don't support these parameters. Similar models from other LLM providers might also not support these parameters. Check your LLM provider's documentation for model-specific support.
+</Warning>
+
+The LLM Prompt Node lets you configure LLMs for your AI Agent and their system prompt to generate both text and structured content. With this Node, you can also:
+
+- Add [tools](#tools) for specific use cases.
+- Activate [image handling](#image-handling).
+- Set advanced LLM request options.
+
+Additionally, you can refer to your AI Agent configuration using the [Load AI Agent Node](/ai/agents/develop/node-reference/ai/load-ai-agent).
+
+<Tip>
+
+In comparison to the [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent), the LLM Prompt Node doesn't include the [AI Agent persona](/ai/agents/develop/persona). If you want to have centralized control over the personality, tone, and voice of different AI Agents, use different AI Agent Nodes with the same persona.
+
+</Tip>
+
+## Prerequisites
+
+- Configure an LLM provider in the [Project settings](/ai/agents/develop/gen-ai-and-llms/generative-ai).
+
+## Limitations
+
+<ToolsParameterLimitation />
+
+## Parameters
+
+### Parent Node
+
+<AccordionGroup>
+  <Accordion title="Large Language Model">
+    The preselected **Default** model is the model configured in the **Generative AI Settings** section of the [Project settings](/ai/administer/access/project-settings#generative-ai-settings).
+
+    To use another model in this Node, select a different one from the list or override the default model with the [Custom Options parameter](#custom-options).
+
+  </Accordion>
+  <Accordion title="System Prompt">
+
+    The system prompt is the message sent to the LLM to guide its responses. This parameter supports CognigyScript, allowing dynamic content and logic in the prompt. This prompt can work either as the input for completion tasks or as the system message in chat-based interactions, setting context and behavior for the AI Agent.
+
+    Additionally, you can inject the recent conversation into the **System Prompt** field by using these tags:
+
+    - `@cognigyRecentConversation` — injects a string that contains up to the 10 most recent conversation turns, for example:
+       ```text
+       Bot: agentOutput1
+       User: userOutput1
+       Bot: agentOutput2
+       User: userOutput2
+       ```
+    - `@cognigyRecentUserInputs` — injects a string that contains up to the 10 most recent user outputs, for example:
+
+       ```text
+       User: userOutput1
+       User: userOutput2
+       ```
+
+    To access only the last user input, enter `{{ci.text}}` or the **Text** token in the **System Prompt** field.
+
+    When you use tags, add a line break before and after the tag, for example:
+
+    ```text
+    A user had a conversation with an AI Agent. The conversation history so far is:
+    @cognigyRecentConversation
+
+    Describe the user sentiment in one very short line.
+    ```
+
+    Both tags include an optional limit parameter, which is appended to the tag, for example:
+
+    ```typescript
+    @cognigyRecentConversation:3 // returns the last 3 turns of the conversation.
+    @cognigyRecentUserInputs:2 // returns the last 2 user inputs.
+    ```
+
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter              | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    |------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Ignore deprecated parameters | Toggle | Excludes the deprecated **Sampling Method**, **Temperature**, **Top Percentage**, **Maximal Tokens**, **Frequency Penalty**, **Presence Penalty**, **Use Stops**, **Stops**, and **Seed** parameters from the request to the LLM provider. Activate this toggle if your model doesn't support these parameters. If you activate this toggle for a model that supports them, the model uses default values. |
+    | Maximal Tokens         | Slider | Sets the maximum number of tokens to generate in the LLM response.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    | Use Single Prompt Mode | Toggle | Sends a prompt from the **System Prompt** parameter to the model without any conversation context. The **Use Single Prompt Mode** parameter is deactivated by default and doesn't support multi-turn conversations, making it suitable for simple, one-off completions. When the parameter is activated, the **System Prompt** parameter must not be empty. Empty prompts return no data and might produce empty responses or errors depending on the model you use.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+    | Transcript Turns       | Slider | Sets the number of previous conversation turns included in the LLM request. A conversation turn includes a user input and the AI Agent’s response. The default value is `50`.<br/>This parameter affects only past turns. The current turn is always included and contains the user input, LLM processing, tool calls, tool results, and multi-step tool workflows.<br/>For example, setting **Transcript Turns** to `0` excludes all previous turns, while the current turn is still fully included. |
+    | Response Format        | List   | Sets the format for the model's output result from the following options:<ul><li>**None** — no response format is specified. With this option, the provider's built-in response format is used. This option is selected by default.</li><li>**Text** — the model returns messages in text format.</li><li>**JSON Object** — the model returns messages in JSON format. To use this option, instruct the model to generate JSON via a system or user message in the **Instruction (System Message/Prompt)** field. For example, `Take the user message and return it as JSON in the following format {"message": "THE_MESSAGE"}`. For Amazon Bedrock and Anthropic models, you can [set the JSON structure](#custom-options) with the `output_config` parameter in **Custom Options**. This parameter might not be supported by all LLMs. For more information, refer to the LLM provider's API documentation.</li></ul> |
+    | Timeout                | Number | Sets the maximum number of milliseconds to wait for a response from the LLM provider.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+    | Sampling Method        | List   | Sets the sampling method from the following options:<ul><li>**Temperature** — determines the level of randomness in the generated text. A higher temperature allows for more diverse and creative outputs, while a lower temperature leads to more predictable outputs consistent with the training data.</li><li>**Top Percentage** — determines the percentage of the most probable outputs for generation. A lower top percentage limits the most probable outputs and leads to more consistent outputs.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+    | Temperature            | Slider | Defines the sampling temperature, which ranges between 0 and 1. Higher values, such as 0.8, make the output more random, while lower values, such as 0.2, make it more focused and deterministic.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Top Percentage         | Slider | Controls the Top-p (nucleus) sampling, ranging from 0 to 1. Higher values allow more diverse word choices, while lower values make the output more focused. For example, 0.9 means the model selects from the smallest set of words with a combined probability of 90%.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+    | Presence Penalty       | Slider | Controls whether the LLM penalizes already generated tokens. You can set a number between -2.0 and 2.0. Positive values prevent the LLM from outputting tokens that have already been generated and increase the likelihood that the LLM will refer to new topics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Frequency Penalty      | Slider | Controls whether the LLM penalizes tokens based on how often they have already been generated. You can set a number between -2.0 and 2.0. Positive values reduce the likelihood of the LLM repeating the same words or phrases, encouraging more diverse and varied output.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+    | Use Stops              | Toggle | Sets whether to use a list of strings as stop words to let the LLM know where the sentence stops.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+    | Stops                  | Text   | Defines up to 4 strings to stop the API from generating further tokens. The returned text doesn't contain the provided strings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    | Seed                   | Number | Ensures consistent output when the same LLM Prompt Node is referenced multiple times. Specify any integer number, for example, `123`. The number in the **Seed** field and the prompt in the **Instruction (System Message/Prompt)** field must remain unchanged during subsequent references to the Node.<br/>In OpenAI, this parameter is in [Beta](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and is supported only by [certain models](https://cookbook.openai.com/examples/reproducible_outputs_with_the_seed_parameter).                                                                                                                                                                                                                                                                                                        |
+    | Include Rich Media Context | Toggle | Controls whether the text from the [Textual Description](/ai/agents/develop/node-reference/basic/say#output-type) field in Say, Question, and Optional Questions Nodes is added to the AI Agent's prompt. This text provides AI Agents with additional information, improving their responses.<br/><br/>If you have filled in a **Textual Description** field in other Nodes, this text is added to the prompt as context for rich media, such as Text with Quick Replies. If the **Textual Description** field is empty, the button titles and alt text from the rich media are added to the prompt. By default, the **Include Rich Media Context** parameter is active. When this parameter is inactive, nothing related to the rich media is added to the prompt.<br/><br/>**Examples**:<ul><li>If **Textual Description** is filled in:<p>Textual Description: `Select your preferred delivery option: Standard Delivery or Express Delivery`.</p><p>Quick Replies buttons: `Standard Delivery`, `Express Delivery`.</p><p>Context added to the prompt: `Select your preferred delivery option: Standard Delivery or Express Delivery`.</p></li><li>If **Textual Description** is empty:<p>Textual Description: empty.</p><p>Quick Replies buttons: `Standard Delivery`, `Express Delivery`.</p><p>Context added to the prompt: `Standard Delivery`, `Express Delivery`.</p></li><li>If **Include Rich Media Context** is inactive:<p>No information related to the rich media is added to the prompt.</p></li></ul> |
+
+  </Accordion>
+
+  <Accordion title="Storage & Streaming Options">
+
+    | Parameter                     | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+    |-------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | How to handle the result      | List        | Determines how to handle the prompt result:<ul><li>**Store in Input** — stores the result in the Input object. To print the prompt result, use the LLM Prompt Result token or `{{ci.promptResult.result}}` in the Say Node, or activate the **Output result immediately** option.</li><li>**Store in Context** — stores the result in the Context object. To print the prompt result, use `{{cc.promptResult.result}}` in the Say Node or activate the **Output result immediately** option.</li><li>**Stream to Output** — streams the result directly into the output. This means that the model provides outputs directly into the conversation chat as soon as Cognigy matches a Stream Buffer Flush Token, and you don't need to use the LLM Prompt Result token and Say Node. By default, this result won't be stored in either the Input or the Context. You can change this behavior by activating the **Store Copy in Input** option. Streaming might not be supported by all [Cognigy LLM Prompt Node](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) providers, such as Google<sup>[1](#footnote1)</sup>. If streaming isn't supported, enabling the **Store Copy in Input** option saves the result to the Input object.</li></ul> |
+    | Input Key to store Result     | CognigyScript | This parameter appears when **Store in Input** is selected or when **Stream to Output** is selected and **Store Copy in Input** is activated. Enter a JSON key under which to store the result object in the Input object. The default key is `promptResult`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+    | Context Key to store Result   | CognigyScript | This parameter appears when **Store in Context** is selected. Enter a JSON key under which to store the result object in the Context object. The default key is `promptResult`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+    | Stream Buffer Flush Tokens    | Text Array    | This parameter appears when **Stream to Output** is selected. Defines tokens that trigger the stream buffer to print the output to the user. The tokens can be punctuation marks or symbols, such as `\n`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+    | Stream Buffer Flush Overrides | Text Array    | This parameter appears when **Stream to Output** is selected. Sets regular expressions (without leading or trailing slashes) to prevent stream buffer flushing in specific cases. A trailing `$` is automatically added to match patterns at the end of the buffer. For example, `\d+\.` checks for a number followed by a dot at the end of the string.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+    | Output result immediately     | Toggle        | This parameter appears when you select either **Store in Input** or **Store in Context**. Outputs prompt results immediately to the user without using the Say Node and LLM Prompt Result token. This parameter is activated by default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+    | Store Copy in Input           | Toggle        | This parameter appears when **Stream to Output** is selected. Stores a copy of the streamed output in the Input object. Enter the JSON key under which to store the result object in the **Input Key to store Result** field.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+
+    **Streaming Results**
+
+    When you select **Stream to Output**, the LLM generates tokens and returns them one by one to Cognigy to ensure low-latency responses. Cognigy monitors delimiter tokens (Stream Buffer Flush Tokens), which serve as markers indicating when to output the token buffer. These tokens can be `.`, `!`, `?`, or any other symbols that act as delimiters for complete logical statements. When Cognigy detects one of these tokens, it promptly flushes the token buffer into the voice or chat output.
+
+    The preconfigured overrides are listed in the table.
+
+    | Regex                                        | Description                                | Example        |
+    |----------------------------------------------|--------------------------------------------|----------------|
+    | `\d+\.`                                      | A number followed by a dot.                | `26.08`        |
+    |  `\b(?:Dr\|Ms\|Mr\|Mrs\|Prof\|Sr\|Jr\|ca)\.` | Common abbreviations followed by a dot.    | `Mr.`          |
+    | `\b[A-Z]\.`                                  | A single capital letter followed by a dot. | `M. Smith`     |
+    | `\.\.\.`                                     | Three dots used for omission.              | `...`          |
+    | `\b.\..\.`                                   | Two-letter abbreviations.                  | `i.e.`, `e.g.` |
+
+  </Accordion>
+
+  <Accordion title="Tool Settings">
+    The process of setting up a tool is the same as for the AI Agent Node. See the example in the [AI Agent Tool Settings](/ai/agents/develop/node-reference/ai/ai-agent#child-nodes) section.
+
+    | Parameter       | Type     | Description                                                                                                                                                                                                                                                                                                                         |
+    |-----------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Tool Choice     | List | If supported by your LLM, determines how the AI Agent selects tools:<ul><li>**Auto** — tools are automatically selected by the AI Agent when available and needed.</li><li>**Required** — your AI Agent always uses one of its tools.</li><li>**None** — your AI Agent doesn't use tools.</li></ul>     |
+    | Use Strict mode | Toggle   | If supported by the LLM provider, ensures that the arguments passed to a tool call precisely match the expected parameters. Activating this mode can help prevent errors. However, it might cause a slight delay in the response, especially during the first call after making changes. |
+
+  </Accordion>
+  <Accordion title="Image Handling">
+    | Parameter | Type | Description |
+    |----------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Process Images | Toggle | Allows the AI Agent to read and understand image attachments. Ensure that your LLM supports image processing; refer to your LLM provider's documentation. In addition, ensure that attachments are supported by and activated in your Endpoint, for example, Webchat. |
+    | Images in Transcript | List | Sets how images uploaded before the last turn are handled to reduce token usage. You can select the following options: <ul><li>**Minify** — reduces the size of these images to 512x512px.</li><li>**Drop** — excludes the images.</li><li>**Keep** — sends the maximum size (this option consumes more tokens).</li></ul>Limitations and token consumption depend on the LLM used. |
+  </Accordion>
+
+  <Accordion title="Error Handling">
+
+    | Parameter                      | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                              |
+    |--------------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Log to System Logs             | Toggle | Logs errors to the system logs. They can be viewed on the [Logs](/ai/agents/test/logs) page of your Project. This parameter is inactive by default.                                                                                                                                                                                                                                                                       |
+    | Select Error Handling Approach | List | Sets how Flow execution behaves if the LLM Prompt Node throws an error. You can select one of the following options:<ul><li>**Stop Flow Execution** — terminates the current Flow execution.</li><li>**Continue Flow Execution** — allows the Flow to continue executing, bypassing the error and proceeding to the next steps.</li><li>**Go to Node** — redirects Flow execution to a specific Node, which can be useful for error recovery or customized error handling.</li></ul> |
+    | Error Message (optional)       | Text   | This parameter appears when you select **Continue Flow Execution** in **Select Error Handling Approach**. Add a message to output if the LLM Prompt Node fails.                                                                                                                                                                                                                                                                                               |
+    | Select Flow                    | List | This parameter appears when you select **Go to Node** in **Select Error Handling Approach**. Sets the Flow that includes the Node to which you want to redirect Flow execution.                                                                                                                                                                                                                                                                                                                         |
+    | Select Node                    | List | This parameter appears when **Go to Node** in **Select Error Handling Approach** is selected. Sets the Node to which you want to redirect Flow execution.                                                                                                                                                                                                                                                                                                                         |
+
+  </Accordion>
+
+  <Accordion title="Custom Options">
+
+    These options let you use parameters that aren't included in the LLM Prompt Node or override existing configurations.
+
+    | Parameter              | Type | Description                                                                                                            | Example                                                         |
+    |------------------------|------|------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+    | Custom Options         | JSON | Sets custom parameters to the LLM configuration. You can set individual parameters as well as entire functions. These parameters customize the behavior of the model, such as adjusting `temperature`, `top_k`, or `presence_penalty`. This field overrides the parameters set in the LLM Prompt Node. To view the full list of available parameters for your model, refer to the LLM provider's API documentation, for example, [OpenAI](https://platform.openai.com/docs/api-reference/chat/create) or [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/).<br/>For Amazon Bedrock and Anthropic models, you must use the `output_config` parameter to [customize the JSON structure in the output](#custom-options).        | `{ "model": "gpt-4o", "temperature": 0.7, "max_tokens": 4000 }` |
+    | Custom Request Options | JSON | Sets parameters to customize the request to the LLM provider. These parameters override the configurations set in this Node. For example, setting a `{ "stream": true }` parameter overrides the **Output result immediately** option. For more information, refer to the LLM provider's API documentation. | `{ "stream": true }`, `{ "headers": { "Authorization": "Bearer <token>" } }`                                           |
+
+    **Forcing Model Versions**
+
+    You can force the LLM Prompt Node to use a specific model version by including it in the Custom Options.
+    This means that the LLM Prompt Node uses the specified version of the language model instead of the default or any other available versions. This gives you more control over the behavior of the LLM Prompt Node, ensuring it uses a specific model version for generating prompts or responses.
+
+    You can use any models from [LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) supported by Cognigy, including those not yet directly integrated. However, you can only replace a model with another from the same provider.
+
+    Consider an example with Anthropic as the LLM provider:
+    
+    You can force the LLM Prompt Node to use the model version `claude-opus-4-8-20260101`, despite the LLM resource defaulting to the `claude-sonnet-4-6` model:
+
+    1. [Create an Anthropic LLM resource](/ai/agents/develop/gen-ai-and-llms/providers/anthropic) for Claude, for example, `claude-sonnet-4-6`.
+    2. Create a Flow and add an LLM Prompt Node to it.
+    3. In the LLM Prompt Node, select the model `claude-sonnet-4-6` from the **Large Language Model** list.
+    4. In the **Custom Options** field, add `{ "model": "claude-opus-4-8-20260101" }` to force the use of the `claude-opus-4-8-20260101` model.
+    5. Click **Save Node**.
+
+    The LLM Prompt Node then uses the `claude-opus-4-8-20260101` model.
+
+    For more information on supported models, see:
+
+    - [Aleph Alpha models](https://docs.aleph-alpha.com/)
+    - [Anthropic models](https://docs.anthropic.com/claude/docs/models-overview)
+    - [Azure OpenAI models](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models)
+    - [OpenAI models](https://platform.openai.com/docs/models)
+
+    **Forcing JSON Output on Amazon Bedrock and Anthropic**
+
+    For [Amazon Bedrock](/ai/agents/develop/gen-ai-and-llms/providers/amazon-bedrock) and [Anthropic](/ai/agents/develop/gen-ai-and-llms/providers/anthropic) models, add the `output_config` parameter to the **Custom Options** field to force the model to return a specific JSON response.
+
+
+    For example, to force the model to return JSON matching a specific schema:
+
+    ```json
+    {
+      "output_config": {
+        "format": {
+          "type": "json_schema",
+          "schema": {
+            "type": "object",
+            "properties": { "answer": {} },
+            "required": ["answer"]
+          }
+        }
+      }
+    }
+    ```
+
+    With this configuration, a prompt such as "What is 1+1?" returns a response like `{"answer": 2}` instead of plain text.
+
+  </Accordion>
+  <Accordion title="Debugging Settings">
+
+    These settings provide two approaches for debug logging:
+
+    - Debug messages in the Interaction Panel — appear only during testing with the Interaction Panel and aren't intended for production.
+    - Webhook request logs — can be used in production to inspect LLM requests and completions.
+
+    You can use both approaches at the same time.
+
+    | Parameter                      | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                            |
+    |--------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Show Token Count               | Toggle        | Sends a debug message containing the input, output, and total token count. The message appears in the Interaction Panel when [debug mode](/ai/agents/test/interaction-panel/chat#debug-mode) is active. Cognigy uses the GPT-3 tokenizer algorithm, so actual token usage may vary depending on the model used. This parameter is inactive by default.                                              |
+    | Log System Prompt & Completion | Toggle        | Sends a debug message containing the system prompt sent to the LLM provider and the subsequent completion. The message appears in the Interaction Panel when [debug mode](/ai/agents/test/interaction-panel/chat#debug-mode) is active. This parameter is inactive by default.                                                                                                                         |
+    | Log Tool Definitions           | Toggle        | Sends a debug message containing information about the configured AI Agent tools. The message appears in the Interaction Panel when [debug mode](/ai/agents/test/interaction-panel/chat#debug-mode) is enabled. This parameter is inactive by default.                                                                                                                                                  |
+    | Log LLM Latency                | Toggle        | Sends a debug message containing key latency metrics for the request to the model, including the time taken for the first output and the total time to complete the request. The message appears in the Interaction Panel when [debug mode](/ai/agents/test/interaction-panel/chat#debug-mode) is enabled. This parameter is inactive by default.                                                       |
+    | Send request logs to Webhook   | Toggle        | Sends the request sent to the LLM provider and the subsequent completion to a webhook service, including metadata, the request body, and custom logging data. With this parameter, you can use a webhook service to view detailed logs of the request to the LLM. This parameter is inactive by default.                                                                                                |
+    | Webhook URL                    | CognigyScript | This parameter appears when you toggle on **Send request logs to Webhook**. Sets the URL of the webhook service to send the request logs to.                                                                                                                                                                                                                                                                                                                                       |
+    | Custom Logging Data            | CognigyScript | This parameter appears when you toggle on **Send request logs to Webhook**. Sets custom data to send with the request to the webhook service.                                                                                                                                                                                                                                                                                                                                      |
+    | Condition for Webhook Logging  | CognigyScript | This parameter appears when you toggle on **Send request logs to Webhook**. Sets the condition for the webhook logging.                                                                                                                                                                                                                                                                                                                                                            |
+    | Webhook Headers                | Input fields  | Sets the headers to send with the request to the webhook service. You can switch between the graphical and JSON editors to enter the header key and value either in the **Key** and **Value** fields or in the code field in JSON format. When using the JSON editor, follow the [JSON Schema specification](https://json-schema.org). |
+    | Key                            | Text          | Sets the header name. After entering the header key, new empty **Key** and **Value** fields are automatically added, in case you need to add more headers.                                                           |
+    | Value                          | CognigyScript | Sets the header value.                                                                                                                                                            |
+
+  </Accordion>
+</AccordionGroup>
+
+<Tools />
+
+## Examples
+
+<ToolsExamples />
+
+## More Information
+
+- [LLM](/ai/agents/develop/gen-ai-and-llms/llms)
+- [Generative AI](/ai/agents/develop/gen-ai-and-llms/generative-ai)
+
+---
+
+<sup id="footnote1">1</sup>: Note that not all LLMs support streaming.
