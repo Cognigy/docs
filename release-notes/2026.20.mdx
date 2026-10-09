@@ -1,0 +1,84 @@
+---
+title: "2026.20 (latest)"
+---
+
+import OdataRemoval from '/snippets/ai/odata-2-3-removal.mdx'
+
+<OdataRemoval />
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.20.1
+
+### Cognigy
+
+**Released** October 6, 2026
+
+#### Bug Fixes
+
+- Fixed the browser tab titles of the Create, Edit, and Hire AI Agents pages, which incorrectly included `(Legacy)`
+
+## 2026.20.0
+
+### Cognigy
+
+**Released** September 29, 2026
+
+#### Features
+
+##### A2A Server Endpoint and A2A Agent Node (Experimental)
+
+Introduced the [A2A Server Endpoint](/ai/agents/deploy/endpoint-reference/a2a-server). It makes a Flow available to A2A clients through the Agent2Agent (A2A) protocol, versions 1.0 and 0.3. Also introduced the [A2A Agent Node](/ai/agents/develop/node-reference/ai/ai-agent#a2a-agent), a child Node of the AI Agent Node that connects to a remote A2A agent and uses it as a single tool. This feature is experimental and isn't intended for production use.
+
+#### Improvements
+
+- Added support for JSON-structured output for Amazon Bedrock and Anthropic models in the [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt#custom-options), [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent#custom-options), [LLM Entity Extract](/ai/agents/develop/node-reference/other-nodes/llm-entity-extract#custom-options), and [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output#custom-options) Nodes, including the `output_config` parameter for the Custom Options field for setting the response schema
+- Renamed the Use deployment name as model parameter to Use Deployment Name field instead of Model field in the LLM editor for [Microsoft Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai) models
+- Redesigned email notifications for changing passwords, choosing and deleting organizations, and being added to a Project
+
+#### Bug Fixes
+
+- Fixed the issue where [imported Endpoints](/ai/platform-features/packages) didn't include a Locale because it wasn't mapped. Now, Endpoints fall back to the target Project's primary Locale
+- Fixed the issue where the `POST /v2.0/endpoints` method failed with `at least one conversation starter needs to be set` or silently discarded the conversation starters when creating Webchat v3 Endpoints, even though they were included in the request
+- Fixed the issue where using an in-platform LLM for Knowledge AI embedding generation crashed with `Cannot read properties of undefined (reading 'fields')`
+- Fixed the issue where saving a Lookup Node after changing the Intent Level reverted it to the default or failed with a `Bad Request` error
+- Fixed the issue where `gpt-5.4`, `gpt-5.4-mini`, and `gpt-5.4-nano` never received a default `reasoning_effort` on Chat Completions when no tools were present, and where an explicit `top_p` override in Custom Model Options broke default `reasoning_effort` injection on Chat Completions for `gpt-5.1`, `gpt-5.2`, and `gpt-5.4`
+- Fixed the issue where the conversation counter timed out incorrectly under load
+- Fixed the issue where Knowledge Chunk ingestion emitted a Qdrant client/server version-compatibility warning after `@qdrant/js-client-rest` was auto-bumped to a version too far ahead of the deployed Qdrant server
+- Fixed the issue where empty voice messages were visible in Live Agent
+- Fixed the issue where OData Analytics requests were rejected with `429 Too Many Requests` during normal reporting use
+- Fixed the issue where login events for users signing in via SSO weren't shown in the Login History section of the My Profile page
+
+### Cognigy Voice Gateway
+
+**Released** September 29, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where malformed calls crashed the media servers. As a result, every other call on the same server was disconnected. Now, malformed calls fail independently without affecting other calls
+- Fixed the issue where the human agent's SIPREC audio wasn't transcribed and the human agent side of the conversation didn't appear in the Conversation explorer. Now, the Conversation explorer shows both sides of the conversation
+
+### Cognigy Live Agent
+
+**Released** September 29, 2026
+
+#### Improvements
+
+- Added multilingual support for email notifications. This makes communication more accessible and personalized for users worldwide
+- Revamped email templates with a fresh, modern look. Available for SaaS installations
+
+#### Bug Fixes
+
+- Fixed the issue where the end user's name wasn't displayed in conversation chat messages
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

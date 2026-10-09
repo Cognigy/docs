@@ -1,0 +1,9 @@
+### Changing the Media Path during an Active Call
+
+Besides setting the media path in the Flow, you can also change the media path during an active transferred call using the Voice Gateway API.
+
+This approach is useful for PCI compliance. For example, when a caller shares sensitive payment information, Voice Gateway, as an intermediate system, must be removed from the media stream. Audio is then routed directly between the caller and the contact center, bypassing Voice Gateway, reducing PCI data exposure and helping protect sensitive data.
+
+To remove Voice Gateway from the media path, send the [PUT /Accounts/{AccountSid}/Calls/{CallSid}](https://api-vg-trial.cognigy.ai/docs/#/Accounts/updateCallPut) API request with `{ "media_path": "noMedia" }` from the contact center to Voice Gateway after the call has been transferred. With this setting, Voice Gateway stops processing the call's audio and DTMF entirely, including for call transcription. After Voice Gateway confirms the API request with a `200` or `202` response, you can't revert to processing media for the transferred call. A `400`, `404`, or `422` response means the request failed, which keeps the call on its previous media path, and Voice Gateway continues processing audio and DTMF.
+
+Capture the call SID before the transfer takes place. During a transfer, a new call SID is created for the new call leg, but the original call SID remains unchanged. Pass the original call SID along during the transfer, for example, in SIP headers. This way, the contact center can reference the original call when triggering the API request at the correct moment.

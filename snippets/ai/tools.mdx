@@ -1,0 +1,432 @@
+### Child Nodes
+
+#### Tool
+
+Tools are child Nodes of AI Agent Nodes. They define the actions the AI Agent can take. If an AI Agent wants to execute the tool, the branch below the child Node is executed.
+
+<Tip>
+To better guide your AI Agent, use a [Resolve Tool Action](/ai/agents/develop/node-reference/ai/resolve-tool-action) Node at the end of a tool branch to return to the AI Agent after tool execution.
+</Tip>
+
+Clicking the Tool Node lets you define a tool, set its parameters, and enable debugging by turning on detailed messages about the tool's execution.
+
+<AccordionGroup>
+  <Accordion title="Tool">
+
+    | Parameter   | Type          | Description                                                                                                                                          |
+    |-------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Tool ID     | CognigyScript | Defines the tool ID. This ID can contain only letters, numbers, underscores (`_`), or dashes (`-`). If you use more than one tool, the tool ID provides context to trigger the correct tool. In this case, enter a clear tool ID for each tool, for example, `update_user-1`. |
+    | Description | CognigyScript | Defines instructions to guide the AI Agent to call the tool. The description field provides context to trigger the tool. Enter a detailed description of what the tool does, when it should be used, and what parameters it requires. |
+  </Accordion>
+  <Accordion title="Parameters">
+
+    Configure the parameters that the AI Agent collects before the tool is called. You can switch between the graphical and JSON editors. When using the JSON editor, follow the [JSON Schema specification](https://json-schema.org).
+
+    | Parameter       | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+    |-----------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Use Parameters  | Toggle        | Displays the **Parameters** section in the Node editor. In this section, you can define additional parameters for the tool. The AI Agent collects all data it needs and calls a tool with these parameters filled as arguments. This parameter values can be accessed directly in the `input.aiAgent.toolArgs` object.                                                                                                                                                                                                                                                                                                                                                                           |
+    | Name            | Text          | Sets the name of the parameter. The name must be clear and concise, and describe the purpose of the parameter.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+    | Type            | List      | Sets the parameter type:<ul><li>**String** — a sequence of characters. For example, `"hello"`, `"123"`.</li><li>**Number** — a numerical value, which can be either an integer, for example,`5`, or a floating point number, for example, `3.14`.</li><li>**Boolean** — a logical value representing `true` or `false`.</li><li>**Array** — a collection of elements, which can contain multiple values of any type. For example, `["apple", "banana", "cherry"]`.</li><li>**Object** — a collection of key-value pairs, where each key is a string and the value can be of any type. For example, `{"name": "John", "age": 30}`.</li></ul> |
+    | Description     | Text | Describes the parameter's purpose.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+    | Enum (optional) | Enum          | Defines a set of values that the parameter can accept. The enum restricts the input to one of the specified values, ensuring only valid options are chosen. The enum is only available for string-type parameters in the graphical editor. For other types, use the JSON editor. Might not be supported by all LLM providers.                                                                                                                                                                                                                                                                                                                          |
+    | Add Parameter   | Button        | Adds another parameter.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter                 | Type   | Description                                                                                                       |
+    |---------------------------|--------|-------------------------------------------------------------------------------------------------------------------|
+    | Debug Message when called | Toggle | Activates the output of a debug message when the tool is called to provide detailed information about the tool call. |
+
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                                                                       |
+    |-----------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Condition | CognigyScript | Sets a condition that must be evaluated as true to activate the tool. If false, the AI Agent can't access the tool during execution. For example, when using an `unlock_account` tool, you can enter a condition like `context.accountStatus === "locked"`. With this condition, the AI Agent checks the value of the `context.accountStatus` key in the Context object, and if the key is missing or the value is different from `"locked"`, the AI Agent can't use the tool. |
+
+  </Accordion>
+</AccordionGroup>
+
+#### MCP Tool
+
+An MCP Tool Node is a type of Tool Node that connects to a remote [MCP server](https://modelcontextprotocol.io/introduction) to load tools that the AI Agent can execute. If an AI Agent wants to execute one of the loaded tools, the branch below the MCP Tool Node is triggered.
+
+In the MCP Tool Node, you can define the connection, filter loaded tools, and turn on detailed messages about the tool's execution for debugging.
+
+<AccordionGroup>
+  <Accordion title="MCP Tool">
+
+    | Parameter          | Type          | Description                                                                                                                                                                            |
+    |--------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Name               | CognigyScript | Defines a name for the MCP connection. This name helps you identify the source of the loaded tool.                                                                                     |
+    | MCP Server SSE URL | CognigyScript | Defines the URL to an SSE (server-sent events) endpoint from a remote [MCP server](https://modelcontextprotocol.io/introduction). Ensure that you connect only to trusted MCP servers. |
+    | Timeout            | Slider        | Sets the timeout for the MCP connection in seconds.                                                                                                                                |
+  </Accordion>
+  <Accordion title="Authentication">
+
+    | Parameter          | Type     | Description                                                                                                                                                                            |
+    |--------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Authentication Type | List | Sets the authentication type to use for the MCP server connection. Select one of the following options: <ul><li>**None** — no authentication. This option is used by default.</li><li>**OAuth2** — authenticate using OAuth 2.0, which provides improved security and control compared to API keys. OAuth 2.0 supports scoped permissions, expiring tokens, and reduced exposure through short-lived tokens.</li></ul>If you want to use a different authentication method, such as an API key, you can add it as a custom header in **Custom Headers** of the **Advanced** section. |
+    | OAuth2 Parameters  | List | Opens the dialog to configure OAuth 2.0 authentication. The dialog includes fields that allow the AI Agent to securely request and use access tokens when communicating with the MCP server. Configure the following fields: <ul><li>**Connection Name** — enter a descriptive name for the connection, for example, `MCP Tool OAuth`.</li><li>**OAuth URL** — enter the token endpoint URL exposed by the MCP server, for example: `https://mcp.example.com/oauth2/token`.</li><li>**Client ID** — enter the application (client) ID issued by the MCP server.</li><li>**Client Secret** — enter the application secret issued by the MCP server. Keep this secret secure.</li><li>**Scope** — add a list of scopes that define the permissions required by your application, for example: `read write admin`. Separate multiple scopes with spaces.</li></ul> |
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter             | Type   | Description                                                                                                                                                                            |
+    |-----------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Debug Loaded Tools    | Toggle | Displays a debug message listing all tools loaded from the MCP server. The debug message also includes tools filtered out in the [Advanced section](#advanced-2-accordion-title). This parameter shows whether tools were loaded from the cache or directly from the MCP server. |
+    | Debug with Parameters | Toggle | Includes the tool parameters in the debug message.                                                                                                             |
+    | Debug calling Tool    | Toggle | Outputs a debug message with detailed information about the tool call each time it is triggered.                                                                      |
+  
+  </Accordion>
+  <Accordion title="Advanced">
+  
+    | Parameter      | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                               |
+    |----------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Cache Tools    | Toggle        | Disables caching of loaded tools during development. Ensure that caching is enabled in production for performance reasons. The caching time is 10 minutes. In [debug mode](/ai/agents/test/interaction-panel/chat#debug-mode), you can verify whether the cache was used. To do this, make sure **Debug Loaded Tools** is enabled. For more information, see the [Debug Settings](#debug-settings) section.                                                                      |
+    | Condition      | CognigyScript | Sets a condition that must be evaluated as true to activate the MCP tool. If false, the AI Agent can't access the tool during execution. For example, when using an `unlock_account` tool, you can enter a condition like `context.accountStatus === "locked"`. With this condition, the AI Agent checks the value of the `context.accountStatus` key in the Context object, and if the key is missing or the value is different from `"locked"`, the AI Agent can't use the tool. |
+    | Tool Filter    | Select        | Excludes tools from execution. You can select one of the following options:<ul><li>**None** — no tool filtering is applied, and all tools are available for execution. This option is selected by default.</li><li>**Whitelist** — only tools on the list are available for execution, while all other tools are excluded.</li><li>**Blacklist** — excludes the tools on the list from execution, while all other tools remain available.</li></ul> |
+    | Blacklist      | CognigyScript | This parameter appears if you select **Blacklist** in **Tool Filter**. Defines which tools to block from execution. Enter only one tool per field.                                                                                                                                                                                                                                                           |
+    | Whitelist      | CognigyScript | This parameter appears if you select **Whitelist** in **Tool Filter**. Sets the tools you want to allow for execution. Enter only one tool per field.                                                                                                                                                                                                                                                                |
+    | Custom Headers                 | Input fields  | Sets the headers to send with the request to the MCP server. You can switch between the graphical and JSON editors to enter the header key and value either in the **Key** and **Value** fields or in the code field in JSON format. |
+    | Key                            | Text          | Sets the header name. After entering the header key, new empty **Key** and **Value** fields are automatically added, in case you need to add more headers.                                                           |
+    | Value                          | CognigyScript | Sets the header value.                                                                                                                                                            |
+  
+  </Accordion>
+</AccordionGroup>
+
+#### Call MCP Tool
+
+In the Flow editor, when you add an MCP Tool Node, a Call MCP Tool Node is automatically created below it. These two Nodes work together to define and execute the chosen tool. The Call MCP Tool Node sets the actual execution point of the chosen tool. This way, you can verify or modify the tool call arguments in the `input.aiAgent.toolArgs` object, or add a Say Node before the tool call. When the Call MCP Tool Node is executed, the tool call is sent to the remote MCP server, where the tool is executed remotely with any arguments set by the AI Agent.
+
+To return the tool result to the AI Agent, enable **Resolve Immediately** to send the full result from the remote MCP server to the AI Agent.
+
+As an alternative, use a [Resolve Tool Action](/ai/agents/develop/node-reference/ai/resolve-tool-action) Node to return a specific result to the AI Agent.
+
+<AccordionGroup>
+  <Accordion title="Call MCP Tool">
+
+    | Parameter           | Type   | Description                                                                                           |
+    |---------------------|--------|-------------------------------------------------------------------------------------------------------|
+    | Resolve Immediately | Toggle | Immediately resolves the tool action with the full result as the tool answer. |
+
+  </Accordion>
+  <Accordion title="Storage Options">
+
+    | Parameter   | Type          | Description                                                                                                                                          |
+    |-------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | How to handle the result    | Select        | Sets how to handle the MCP tool call result:<ul><li>**Store in Input** — stores the result in the Input object.</li><li>**Store in Context** — stores the result in the Context object.</li></ul> |
+    | Input Key to store Result   | CognigyScript | This parameter appears when **Store in Input** is selected. The result is stored in the `input.aiAgent.toolResult` object by default. You can specify another value, but the **MCP Tool Result** Token won't work if the value is changed. |
+    | Context Key to store Result | CognigyScript | This parameter appears when **Store in Context** is selected. The result is stored in the `context.aiAgent.toolResult` object by default. |
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter         | Type   | Description                                                                                                       |
+    |-------------------|--------|-------------------------------------------------------------------------------------------------------------------|
+    | Debug Tool Result | Toggle | Outputs a debug message with the tool call result after a successful call. |
+  
+  </Accordion>
+</AccordionGroup>
+
+#### A2A Agent
+
+A2A Agent Nodes are child Nodes of AI Agent Nodes. An A2A Agent Node allows the AI Agent Node to connect to a remote A2A agent and use it as a single tool.
+
+The remote A2A agent can advertise multiple skills, but the AI Agent Node always sees them as a single tool. The skills are summarized in the tool description to help the AI Agent Node decide when to use it.
+
+In the A2A Agent Node, configure the A2A agent connection, authentication, skill filtering, and debugging options.
+
+<AccordionGroup>
+  <Accordion title="A2A Agent">
+
+    | Parameter                     | Type          | Description                                                                                                                                                                                                                                |
+    |-------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Name                          | CognigyScript | Defines the name of the A2A Agent connection.                                                                                                                                                                                              |
+    | A2A Agent Base URL            | CognigyScript | Defines the base URL of the A2A agent. Connect only to trusted A2A agents.                                                                                                                                                                 |
+    | Custom Agent Card Path        | CognigyScript | Overrides the default Agent Card discovery path.                                                                                                                                                                                           |
+    | Test Connection               | Button        | Tests the connection and verifies that the remote Agent Card can be retrieved.                                                                                                                                                             |
+    | Timeout                       | Slider        | Sets the request timeout in seconds when **Execution mode** is **Blocking**. Ranges from 1 to 30 seconds. The default value is `12`.                                                                                                       |
+    | Execution mode                | List          | Determines how the Node waits for the remote A2A agent:<ul><li>**Blocking** — waits for the final result.</li><li>**Non-blocking** — sends the message and polls the task until it completes or the **Task timeout** is reached.</li></ul> |
+    | Task timeout                  | Slider        | Sets the maximum time in seconds to poll a task when **Execution mode** is **Non-blocking**. Ranges from 10 to 300 seconds. The default value is `60`.                                                                                     |
+    | Max autonomous calls per turn | Slider        | Limits the number of times the AI Agent Node can call this tool autonomously during one turn. Ranges from 1 to 10. The default value is `4`.                                                                                               |
+    | Cache Agent Card              | Toggle        | Caches the remote Agent Card for 10 minutes. This parameter is active by default. When developing, set the parameter to inactive to fetch the Agent Card on every turn.                                                                     |
+
+  </Accordion>
+
+  <Accordion title="Authentication">
+
+    | Parameter                              | Type          | Description                                                                                                                         |
+    |----------------------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
+    | Authentication Type                    | List          | Authentication method for requests to the remote A2A agent: **None**, **OAuth2**, **Bearer Token**, **Basic Auth**, or **API Key**. |
+    | OAuth2 Parameters                      | Connection    | Appears when **OAuth2** is selected. Configures the connection used to obtain and cache an access token.                            |
+    | Basic Auth Parameters                  | Connection    | Appears when **Basic Auth** is selected. Configures the username and password.                                                      |
+    | Bearer Token                           | Connection    | Appears when **Bearer Token** is selected. Configures the token sent in the `Authorization` header.                                 |
+    | API Key                                | Connection    | Appears when **API Key** is selected. Configures the API key value.                                                                 |
+    | API Key Header Name                    | CognigyScript | Appears when **API Key** is selected. Specifies the header used for the API key. Default: `X-API-Key`.                              |
+    | Use Authentication for Agent Discovery | Toggle        | Applies the configured authentication to Agent Card discovery. Inactive by default.                                                 |
+
+  </Accordion>
+
+  <Accordion title="Debug Settings">
+
+    | Parameter           | Type   | Description                                                                                                                                         |
+    |---------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Debug loaded A2A Skills | Toggle | Displays the skills loaded from the remote Agent Card and indicates whether the Agent Card came from the cache. This parameter is active by default. |
+    | Debug calling A2A Skill | Toggle | Displays a debug message when the tool is called. This parameter is active by default.                                                               |
+
+  </Accordion>
+
+  <Accordion title="Advanced">
+
+    | Parameter      | Type          | Description                                                                                                                                                                                                                                                                                                          |
+    |----------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Condition      | CognigyScript | Enables the tool only when the condition evaluates to `true`.                                                                                                                                                                                                                                                        |
+    | A2A Skill Filter | Select        | Controls which remote skills are summarized in the tool description. The A2A Agent Node remains a single tool regardless of the filter. Options:<ul><li>**None** — includes all skills.</li><li>**Whitelist** — includes only the specified skills.</li><li>**Blacklist** — excludes the specified skills.</li></ul> |
+    | Whitelist      | CognigyScript | Appears when **Whitelist** is selected. Specifies the skill IDs to include.                                                                                                                                                                                                                                          |
+    | Blacklist      | CognigyScript | Appears when **Blacklist** is selected. Specifies the skill IDs to exclude.                                                                                                                                                                                                                                          |
+    | Custom Headers | -             | Adds custom headers to requests sent to the remote A2A agent. Supports CognigyScript values.                                                                                                                                                                                                                         |
+
+  </Accordion>
+</AccordionGroup>
+
+The A2A Agent Node covers the following use cases:
+
+<AccordionGroup>
+  <Accordion title="Specialist Delegation">
+    Delegate a subtask to a specialist A2A agent, such as an SAP or IT operations agent. The AI Agent Node remains in control of the conversation.
+  </Accordion>
+
+  <Accordion title="Cross-Company Delegation">
+    Connect to an A2A agent operated by a partner organization for tasks such as booking, procurement, or support.
+  </Accordion>
+</AccordionGroup>
+
+#### Call A2A Agent
+
+Cognigy.AI automatically creates a Call A2A Agent Node below an A2A Agent Node. The A2A Agent Node defines the A2A agent connection, while the Call A2A Agent Node executes the call.
+
+Use the Call A2A Agent Node to modify or inspect the message before it is sent, add a Say Node, and configure how the result is returned to the AI Agent Node.
+
+When the Call A2A Agent Node runs, it sends the message to the remote A2A agent and handles the response according to the configured execution mode. The Agent Card determines the supported A2A protocol version, so no version configuration is required.
+
+If the remote A2A agent supports streaming, the Node consumes the response as it arrives. Otherwise, it sends a request. In Non-blocking mode, the Node polls the resulting task until it completes or the task times out.
+
+To return the result to the AI Agent Node, enable **Resolve Immediately**. Alternatively, use a [Resolve Tool Action](/ai/agents/develop/node-reference/ai/resolve-tool-action) Node to return a specific result.
+
+If the remote A2A agent requires additional input or authentication, the AI Agent Node calls the tool again. **Max autonomous calls per turn** limits how often this can happen.
+
+<AccordionGroup>
+  <Accordion title="Call A2A Agent">
+
+    | Parameter           | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                    |
+    |---------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Resolve Immediately | Toggle        | Immediately returns the full result to the AI Agent Node as the tool answer. This parameter is active by default.                                                                                                                                                                                                                                                                                                               |
+    | Progress Message    | CognigyScript | Sends an optional status message to the A2A client. The message is sent only to a client connected via an [A2A Server Endpoint](/ai/agents/deploy/endpoint-reference/a2a-server) with streaming enabled. This setting is relevant only when this Cognigy.AI Flow is called via an A2A Server Endpoint. If the parameter is empty, an automatically generated message such as `Delegating to <agent name>...` is shown instead. |
+
+  </Accordion>
+
+  <Accordion title="Storage Options">
+
+    | Parameter                   | Type          | Description                                                                                                  |
+    |-----------------------------|---------------|--------------------------------------------------------------------------------------------------------------|
+    | How to handle the result    | Select        | Determines where to store the result: **Input** or **Context**. **Store in Input** is selected by default.   |
+    | Input Key to store Result   | CognigyScript | Appears when **Store in Input** is selected. Stores the result in `input.aiAgent.toolResult` by default.     |
+    | Context Key to store Result | CognigyScript | Appears when **Store in Context** is selected. Stores the result in `context.aiAgent.toolResult` by default. |
+
+  </Accordion>
+
+  <Accordion title="Debug Settings">
+
+    | Parameter          | Type   | Description                                                                                             |
+    |--------------------|--------|---------------------------------------------------------------------------------------------------------|
+    | Debug A2A Skill Result | Toggle | Displays a debug message with the result after a successful call. This parameter is inactive by default. |
+    | Debug Raw Request  | Toggle | Displays the raw JSON-RPC request sent to the A2A agent. This parameter is inactive by default.          |
+
+  </Accordion>
+</AccordionGroup>
+
+#### Knowledge Tool
+
+The Knowledge Tool Node is a child Node of the AI Agent Node. It lets the AI Agent directly access [Knowledge Stores](/ai/agents/develop/knowledge-ai/knowledge-store) to provide context-aware responses.
+
+In the Knowledge Tool Node, you can select the [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store) to search, [Source Tags](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-source-tags) to refine the search, and output detailed debug messages about the tool's execution.
+
+<AccordionGroup>
+  <Accordion title="Knowledge Tool">
+
+    | Parameter       | Type          | Description                                                                                                                                                                                                                                                                 |
+    |-----------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Knowledge Store | List      | Sets the Knowledge Store to read information from.                                                                                                                                                                                                                                                   |
+    | Tool ID         | CognigyScript | Defines the tool ID. This ID can contain only letters, numbers, underscores (`_`), or dashes (`-`). If you use more than one Knowledge tool, the tool ID provides context to trigger the correct Knowledge tool. In this case, enter a clear tool ID for each Knowledge tool, for example, `search_appliances`                                                                                                                  |
+    | Description     | CognigyScript | Defines instructions to guide the AI Agent to call the Knowledge tool. The description field provides context to trigger the Knowledge tool. If you want to use more than one Knowledge tool, enter clear instructions for the cases when each Knowledge tool should be used. For example, `Find the answer to prompts or questions about appliances by searching the attached data sources. Use this tool when a customer asks about appliance items such as washing machines, dryers, and other household appliances. Focus exclusively on a knowledge search and don't execute tasks like small talk, calculations, or script running.` |
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter                 | Type   | Description                                                                                                       |
+    |---------------------------|--------|-------------------------------------------------------------------------------------------------------------------|
+    | Debug Message when called | Toggle | Activates the output of a debug message when the tool is called to provide detailed information about the tool call. |
+
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter                   | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    |-----------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Top K                       | Slider        | Sets how many Knowledge Chunks to return. The default value is 5, and the maximum value is 10. Providing more results gives the AI Agent additional context, but it also increases noise and token usage.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+    | Store Location              | List      | Sets whether and where to store the knowledge search results. Select one of the following options:<ul><li>**Don't store** — the content isn't stored. This option is set by default.</li><li>**Input** — the content is stored in the Input object.</li><li>**Context** — the content is stored in the Context object.</li></ul>                                                                                                                                                                                                                                                                                                              |
+    | Input Key to store result   | CognigyScript | This parameter appears when **Store Location** is set to **Input**. The property in the Input object where the result is stored. For example, if you enter `knowledgeSearch`, you can retrieve the knowledge search result from `input.knowledgeSearch`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+    | Context Key to store result | CognigyScript | This parameter appears when **Store Location** is set to **Context**. The property in the Context object where the result is stored. For example, if you enter `knowledgeSearch`, you can retrieve the knowledge search result from `context.knowledgeSearch`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+    | Source Tags                 | CognigyScript | Defines [Knowledge Source Tags](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-source-tags) to refine the scope of your knowledge search, including only the most relevant Knowledge Chunks in the Knowledge Store. Before entering the tags, ensure they are included in the Knowledge Sources. Add a tag by entering it in the field and pressing <kbd>Enter</kbd>. You can add up to 5 Source Tags. When multiple Source Tags are added, the Search Extract Output Node defaults to the `AND` operator, meaning it only considers Sources that have all specified tags. To change this behavior, adjust the **Match Type for Source Tags** parameter. |
+    | Match type for Source Tags  | List      | The operator to filter Knowledge Sources by Source Tags. Select one of the following options:<ul><li>**AND** —  requires all Source Tags to match across multiple Knowledge Sources. This option is selected by default. Consider the following example: there are Knowledge Sources with Source Tags `S-a`, `S-b`, and `S-c`. When you use the `AND` operator to filter by `S-a` and `S-b`, only Sources with both Tags `S-a` and `S-b` are included in the search results.</li><li>**OR** — requires at least one Source Tag to match across multiple Knowledge Sources. Consider the following example: there are Knowledge Sources with Source Tags `S-a`, `S-b`, and `S-c`. When you use the `OR` operator to filter by `S-a` or `S-b`, any Source with either Tag `S-a` or `S-b` is included in the search results.</li></ul> |
+    | Condition                   | CognigyScript | Sets a condition that must be evaluated as true to activate the Knowledge tool. If false, the AI Agent can't access the tool during execution. For example, when using the Knowledge tool, you can enter a condition like `context.productCategory === "appliances"`. With this condition, the AI Agent checks the value of the `context.productCategory` key in the Context object, and if the key is missing or the value is different from `"appliances"`, the AI Agent can't use the tool. |
+
+  </Accordion>
+</AccordionGroup>
+
+#### Send Email Tool
+
+The Send Email tool lets your AI Agent send emails directly to users. The Send Email tool uses the same configuration and restrictions as the [Email Notification Node](/ai/agents/develop/node-reference/data/email-notification) but adds more flexibility. While the Email Notification Node sends emails at a fixed step in a Flow, the Send Email tool allows the AI Agent to send emails dynamically, based on user input, conversation context, or instructions. This tool makes automation more flexible and minimizes extra Flow steps.
+
+<AccordionGroup>
+  <Accordion title="Tool">
+
+    | Parameter       | Type          | Description                                                                                                                                                                                                                                                                 |
+    |-----------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Tool ID         | CognigyScript | Defines the tool ID. This ID can contain only letters, numbers, underscores (`_`), or dashes (`-`). The default ID is `send_email`. If you use more than one Send Email tool, the tool ID provides context to trigger the correct Send Email tool. In this case, enter a clear tool ID for each Send Email tool, for example, `send_order_confirmation`. |
+    | Description     | CognigyScript | Defines instructions to guide the AI Agent to call the Send Email tool. The description field provides context to trigger the Send Email tool. The default description is `Create and send a new email message.` |
+    | Recipient TO Email Addresses| CognigyScript | A comma-separated list of email addresses to which the email will be sent.|
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter                 | Type   | Description                                                                                                       |
+    |---------------------------|--------|-------------------------------------------------------------------------------------------------------------------|
+    | Debug Message when called | Toggle | Activates the output of a debug message when the tool is called to provide detailed information about the tool call. |
+
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter                   | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    |-----------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Condition                   | CognigyScript | Sets a condition that must be evaluated as true to activate the Send Email tool. If false, the AI Agent can't access the tool during execution. For example, when using the Send Email tool, you can enter a condition like `context.orderFinished === true`. With this condition, the AI Agent checks the value of the `context.orderFinished` key in the Context object, and if the key is missing or the value is different from `true`, the AI Agent can't use the tool. |
+
+  </Accordion>
+</AccordionGroup>
+
+#### Handover to AI Agent Tool
+
+The Handover to AI Agent tool lets you transfer a conversation to another AI Agent in the same or a different Flow. This approach ensures the conversation keeps its context, different AI Agents can handle specific tasks, and multi-step conversations run smoothly across Flows.
+
+<AccordionGroup>
+  <Accordion title="Tool">
+    | Parameter       | Type          | Description                                                                                                                                                                                                                                                                 |
+    |-----------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Tool ID         | CognigyScript | Defines the tool ID. This ID can contain only letters, numbers, underscores (`_`), or dashes (`-`). The default ID is `handover_to_ai_agent`. If you use more than one Handover to AI Agent tool, the tool ID provides context to trigger the correct Handover to AI Agent tool. In this case, enter a clear tool ID for each Handover to AI Agent tool, for example, `handover_to_billing_agent`. |
+    | Description     | CognigyScript | Defines instructions to guide the AI Agent to call the Handover to AI Agent tool. The description field provides context to trigger the correct receiving AI Agent. If you use more than one Handover to AI Agent tool, enter clear instructions for the cases when each receiving AI Agent should take over. For example, `Handle product recommendations`, `Perform technical troubleshooting`, or `Assist with billing questions`. |
+    | Select Flow     | List      | Sets the target Flow to hand over to. By default, all Flows in the Project are displayed in the list. The selected Flow must contain an AI Agent Node.                                                                                                                                                                       |
+    | Select Node     | List      | Sets the AI Agent Node to hand over to. |
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter                 | Type   | Description                                                                                                       |
+    |---------------------------|--------|-------------------------------------------------------------------------------------------------------------------|
+    | Debug Message when called | Toggle | Activates the output of a debug message when the tool is called to provide detailed information about the tool call. |
+    
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                                                                        |
+    |-----------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Condition | CognigyScript | Sets a condition that must be evaluated as true to activate the Handover to AI Agent tool. If false, the AI Agent can't access the tool during execution. For example, when using the Handover to AI Agent tool, you can enter a condition like `context.accountStatus === "locked"`. With this condition, the AI Agent checks the value of the `context.accountStatus` key in the Context object, and if the key is missing or the value is different from `"locked"`, the AI Agent can't use the tool. |
+
+  </Accordion>
+</AccordionGroup>
+
+#### Handover to Human Agent Tool
+
+The Handover to Human Agent tool lets you transfer a conversation to a human agent through handover providers. This tool lets your AI Agents refer complex tasks to a human agent if they can't address the user's request.
+
+<AccordionGroup>
+  <Accordion title="Tool">
+
+    | Parameter       | Type          | Description                                                                                                                                                                                                                                                                 |
+    |-----------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Tool ID         | CognigyScript | Defines the tool ID. This ID can contain only letters, numbers, underscores (`_`), or dashes (`-`). The default ID is `handover_to_human_agent`. If you use more than one Handover to Human Agent tool, the tool ID provides context to trigger the correct Handover to Human Agent tool. In this case, enter a clear tool ID for each Handover to Human Agent tool, for example, `handover_to_billing_support`. |
+    | Description     | CognigyScript | Defines instructions to guide the AI Agent to call the Handover to Human Agent tool. The description field provides context to trigger the handover. Enter clear instructions for the situations when the AI Agent should refer to a human agent. For example, `Use this tool if the user explicitly asks for a human.` or `Use this tool if you fail to answer the user's question three times.` |
+    | Handover Provider                | List          | Sets a handover provider that you previously created in **Deploy > Handover Providers**. A section with handover provider-specific settings appears. [Configure the handover accordingly](/ai/escalate/handover-reference/overview):<ul><li>[Live Agent](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-flow#set-up-flows-for-handover)</li><li>[Chatwoot](/ai/escalate/handover-reference/chatwoot#2-add-a-handover-to-human-agent-node)</li><li>[Salesforce](/ai/escalate/handover-reference/salesforce#2-add-a-handover-to-human-agent-node)</li><li>[NiCE CXone](/ai/escalate/handover-reference/nice-cxone/overview)</li><li>[Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging#2-configure-handover-settings) or [Genesys Cloud Guest Chat](/ai/escalate/handover-reference/genesys-cloud-guest-chat#2-configure-handover-settings)</li><li>[8x8](/ai/escalate/handover-reference/8x8#2-configure-handover-settings)</li><li>[RingCentral Engage](/ai/escalate/handover-reference/ring-central-engage#2-add-a-handover-to-human-agent-node)</li></ul> |
+    | Handover Accepted Message        | CognigyScript | Defines the message sent to the user when the handover is requested.                                                                                                                                                                                                                                                                                                                              |
+    | Repeat Handover Accepted Message | Toggle        | Repeatedly outputs the text in **Handover Accepted Message** if the user sends a message while waiting in the queue for an agent.                                                                                                                                                                                                                                                           |
+  </Accordion>
+  <Accordion title="Cancel Handover Options">
+
+    | Parameter          | Type          | Description                                                                       |
+    |--------------------|---------------|-----------------------------------------------------------------------------------|
+    | Cancel Intent      | CognigyScript | Defines the Intent the user must trigger to cancel the handover request.                |
+    | Cancel Button Text | CognigyScript | Defines the text for a Quick Reply button that cancels the handover request when clicked. |
+
+  </Accordion>
+  <Accordion title="On Resolve Options">
+
+    | Parameter                           | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+    |-------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Flow Continuation                   | List     | Controls where the Flow continues after the human agent leaves the conversation.<br></br>When the user needs assistance completing the Flow with the AI Agent, the conversation is handed over to a human agent. The human agent can trigger the Flow by sending a `/bot` command as a reply in the conversation interface.<br></br>For example, the user enters their date of birth in an incorrect format, and the AI Agent can't process the response. The conversation is handed over to a human agent, who identifies the incorrect format and sends the corrected date using `/bot MM/DD/YYYY`. The AI Agent takes over and continues the Flow.<br></br><ul><li>**Below this Node** — the Flow continues from the first Node below the Human Agent Node, regardless of where the human agent stopped assisting the user. This option is selected by default.</li><li>**At current AgentInject Entrypoint** — the Flow continues from the Node where the human agent stopped assisting the user.</li></ul> |
+    | Send resolve event to Virtual Agent | Toggle | Controls whether the Flow receives the `conversation_status_changed` event with the status set to `resolved`. This parameter is activated by default.<ul><li>When the parameter is activated, the event is sent when the human agent leaves the conversation. As a result, the Flow continues immediately, without waiting for the user to send another message. If the [Lookup Case](/ai/agents/develop/node-reference/logic/lookup) Node is configured with **Handover Status** set to **Completed**, the Node can detect the completed handover and continue the Flow.</li><li>When the parameter is deactivated, the event isn't sent when the human agent leaves the conversation. The Flow continues after the user sends their next message.</li></ul>                                                                                                                                                                                                                                                                                                                                        |
+
+  </Accordion>
+  <Accordion title="Event Settings">
+
+    | Parameter         | Type   | Description                                             |
+    |-------------------|--------|---------------------------------------------------------|
+    | Send Queue Event  | Toggle | Sends an event to the Flow once the handover is queued. |
+    | Send Active Event | Toggle | Sends an event to the Flow once the handover is active. |
+
+  </Accordion>
+  <Accordion title="Debug Settings">
+
+    | Parameter                 | Type   | Description                                                                                                       |
+    |---------------------------|--------|-------------------------------------------------------------------------------------------------------------------|
+    | Debug Message when called | Toggle | Activates the output of a debug message when the tool is called to provide detailed information about the tool call. |
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter | Type          | Description                                                                                                                                                                                                                                                                                                                                                                       |
+    |-----------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Condition | CognigyScript | Sets a condition that must be evaluated as true to activate the Handover to Human Agent tool. If false, the AI Agent can't access the tool during execution. For example, when using the Handover to Human Agent tool, you can enter a condition like `context.issueType === "complaint"`. With this condition, the AI Agent checks the value of the `context.issueType` key in the Context object, and if the key is missing or the value is different from `"complaint"`, the AI Agent can't use the tool. |
+
+  </Accordion>
+</AccordionGroup>
+
+#### Execute Workflow Tool
+
+The Execute Workflow tool lets the AI Agent execute another Flow. After the target Flow executes, the conversation returns to the AI Agent.
+
+The target Flow inherits the [Context object](/ai/agents/develop/ai-agent-memory/context) from the AI Agent. If the target Flow changes the Context object, these changes are also available to the AI Agent.
+
+| Parameter   | Type          | Description                                                                                                                                                                                                                                                                                         |
+| ----------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tool ID     | CognigyScript | Defines the tool ID. This ID can contain only letters, numbers, underscores (`_`), or dashes (`-`). The default ID is `execute_workflow`. If you use more than one Execute Workflow tool, the tool ID provides context to trigger the correct Execute Workflow tool. In this case, enter a clear tool ID for each Execute Workflow tool, for example, `execute_returns_workflow`. |
+| Description | CognigyScript | Defines instructions to guide the AI Agent to call the Execute Workflow tool. The description field provides context to trigger the Execute Workflow tool. Describe when the AI Agent should execute the target Flow. For example, `Use this tool if the user explicitly asks to return a package.` |
+| Target Flow | List          | Sets the target Flow that the AI Agent executes when this tool is called. Click ![target-flow](/_assets/icons/black-and-white/target-flow.svg) to open the target Flow.                                                                                           |
+| Select Node | List          | Sets the target Node that the AI Agent executes when the target Flow is called. You must set the Node you want to select as an Entrypoint with the [Set Entrypoint](/ai/agents/develop/nodes/overview#set-nodes-as-entrypoints) setting before you can select it. |
+
+<AccordionGroup>
+  <Accordion title="Debug Settings">
+
+    | Parameter                 | Type   | Description                                                                                                         |
+    |---------------------------|--------|---------------------------------------------------------------------------------------------------------------------|
+    | Debug Message when called | Toggle | Activates the output of a debug message when the tool is called to provide detailed information about the tool call. |
+
+  </Accordion>
+  <Accordion title="Advanced">
+
+    | Parameter      | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+    |----------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Parse Intents  | Toggle | Sets whether Intents should be parsed in the target Flow. This parameter is activated by default.<br/><br/>If this parameter is enabled, Cognigy NLU reparses the Intents in the target Flow based on `text` in the [Input object](/ai/agents/develop/ai-agent-memory/input#accessing-input-properties) and generates Intent scores using the Intents in the target Flow instead of the ones in the AI Agent's current Flow. |
+    | Parse Slots    | Toggle | Sets whether Slots should be parsed in the target Flow. This parameter is activated by default.<br/><br/>If this parameter is enabled, Cognigy NLU reparses the Slots in the target Flow based on `text` in the [Input object](/ai/agents/develop/ai-agent-memory/input#accessing-input-properties) and generates Slot scores using the Slots in the target Flow instead of the ones in the AI Agent's current Flow.         |
+    | Absorb Context | Toggle | Sets whether the [default Context object](/ai/agents/develop/ai-agent-memory/context#default-context) of the target Flow is used in the context of the Flow the AI Agent is currently in.<br/><br/>If the default Context of the target Flow has a value, it is copied into the Context object of the AI Agent as soon as the target Flow is executed.                                                                                                                                                                                                                                                                                                                           |
+
+  </Accordion>
+</AccordionGroup>
