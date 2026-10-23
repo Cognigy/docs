@@ -1,0 +1,119 @@
+---
+title: "2026.17"
+---
+
+<Warning>
+  Deprecations:
+  
+  - The [Amazon Alexa](/ai/agents/deploy/endpoint-reference/amazon-alexa) and [Dialogflow](/ai/agents/deploy/endpoint-reference/dialogflow) Endpoints have been deprecated. You can keep using Endpoints of these types, but you can't create new ones. The removal is planned for January 2028.
+  - The [Alexa](/ai/platform-features/nlu/external/nlu-connector-reference/alexa) and [Dialogflow](/ai/platform-features/nlu/external/nlu-connector-reference/dialog-flow) NLU connectors have been deprecated. You can still create and use these NLU connectors until the removal date, but no further feature development is planned. Before the removal date, migrate to an alternative NLU connector, such as [Cognigy NLU](/ai/platform-features/nlu/external/nlu-connector-reference/cognigy-nlu). The removal is planned for January 2028.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.17.1
+
+### Cognigy Voice Gateway
+
+**Released** September 2, 2026
+
+#### Bug Fix
+
+- Fixed the issue in the Helm chart that affected new Voice Gateway installations
+
+### Cognigy Insights
+
+**Released** August 19, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where an Insights database migration job failed
+
+## 2026.17.0
+
+### Cognigy
+
+**Released** August 18, 2026
+
+#### Features
+
+##### New Models by Google Gemini
+
+Added support for the `gemini-3.6-flash` and `gemini-3.5-flash-lite` models provided by [Google Gemini](/ai/agents/develop/gen-ai-and-llms/providers/google-gemini). These models provide faster, lower-cost options for high-volume Generative AI tasks.
+
+##### New Models by Anthropic
+
+Added support for the `claude-sonnet-5`, `claude-opus-4-7`, and `claude-opus-4-8` models provided by [Anthropic](/ai/agents/develop/gen-ai-and-llms/providers/anthropic). These models give you access to Anthropic's latest model capabilities.
+
+#### Improvements
+
+- Added the [Use deployment name as model](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai) toggle to the Azure OpenAI LLM provider settings for the Responses API. You can now choose whether to use the Deployment Name or Model parameter to specify the model
+- Added Custom Model Options and Custom Request Options to the [LLM Entity Extract](/ai/agents/develop/node-reference/other-nodes/llm-entity-extract) and [Question](/ai/agents/develop/node-reference/basic/question) Nodes. You can now pass additional model and request parameters directly to the LLM call
+- Added support for multiple Microsoft SSO OAuth connections in [Azure Bot Services](/ai/agents/deploy/endpoint-reference/azure-bot-services) Endpoints. You can now manage tokens for each connection separately using the Overwrite Connection option in the [Get Token](/ai/agents/develop/node-reference/service/get-token), [Invalidate Token](/ai/agents/develop/node-reference/service/invalidate-token), and [Token Status](/ai/agents/develop/node-reference/service/token-status) Nodes
+- Improved compatibility with [Anthropic models](/ai/agents/develop/gen-ai-and-llms/providers/anthropic) that don't support sampling parameters. Now, Cognigy removes unsupported `temperature`, `top_p`, and `top_k` parameters before sending the request
+- Improved the reliability of the Project Overview dashboard. If the simulation search fails, the Recently Changed panel still displays other resources instead of showing an error
+- Added `traceId` and `sessionId` to [transformer error logs](/ai/for-developers/transformers/overview#error-handling-in-transformers), making it easier to trace errors to a specific request and session
+
+#### Bug Fixes
+
+- Fixed the issue where the Logs API generated invalid pagination links with empty next or previous parameters. Now, you can use pagination links to navigate through log entries without receiving a `400 Bad Request`
+- Fixed the issue where the platform stopped Knowledge Connector synchronizations but left them in the running state. Now, stopped synchronizations automatically switch to failed, and the connector status updates accordingly
+- Fixed the issue where Package imports failed when a Connection contained a long field value, such as a MongoDB connection string. Connection values within the 10,000-character limit now import successfully
+- Fixed the issue where an Intent in an unattached Flow triggered a Default Reply and stopped message processing
+- Fixed the issue where saving an MCP Server Endpoint with OAuth 2.0 authentication failed when the optional Key Refresh Interval was left empty 
+- Fixed the issue where handover providers received duplicate AI Agent messages while waiting for a human agent to accept the handover
+- Fixed the issue where the Studio script name appeared before a NiCE CXone handover provider was ready. Now, the Studio script name appears only when the provider status is `Ready`
+- Fixed the issue where masked `GoalEvents` weren't correctly included or filtered in the OData responses
+- Fixed the issue where clicking a conversation from a Contact Profile opened the transcript with an incorrect contact ID and where the Conversations section was inaccessible on small screens
+- Fixed the issue where users couldn't open the Node editor for a Say Node configured with the Gallery output type
+
+### Cognigy Voice Gateway
+
+**Released** August 18, 2026
+
+#### Improvements
+
+- Added the `recordProcessor` attribute to the background recording span in the call detail record traces. This attribute identifies whether the audio manager or API server handled the recording
+
+### Cognigy Agent Copilot
+
+**Released** August 18, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Agent Copilot didn't get session data from a JWT when JWT authentication was deactivated. Agent Copilot now supports session data from JWTs in URLs with [Allow only JWT requests](/agent-copilot/configure/copilot-section) turned off
+- Fixed the issue where the Transcript tile didn't show the conversation transcript in the Agent Copilot workspace
+
+### Cognigy Live Agent
+
+**Released** August 18, 2026
+
+#### Improvements
+
+- Renamed AI Copilot Workspace to Agent Copilot Workspace in the [Profile](/live-agent/profile-settings) and [Account](/live-agent/settings/account-settings) settings for consistency with the Cognigy interface
+
+### Cognigy AI Ops Center
+
+#### Bug Fixes
+
+- Fixed the issue where the AI Ops Center accepted invalid notification [Webhook URLs](/ops-center/manage/alerts#webhook). Now, you can use only valid `http://` or `https://` Webhook URLs
+
+### Cognigy Insights
+
+**Released** August 18, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where Conversation Analyzer returned a `502` error when analyzing all new conversations over large date ranges. Now, the analysis completes successfully for these date ranges
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

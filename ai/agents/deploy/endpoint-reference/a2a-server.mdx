@@ -1,0 +1,217 @@
+---
+title: A2A Server
+sidebarTitle: A2A Server
+keywords: ['a2a server', 'a2a endpoint', 'agent2agent protocol', 'agent-to-agent']
+tag: experimental
+---
+
+import A2aAndMcp from '/snippets/ai/a2a-and-mcp.mdx';
+
+<a href="/release-notes/2026.20"><Badge className="version-badge" color="purple">Added in 2026.20.0 (experimental)</Badge></a>
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/a2a.svg" alt="A2A Server Endpoint logo" />
+</Frame>
+
+<Warning>
+The A2A Server Endpoint is experimental and isn't recommended for production use. This Endpoint may change or be removed in future releases. Use it only in development or staging environments.
+</Warning>
+
+The A2A Server Endpoint makes a Cognigy.AI [Flow](/ai/agents/develop/projects-and-flows/overview) available to A2A clients through the open [Agent2Agent (A2A) protocol](https://a2a-protocol.org/). Together, the Flow and the Endpoint form the A2A agent that A2A clients discover and call. The Endpoint provides an Agent Card that describes the A2A agent and an A2A interface that accepts messages and returns responses.
+
+The Endpoint supports A2A protocol versions 1.0 and 0.3. Each A2A client selects its version upon discovering the Agent Card.
+
+## Key Benefits
+
+- **Interoperability**. A2A clients can interact with the A2A agent through a standardized protocol.
+- **Standardized Discovery**. An Agent Card provides A2A clients with the A2A agent's name, description, and skills.
+- **Flexible Interaction**. The Endpoint supports single-turn messages, multi-turn conversations, long-running tasks, and streaming responses.
+
+## Restrictions
+
+- A2A support varies between platforms. An A2A client that implements the protocol differently may not consume all parts of the Agent Card or all response types. Test the integration with each A2A client you plan to use.
+- Push notifications, such as webhook delivery on task completion, aren't supported. The Agent Card always advertises `capabilities.pushNotifications: false`.
+- The `x-a2a-endpoint-key` header name used for API Key Authentication isn't configurable.
+- Inbound requests are rate-limited to 120 requests per 60 seconds per Endpoint. This limit isn't configurable.
+- Incoming file attachments (`FilePart`) aren't supported. The Endpoint editor doesn't currently expose a [File Storage](/ai/agents/deploy/endpoints/file-storage) connection for the A2A Server Endpoint, so attachments are dropped regardless of whether they're sent by URI reference or as inline base64 content.
+- A [Handover to Human Agent](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-human-agent-tool) request in the Flow doesn't produce a distinct task state. A human agent replies after the Flow's execution pass ends. Because push notifications aren't supported, that reply can't reach the A2A client through this Endpoint.
+
+## Prerequisites
+
+- A Cognigy.AI Flow that can respond to text messages, for example, with a [Say](/ai/agents/develop/node-reference/basic/say) Node or an [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent) Node.
+
+## Generic Endpoint Settings
+
+- [Advanced: Mocking](/ai/agents/test/mocking)
+- [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer Functions](/ai/for-developers/transformers/overview)
+
+## Specific Endpoint Settings
+
+<AccordionGroup>
+
+  <Accordion title="Agent Card Configuration">
+
+    This section shows the Endpoint URL and configures the metadata that A2A clients receive upon discovering the A2A agent.
+
+    | **Parameter** | **Description** |
+    |---------------|-----------------|
+    | A2A Agent Base URL | The Endpoint's base URL in the format `https://endpoint.cognigy.ai/a2a/v1/{token}`. To let an A2A client reach this A2A agent, give it this URL. For example, paste it into the **A2A Agent Base URL** field of an [A2A Agent](/ai/agents/develop/node-reference/ai/ai-agent#a2a-agent) Node. |
+    | Agent Card URL | A read-only link that opens the Agent Card discovery document, in the format `https://endpoint.cognigy.ai/a2a/v1/{token}/.well-known/agent-card.json`. Use it to preview or verify the Agent Card. |
+    | Agent Name | The name that the A2A agent presents to A2A clients in the Agent Card `name` field. If left empty, the value defaults to `Cognigy AI Agent`. |
+    | Agent Description | A description of the A2A agent that A2A clients use to determine when to route tasks to it. |
+    | Enable Streaming (SSE) | Advertises whether the A2A agent supports streaming responses through the Agent Card's `capabilities.streaming` field. Active by default. |
+
+  </Accordion>
+
+  <Accordion title="Authentication">
+
+    This section configures an optional authentication layer in addition to the mandatory URL token.
+
+    | **Parameter**         | **Description**                                                                                                                                                                                                                                                  |
+    | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Authentication Method | Selects the authentication method for incoming A2A requests:<ul><li>**None** — requires only the URL token. The parameter is selected by default.</li><li>**API Key** — requires the URL token and a valid API key in the `x-a2a-endpoint-key` header.</li></ul> |
+    | Endpoint API Keys     | Appears when **API Key** is selected. Generates and revokes API keys for the Endpoint. Multiple keys can remain active at the same time, allowing you to rotate keys without downtime.                                                                           |
+
+    The URL token embedded in the Endpoint URL is always required and can't be disabled.
+
+  </Accordion>
+
+  <Accordion title="A2A Skills">
+
+    This section lists the capabilities that the A2A agent advertises through the Agent Card's `skills` field. Skills provide descriptive metadata only and don't restrict what the Flow can do.
+
+    | **Parameter** | **Description** |
+    |---------------|-----------------|
+    | Name | The skill's display name. |
+    | Description | A description that helps A2A clients determine when to invoke the skill. |
+
+    Click the plus icon to add a skill or the delete icon to remove one. If you don't configure any skills, the Agent Card advertises a single default skill.
+
+  </Accordion>
+
+</AccordionGroup>
+
+## How to Set Up
+
+Configure the A2A Server Endpoint for the Flow, then give its **A2A Agent Base URL** to the A2A client.
+
+### Set Up the A2A Server Endpoint
+
+<Accordion title="Configure an A2A Server Endpoint">
+
+1. In the left-side menu of your Project, click **Deploy > Endpoints**.
+2. On the **Endpoints** page, click **+ New Endpoint**.
+3. In the **New Endpoint** section:
+   1. Select the **A2A Server** Endpoint type.
+   2. Specify a unique name.
+   3. Select the Flow that the Endpoint should expose.
+   4. Save the changes.
+4. In **Agent Card Configuration**, specify the **Agent Name** and **Agent Description**. Save the changes.
+5. _(Optional)_ In **A2A Skills**, add one or more skills that describe the A2A agent's capabilities.
+6. In **Authentication**, select the **Authentication Method**:
+   - **None** — requires only the URL token. This option is selected by default.
+   - **API Key** — requires the URL token and a valid API key in the `x-a2a-endpoint-key` header. To generate an API key, click **+ New Key** under **Endpoint API Keys**. Share the key securely with the A2A client.
+7. Activate the Endpoint.
+8. Click **A2A Agent Base URL** to copy the URL.
+
+</Accordion>
+
+### Connect an A2A Client
+
+<Accordion title="Connect an External A2A Client">
+
+The exact configuration depends on the A2A client library or framework. Most A2A clients handle Agent Card discovery and protocol details automatically.
+
+1. Give the A2A client the **A2A Agent Base URL** copied from the Endpoint. Most A2A clients use this URL to discover the Agent Card. For a direct request, append `/.well-known/agent-card.json`:
+
+   ```bash
+   curl -s \
+     -H "A2A-Version: 1.0" \
+     https://endpoint.cognigy.ai/a2a/v1/{token}/.well-known/agent-card.json
+   ```
+
+   Replace `{token}` with the token from the A2A Agent Base URL. The `A2A-Version: 1.0` header returns the version 1.0 Agent Card. Omit the header to receive the version 0.3 Agent Card.
+
+2. Send a message with the `SendMessage` JSON-RPC method:
+
+   ```bash
+   curl -s -X POST https://endpoint.cognigy.ai/a2a/v1/{token}/a2a \
+     -H "Content-Type: application/json" \
+     -H "A2A-Version: 1.0" \
+     -d '{
+       "jsonrpc": "2.0",
+       "id": "req-1",
+       "method": "SendMessage",
+       "params": {
+         "message": {
+           "messageId": "msg-1",
+           "role": "ROLE_USER",
+           "parts": [{ "text": "Hello" }]
+         }
+       }
+     }'
+   ```
+
+   If the **API Key** authentication is configured, add:
+
+   ```bash
+   -H "x-a2a-endpoint-key: {key}"
+   ```
+
+   Agent Card discovery doesn't require the API key, even when API Key authentication is configured for message requests.
+
+3. For long-running tasks, set `"configuration": { "returnImmediately": true }` in the request. The Endpoint returns the task immediately. Poll its status with `GetTask` using the returned task `id` until it reaches a terminal state.
+4. For streaming responses, use `SendStreamingMessage` instead of `SendMessage`. The Endpoint returns the response as a Server-Sent Events (SSE) stream.
+
+</Accordion>
+
+## Use Cases
+
+<AccordionGroup>
+
+  <Accordion title="Multi-Agent Orchestration">
+    Add the A2A agent to a multi-agent system. An orchestrator can route relevant tasks to it and incorporate its responses into a larger workflow.
+  </Accordion>
+
+  <Accordion title="Cross-Platform Agent Collaboration">
+    Let A2A clients on other platforms interact with the A2A agent to access specialized knowledge or execute existing business logic.
+  </Accordion>
+
+  <Accordion title="Cross-Organization Cognigy Collaboration">
+    Let a Cognigy.AI Flow in one organization or Project interact with an A2A agent in another organization or Project. Use the A2A protocol instead of a proprietary integration. Copy the **A2A Agent Base URL** from the A2A Server Endpoint. Paste it into the **A2A Agent Base URL** field of an [A2A Agent](/ai/agents/develop/node-reference/ai/ai-agent#a2a-agent) Node in the other environment.
+  </Accordion>
+
+  <Accordion title="Long-Running Task Delegation">
+    Delegate a task that takes time to complete, for example, a task that calls a slow external API. The A2A client can poll for the result instead of keeping the connection open.
+  </Accordion>
+
+  <Accordion title="Agent as a Channel">
+    Let the A2A client contact the A2A agent on the customer's behalf. The A2A Server Endpoint provides the machine-to-machine interface for accessing the A2A agent.
+  </Accordion>
+
+  <Accordion title="Reuse Without Exposure">
+    Let other teams delegate work to the A2A agent without giving them access to its implementation. The A2A client sees the Agent Card and receives the result, while the Flow's internal logic, tools, and data remain inside Cognigy.AI.
+  </Accordion>
+
+</AccordionGroup>
+
+## Troubleshooting
+
+| **Issue**                    | **Cause**                                                                                                             | **Solution**                                                                                                                                                     |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agent Card Not Found         | The Endpoint isn't active, or the wrong path is used.                                                                 | Ensure the Endpoint is active and use `/a2a/v1/{token}/.well-known/agent-card.json`. The legacy path `/a2a/v1/{token}/.well-known/agent.json` is also supported. |
+| 401 Unauthorized             | The request is missing the `x-a2a-endpoint-key` header while API Key authentication is configured.                    | Add the header with a valid API key. Verify that the key hasn't been revoked.                                                                                    |
+| 403 Forbidden                | The `x-a2a-endpoint-key` header contains an invalid or revoked key.                                                   | Generate a new API key in **Endpoint API Keys** and update the A2A client's configuration.                                                                       |
+| 429 Too Many Requests        | The Endpoint received more than 120 requests within 60 seconds.                                                       | Reduce the request rate from the A2A client. This limit isn't configurable.                                                                                      |
+| File Attachments Dropped     | No [File Storage](/ai/agents/deploy/endpoints/file-storage) connection is available for this Endpoint type.           | This isn't currently configurable. Avoid relying on incoming file attachments with this Endpoint type.                                                           |
+| Task Stuck in Input Required | The Flow is waiting for further input, for example, at a Question Node, but no follow-up message arrives. | Send a follow-up message continuing the same task. If no follow-up arrives, the task automatically fails after 5 minutes.                                        |
+
+## A2A Compared to MCP
+
+<A2aAndMcp />
+
+## More Information
+
+- [A2A Agent Tool](/ai/agents/develop/node-reference/ai/ai-agent#a2a-agent). Call a remote A2A agent as a tool from within an AI Agent Node.
+- [MCP Server](/ai/agents/deploy/endpoint-reference/mcp-server). Expose AI Agent tools through the Model Context Protocol.
