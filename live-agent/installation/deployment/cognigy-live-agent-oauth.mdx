@@ -1,0 +1,63 @@
+---
+title: Cognigy Live Agent OAuth
+description: Configure Cognigy Live Agent OAuth 2.0 login using your Cognigy account credentials, the default authentication method for Live Agent access.
+
+---
+
+<a href="/release-notes/2026.18"><Badge className="version-badge" color="blue">Updated in 2026.18</Badge></a>
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+You can log in to Live Agent with your Cognigy account using the OAuth2 protocol.
+To configure this, follow the instructions provided in the [Helm Values](/live-agent/installation/helm-values/helm-values) article. Note that this approach is the default login method for Live Agent.
+
+<Frame>
+<img src="/_assets/live-agent/LA-cognigy-oauth.png" alt="Live Agent OAuth screen and Cognigy Login" style={{ width: 'auto' }} />
+</Frame>
+
+
+After entering your credentials, you will be redirected to the Live Agent page. Live Agent then logs you in to your Cognigy account.
+
+<Note>
+  Remember that the user needs the proper roles to log in to Live Agent. Otherwise, an unauthorized error will be thrown.
+</Note>
+
+## Log in to Live Agent via CXone SSO
+
+In [CXone-integrated installations](/ai/administer/installation/access-to-cognigy-ai), users who have completed CXone SSO into Cognigy can access Live Agent without re-entering credentials. This direct access requires one of the following roles in Cognigy: `liveAgentAgent`, `liveAgentAdmin`, `liveAgentSupervisor`, or `admin`.
+
+## Migrate existing users who currently log in with their email and password to using Cognigy OAuth
+
+Old users created from the Management UI can still log in using the `/old-login` endpoint.
+
+However, it is recommended to migrate these users to use the Cognigy OAuth login. To initiate the migration process, follow these steps:
+
+1. Create a Cognigy user account with the same email as the old user. 
+2. To log in to Live Agent, assign a valid role by following the guide [Adding Agents and Admins to Live Agent](/live-agent/getting-started/live-agent-setup/live-agent-setup-agents). 
+3. Log in to Live Agent using Cognigy OAuth (`/login` endpoint).
+
+<Note>
+  Once this process is completed, the user will no longer be able to log in using `/old-login`, and any changes to their credentials must be made through the Cognigy platform.
+</Note>
+
+## OAuth Errors
+
+The following list contains common errors that can occur when using Cognigy OAuth.
+
+### Something is wrong with the OAuth configuration
+
+The problem concerns how the Cognigy and Live Agent APIs are configured to communicate. To resolve this, you must review and double-check the configuration for Live Agent in the [Helm Values](/live-agent/installation/helm-values/helm-values#oauth) section. Additionally, verify the Cognigy ConfigMap that contains the Live Agent API endpoints and client data.
+
+### The user organization `{Organisation ID}` was not found in the system
+
+This error message indicates that no Live Agent account is associated with the specified Cognigy organization. To resolve this, you need to set up the organization in Live Agent. Please refer to the [Cognigy Live Agent Setup](/live-agent/getting-started/live-agent-setup/live-agent-setup-org) guide for instructions on how to do this.
+
+### The Cognigy user is not authorized to access the system
+
+If the user does not have the necessary permissions, follow the instructions provided in the guide [Adding agents and admins to Live Agent](/live-agent/getting-started/live-agent-setup/live-agent-setup-agents) to grant them the appropriate roles and resolve the authorization issue.
+
+### CXone-SSO'd user without a Live Agent role (403)
+
+If a user has completed CXone SSO into Cognigy but doesn't have one of the required Live Agent roles (`liveAgentAgent`, `liveAgentAdmin`, `liveAgentSupervisor`, or `admin`), Live Agent returns a `403` error. To resolve this issue, assign the user one of the required roles by following the [Adding Agents and Admins to Live Agent](/live-agent/getting-started/live-agent-setup/live-agent-setup-agents) guide.

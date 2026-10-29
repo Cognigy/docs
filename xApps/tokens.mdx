@@ -1,0 +1,33 @@
+---
+title: xApp Tokens
+description: "Learn how xApp Tokens provide the xApp session URL and PIN code used to access and authenticate xApp sessions via Cognigy flow input objects."
+keywords: ['xapp tokens', 'xapp session url', 'xapp pin', 'session access', 'xapp authentication']
+---
+
+URLs as well as the PIN code to access an xApp session are exposed via Cognigy Tokens.
+
+## xApp PIN Page URL	
+
+The xApp PIN Page URL token provides a URL to access the PIN Page.
+You can get this URL when the [xApp: Init Session](/ai/agents/develop/node-reference/xApp/init-xApp-session#with-pin) Node is executed.
+This URL is also accessible via `input.apps.baseUrl` in the input object.
+
+## xApp Session PIN
+
+The xApp Session PIN token provides the PIN code to access the xApp Session.
+This PIN is also accessible via `input.apps.session.pin` in the input object.
+
+The PIN code is only valid for 5 minutes after it is created by the [xApp: Get Session PIN](/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN) Node.
+
+## xApp Session URL
+
+The xApp Session URL token provides the URL to access the xApp Session without a PIN.
+You can get this token
+when the [xApp: Init Session](/ai/agents/develop/node-reference/xApp/init-xApp-session#without-pin) Node is executed.
+This URL is also accessible via `input.apps.url` in the input object.
+
+## More Information
+
+- [xApp: Get Session PIN](/ai/agents/develop/node-reference/xApp/get-xApp-session-PIN) 
+- [xApps](/xApps/overview)
+- [xApp Nodes](/ai/agents/develop/node-reference/xApp/overview)

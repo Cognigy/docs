@@ -1,0 +1,143 @@
+---
+title: "2026.22 (latest)"
+---
+
+<Warning>
+  Removals:
+
+  - The `amazon.nova-premier-v1:0` model has been removed because Amazon Bedrock no longer supports it. Migrate to a [supported model](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+  - The deprecated `GET /v2.0/conversationcounter`, `GET /v2.0/projects/{projectId}/conversationcounter`, `GET /v2.0/callcounter`, and `GET /v2.0/projects/{projectId}/callcounter` API methods have been removed. Use the `GET /v3.0/conversationcounter`, `GET /v3.0/projects/{projectId}/conversationcounter`, `GET /v3.0/callcounter`, and `GET /v3.0/projects/{projectId}/callcounter` methods instead.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.22.2
+
+### Cognigy
+
+**Released** October 29, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in handovers through the 8x8 Endpoint and handover provider where replies from human agents didn't reach the end user
+- Fixed the issue where running an Endpoint that used a Snapshot created in Cognigy 2026.21 or earlier overwrote the Connection values in the Project with the Snapshot's values
+
+## 2026.22.1
+
+### Cognigy, Cognigy Voice Gateway, and Cognigy Live Agent
+
+**Released** October 28, 2026
+
+#### Improvements
+
+- Improved service security and stability
+
+## 2026.22.0
+
+### Cognigy
+
+**Released** October 27, 2026
+
+#### Features
+
+##### New Models by OpenAI
+
+Added support for the [`gpt-6-sol`, `gpt-6-luna`, and `gpt-6.1-sol`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) models for the OpenAI and Microsoft Azure OpenAI providers. Use `gpt-6-sol` and `gpt-6.1-sol` for complex tasks, such as coding. Use the lower-cost `gpt-6-luna` for high-volume tasks with a clear goal, such as extracting information or answering quick questions.
+
+##### New Models by Anthropic
+
+Added support for the [`claude-opus-5-5`, `claude-sonnet-5-5`, and `claude-haiku-5-5`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) models. Use `claude-opus-5-5` for complex work that requires careful judgment, `claude-sonnet-5-5` for well-scoped everyday tasks that need fast output, and `claude-haiku-5-5` for high-volume, cost-sensitive applications.
+
+#### Improvements
+
+- Reduced NLU model loading time during intent scoring, helping AI Agents respond faster when many users interact with them simultaneously
+- Renamed Salesforce Messaging for In-App and Web (MIAW) to [Salesforce Enhanced Chat](/ai/escalate/handover-reference/salesforce-enhanced-chat) in the UI to match the current Salesforce product name
+- Added the [Custom URL](/ai/agents/develop/gen-ai-and-llms/providers/mistral) field in the LLM editor for Mistral AI models
+
+#### Bug Fixes
+
+- Fixed the issue that caused duplicate eye icons in password fields when users accessed Cognigy through Microsoft Edge
+- Fixed the issue where LLM Prompt and AI Agent Nodes using `gemini-3.1-pro-preview` failed with the `400 INVALID_ARGUMENT` error after the second LLM call of a session
+- Fixed the issue where API requests with a valid API key intermittently failed with the `401 Unauthorized` error after a RabbitMQ restart
+- Fixed the issue where importing a Package through the REST API with Locale IDs in `resourceIds` created a second primary Locale in the Project and blocked later Package imports
+- Fixed the issue where system emails displayed incorrectly in dark mode in Outlook on macOS, affecting icons, buttons, and the footer logo
+- Fixed the issue where changing two assertions in the same Playbook Step simultaneously caused one of the changes to be lost without warning
+- Fixed the issue where the JSON editor on the Default Context tab used the light theme instead of the default dark theme
+- Fixed the issues with collapsible sections and inconsistent field label styling in the Question Node editor
+- Fixed the issue where calls to Gemini 2.5 family models failed with the `TypeError: Value is not a valid number: NaN` error when the model returned an empty answer
+- Fixed the issue where a streamed answer from an OpenAI or Microsoft Azure OpenAI model using the Responses API repeated the first sentence and dropped the first word of the second message when a tool call separated two text messages
+- Fixed the issue where saving a Playbook or NLU connector with unchanged values within one second returned a `404 Not Found` error
+- Fixed the issue where the Simulator's dashboard, scenarios, and simulations tabs disappeared when a Project had no scenarios but still had simulation runs 
+- Fixed the issue where the Flows list pagination footer truncated the entry count on the last page
+- Fixed the issue where the Endpoint editor allowed saving a Genesys Bot Connector Endpoint with an empty Verify Token field
+- Fixed the issue where a CognigyScript expression in the MCP Server SSE URL, Whitelist, or Blacklist field of an MCP Tool Node wasn't resolved. This behavior caused an `Invalid URL` error or prevented tools from being filtered
+- Fixed the issue where SSO from the NiCE CXone portal intermittently failed, redirecting users to the standard login form and requiring a retry
+- Fixed the issue where the headers of system emails took up too much space when images were blocked by the email client
+- Fixed the issue where changing an Endpoint's Snapshot through the REST API left it pointing to a Flow or Locale that didn't exist in that Snapshot, so conversations failed with the `Requested locale does not exist` error
+- Fixed the issue where restoring a Snapshot randomly failed with a duplicate key error on Intents and left the Project without working Locales
+- Fixed the issue where GET requests made with the Cognigy REST API Client (`@cognigy/rest-api-client`) were blocked by CDN infrastructure with a `403` error before reaching Cognigy
+- Fixed the issue where LLM Prompt and AI Agent Nodes used strict mode for tools on gpt-5.5 and later OpenAI models, despite the setting being turned off
+- Fixed the issue where Simulator scenarios from Cognigy 2026.14–2026.16 were omitted from Packages and Snapshots, and lost after Snapshot restoration
+- Fixed the issue where creating or restoring a Snapshot or importing a Package failed with a `Connection does not exist` error when a Project's LLM referenced a deleted Connection
+
+### Cognigy Voice Gateway
+
+**Released** October 27, 2026
+
+#### Features
+
+##### Amazon Polly TTS Engine Support
+
+Introduced support for Amazon Polly TTS engines. You can now choose between Generative, Neural, and Standard engines to match your AI agent’s voice quality and language coverage to your use case. You can also select an engine for the fallback speech vendor.
+Configure the engine in the following places:
+  - The TTS Engine parameter of the [Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) Node.
+  - The Engine field on the [Applications](/voice-gateway/webapp/applications) page in the Voice Gateway Self-Service Portal.
+  - The `synthesizer.engine` and `synthesizer.fallbackEngine` properties of the [`say`](/voice-gateway/references/verbs/say) and [`config`](/voice-gateway/references/verbs/config) verbs.
+
+#### Bug Fixes
+
+- Fixed an issue where callers heard silence when Voice Gateway failed over to a fallback TTS voice from the same vendor (Microsoft or Google)
+- Fixed the issue where a large SIP message caused Voice Gateway to stop handling new calls until the service was restarted
+
+### Cognigy Agent Copilot
+
+**Released** October 27, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Interaction Panel's Input, Context and Profile tabs flashed a white `Loading...` screen when first opened
+- Fixed the issue where clicking the Powered by Cognigy.AI button when using Genesys resulted in a connection error
+
+### Cognigy Live Agent
+
+**Released** October 27, 2026
+
+#### Improvements
+
+- Improved service stability and performance
+
+### Cognigy Insights
+
+**Released** October 27, 2026
+
+#### Improvements
+
+- Added search prefixes to the Conversations explorer in the new Insights framework to improve search performance. Use `session:<id>`, `user:<id>`, `text:<words>`, or `words:<words>` to narrow searches
+
+#### Bug Fixes
+
+- Fixed the issue where the LLM editor listed Conversation Analyzer as supported for incompatible models. Now, Projects already using one of these models show a warning in Project Settings
+- Fixed the issue where the Conversations explorer showed Webchat v3 conversations as Webchat v2, including the Webchat v2 icon, because the transcript list didn't return the Endpoint type
+- Fixed the issue where the Conversations explorer showed a `No default translation found!` error instead of an AI Agent message, for example, for Voice Gateway SIPREC agent transcripts
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)
