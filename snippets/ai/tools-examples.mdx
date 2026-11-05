@@ -1,0 +1,66 @@
+### Tool
+
+In this example, the `unlock_account` tool unlocks a user account by providing the email and specifying the reason for the unlocking.
+
+Parameter configuration in JSON:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "User's login email for their account."
+    }
+  },
+  "required": ["email"],
+  "additionalProperties": false
+}
+```
+
+where:
+
+- `type` — the type for a tool parameter schema, which must always be `object`.
+- `properties` — defines the parameters for the tool configuration:
+    - `email` — a required tool parameter for unlocking the account.
+        - `type` — defines the data type for the tool parameter.
+        - `description` — a brief explanation of what the property represents.
+- `required` — lists `email` as a required parameter, ensuring that this value is always provided when the tool is called.
+- `additionalProperties` — ensures that the input contains only the `email` tool parameter, and no others are allowed.
+
+### MCP Tool and Call MCP Tool
+
+#### Use Zapier's Remote MCP server
+
+You can create a custom MCP server with personalized tools by using one of the [provided SDKs](https://github.com/modelcontextprotocol). For a quicker setup, you can use a third-party provider. For example, [Zapier](https://zapier.com/) allows you to [configure your MCP server](https://actions.zapier.com/settings/mcp/), which can be connected to multiple application APIs.
+
+To use Zapier as a remote MCP server, follow these steps:
+
+1. Log in to your Zapier account, go to the [MCP settings](https://actions.zapier.com/settings/mcp/) page, and configure your MCP server.
+2. Copy the SSE URL and paste it into the **MCP Server SSE URL** field of your MCP Tool Node.
+3. In the Zapier MCP settings, create an action to connect to various APIs. For example, you can create a Zapier action to automatically generate a Google Doc.
+
+Once the setup is complete, the configured MCP Actions will be loaded when the AI Agent is executed.
+
+You will see the following debug message in the Interaction Panel, indicating the result of the tool call after a successful execution:
+
+```txt
+AI Agent: MCP Tool
+Fetched tools from MCP Tool "zapier"
+
+- google_docs_create_document_from_: Create a new document from text. Also supports limited HTML.
+  Parameters:
+  - title (string): Document Name
+  - file (string): Document Content
+```
+
+### Knowledge Tool
+
+In this example, you have two Knowledge tools to search two different Knowledge Stores. Each Knowledge Store refers to a different product category, in this example, appliances and furniture. To guide the AI Agent to use the correct Knowledge tool, enter a clear tool ID and description:
+
+- Knowledge Tool 1:
+  - Tool ID: `search_appliances`
+  - Description: `Find the answer to prompts or questions about appliances by searching the attached data sources. Use this tool when a customer asks about appliance items such as washing machines, dryers, and other household appliances. Focus exclusively on a knowledge search and does not execute tasks like small talk, calculations, or script running.`
+- Knowledge Tool 2:
+  - Tool ID: `search_furniture`
+  - Description: `Find the answer to prompts or questions about furniture by searching the attached data sources. Use this tool when a customer asks about furniture items such as sofas, tables, and other items. Focus exclusively on a knowledge search and does not execute tasks like small talk, calculations, or script running.`

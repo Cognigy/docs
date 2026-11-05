@@ -1,0 +1,86 @@
+---
+title: executeFlow
+seo:
+  metatags:
+    description: executeFlow executes a target Flow starting from a specified Entrypoint
+      Node.
+keywords: ['executeflow', 'execution control functions']
+---
+
+## Syntax
+
+`executeFlow(config)`
+
+## Description
+
+Executes a target Flow starting from a specified Entrypoint Node.
+
+The behavior is controlled by `config.flowNode.isGoto`:
+
+- `false` – the target Flow runs temporarily, then returns to the current Flow.
+- `true` – the target Flow runs permanently and doesn't return to the current Flow. For this behavior, you must call [`resetNextNodes()`](/ai/for-developers/function-reference/execution-control/resetNextNodes) before calling `executeFlow()`.
+
+Only Nodes marked as Entrypoint in the target Flow can be used.
+
+**Parameters:**
+
+- `config`: `IExecuteFlowNodeConfig` — the `IExecuteFlowNodeConfig` configuration object that specifies the configuration for the Flow execution.
+
+<Accordion title="IExecuteFlowNodeConfig Object Structure">
+
+  ```js
+  interface IExecuteFlowNodeConfig {
+      flowNode: {
+          flow: string;
+          node: string;
+          isGoto?: boolean;
+      };
+      parseIntents?: boolean;
+      parseKeyphrases?: boolean;
+      absorbContext?: boolean;
+  }
+  ```
+
+  **Returns:** `Promise<void>`
+</Accordion>
+## Example
+
+<Tabs>
+<Tab title="Permanent Switch (`isGoto = true`)">
+    ```txt
+    Current Flow → executeFlow(target Flow) → switches → target Flow continues (no return)
+    ```
+
+    ```js
+    resetNextNodes();         // Call this function to make sure `isGoto: true` is applied
+    await executeFlow({
+      flowNode: {
+        flow: "support-flow",     // The ID of the target Flow
+        node: "node-id",          // The ID of the Entrypoint Node
+        isGoto: true              // Keep execution in the target Flow
+      },
+      parseIntents: true,         // Enable intent parsing in the target Flow
+      parseKeyphrases: false,     // Disable keyphrase parsing
+      absorbContext: true         // Absorb context from the target Flow
+    });
+    ```
+</Tab>
+<Tab title="Temporary Run (`isGoto = false`)">
+    ```txt
+    Current Flow → executeFlow(target Flow) → returns → Current Flow continues
+    ```
+
+    ```js
+    await executeFlow({
+      flowNode: {
+        flow: "support-flow",     // The ID of the target Flow
+        node: "node-id",          // The ID of the Entrypoint Node
+        isGoto: false             // Return to this Flow after execution
+      },
+      parseIntents: true,         // Enable intent parsing in the target Flow
+      parseKeyphrases: false,     // Disable keyphrase parsing
+      absorbContext: true         // Absorb context from the target Flow
+    });
+    ```
+</Tab>
+</Tabs>

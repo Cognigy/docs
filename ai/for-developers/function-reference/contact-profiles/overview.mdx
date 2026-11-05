@@ -1,0 +1,42 @@
+---
+title: Contact Profiles
+sidebarTitle: Overview
+seo:
+  metatags:
+    description: The Contact Profile functions are used to manage a user's Contact
+      Profile. They allow you to activate or deactivate a Contact Profile, update
+      specific fields, and merge one Contact Profile with another. When a Contact
+      Profile is deactivated, no data can be read from or written to it.
+keywords: ['contact profiles', 'contact profile functions']
+---
+
+The _Contact Profile_ functions are used to manage a user's [Contact Profile](/ai/agents/analyze/contact-profiles). They allow you to activate or deactivate a Contact Profile, update specific fields, and merge one Contact Profile with another. When a Contact Profile is deactivated, no data can be read from or written to it.
+
+## [`activateProfile`](/ai/for-developers/function-reference/contact-profiles/activateProfile)
+
+**Syntax:** `activateProfile()`
+
+Activates the user's Contact Profile.
+Call this function to re-enable read and write operations on a previously deactivated Contact Profile.
+
+## [`deactivateProfile`](/ai/for-developers/function-reference/contact-profiles/deactivateProfile)
+
+**Syntax:** `deactivateProfile(deleteData)`
+
+Deactivates the user's Contact Profile. When the Contact Profile is deactivated, no data can be read from or written to the Contact Profile.
+
+## [`updateProfile`](/ai/for-developers/function-reference/contact-profiles/updateProfile)
+
+**Syntax**
+
+`updateProfile(key, value)`
+
+Updates a value in the current user's Contact Profile.
+
+## [`mergeProfile`](/ai/for-developers/function-reference/contact-profiles/mergeProfile)
+
+**Syntax**
+
+`mergeProfile(contactId)`
+
+Merges the current Contact Profile with another one.
