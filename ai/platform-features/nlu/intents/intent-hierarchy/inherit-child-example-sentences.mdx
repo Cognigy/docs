@@ -1,0 +1,98 @@
+---
+title: Inheritance mechanism
+description: "Let parent intents use the example sentences of their child intents with the Cognigy intent inheritance mechanism. Learn how inheritance works."
+keywords: ['intent inheritance mechanism', 'intent hierarchy', 'parent intents', 'child intents']
+---
+
+The _inheritance mechanism_ feature lets parent intents use example sentences from their child intents.
+This mechanism helps the agent better understand user inputs and determine the intended action.
+
+## Key benefits
+
+- **Wider scope for parent intents**. Parent intents get a better-trained NLU model by including examples from child intents.
+- **Clear hierarchy**. You can see how intents relate to each other and how they're scored.
+
+## Prerequisites
+
+Before using the inheritance mechanism, make sure you have a multilevel intent structure,
+for example, Level 1 parent intents with Level 2 or Level 3 child intents.
+
+## How to use
+
+To activate the inheritance mechanism, follow these steps:
+
+1. In the navigation menu, go to **Advanced > NLU**, then on the **Intents** tab, select the parent intent you want to set up.
+2. Activate the **Inherit Example Sentences from Child Intents** setting.
+3. Save your changes and rebuild the model to apply them.
+
+### Intent hierarchy matching
+
+The parent intent includes examples from its child intents in its training data.
+When a user sends an input, during intent matching, both parent and child intents can score highly.
+
+The child intent's details are saved in the `input.intent` Input object,
+while the parent intent's details appear in `input.nlu.intentMapperResults.scores`.
+For a deeper understanding of the resolution process, you can trace the intent path using `input.intentLevel` and `input.nlu.intentMapperResults.intentPath`.
+
+<Accordion title="Input object">
+  ```json
+  {
+    "input": {
+      "intent": "Child Intent",  
+      "nlu": {
+        "intentMapperResults": {
+          "scores": [
+            {
+              "intent": "Child Intent",
+              "score": 0.6833273843878324
+            },
+            {
+              "intent": "Parent Intent",
+              "score": 0.5099832885597476
+            }
+          ],
+          "intentPath": [
+            "Parent Intent",
+            "Child Intent"
+          ]
+        }
+      },
+      "intentLevel": {
+        "level1": "Parent Intent",
+        "level2": "Child Intent",
+        "level3": null
+      }
+    }
+  }
+  ```
+</Accordion>
+
+## Example
+
+Consider the inheritance mechanism in a customer support agent.
+The parent intent (`Support`) inherits example sentences from its child intents
+(`Technical Support` and `Billing Support`).
+This structure enables the agent to handle general inquiries while accurately identifying specific intents.
+
+<AccordionGroup>
+  <Accordion title="Intent data">
+    | Level   | Name   | Intent name         | Example sentences                                                                                          | Description                                                                   |
+    | ------- | ------ | ------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+    | Level 1 | Parent | `Support`           | `I need assistance` <br/> `Can you help me?` <br/> `I have an issue`                                       | The high-level parent intent recognizing broad customer queries.              |
+    | Level 2 | Child  | `Technical Support` | `My internet is down` <br/> `I can't connect to the Wi-Fi` <br/> `My computer is broken`                   | The child intent under the `Support` parent for issues related to technology. |
+    | Level 2 | Child  | `Billing Support`   | `I need help with my invoice` <br/> `I have a question about my bill` <br/> `Can you explain this charge?` | The child intent under the `Support` parent for issues related to billing.    |
+  </Accordion>
+
+  <Accordion title="Result">
+    | User input                    | Recognized intent                  |
+    |-------------------------------|------------------------------------|
+    | `I need assistance`           | `Support` (parent intent)          |
+    | `My internet is down`         | `Technical Support` (child intent) |
+    | `I need help with my invoice` | `Billing Support` (child intent)   |
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)
+- [Intent mapping priority](/ai/platform-features/nlu/intents/intent-hierarchy/intent-mapping-priority)

@@ -1,0 +1,148 @@
+---
+title: "Bi-directional transfer"
+sidebarTitle: "Bi-directional transfer"
+keywords: ['bi-directional transfer', 'route to flow', 'agents node', 'tool result', 'execute tool flow', 'agent routing']
+description: "Route a conversation between a flow and an agent in both directions with the Agents Node, the Route to flow tool, and the Tool Result Node."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+The _bi-directional transfer_ provides routing between a flow and an agent in both directions, enabling you to combine open-ended conversation with fixed steps.
+
+## Key benefits
+
+- Fixed steps stay in flows. A flow runs the steps that must follow fixed rules, while the agent handles the open conversation.
+- One conversation for the customer. The customer stays in one conversation, even when control moves between a flow and an agent.
+- Context can carry over. You choose how much conversation history the flow receives from an agent, and how much the agent receives from a flow.
+- Results return to the agent. A flow can send a result back, and the agent continues from it.
+
+## Prerequisites
+
+Before using bi-directional transfer, ensure the following:
+
+1. Turn on **Enable Agents node** in the **Agent Settings** section of the project settings.
+2. Turn on **Enable Route to Flow tool** in the same section.
+
+These settings control only whether the node and the tool appear in the menus. Existing Nodes and tools keep working when you turn a setting off.
+
+## Limitations
+
+- The platform limits how many times a conversation can be routed between flows and agents in one session. Each **Route to Flow** call and each Agents Node run counts toward the limit, and user messages don't reset it. Running a flow as a tool doesn't count. When the limit is reached, the transfer doesn't happen. With **Route to Flow**, the agent receives a tool error and keeps the conversation. With the Agents Node, the conversation stays with the flow.
+- An agent can run a flow as a tool up to 4 times between two user messages. Further calls fail with a tool error.
+- A transfer carries up to 32 KB of data, including the conversation history and the tool parameters. A transfer shares at most the last 50 messages. When the data is too large, the oldest messages are dropped first. If the data is still too large, for example because of a long summary, the transfer doesn't happen.
+
+## Restrictions
+
+- The target flow must be in the same project as the agent. **Route to Flow** lists only the flows that can handle conversations.
+- A transfer doesn't happen while a human agent handover is active.
+- The Agents Node must be the last node in a flow.
+- The **Tool Result** Node is available only in flows created for the **Execute Tool Flow** tool.
+
+## How it works
+
+Bi-directional transfer has three parts. The Agents Node and the **Route to Flow** tool move the conversation. The **Execute Tool Flow** tool runs a flow for the agent and returns a result.
+
+| Scenario | Component | Who owns the conversation afterward |
+|---|---|---|
+| Flow to agent | [Agents Node](/ai/agents/develop/node-reference/ai/agents) | The agent. |
+| Agent to flow | **Route to Flow** tool | The flow. |
+| Agent runs a flow as a tool | **Execute Tool Flow** tool and **Tool Result** Node | The agent. The flow returns a result to the agent. |
+
+A transfer moves the conversation. The flow or the agent stops, and the other one handles the conversation from then on. A flow that runs as a tool doesn't move the conversation. The agent keeps it, and the flow returns a result.
+
+## How to use
+
+### Route from a flow to an agent
+
+Add the [Agents Node](/ai/agents/develop/node-reference/ai/agents) as the last node of the flow. After the node runs, the flow ends and the agent handles the conversation.
+
+### Route from an agent to a flow
+
+The **Route to Flow** tool transfers the conversation from an agent to a flow. The agent stops, and the flow handles the conversation until a node or tool routes it elsewhere.
+
+To add the tool to an agent:
+
+1. In the agent, go to the **Tools** tab.
+2. Click **Add tool**.
+3. In the **Add to this agent** window, go to the **System tools** tab and select **Route to Flow**.
+4. Enter a **Name** and a **Description**, and configure the parameters in the following table.
+5. Click **Save**.
+
+| Parameter | Type | Description |
+|---|---|---|
+| Select flow | Selector | Specifies the flow that takes over the conversation. This parameter is required. |
+| Handoff message | Text | Defines the message that the agent sends to the user before the transfer. This parameter is required. By default, the agent generates this message. To use a fixed message, set **Filling mode** to **User defined** and enter the text. The **Handoff message** parameter of the Agents Node is a different message, and the user doesn't see it. If the message is empty, the user sees "Transferring you now." |
+| Flow start message | Text | Sends text to the flow as its first input, so the flow responds without waiting for the user. If you leave the field empty, the flow starts on the next user message. |
+| History mode | Selector | Controls how much of the conversation the flow receives as context:<ul><li>**None** (default): no history.</li><li>**Last turn**: the user message that led to the transfer.</li><li>**AI-generated summary**: a summary that the agent writes when it calls the tool.</li><li>**Full conversation**: the user and agent messages, up to the last 50.</li></ul> |
+
+The user sees the **Handoff message**. The agent doesn't reply again unless a flow routes the conversation back. The flow starts from the beginning, even if the conversation was in this flow before. If you set a **Flow start message**, the flow starts in the same turn on most channels, for example the Interaction Panel, Webchat v3, and REST endpoints. On some channels, for example Twilio voice calls, Avaya, Amazon Alexa, the NICE CXone webhook, the MCP Server, and A2A, the **Flow start message** isn't sent, and the flow starts on the next user message. If the transfer can't happen, for example because the limit is reached, the agent receives a tool error, keeps the conversation, and replies to the user.
+
+The flow receives the history once, in the `input.data.handoffContext` object. The object contains these keys:
+
+| Key | Description |
+|---|---|
+| `mode` | The selected history mode: `lastMessage`, `summary`, or `full`. |
+| `summary` | The conversation summary. Present when `mode` is `summary`. If the agent doesn't write a summary, the flow doesn't receive `handoffContext`. |
+| `lastMessage` | The last user message. Present when `mode` is `lastMessage`. |
+| `transcript` | A list of messages with the `role` (`user` or `assistant`) and `text` keys. Present when `mode` is `full` or `lastMessage`. With `lastMessage`, the list contains only the messages of the last turn. |
+
+Copy the values you need to the Context object, because the Input object changes with every message. With **History mode** set to **None**, the flow doesn't receive `handoffContext`.
+
+To send more values to the flow, add them in the **Parameters** section of the tool. The agent fills them in from the conversation, and the flow receives them once, in the `input.data.toolArgs` object.
+
+To check a transfer, look for the **Handoff to Flow** span in [Tracing](/ai/agents/test/interaction-panel/tracing).
+
+### Run a flow as a tool and return a result
+
+When an agent runs a flow as a tool, the agent keeps the conversation. The flow does its work and returns a result with the **Tool Result** Node.
+
+To add the tool to an agent:
+
+1. In the agent, go to the **Tools** tab.
+2. Click **Add tool**.
+3. In the **Add to this agent** window, go to the **System tools** tab and select **Execute Tool Flow**.
+4. In **Select flow**, select the flow that the tool runs, or select **Create new flow**. The list shows only flows created for this tool.
+5. Optional: in **Parameters**, add the inputs that the agent fills in from the conversation. The flow receives each parameter as a key of `input.data.toolArgs`.
+
+The flow receives the tool arguments once, in the `input.data.toolArgs` object. Copy the values you need to the Context object.
+
+A flow that runs as a tool can't wait for the user, so nodes such as Question aren't available in it. Nodes that hand the conversation over or run another flow aren't available either.
+
+Add the **Tool Result** Node where the flow has the result. The node ends the flow and sends the result to the agent. The agent continues from this result without a new greeting.
+
+On most channels, the flow runs and the agent responds within the same user message. On some channels, for example Twilio voice calls, Avaya, Amazon Alexa, the NICE CXone webhook, the MCP Server, and A2A, the flow runs and the agent responds only after the next user message. For voice-to-voice agents, the flow runs during the call, and the user doesn't hear the flow's messages.
+
+| Parameter | Type | Description |
+|---|---|---|
+| Tool Answer | CognigyScript | Defines the result that the agent receives, for example, `{{context.orderId}}`. This parameter is required. |
+| Share Conversation History | Selector | In the **Advanced** section, controls how much of the conversation from this tool call the agent receives from the flow:<ul><li>**Last exchange only** (default): the last user message and the replies to it. Without a user message, the last message of the flow.</li><li>**Full conversation**: all messages of this tool call.</li><li>**No history shared**: no history.</li></ul> |
+
+If the answer is empty, the agent receives "The flow finished without returning an answer." If the answer doesn't fit in the 32 KB transfer limit, it's cut and ends with `[truncated]`. The history is shortened first, oldest messages first, so the answer is never cut for history.
+
+If the flow ends without reaching a **Tool Result** Node, the agent receives "The flow finished without returning an answer." If the flow fails, the agent receives "The flow failed before returning an answer." In both cases, the agent continues the conversation. Make sure that every path of the flow ends with a **Tool Result** Node.
+
+If you run the flow on its own, the **Tool Result** Node doesn't send anything and logs a debug error. Test the flow through the agent, for example in the Interaction Panel, and check the **Execute Tool Flow** span in [Tracing](/ai/agents/test/interaction-panel/tracing).
+
+### Route back from a flow
+
+A flow that took over the conversation with **Route to Flow** doesn't return control by itself. To send the conversation back to an agent, add an [Agents Node](/ai/agents/develop/node-reference/ai/agents) as the last node of the flow. This is a second transfer and counts toward the transfer limit.
+
+## Example
+
+Acme Express has a delivery agent. It responds to questions about orders, delivery times, and returns. A customer asks to reschedule a delivery. The reschedule process must check the customer's identity and apply the company's rules, so it runs in a flow:
+
+1. The agent calls the **Route to Flow** tool. The customer sees a short message, and the reschedule flow takes over.
+2. The flow verifies the customer and books the new time slot.
+3. The flow ends with an Agents Node. The delivery agent takes over again and responds to follow-up questions, for example, about the new delivery window.
+
+Without the transfer back, the reschedule flow keeps handling the customer's messages after the reschedule, and the delivery agent doesn't respond again. Without a flow, the agent runs the whole process without fixed rules.
+
+The agent can also run a flow as a tool and keep the conversation. For example, the agent runs a flow that looks up the delivery status in a backend system. The flow returns the status with a **Tool Result** Node, and the agent shares the status with the customer.
+
+## More information
+
+- [Agents Node](/ai/agents/develop/node-reference/ai/agents)
+- [Tools](/ai/agents/develop/tools)
+- [Nodes](/ai/agents/develop/nodes/overview)

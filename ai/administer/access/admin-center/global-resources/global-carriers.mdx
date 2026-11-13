@@ -1,0 +1,46 @@
+---
+title: Global carriers
+sidebarTitle: Global carriers
+keywords: ['global resources', 'global carriers', 'admin center', 'sip trunk', 'telephony']
+seo:
+  metatags:
+    description: >-
+      Global carriers are SIP trunks at organization level that you can assign to projects.
+---
+
+
+_Global carriers_ are [carriers](/ai/administer/access/speech-and-telephony#carriers) at [organization level](/ai/administer/access/admin-center/global-resources/overview). You can assign them to projects and share them across your organization.
+
+## Prerequisites
+
+- Have the `admin` [global role](/ai/administer/access/admin-center/access-control).
+- Have voice features activated for your organization.
+
+## Work with global carriers
+
+In the Admin Center, go to **Resources > Carriers**. You can add, edit, and delete global carriers.
+
+The form is the same as for project-level carriers. For the carrier settings, see [Carriers](/ai/administer/access/speech-and-telephony#carriers).
+
+Phone numbers, recording buckets, and the carrier **Test call** tab are project-level. They aren't available in the Admin Center.
+
+### Check carrier usage
+
+The **Used in** column shows the projects that use a carrier. It shows **Not used** if nothing uses it.
+
+You can't delete a carrier that is in use. Remove the carrier from those phone numbers first.
+
+## Assign to projects
+
+To make a global carrier available in a project, assign it to the project. For the steps, see [Assign global resources to projects](/ai/administer/access/admin-center/global-resources/overview#assign-global-resources-to-projects).
+
+## Use in projects
+
+In **Manage > AI & Voice Providers > Telephony > Carriers**, global carriers appear with a **Global** badge. Projects can use them, for example when you add a phone number.
+
+Projects can't edit or delete global carriers. To view the settings, open the carrier. In a project, you can set an active global carrier with an outbound gateway as the Click To Call default.
+
+## See also
+
+- [Speech and telephony](/ai/administer/access/speech-and-telephony)
+- [Global resources](/ai/administer/access/admin-center/global-resources/overview)

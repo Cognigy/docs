@@ -1,0 +1,99 @@
+---
+title: Node search
+keywords: ['node search', 'flow editor']
+seo:
+  metatags:
+    description: Search through the Nodes in the Flow editor.
+---
+
+import { ExpandableTable } from '/snippets/expandable-table.jsx'
+
+
+With the _Node Search_ field, you can search through the nodes in the [flow editor](/ai/agents/develop/projects-and-flows/editor).
+
+<Note>
+The search field in the top navigation searches project resources, not nodes in a flow.
+</Note>
+
+## Restrictions
+
+- The Node Search field applies only to [specific content](#how-to-use) and doesn't match expressions in the following fields:
+
+<Accordion title="Non-searchable fields">
+
+In general, the search skips fields that hold LLM prompt text and key-value lists, such as headers, in addition to the fields in the following table.
+
+| Field                                                    | Node                                                                                                                      |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **Operator**                                             | [Lookup Node](/ai/agents/develop/node-reference/logic/lookup). This field is never searched.                              |
+| **Locale**                                               | [Switch Locale Node](/ai/agents/develop/node-reference/logic/switch-locale). This applies to the locale selector.         |
+| **System Prompt**                                        | [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt)                                                   |
+| **Instructions and Context**                             | [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent)                                                            |
+| **Headers** and **Parameters**                           | [HTTP Request Node](/ai/agents/develop/node-reference/service/http-request)                                               |
+| **Key** and **Value** in the **Webhook Headers** section | AI Agent and [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) Nodes                                     |
+| **Mock Code**                                            | All nodes                                                                                                                 |
+
+</Accordion>
+
+## How to use
+
+To open the Node Search field, click ![Search nodes button](/_assets/icons/c26/search.svg) in the bottom-center toolbar of the flow editor. It's the first button in the toolbar. The field opens in the lower-left corner of the flow editor.
+
+Alternatively, press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> on Windows and Linux, or <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>F</kbd> on macOS. Use the same shortcut to close the field.
+
+The search follows these rules:
+
+- You must enter at least 2 characters.
+- Matching isn't case sensitive and finds text anywhere in a field.
+- Results are ordered by node position, from top to bottom and from left to right.
+- The field shows a counter, for example, `1/5`, and a spinner while the search is running.
+- Label and Comment are searched only if you have permission to view them.
+
+<ExpandableTable
+  headers={["Searchable Content", "Description"]}
+  rows={[
+    ["Label", "The label displayed on a node, configured in the Settings section of the node editor."],
+    ["Comment", "The comment made on a node."],
+    ["Analytics Step", "The <a href=\"/ai/agents/analyze/analytics-steps\">Analytics Step</a> configured in a node."],
+    ["Type", "The node type, for example, Say Node or AI Agent Node."],
+    ["ID", "The unique database ID of a node. You can obtain the Node ID number via <a href=\"/ai/agents/analyze/odata#steps\">OData</a>."],
+    ["Reference ID", "The ID you can use for setting a node, for example, as an Entrypoint or for manipulating nodes via the <a href=\"https://api-trial.cognigy.ai/openapi\">Cognigy API</a>. You can copy the Reference ID from the <img src=\"/_assets/icons/black-and-white/vertical-ellipsis.svg\" alt=\"more options\" /> menu in the node editor. Select <strong>Copy Node ID</strong>."],
+    ["JSON editor content", "Code, keys, or values in the JSON editor inside a node, for example, inside a Code Node or POST data object in an HTTP Request Node."],
+    ["Output types", "Any text in the Output type settings in configured <a href=\"/ai/agents/develop/nodes/channels\">channels</a>."],
+    ["Button labels", "Button labels and values you have configured in Say, Question, and Optional Question Nodes."],
+    ["Settings fields", "Fields in the Settings section of a node or Extension."],
+    ["Extension", "The name of the extension of an Extension Node."],
+    ["Case values", "The values of the Case Nodes under a Lookup Node."],
+    ["<code>has:analyticsStep</code>", "A special query that returns every node that has an Analytics Step."],
+    ["If-condition expression", "The expression in the <strong>Condition</strong> field of an <a href=\"/ai/agents/develop/node-reference/logic/if\">If Node</a>. Use this to find and update variables, conditions, or logic used in If nodes across large flows."]
+    ]}
+    initialRowsToShow={3}
+/>
+
+### Search matches in the flow editor
+
+When you enter a text into the Node Search field, the flow editor highlights matching nodes in yellow and scrolls to the first match. The current match also has an orange border, and the flow editor centers it. While a search is active, the flow editor hides the green execution highlighting.
+
+Use the **Previous result** and **Next result** buttons to navigate between matches. After the last result, **Next result** goes to the first result. On the first result, **Previous result** goes to the last result. Both buttons are disabled when there is 0 or 1 result.
+
+Click the **Clear Input** button to clear the search text and results. The field stays open.
+
+<Accordion title="Toggle search results">
+  To close the Node Search field, click ![Search nodes button](/_assets/icons/c26/search.svg) again or press <kbd>Escape</kbd>. Closing the field removes the highlights. The search text and results are kept, so the highlights return when you open the field again.
+</Accordion>
+
+### Search matches in the node editor
+
+The node search also matches text in the node editor. When you open a matching node, the field, section, or tab that matches the search text is highlighted. The Settings section opens, and the label of the matching field is highlighted.
+
+<Frame>
+  <img
+    src="/_assets/ai/develop/nodes/node-editor-with-highlighting.png"
+    alt="node editor with a highlighted field matching the node search text" style={{ width: 'auto' }} />
+</Frame>
+
+## More information
+
+- [Nodes](/ai/agents/develop/nodes/overview)
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Node Editor](/ai/agents/develop/nodes/overview#working-with-nodes)

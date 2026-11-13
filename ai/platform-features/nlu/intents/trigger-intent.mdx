@@ -1,0 +1,64 @@
+---
+title: Trigger intent
+description: "Use the trigger intent feature to activate a specific intent with cIntent: followed by the intent name, overriding regular intent mapping in Cognigy."
+keywords: ['cognigy nlu', 'trigger specific intent', 'trigger intent']
+---
+
+The _trigger intent_ feature lets you
+manually activate a specific intent in your flow using the syntax `cIntent:` followed by the intent name.
+This feature overrides the default intent mapping process, giving you precise control over the flow's next steps based on user input, such as a message or button click.
+
+Use the trigger intent feature when you need to:
+
+- Skip NLU processing and direct the flow to a specific intent.
+- Ensure consistent navigation in response to button clicks or system actions.
+- Improve the user experience by minimizing errors from misinterpreted user input.
+
+## Key benefits
+
+- **Precise flow control**. Ensures the correct intent drives the flow forward.
+- **Postback support**. Triggers a specific intent smoothly when a user clicks a button with a postback value.
+
+## Prerequisites
+
+Before using this feature, ensure the following:
+
+1. You set up your flow with specific intents for the scenarios you want to trigger.
+2. You have a Say, Question, or Optional Question node in the flow editor.
+
+## Restrictions
+
+- This feature bypasses full NLU processing, preventing default replies from triggering and automatically setting the intent score to 1. Don't use this feature for general NLU analysis.
+
+## How to use
+
+1. In the navigation menu, go to **Advanced > NLU** and identify the intent needed to continue your flow, for example, `Continue Booking`.
+2. In a Say, Question, or Optional Question node, use the syntax `cIntent:Continue Booking` as a postback value in [output types](/ai/agents/develop/node-reference/basic/say) that support postbacks.
+    Follow these syntax rules:
+    - Don't add a space after the colon, though spaces within the intent name are allowed. For example, `cIntent:Continue Booking`.
+    - _(Optional)_ Add text for slot parsing after a pipe symbol (`|`). For example, `cIntent:Continue Booking|book tomorrow`.
+
+## How to test
+
+Test the feature in the Interaction Panel:
+
+1. Open the Interaction Panel and activate **Debug Mode**.
+2. Test your flow with the `cIntent:Continue Booking` postback value. The system debug message shows:
+    ```text
+    Intent Match
+    Flow: Slots
+    Intent: Continue Booking
+    Intent score: 1
+    ```
+3. Test your flow with the `cIntent:Continue Booking|book tomorrow` postback value to verify slot extraction, for example, `tomorrow`. The system debug message shows:
+    ```text
+    System Slot Match
+    Start: February 26, 2025 (2025-02-26T00:00:00+01:00)
+    Text: tomorrow
+    Slot: DATE
+    ```
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)
+- [Slots](/ai/platform-features/nlu/slots/overview)

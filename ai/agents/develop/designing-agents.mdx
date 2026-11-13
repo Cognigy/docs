@@ -1,0 +1,146 @@
+---
+title: "Designing agents"
+sidebarTitle: "Overview"
+keywords: ['designing agents', 'agents', 'flows', 'flow agents', 'brand persona', 'skills', 'tools', 'guardrails', 'knowledge']
+description: "Choose between deterministic, hybrid, and fully agentic orchestration, and learn how agents, flows, and flow agents work together in one conversational experience."
+---
+
+import VideoPauseButton from "/snippets/VideoPauseButton.mdx";
+
+<div className="media-frame">
+  <video
+    width="1280"
+    height="720"
+    aria-label="Video that explains how agents and flows work together in Cognigy."
+    autoPlay
+    muted
+    loop
+    playsInline
+  >
+    <source
+      src="https://docscognigyassets.blob.core.windows.net/assets/agents-and-flows.mp4"
+      type="video/mp4"
+    />
+  </video>
+  <VideoPauseButton />
+</div>
+
+## Choose an orchestration approach
+
+<div className="approach-columns">
+  <div>
+    <p className="approach-title">Deterministic</p>
+    <p className="approach-kicker">Flows</p>
+    <p>Fixed, step-by-step processes. Use it when you need strict compliance, predictable outcomes, or high-volume transactional use cases.</p>
+  </div>
+  <div>
+    <p className="approach-title">Hybrid</p>
+    <p className="approach-kicker">Flows with AI where needed</p>
+    <p>Mostly structured journeys with some open-ended parts. For example, use AI to understand or answer within a controlled process.</p>
+  </div>
+  <div>
+    <p className="approach-title">Fully agentic</p>
+    <p className="approach-kicker">Agents</p>
+    <p>Open-ended conversations, multiple intents, and tasks where the agent needs to reason and pick tools. You can add deterministic steps as flow-based tools.</p>
+  </div>
+</div>
+
+## Agents and flows
+
+Cognigy provides two complementary building blocks for AI-powered conversational experiences: agents and flows. Agents add AI-driven capabilities: they reason, use skills, and act through tools, such as calling APIs, searching knowledge, or sending an email. Flows add the structure and control to orchestrate conversational processes and business logic.
+
+You can use agents and flows independently, because an endpoint can point at either one. You can also combine them to balance AI-driven flexibility with structured execution. This page explains each concept and helps you decide which to use. It is for anyone who designs conversational experiences in Cognigy.
+
+### Agents and flows at a glance
+
+The following diagram shows how the concepts relate:
+
+<Frame>
+  <img src="/_assets/ai/develop/design-agents.webp" alt="Diagram of an agent and a flow. The agent contains a brand persona, knowledge, skills, guardrails, and tools. The flow contains conditions and branching, data handling, extensions and xApps, and a Flow Agent node. An arrow labeled Route to Flow tool leads from the agent to the flow, and an arrow labeled Agents node leads from the flow to the agent. Tools in the agent lead to external systems." />
+</Frame>
+
+The diagram shows two groups. An agent has a brand persona, knowledge, skills, tools, and guardrails. A flow holds the conditions, branching, data handling, and extensions and xApps of a process. A flow can also contain a Flow Agent node. A flow hands a conversation to an agent through an Agents node. An agent hands a conversation to a flow through the Route to Flow tool. An agent uses other tools to reach external systems. Brand personas and tools are reusable project objects that you attach to agents.
+
+| Attribute | Agents | Flows | Flow agents |
+|---|---|---|---|
+| **What it is** | An independent, AI-powered entity that reasons and acts. | A structure that orchestrates a conversational process. | Agent functionality inside a flow. |
+| **Best for** | Tasks that need AI-driven reasoning and dynamic use of skills and tools. | Processes that need explicit control and deterministic execution. | Existing implementations. For new ones, use agents. |
+| **Configuration and reuse** | Configured independently. One agent can serve different endpoints and flows. | Orchestrate processes and can hand a conversation to an agent. | Configured on the Flow agents tab of the Flows page and run in a flow through the Flow Agent node. |
+
+### Agents (beta)
+
+_Agents_ are independent AI-powered entities that use reasoning, skills, and tools to accomplish tasks.
+
+You create, configure, and manage agents independently of individual flows. This separation makes agents reusable across different use cases and lets you develop their capabilities independently of workflow orchestration.
+
+With agents, you can:
+
+- Define the role and behavior of an agent.
+- Equip an agent with skills.
+- Connect tools that the agent can call, such as APIs, MCP servers, knowledge search, or email.
+- Reuse the same agent across different conversational experiences: point an endpoint at it directly, or hand a conversation to it from a flow.
+
+Agents are the recommended approach for building new agent-based applications in Cognigy.
+
+The main building blocks of an agent are:
+
+- [Brand persona](/ai/agents/develop/brand-persona): The voice, tone, and speaking style that you define once and share across agents, separate from what each agent does. Set it on the agent's Configuration tab.
+- [Knowledge](/ai/agents/develop/knowledge): What an agent knows about your business. The agent searches your content at run time and answers from what it finds.
+- [Skills](/ai/agents/develop/skills): Bundles of instructions and tools for a specific task, such as checking an order status.
+- [Tools](/ai/agents/develop/tools): What an agent can do during a conversation, such as call an API, search knowledge, or send an email.
+- [Guardrails](/ai/agents/develop/guardrails): The safety settings and data privacy settings that apply to every conversation of an agent.
+
+An agent also has a name, a role, instructions, and a language model.
+
+### Flows
+
+_Flows_ define and orchestrate the execution of conversational processes. A flow consists of [nodes](/ai/agents/develop/nodes/overview) and gives you explicit control over operations, including conditions, branching, data handling, and integrations.
+
+Use flows when you need predefined execution steps, predictable behavior, or explicit control over business logic. For example, processes that involve payments or personal data can require structured execution, validation, and clearly defined steps.
+
+For more information, read the [flows](/ai/agents/develop/projects-and-flows/overview) documentation.
+
+### Flow agents
+
+_Flow agents_ provide agent functionality within a flow. You configure a flow agent's identity, instructions, knowledge, and safety settings on the Flow agents tab of the Flows page. Its job, language model, tools, and memory are set on the Flow Agent node (formerly AI Agent node) in the flow.
+
+Flow agents combine agent capabilities with flow-based execution. Standalone agents offer a more flexible approach: you configure each agent independently, equip it with skills, and reuse the agent across different flows and use cases.
+
+Try agents alongside your existing flow agents to benefit from the capabilities and flexibility of the agents model. Flow agents remain supported, so you can keep running your existing implementations as they are. You can't move flow agents to agents yet, so recreate the settings on an agent. For more information, read the [flow agents](/ai/agents/develop/flow-agents/overview) and [feature parity](/ai/agents/develop/feature-parity) documentation.
+
+### Combine agents and flows
+
+Agents and flows complement each other:
+
+- Use agents for tasks that require AI-driven reasoning and dynamic use of skills and tools.
+- Use flows to orchestrate processes that require explicit control, predictable execution, and structured business logic.
+
+Combining them lets you build applications that benefit from both flexible AI-driven capabilities and reliable workflow orchestration. A conversation can move between them in three ways:
+
+- **From a flow to an agent.** Add an Agents node at the end of the flow. It hands the conversation to an agent.
+- **From an agent to a flow.** Give the agent the Route to Flow tool. It hands the conversation to a flow.
+- **From an agent to a flow and back.** Give the agent the Execute Tool Flow tool. It runs a flow as a tool and returns the result to the agent, which keeps the conversation. For details, see [Bi-directional transfer](/ai/agents/develop/nodes/bi-directional-transfer).
+
+<Note>
+Some of these handover options depend on your environment and channel. The Agents node and the Route to Flow tool may not be available in your environment. To show the Route to Flow tool, turn on **Enable Route to Flow tool** in Agent Settings. To show the Agents node, turn on **Enable Agents node** in Agent Settings.
+</Note>
+
+## Build on the foundations
+
+Agents and flows rely on the following parts of the Design phase:
+
+<CardGroup cols={3}>
+  <Card title="Language models" icon="brain" href="/ai/agents/develop/gen-ai-and-llms/llms">
+    Connect a language model provider, check feature support, and configure a fallback.
+  </Card>
+  <Card title="Knowledge AI" icon="database" href="/ai/agents/develop/knowledge-ai/overview">
+    Upload your content to a Knowledge Store so that agents can search it.
+  </Card>
+  <Card title="Voice" icon="phone" href="/ai/agents/develop/voice/overview">
+    Let your agents talk to callers over the phone: set how they speak and listen, and connect them to a phone number.
+  </Card>
+</CardGroup>
+
+## What's next
+
+After you design an agent, [test it](/ai/agents/test/testing-your-ai-agents), [deploy it](/ai/agents/deploy/deploying-your-ai-agents), and [analyze how it performs](/ai/agents/analyze/overview).

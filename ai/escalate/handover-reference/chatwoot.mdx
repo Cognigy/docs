@@ -1,0 +1,94 @@
+---
+title: Chatwoot
+keywords: ['contact centers', 'chatwoot', 'handover provider']
+description: >-
+  Connect Cognigy and Chatwoot, enabling end users to connect with human agents
+  working within the Chatwoot contact center.
+---
+
+
+<Frame>
+  <img src="/_assets/ai/escalate/handover-reference/chatwoot/chatwoot.svg" alt="Chatwoot handover provider logo" style={{ width: '200px' }} />
+</Frame>
+
+## Description
+
+The Chatwoot handover provider bridges Cognigy and [Chatwoot](https://www.chatwoot.com/),
+enabling end users to connect with human agents working in a contact center that uses Chatwoot.
+
+The Chatwoot integration allows users to receive text messages, files, videos (MP4), images (JPG, PNG), and GIFs.
+
+Cognigy supports Chatwoot API v1.19.0, custom agent bot names and descriptions, and full conversation history.
+
+## Prerequisites
+
+- Access to [Chatwoot](https://www.chatwoot.com/). You can also run Chatwoot on an [on-premises environment](https://www.chatwoot.com/docs/self-hosted).
+- Created endpoint [compatible with Chatwoot](/ai/escalate/handovers#endpoints-compatible-with-handover-providers).
+- You need two IDs that are listed in the Chatwoot address line:
+    - **Account ID** — a unique identifier assigned to you as the user.
+    - **Inbox ID** — not unique and is created again for each channel.<br/>
+    Both IDs are required to use the new Inbox channel. You can find them in your Chatwoot URL. For example, `https://app.chatwoot.com/app/account/6607/inbox/5446`, where the Account ID is `6607` and the Inbox ID is `5446`.
+
+## Configuration on the handover provider side
+
+<AccordionGroup>
+  <Accordion title="1. Add agents in Chatwoot">
+    To enable agents to handle handovers, add them in your Chatwoot instance:
+
+    1. Go to the Chatwoot home page.
+    2. In the left-side **Settings** menu, select **Agents**.
+    3. Add a new agent as needed.
+  </Accordion>
+
+  <Accordion title="2. Set up a webhook for an inbox">
+    To configure Chatwoot to receive incoming messages via a webhook:
+
+    1. On the Chatwoot main page, go to the left-side menu and click **Inboxes**.
+    2. Click **Add Inbox** to start creating a new inbox.
+    3. Select **API channel** and provide a channel name.
+    4. In the **Webhook URL** field, enter your Cognigy endpoint base URL appended with `/handover/chatwoot/`, for example, `https://endpoint-trial.cognigy.com/handover/chatwoot`.
+    5. Click **Create API Channel**.
+    6. Assign an agent to the inbox by selecting them and clicking **Add agents**.
+
+      <img src="/_assets/ai/escalate/handover-reference/chatwoot/inbox-create-api-channel-edit.png" alt="Chatwoot API channel creation with webhook URL configuration" style={{ width: 'auto' }} />
+
+    The new API channel appears in your Chatwoot inbox list.
+  </Accordion>
+</AccordionGroup>
+
+## Configuration on the Cognigy side
+
+<AccordionGroup>
+  <Accordion title="1. Create a handover provider">
+    To link your Cognigy endpoint to Chatwoot:
+
+    1. Go to **Deploy > Handover Providers** and click **+ Create handover provider**.
+    2. In the **Create handover provider** dialog, select **Chatwoot** and click **Create handover provider**. The handover provider editor opens.
+    3. In the handover provider editor, configure the following:
+        - **Name** — enter a unique name for your handover provider.
+        - **API base URL** — the URL of your Chatwoot instance, which is your Chatwoot installation URL extended with `/api/v1`, for example, `https://app.chatwoot.com/api/v1`. For on-premises setups, use your custom Chatwoot API URL.
+        - **Account ID** — the Chatwoot account ID.
+        - **Authentication** — select a Chatwoot connection or create a new one. Enter the Chatwoot **API key** in the connection.
+    4. Click **Save changes**.
+    5. Test the setup by opening the endpoint editor, clicking **Open Demo Webchat**, and initiating a conversation that triggers a handover.
+  </Accordion>
+
+  <Accordion title="2. Add a handover to human agent node">
+    To specify the Chatwoot inbox for the handover:
+
+    1. In the flow editor, add a **Handover to Human Agent** node.
+    2. Open the node editor and, in the **Handover provider** field, select the Chatwoot handover provider.
+    3. In the **Inbox ID** field below it, enter the inbox ID. You can use [CognigyScript](/ai/platform-features/cognigyscript) to dynamically select an inbox ID based on the conversation context.
+
+    When the **Handover to Human Agent** node is triggered during a conversation, the handover process begins and the user's message appears in the specified Chatwoot inbox. In Chatwoot, user messages are shown on the left, while agent responses appear on the right.
+
+    <Note>
+      Human agents can resolve a conversation once the user's request is addressed. If the user sends a new request, the human agent can reopen the conversation in Chatwoot to continue assisting.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [All handover providers](/ai/escalate/handover-reference/overview)
+- [Handover](/ai/escalate/handovers)

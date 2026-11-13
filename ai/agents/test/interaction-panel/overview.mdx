@@ -1,0 +1,123 @@
+---
+title: Interaction panel
+sidebarTitle: Overview
+keywords: ['testing', 'debugging', 'tracing', 'advanced mode', 'playbooks', 'interaction panel', 'ai agent memory', 'test scenarios']
+seo:
+  metatags:
+    description: "The interaction panel lets you test agents and flows in chat and voice conversations, trace what happens in each turn, and improve their behavior."
+---
+
+
+<div style={{display: 'flex', flexWrap: 'wrap', gap: '32px', alignItems: 'center', margin: 0}}>
+<div style={{flex: '1 1 320px', display: 'flex', flexDirection: 'column', gap: '8px', margin: 0}}>
+
+The _interaction panel_ is an interface for testing agents and flows. You can chat with an agent or call it, see how it responds, and trace what it does in each turn. Use the results to improve your agent's communication and service skills.
+
+The interaction panel provides the following features:
+
+- **Chat and voice testing.** Test an agent in [chat](/ai/agents/test/interaction-panel/chat) or [voice call](/ai/agents/test/interaction-panel/voice-call) mode. For flows, you can also use [live follow](/ai/agents/test/interaction-panel/live-follow) mode.
+- **Tracing.** With **Advanced mode**, [trace](/ai/agents/test/interaction-panel/tracing) the LLM calls, tool calls, and skills of each turn.
+- **Memory inspection.** For flows, view and extract the data stored in the [agent's memory](/ai/agents/develop/ai-agent-memory/overview).
+- **Playbooks.** For flows, use [Playbooks](/ai/agents/test/playbooks) to automate repetitive tests and catch errors efficiently.
+
+</div>
+
+<div style={{flex: '0 0 auto', maxWidth: '100%', margin: 0}}>
+  <video autoPlay muted loop playsInline controls preload="metadata" title="Interaction panel overview" aria-label="The video gives an overview of the interaction panel." style={{height: '420px', width: 'auto', maxWidth: '100%', border: '1px solid #ccc', borderRadius: '12px', display: 'block'}}>
+    <source src="https://docscognigyassets.blob.core.windows.net/assets/interaction-panel.mp4" type="video/mp4" />
+  </video>
+</div>
+
+</div>
+
+## Prerequisites
+
+- An agent or a [flow](/ai/agents/develop/projects-and-flows/overview) with configured [nodes](/ai/agents/develop/nodes/overview) in your project.
+
+## Explore the interaction panel
+
+To open the interaction panel, click ![Toggle interaction panel](/_assets/icons/blue/interaction-panel.svg) **Toggle interaction panel** in the upper-right corner. You can open the interaction panel from any page of your project. To close it, click the **X** icon in its header.
+
+<Frame>
+  <img
+    src="/_assets/ai/test/interaction-panel/interaction-panel-open.webp"
+    alt="Three views of the interaction panel: the Test tab, the Info tab, and the Settings view. Callout 1 marks the header, callout 2 the Test and Info tabs, and callout 3 the Voice and Chat switch." style={{ width: 'auto' }} />
+</Frame>
+
+<AccordionGroup>
+  <Accordion title="Header">
+
+    | UI element | Description |
+    |------------|-------------|
+    | **Select Agent or Flow** | Selects the target that you want to test. The list has a **Search agents and flows** field and the filters **All**, **Agents**, and **Flows**. If the target isn't in the selected snapshot, the list shows a notice. |
+    | Flask icon | Turns **Advanced mode** on or off. For more information, see [Advanced mode](#advanced-mode). |
+    | Gear icon | Opens the [settings](#configure-the-interaction-panel). To return to the panel, click **Back to main view**. |
+    | More options icon | Opens a menu with the following actions:<ul><li>**Reset session**. Clears the conversation and starts a new session after you confirm in the **Reset session?** dialog. You can also use the <kbd>Ctrl+B</kbd> (Windows and Linux) or <kbd>Cmd+B</kbd> (macOS) shortcut. The shortcut works anywhere on the page while the interaction panel is open, including in input fields.</li><li>**Create playbook** and **Create playbook with assertions**. Creates a [Playbook](/ai/agents/test/playbooks) from the conversation. You need permission to create Playbooks.</li><li>**Disable markdown** or **Enable markdown**. Turns the rendering of Markdown in messages off or on.</li><li>**Export session**. Downloads the current session as a file.</li></ul> |
+    | **X** icon | Closes the interaction panel. |
+
+  </Accordion>
+
+  <Accordion title="Panel tabs">
+
+    The tabs appear when **Advanced mode** is on. With **Advanced mode** off, the interaction panel shows only the test view.
+
+    | Tab | Description |
+    |-----|-------------|
+    | **Test** | Lets you interact with your agent or flow. |
+    | **Info** | Shows the **Input**, **Context**, and **Profile** data of the session, including the data stored in the [agent's memory](/ai/agents/develop/ai-agent-memory/overview). This tab is available when **Advanced mode** is on. For agents, **Context** is read-only. |
+
+  </Accordion>
+
+  <Accordion title="Modes">
+
+   For agents, select **Voice** or **Chat** with the switch at the top of the **Test** tab. For flows, select a mode at the bottom of the interaction panel. If you switch the mode, the interaction panel shows a notice. Any action in the new mode ends the current session and starts a new one.
+
+   | Mode | Description | Available for |
+   | ---- | ----------- | ------------- |
+   | ![chat](/_assets/icons/black-and-white/chat-interaction-panel.svg) **Chat** | Tests your agent in the [Chat panel](/ai/agents/test/interaction-panel/chat). This is the default mode. | Agents and flows |
+   | ![voice-call](/_assets/icons/black-and-white/voice-call-interaction-panel.svg) **Voice** | Tests your voice agent in the [Voice call panel](/ai/agents/test/interaction-panel/voice-call). | Agents and flows |
+   | ![live-follow](/_assets/icons/black-and-white/live-follow-interaction-panel.svg) **Live follow** | Monitors your agent in real time in the [Live follow panel](/ai/agents/test/interaction-panel/live-follow). | Flows, with **Advanced mode** on |
+   | ![simulation](/_assets/icons/black-and-white/simulation.svg) **Simulator** | Runs [simulated conversations](/ai/agents/test/interaction-panel/simulation) using LLMs. | Flows, with **Advanced mode** on |
+   | ![playbook](/_assets/icons/black-and-white/playbooks-interaction-panel.svg) **Playbooks** | Tests your flow using a [Playbook](/ai/agents/test/playbooks). | Flows, with **Advanced mode** on |
+
+  </Accordion>
+</AccordionGroup>
+
+### Advanced mode
+
+**Advanced mode** shows more information about a conversation. It turns on [tracing](/ai/agents/test/interaction-panel/tracing) and the modes and tabs that only flows have. To turn on **Advanced mode**, click the flask icon in the header, or use the settings. **Advanced mode** is off by default. If you turn it off while a flow-only mode is open, the interaction panel switches to chat mode.
+
+## Configure the interaction panel
+
+To open the settings, click the gear icon in the header. The interaction panel stores the settings per user and per project in your browser. To return all settings to their defaults and to reset the session, click **Reset to default values**.
+
+<Accordion title="Settings">
+  | Section | Setting | Type | Description | Default |
+  |---------|---------|------|-------------|---------|
+  | **Advanced mode** | **Advanced mode** | Toggle | Displays tracing spans and data for debugging. | Off |
+  | **Session configuration** | **Snapshot** | List | Sets the snapshot that you test. This setting is optional and available for flows and agents. If you select a snapshot, the lists of agents, flows, and locales show only items from that snapshot. If the selected agent or flow isn't in the snapshot, the interaction panel shows **Select an agent or flow**. Select an available one to continue. | **No snapshot** |
+  | **Session configuration** | **Locale** | List | Sets the locale for testing the agent or flow. The primary locale is marked **Primary**. | None |
+  | **Advanced mode preferences** | **Tracing spans per turn** | Toggle | Displays the tracing spans of each turn. If you turn it off, the interaction panel collapses the spans of each turn. | On |
+  | **Advanced mode preferences** | **Display only error spans** | Toggle | Shows only spans with errors. This setting is linked to **Errors only** in the full tracing view. | Off |
+  | **Advanced mode preferences** | **Persist advanced mode** | Toggle | Keeps **Advanced mode** on each time the interaction panel reloads. | Off |
+  | **Chat and voice** | **Show JSON data payload field** | Toggle | Displays the **JSON data payload** field below the message input. If the JSON is invalid, you can't send the message. | Off |
+  | **Chat and voice** | **Render markdown** | Toggle | Displays messages with rendered Markdown syntax. | On |
+  | **Chat and voice** | **Text to speech** | Toggle | Plays the agent's outputs aloud. The interaction panel disables the setting if your browser doesn't support speech synthesis. The interaction panel doesn't keep this setting. | Off |
+  | **Chat and voice** | **Language** and **Voice** | List | Set the language and the voice for text to speech. Select **Custom** to enter a language code, for example, `en-US`, and a voice name or ID. If you change the language, the interaction panel clears the voice. | None |
+  | **Advanced** (flows only) | **NLU connector** | List | Sets the NLU connector that the flow uses. | **Cognigy** |
+  | **Advanced** (flows only) | **Channel to display** | List | Sets the channels that the interaction panel displays, such as Webchat, Voice Gateway, and Slack. | **All channels** |
+  | **Advanced** (flows only) | **Mocking** | Toggle | Activates [mocking](/ai/agents/test/mocking) for nodes that have mock code configured. The setting appears only if mocking is enabled for your environment. | Off |
+  | **Advanced** (flows only) | **Auto-move in flow editor** | Toggle | Moves the flow editor to the node that runs. | On |
+  | **Advanced** (flows only) | **Auto-switch to target flow** | Toggle | Switches the flow editor to the flow that runs. | On |
+  | **Playbooks** (flows only) | **Repeat playbook** | Toggle | Repeats the playbook. | Off |
+  | **Playbooks** (flows only) | **Delay (ms)** | Number | Sets the delay in milliseconds for Playbook runs. The value must be a whole number, 0 or higher. | 200 |
+</Accordion>
+
+The **Advanced** and **Playbooks** settings are available when **Advanced mode** is on.
+
+## More information
+
+- [Tracing](/ai/agents/test/interaction-panel/tracing)
+- [CognigyScript and objects lifespan](/ai/agents/develop/ai-agent-memory/overview#lifespan-of-cognigy-objects)
+- [Testing your agents with Playbooks](https://support.cognigy.com/hc/en-us/articles/9585431937948-Best-Practices-Testing-your-Virtual-Agents-with-Playbooks#1-design-comprehensive-playbooks-0-0)
+- [Voice Gateway parameter details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details)

@@ -1,0 +1,182 @@
+---
+title: Goals
+keywords: ['goals', 'goal steps', 'track goal node', 'business metrics', 'user interactions', 'agent performance']
+description: Goals are used to track specific user interactions during conversations between end users and agents that align with your business objectives.
+---
+
+<Note>
+  Goals is available only in the new [Insights framework](/insights/data-management/pre-aggregation) and is being released through a phased rollout. Once it becomes available for your environment, your Cognigy business representative will notify you via email.
+  You can also explore the Goals Report in the [Cognigy trial environment](https://trial.cognigy.ai/). We encourage you to try this feature out and provide us with feedback.
+</Note>
+
+_Goals_ are structured objectives that require specific steps to be completed in agent interactions. You can use goal steps to track user actions with [Track Goal Nodes](/ai/agents/develop/node-reference/analytics/track-goal) and tie these actions to measurable business metrics. This setup ensures alignment of your agents with organizational objectives.
+
+With goals, you can evaluate and enhance the business impact of your agent:
+
+- **Track user interactions**. Monitor specific user interactions during conversations to ensure they align with your business objectives.
+- **Monitor different goals and their steps**. Track different goals and their corresponding steps to get a comprehensive view of the user journey in conversations.
+- **Measure business value**. Goals are linked to business metrics, allowing you to assess the value of agents in achieving key business objectives. Metrics, such as time and money for each completed goal and step, provide a detailed view of the agent's performance.
+- **Gain valuable insights**. Measure how effectively your agent conversations achieve business objectives and optimize agents to improve performance and user satisfaction.
+
+## Restrictions
+
+- Goals are supported only for flow agents.
+
+## Limitations
+
+- The maximum number of steps per goal is 10, including the initial step. On-premises administrators can increase this number to 20 with the `FEATURE_USE_GOALS__MAX_STEPS_PER_GOAL` variable.
+- The goal name and the step name can have up to 200 characters. The goal description and the step description can have up to 500 characters.
+
+## Working with goals
+
+You can create, edit, and delete goals and their steps, as well as export them as a package in **Test > Goals**. The list shows the **Name** and **Last edited** columns. To search the list, use the **Search goals** field. To delete a goal or export it as a package, open the row menu and select **Delete** or **Export as package**.
+
+When you delete a goal, any Track Goal Node that uses the goal stops working. When you delete a step, any Track Goal Node linked to the step stops tracking it. You can't delete the last completion step of a goal. Before you delete a goal or a step, replace it with another goal or step in the Flow, or remove the linked Node if you no longer need it.
+
+<Warning>
+  You can't undo deleting a goal or a step.
+</Warning>
+
+### Determine what you want to measure
+
+Decide whether you want to track money, time, or both:
+
+- **Cost saved**. Track cost savings. To set the currency, go to **Manage > Settings > Currency Settings** and select a currency type from the **Set Standard Currency** list. You can select only one type of currency per Project.
+- **Revenue earned**. Monitor the additional revenue you earn by automating the process with the agent. To set the currency, go to **Manage > Settings > Currency Settings** and select a currency type from the **Set Standard Currency** list. You can select only one type of currency per Project.
+- **Time saved**. Measure the amount of time a person spends on the task. This metric shows the time human agents save when the goal is achieved.
+
+If you don't set a currency, Cognigy uses EUR.
+
+### Implement goals in flows
+
+To implement goals in your Flows, follow these steps:
+
+<AccordionGroup>
+  <Accordion title="1. Create goals">
+    1. In **Test > Goals**, click **Create goal** and configure the parameters of the goal:
+      - **Name** — this field is mandatory. Enter a name that reflects the goal. The name must be unique in the Project. It can't contain any of these characters: `\ / : * ? " < > | ¥`. For example, `Reduce Call Handling Time` or `Increase Automation Efficiency`.
+      - **Description** — this field is optional. Provide a brief description that reflects the goal. For example, `This goal aims to reduce average call handling time by automating common customer requests`.
+    2. In the **Initial step** section, complete the following fields:
+      - **Step name** — this field is mandatory. Provide a descriptive name for the starting step. For example, `Initiate Agent Conversation`. The initial step is required, because the goal activates when the Flow triggers this step.
+      - **Step description** — this field is optional. Add a detailed description of the starting step. For example, `This step triggers when a user begins an agent session`.
+    3. In the **Steps** section, click **Add step** and add at least one step to complete the goal configuration. If you add only one step, it must be marked as a completion step. Step names must be unique in the goal.
+    4. In the **Create step** dialog, configure the step parameters:
+      - **Name** — this field is mandatory. Enter a name that reflects the step. For example, `Customer Request Handled`.
+      - **Description** — this field is optional. Describe the step. For example, `This step captures when the agent successfully resolves a customer request`.
+      - **Completion step** — select this option to mark the current step as the point where the goal is considered fully completed. For example, this step can reflect the key result when the agent has resolved all user requests. At least one step in the goal must be a completion step. Multiple steps can be completion steps.
+    5. In the **Success metrics** section, measure the impact of your goal by tracking the following performance metrics. The values are optional. Cognigy counts them each time the step is triggered.
+      - **Cost saved** — track saved money by entering values in the format `xx.xx`. For example, `150.00` represents `$150`. Make sure your currency is configured in the **Currency Settings** section in the [Project Settings](#determine-what-you-want-to-measure).
+      - **Revenue earned** — track earnings by entering values in the format `xx.xx`. For example, `150.00` represents `$150`. Make sure your currency is configured in the **Currency Settings** section in the [Project Settings](#determine-what-you-want-to-measure).
+      - **Time saved** — track saved time by entering values in the format `00:00:00` (hours:minutes:seconds). For example, `02:45:00` represents 2 hours and 45 minutes.
+  </Accordion>
+  <Accordion title="2. Add goals to flows">
+
+    1. In **Design > Flows**, select a Flow or create one.
+    2. In the Flow editor, add a Track Goal Node to monitor goal progress in the Flow.
+    3. Configure the Node settings:
+      - **Goal** — choose the goal you recently created, such as `Reduce Call Handling Time`.
+      - **Steps** — choose the goal steps that you want to track. Include the initial step in the first Track Goal Node of the Flow. Without the initial step, Cognigy doesn't start tracking the goal.
+
+    You can add multiple Track Goal Nodes to the same Flow to track different steps and KPIs.
+
+    By defining multiple steps and associating them with predefined metrics, goals provide a more comprehensive way to evaluate success compared to [tasks](/ai/agents/analyze/goals-and-tasks/tasks). While using multiple steps, you must still define the initial and completion steps. Without a completion step, your goal is partially completed or incomplete if only the initial step is triggered.
+  </Accordion>
+</AccordionGroup>
+
+### Track goals in Insights
+
+After having added goals and their steps to Flows, you can monitor metrics in the Insights [Goals report](/insights/reports/goals).
+
+## Example
+
+In this example, you configure goals and steps in a Flow, such as entering passenger information and completing payment. This setup lets you track the pre-booking process and monitor and analyze each step of the booking process. Follow these instructions:
+
+<AccordionGroup>
+  <Accordion title="1. Configure goals">
+
+    1. [Create a goal](#implement-goals-in-flows) with the name `Pre-book a Flight`.
+    2. Set up these steps in this goal:
+      - **Initial step** — in the **Initial step** section, enter `Select booking options` in the **Step name** field.
+      - **Further steps** — click **Add step** to add two further steps with the following names:
+        - **Passenger Details** — in this step, set the time savings metric to `3 minutes` in the **Time saved** field.
+        - **Confirm Booking** — in this step, set the cost savings metric to `$15` in the **Cost saved** field, then select the **Completion step** option.
+  </Accordion>
+  <Accordion title="2. Create flows and configure the initial step">
+
+    1. [Create a Flow](/ai/agents/develop/projects-and-flows/overview#working-with-flows) and add a Question Node to the Flow.
+    2. Open the Question Node and select the **Text with Buttons** output type.
+    3. In the **Text** field, enter the following text:
+    ```txt
+    Hello, I’m Mr. Traveler, and I can help you find discounts on tours to Europe.  
+    At the moment, there are no discounted tours available. However, you can leave a request for pre-booking, and I’ll assist you in placing the order. Alternatively, you can contact an operator, though that process may take longer.  
+
+    What works best for you?
+    ```  
+    4. Click **Add Button** and configure the first button:
+      1. In the **Button Title** field, enter `pre-booking`.
+      2. From the **Select Button Type** list, select **Postback Value**.
+      3. In the **Postback Value** field, enter `pre-booking` and save.
+    5. Click **Add Button** and configure the second button:
+      1. In the **Button Title** field, enter `contact an operator`.
+      2. From the **Select Button Type** list, select **Postback Value**.
+      3. In the **Postback Value** field, enter `contact an operator` and save.
+    6. Below the Question Node, add a Track Goal Node. In the Node editor, select the initial step you created earlier and save. This Node starts the goal tracking.
+    7. Below the Track Goal Node, add an If Node. In the Node editor, configure the `Answer contains pre-booking` condition:
+      1. In the **Condition** field, click ![token](/_assets/icons/black-and-white/token.svg) and select the **Answer** Token.
+      2. From the dropdown list, select **contains**.
+      3. Specify `pre-booking` below the list and save.
+
+    <figure>
+    <img src="/_assets/ai/analyze/goals/goal-flow.png" alt="Flow with Question, Track Goal, and If Nodes for pre-booking" style={{ width: 'auto' }} />
+    </figure>
+  </Accordion>
+  <Accordion title="3. Configure the passenger details step">
+
+    1. Below your Then child Node, add a Question Node. Below the Else child Node, add a Handover to Human Agent Node.
+    2. Add a Question Node.
+    In the Node editor, configure the following fields: 
+      1. From the **Question Type** list, select **Text**.
+      2. From the **Output Type** list, select **Text** and enter the following text:
+    ```txt
+    I'll just need your full name and contact information to finalize the booking.
+    ```  
+    3. Add a new Track Goal Node. In the Node editor, select **Passenger Details** from the **Steps** list and save. This Node records how much time is saved when the user submits the data manually.
+  </Accordion>
+  <Accordion title="4. Configure the confirm booking step">
+
+    1. Below the Track Goal Node, add a Question Node.
+    2. Add a Question Node.
+    3. Open the Node editor and select **Email** from the **Question Type** list.
+    4. Select the **Text with Buttons** output type. 
+    5. In the **Text** field, enter the following text:
+    ```txt
+    As soon as new offers become available, you will receive an email about your pre-booking.  
+
+    Please confirm your booking by entering your email.
+    ```
+      1. In the **Button Title** field, enter `pre-booking`.  
+      2. From the **Select Button Type** list, select **Postback Value**.  
+      3. In the **Postback Value** field, enter `pre-booking` and save.
+    6. Below the Question Node, add a Track Goal Node. In the Node editor, select **Confirm Booking** from the **Steps** list and save. This Node records how much money is saved when the user submits the data manually.
+    7. Below the Track Goal Node, add a Say Node. In the Node editor, enter the following text in the **Text** field:
+    ```txt
+    Your email: <Answer>  
+
+    Thank you for the confirmation!
+    ```  
+    Replace `<Answer>` with the **Answer** Token by clicking ![token](/_assets/icons/black-and-white/token.svg).
+
+    <figure>
+    <img src="/_assets/ai/analyze/goals/goal-flow-end.png" alt="Flow with Track Goal and Say Nodes for booking confirmation" style={{ width: 'auto' }} />
+    </figure>
+  </Accordion>
+  <Accordion title="5. Test your flow">
+
+    Test your Flow via the [Interaction Panel](/ai/agents/test/interaction-panel/overview). Activate [debug mode](/ai/agents/test/interaction-panel/chat#debug-mode) to see when Track Goal Nodes are triggered. To view recorded metrics, go to [Insights](/insights/index) and select [Goals](/insights/reports/goals) in the navigation menu.
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Track Goal](/ai/agents/develop/node-reference/analytics/track-goal)
+- [Insights Goals Report](/insights/reports/goals)

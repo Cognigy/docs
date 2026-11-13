@@ -1,0 +1,86 @@
+---
+title: Collaborative editing
+keywords: ['collaborative editing', 'flow editor', 'nodes', 'node editor']
+seo:
+  metatags:
+    description: >-
+      Collaborative editing allows multiple users to edit a Flow simultaneously.
+      With Collaborative Editing, you can see the avatars of other users editing
+      the Flow and Nodes. Their changes appear in the Flow and Node editors in
+      real time.
+---
+
+
+The _Collaborative Editing_ feature allows multiple users to edit a flow simultaneously. With Collaborative Editing, you can see the avatars of other users editing the flow and nodes. Their changes appear in the flow and node editors in real time.
+
+## Key benefits
+
+- **Visual Indication of User Presence**. You can see what users are working on in the flow editor.
+- **Easy Collaboration**. You can start discussions on nodes to ask questions, make suggestions, or share ideas. Additionally, you can mention other users directly in discussion threads. Mentioning other users triggers an email notification to them.
+- **Simultaneous Editing**. The flow and node editors show when users are working simultaneously on the same flows and nodes to prevent users from overwriting each other's changes.
+
+## User presence
+
+The flow editor shows the presence of other users with icons including initials:
+
+- in the upper-right corner of the flow editor when other users have the same flow open.
+- attached to the upper-right corner of nodes when other users are currently editing them. A node shows up to 3 collaborator avatars. If more users are editing, a **Show N more collaborators** option appears, where N is the number of additional users.
+
+## Mouse cursors
+
+Mouse cursors show the position of other users editing the same flow.
+
+## Discussions
+
+To start a discussion, right-click the node and select **Start Discussion**. You can enter the first comment in the **Start Discussion** field.
+
+Nodes with discussions display ![Active discussion icon](/_assets/icons/c26/discussion.svg) attached to them. In a discussion thread, you can add comments and mention other users. To mention other users, type `@` and select the user from the list of suggestions. Only Project members are included in the list of suggestions. Mentioning other users triggers an email notification to them.
+
+You can start multiple discussion threads on a node. This way, you can open multiple discussions on a node and separate the topics if necessary. To start a new discussion thread, follow these steps:
+
+1. Right-click the node and select **Open Discussion**. The discussion menu opens.
+
+   <Frame>
+     <video controls loop muted playsInline preload="metadata" poster="/_assets/ai/develop/flows/discussion-thread-c26-poster.webp" title="Animation of a discussion. Right-click a Say Node, select Start Discussion, and type a comment in the Discussion panel." aria-label="Animation of a discussion. Right-click a Say Node, select Start Discussion, and type a comment in the Discussion panel." style={{ width: '100%' }}>
+       <source src="/_assets/ai/develop/flows/discussion-thread-c26.mp4" type="video/mp4" />
+       <source src="/_assets/ai/develop/flows/discussion-thread-c26.webm" type="video/webm" />
+     </video>
+   </Frame>
+
+2. Enter a comment in the **Start Discussion** field.
+
+   If you close the Discussion panel while a comment is typed, an unsaved-changes dialog appears with **Cancel**, **Continue without saving**, and **Save and continue**. **Continue without saving** discards the draft.
+
+In a discussion thread, you can take the following actions:
+
+- **Reply** to a comment.
+- **Edit** a comment.
+- **Delete** a comment.
+- **Mark as completed** to close the thread.
+
+The C26 Flow editor hides completed threads from the thread count.
+
+## Simultaneous editing
+
+### Flow editor
+
+The flow editor shows when other users make changes to the flow you are working on. Whenever other users make changes to the flow, for example, by adding or editing a node, the flow editor displays the following:
+
+- A refresh button in the upper-right corner. Click the refresh button to view the latest changes.
+- The number of changes made by other users next to the refresh button.
+
+### Node editor
+
+The node editor shows the following:
+
+- When multiple users open the same node, the user icon appears in the upper-right corner.
+- When another user makes changes, the node editor is locked for all other users and displays ![Locked Node icon](/_assets/icons/c26/node-locked.svg).
+- When the changes are saved, the node editor displays the ![Refresh button](/_assets/icons/blue/refresh.svg) button. Then, you can:
+  - Click the ![Refresh button](/_assets/icons/blue/refresh.svg) button to refresh the node editor and view the latest changes.
+  - Select ![Menu button](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Edit** to unlock and keep editing the node. The changes you save after unlocking the node overwrite the changes other users previously made.
+
+## More information
+
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Flow Editor](/ai/agents/develop/projects-and-flows/editor)
+- [Nodes](/ai/agents/develop/nodes/overview)

@@ -1,0 +1,61 @@
+---
+title: "storm"
+keywords: ['contact centers', 'handover provider', 'storm']
+description: "Connect Cognigy and storm, the contact center platform from Content Guru."
+---
+
+
+<Frame>
+  <img
+    src="/_assets/ai/escalate/handover-reference/storm.svg"
+    alt="storm handover provider logo"
+  />
+</Frame>
+
+## Description
+
+The storm handover provider bridges Cognigy and [storm](https://www.contentguru.com/en-gb/products/storm-cx/omni-channel-customer-engagement/omni-channel-agent-desktop/), the contact center platform from Content Guru, enabling end users to connect with human agents working in a contact center that uses storm.
+
+## Prerequisites
+
+- Access to [storm DTA](https://www.timeforstorm.eu/dta).
+
+## Configuration on the Cognigy side
+
+<AccordionGroup>
+  <Accordion title="1. Create a handover provider">
+    To link your Cognigy endpoint to storm:
+
+    1. Go to **Deploy > Handover Providers** and click **+ Create handover provider**.
+    2. In the **Create handover provider** dialog, select **storm®** and click **Create handover provider**. The handover provider editor opens.
+    3. In the handover provider editor, configure the following:
+        - **Name** — enter a unique name for your handover provider.
+        - **Base API URL** — the URL of your configured service in storm.
+        - **Authentication** — select a storm connection from the list. Alternatively, click ![add storm connection](/_assets/icons/black-and-white/plus-sign.svg) next to the field to add a storm connection. Fill in the following fields:
+
+           | **Field**       | **Description**                                     |
+           |-----------------|-----------------------------------------------------|
+           | Name            | Enter a unique name for your connection.            |
+           | API secret      | Enter the API secret for your Content Guru service. |
+           | API key         | Enter the API key for your Content Guru service.    |
+
+    4. Click **Save changes**.
+  </Accordion>
+
+  <Accordion title="2. Add a handover to human agent node">
+    To add a Handover to Human Agent node, follow these steps:
+
+    1. In the flow editor, add a **Handover to Human Agent** node.
+    2. Open the node editor and select the storm handover provider from the **Handover provider** list. Save changes.
+
+  </Accordion>
+</AccordionGroup>
+
+## Configuration on the handover provider side
+
+Contact your Content Guru representative to finalize the integration between Cognigy and storm.
+
+## More information
+
+- [All handover providers](/ai/escalate/handover-reference/overview)
+- [Handovers](/ai/escalate/handovers)

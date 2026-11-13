@@ -1,0 +1,93 @@
+---
+title: Reject intent
+description: "Stop Cognigy NLU from recognizing out-of-scope user inputs with the reject intent. Learn how to create one and prevent false intent matches."
+keywords: ['cognigy nlu', 'stop intents', 'reject intents', 'intents']
+---
+
+The _reject intent_ feature allows you to block the NLU model from recognizing user inputs that aren't relevant to your agent.
+This approach helps agents focus on in-context questions, ignoring irrelevant ones.
+
+## Key benefits
+
+- **Enhanced focus on core capabilities**. By filtering out irrelevant inputs, your agent can prioritize the tasks it's designed to handle.
+- **Improved user experience**. By avoiding responses to out-of-scope queries, you can prevent confusion and keep conversations on track.
+
+## Restrictions
+
+- This feature may struggle with complex or varied off-topic inputs unless paired with [standard intents](/ai/platform-features/nlu/intents/overview) or [intent rules](/ai/platform-features/nlu/intents/rules).
+
+## Limitations
+
+- You can create only one reject intent per flow.
+
+## How to use
+
+To use this feature, create a reject intent and add several example sentences.
+
+<AccordionGroup>
+  <Accordion title="Create a reject intent">
+
+    <Tabs>
+      <Tab title="GUI">
+
+        To create a reject intent, go to **Advanced > NLU**, select your flow, and open the **Intents** tab.
+        Next to the **Create Intent** button, click ![Menu icon](/_assets/icons/black-and-white/vertical-ellipsis.svg) and select **Create 'Reject Intent'**. 
+      
+      </Tab>
+      <Tab title="API">
+
+        You can create a reject intent using the [Cognigy API /v2.0/flows/{flowId}/intents](/api-reference/intents/create-an-intent) request and specifying the `"isRejectIntent": true` parameter.
+
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Add example sentences">
+
+    On the **Reject Intent** page, add a list of example sentences representing the user inputs you want the NLU model to ignore.
+    Save changes and click **Build Model** to apply them. You can generate these sentences [using generative AI](/ai/agents/develop/gen-ai-and-llms/llms).
+    Similar to standard intents, you can also add [annotations](/ai/platform-features/nlu/intents/annotations) to each example sentence.
+
+  </Accordion>
+</AccordionGroup>
+
+## How to test
+
+Test the feature in the Interaction Panel:
+
+1. Open the Interaction Panel and activate **Debug Mode**. 
+2. Enter examples that match your reject intent example sentences to verify that the reject intent catches them. If it does, the Input object has the following format:
+
+    ```json
+     "nlu": {
+        "intentMapperResults": {
+          ...
+          "intentPath": [
+            "Reject Intent"
+          ],
+          "scores": [
+            {
+              "id": "f0db738b-e1c3-4841-a6d9-490e082b8ec5",
+              "name": "Reject Intent",
+              "score": 1,
+             ... 
+            }
+          ]
+        },
+    ```
+
+## Example
+
+Imagine your agent is designed to assist drivers with parking-related queries.
+A user asks `Where can I find a park nearby?`, meaning a green space rather than a parking lot.
+By including similar reject intent example sentences, you can train the agent to filter out these requests, ensuring it stays focused on parking assistance.
+
+<Accordion title="More reject intent example sentences">
+  | **Reject intent name** | **Example sentences**                                                                                                                                                                                                                                                                                                               |
+  | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `OutOfScope_Parks`     | <ul><li>Where can I find a park nearby?</li><li>Are there any green spaces around here?</li><li>Is there a park I can visit close by?</li><li>Where's the nearest nature spot?</li><li>Can you point me to a local park?</li><li>Are there any nice parks in this area?</li><li>Where can I take a walk in a park nearby?</li></ul> |
+</Accordion>
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)
+- [Intent rules](/ai/platform-features/nlu/intents/rules)

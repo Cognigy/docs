@@ -1,0 +1,72 @@
+---
+title: Attachments
+description: "Share flows and lexicons across multiple flows in a project with attachments. Learn how to attach a child flow or a lexicon to a flow."
+keywords: ['flow attachments', 'lexicon attachments', 'child flow', 'add lexicon to flows']
+---
+
+_Attachments_ allow you to connect [flows](/ai/agents/develop/projects-and-flows/overview) and reuse [lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon) across multiple flows within a project.
+
+## Key features
+
+- **Flow sharing**. Reuse flows and their intents across different flows, eliminating the need to manually rebuild the NLU model in the attached flows.
+- **Lexicon sharing**. Reuse lexicons across different flows, ensuring consistent language understanding.
+- **Centralized resource management**. Manage flows and lexicons in one location. This approach simplifies updates; a change in one place applies everywhere it's used.
+- **Elimination of duplication**. You don't need to copy flows or lexicons. This approach saves space and keeps your project more organized.
+
+## Attached flows
+
+Attached flows share their intents with the flow they're attached to. Attaching flows is optional and
+allows you to reuse existing intents without duplicating them.
+If no flows are attached, the primary flow relies only on its own intents.
+
+You don't need to manually train attached flows after modifying their intents, as long as they aren't used individually. For example, if you attach Flow B and Flow C to Flow A, you need to train Flow A. Flow B and Flow C will be trained automatically.
+However, Flow B and Flow C won't be listed as trained on the **Flows** page because they're attached to Flow A.
+
+To attach a flow to another flow, follow these steps:
+
+<Tabs>
+  <Tab title="GUI">
+         1. Go to **Advanced > NLU**.
+         2. Select the flow in the flow selector at the top.
+         3. Select the **Attached Flows** tab and activate the toggle next to the flow that you want to attach to the current flow.
+  </Tab>
+  <Tab title="API">
+         Attach a flow by using the Cognigy API:
+
+         - To a new flow, use the [Cognigy API POST /v2.0/flows](/api-reference/flows/create-a-flow) request.
+         - To an existing flow, use the [Cognigy API PATCH /v2.0/flows/{flowId}](/api-reference/flows/update-a-flow) request.
+
+    When you attach flows, the NLU model doesn't rebuild automatically.
+    Anytime a new flow is attached, you need to manually rebuild the NLU model in the flow to which you attached it.
+    To rebuild the NLU model manually, click **Build Model** in **Advanced > NLU > Intents**.
+  </Tab>
+</Tabs>
+
+## Attached lexicons
+
+Attached lexicons share their keyphrases with the flow they're attached to.
+Attaching lexicons is important because it allows precise control over which keyphrases are recognized in specific flows.
+By attaching different lexicons to different flows, you can create customized conversational experiences for different use cases.
+
+To attach a lexicon to a flow, follow these steps:
+
+<Tabs>
+  <Tab title="GUI">
+         1. Go to **Advanced > NLU**.
+         2. Select the flow in the flow selector at the top.
+         3. Select the **Attached Lexicons** tab and activate the toggle next to the lexicon that you want to attach to the current flow.
+  </Tab>
+  <Tab title="API">
+         Attach a lexicon by using the Cognigy API:
+
+         - To a new flow, use the [Cognigy API POST /v2.0/flows](/api-reference/flows/create-a-flow) request.
+         - To an existing flow, use the [Cognigy API PATCH /v2.0/flows/{flowId}](/api-reference/flows/update-a-flow) request.
+
+    When you attach lexicons, the NLU model doesn't rebuild automatically. Anytime a new lexicon is attached, you need to manually rebuild the NLU model in the flow to which you attached it. To rebuild the NLU model manually, click **Build Model** in **Advanced > NLU > Intents**.
+  </Tab>
+</Tabs>
+
+## More information
+
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Lexicon slots](/ai/platform-features/nlu/slots/user-defined/lexicon)

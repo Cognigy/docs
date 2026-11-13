@@ -1,0 +1,144 @@
+---
+title: Flow editor
+sidebarTitle: Overview
+keywords: ['flows', 'flow editor', 'nodes', 'collaborative editing']
+seo:
+  metatags:
+    description: >-
+      The Flow Editor is a user interface where you can see a graphic
+      representation of a Flow, the Flow Chart, and design agent
+      conversations.
+---
+
+
+The _Flow Editor_ is a user interface (UI) where you can see a graphic representation of a [Flow](/ai/agents/develop/projects-and-flows/overview), the _Flow Chart_, and design agent conversations. In the flow editor, the flow consists of nodes that represent various actions or decision points. The [Nodes](/ai/agents/develop/nodes/overview) are linked to one another by lines that indicate the conversation's path, from the **Start** Node to the **End** Node.
+
+The flow editor allows for [Collaborative Editing](/ai/agents/develop/projects-and-flows/collab-editing). This means that multiple users can edit the same flow at the same time.
+
+A green arrow next to a node indicates the Flow Entrypoint. The Entrypoint is where the agent expects a user entry. The flow editor highlights the path of the conversation in green. The green path allows you to understand the flow execution path at each step, depending on the input in the [Interaction Panel](/ai/agents/test/interaction-panel/overview).
+
+## Limitations
+
+- A warning appears when a flow has more than 100 nodes. To keep performance high, split large flows into smaller ones.
+
+## Exploring the flow editor
+
+The following image shows an overview of the flow editor:
+
+<Frame>
+  <img src="/_assets/ai/develop/flows/flow-editor-c26.webp" alt="Flow editor in the C26 UI showing the Ansel Flow chart. A Start Node leads to a Say Node, a Question Node, and a Lookup Node that branches into Default, Weather, Technology, Travel, and Food, then to Route to Agent, with chart controls at the bottom." style={{ width: 'auto' }} />
+</Frame>
+
+<AccordionGroup>
+  <Accordion title="1. Top bar">
+    Besides the controls from the [Project Page](/ai/agents/develop/projects-and-flows/projects) top bar, the flow editor includes the following elements from left to right:
+
+    | UI&nbsp;Element                                           | Type | Description                                                                                                                                                                                                                                                                                                                                                                              |
+    |-----------------------------------------------------------|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Flow List                                                 | List | Search for flows by name and switch between them.                                                                                                                                                                                                                                                                                                                                        |
+    | Locale List                                               | List | Switch between Locales.                                                                                                                                                                                                                                                                                                                                                                  |
+    | Chart                                                     | Tab  | Display the flow chart.                                                                                                                                                                                                                                                                                                                                                                  |
+    | NLU                                                       | Tab  | Display the NLU settings, where you can configure [Intents](/ai/platform-features/nlu/intents/overview), States, [Slot Fillers](/ai/platform-features/nlu/slot-fillers), as well as attach [Flows](/ai/platform-features/nlu/attachments#attached-flows) and [Lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon). The C26 Flow editor doesn't show this tab. Open **Advanced** in the sidebar, then select **NLU**. |
+    | Settings                                                  | Tab  | Display the [Flow Settings](/ai/agents/develop/projects-and-flows/overview#settings), [Default Context](/ai/agents/develop/ai-agent-memory/context), and [Locale Settings](/ai/platform-features/translation-and-localization/localization).                                                                                                                                                                                              |
+    | ![Other users in flow icon](/_assets/icons/user-bubble.svg) | Icon | Shows other users who have the current flow open and active.                                                                                                                                                                                                                                                                                                                             |
+
+    In the C26 Flow editor, NLU lives in the sidebar. Open **Advanced** in the sidebar, then select **NLU**.
+
+    <Frame>
+      <img src="/_assets/ai/develop/flows/sidebar-advanced-nlu-c26.webp" alt="Expanded Advanced section in the left sidebar, listing NLU, NLU Connectors, Lexicons, Intent Trainer, Functions, Playbooks, and Proactive below the main navigation items." style={{ width: 'auto' }} />
+    </Frame>
+  </Accordion>
+
+  <Accordion title="2. Flow chart">
+    |                            Button                                 | Description                                                                             |
+    |:-----------------------------------------------------------------:|-----------------------------------------------------------------------------------------|
+    |    ![Add node button](/_assets/icons/flow-plus.svg)                     | Click to add a new node or [Extension Node](/ai/for-developers/extensions) to the flow. |
+    |      ![Node comments button](/_assets/icons/c26/node-comment.svg)       | Click to see the comments in the node.                                                  |
+    | ![Other users editing flow icon](/_assets/icons/c26/cursor-other-users.svg)             | Indicates other users who are editing the same flow.                                    |
+    |  ![Other users editing node icon](/_assets/icons/user-bubble.svg)                   | Indicates that other users are editing the node to which the icon is attached.          |
+    | ![Discussion button](/_assets/icons/c26/discussion.svg) | Click to open the Discussion menu on the node and access Discussion Threads.            |
+
+    <Note>
+      The flow editor supports drag and drop. To copy a node, simply hold the <kbd>Alt</kbd> or <kbd>Option</kbd> while dragging the node to another position.
+    </Note>
+  </Accordion>
+
+  <Accordion title="3. Chart controls">
+    |                               Control                                    | Description                                                                                                                                                             |
+    |:------------------------------------------------------------------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    |                           **-** and **+**                                | Zoom out (-) or in (+).                                                                                                                                                 |
+    |  ![Reset Zoom button](/_assets/icons/c26/reset-zoom.svg)  | **Reset Zoom**. Centers the chart.                                                                                                                                                      |
+    | ![Search nodes button](/_assets/icons/c26/search.svg) | Search for nodes in the flow.                                                                                                                                           |
+    |     ![Save flow as Image button](/_assets/icons/c26/save-flow-as-image.svg)     | **Save Flow as Image**. Take a screenshot of the entire flow and save it in PNG format. The file name format is `<agent>_<flow>_<YYYY-MM-DD_HH-mm-ss>.png`. In the top left corner of each screenshot, the time of its creation and the Cognigy logo are displayed. |
+    |    ![Voice Preview button](/_assets/icons/c26/voice-preview.svg)    | Test voice outputs without executing the entire flow. This control appears only if you can create nodes.                                                                                                                   |
+    |       ![Undo button](/_assets/icons/c26/undo.svg)       | Undo the last step by going backward in history.                                                                                                                        |
+    |    ![Redo button](/_assets/icons/c26/redo.svg)    | Redo the last steps by going forward in history.                                                                                                                        |
+  </Accordion>
+</AccordionGroup>
+
+## Node context menu
+
+Right-click a node in the flow chart to open its context menu.
+
+<Frame>
+  <img src="/_assets/ai/develop/flows/flow-node-context-menu-c26.webp" alt="Context menu opened on a Say Node in the Flow editor, listing Copy, Cut, Paste, Disable, Set Entrypoint, Add Comment, Start Discussion, Enable Mocking, and Delete." style={{ width: 'auto' }} />
+</Frame>
+
+For a Say Node, the menu includes the following options:
+
+- **Copy**, **Cut**, and **Paste**
+- **Enable** and **Disable**
+- **Set Entrypoint** and **Unset Entrypoint**
+- **Add Comment** and **Edit Comment**
+- **Start Discussion** or **Open Discussion**
+- **Enable Mocking**, when the feature is enabled for your organization
+- **Delete**
+
+**Collapse**, **Uncollapse**, and **Create Flow From Branch** appear only on child nodes, such as the cases of a Lookup Node.
+
+The **Start** and **End** Nodes don't have a context menu.
+
+## Add nodes
+
+To add a node, click the plus (+) button on the chart line where you want the node. A popover opens with two tabs:
+
+- **By Function**
+- **Extensions**
+
+The popover includes a search field. Enter a command or search term to find a node. Category tabs filter the list: **All**, **Basic**, **Logic**, **AI**, **Voice**, **Analytics**, **CXone**, **Service**, and **Data**. Select a node to add it to the flow.
+
+<Frame>
+  <video controls loop muted playsInline preload="metadata" poster="/_assets/ai/develop/flows/add-node-popover-c26-poster.webp" title="Animation of the Add Node popover. Select the plus button, browse the Logic category, search for Say, and switch to the Extensions tab." aria-label="Animation of the Add Node popover. Select the plus button, browse the Logic category, search for Say, and switch to the Extensions tab." style={{ width: '100%' }}>
+    <source src="/_assets/ai/develop/flows/add-node-popover-c26.mp4" type="video/mp4" />
+    <source src="/_assets/ai/develop/flows/add-node-popover-c26.webm" type="video/webm" />
+  </video>
+</Frame>
+
+<Frame>
+  <img src="/_assets/ai/develop/flows/add-node-selector-c26.webp" alt="Add Node selector in the Flow editor with the By Function tab open. It shows a search field, category tabs from All to Data, and the Basic Nodes Say, Question, If, Lookup, Code, Optional Question, Stop and Return, Wait for Input, and Add To Context." style={{ width: 'auto' }} />
+</Frame>
+
+## Keyboard shortcuts
+
+In the flow chart, you can use the following keyboard shortcuts:
+
+| Action | Windows and Linux | macOS |
+|--------|-------------------|-------|
+| Copy | <kbd>Ctrl</kbd> + <kbd>C</kbd> | <kbd>Cmd</kbd> + <kbd>C</kbd> |
+| Cut | <kbd>Ctrl</kbd> + <kbd>X</kbd> | <kbd>Cmd</kbd> + <kbd>X</kbd> |
+| Paste | <kbd>Ctrl</kbd> + <kbd>V</kbd> | <kbd>Cmd</kbd> + <kbd>V</kbd> |
+| Undo | <kbd>Ctrl</kbd> + <kbd>Z</kbd> | <kbd>Cmd</kbd> + <kbd>Z</kbd> |
+| Redo | <kbd>Ctrl</kbd> + <kbd>Y</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> |
+| Delete | <kbd>Delete</kbd> | <kbd>Delete</kbd> |
+| Search for nodes | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> | <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>F</kbd> |
+
+## Tool flows
+
+Tool Flows show only the **Chart** tab.
+
+## More information
+
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Nodes](/ai/agents/develop/nodes/overview)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Agents](/ai/overview/ai-workforce)

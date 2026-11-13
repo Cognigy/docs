@@ -1,0 +1,69 @@
+---
+title: "Speech to speech"
+sidebarTitle: "Speech to speech"
+keywords: ['speech to speech', 'speech-to-speech', 'voice agent', 'real-time voice', 'delegation agent', 'voice prompt']
+description: "Learn how speech to speech works in Cognigy and how to turn it on for an agent."
+tag: experimental
+---
+
+<Warning>
+  Speech to speech is experimental and isn't recommended for production use. It might change or be removed in future releases.
+</Warning>
+
+_Speech-to-speech_ (S2S) agents hear and speak directly through one voice model. There's no chain of speech-to-text, large language model (LLM), and text-to-speech services. The model, which is trained on voice, handles the whole turn.
+
+Speech to speech offers the following advantages:
+
+- **Low latency.** There are no hand-offs between three engines, so replies start faster.
+- **Natural conversation.** The model picks up tone, pauses, and interruptions, and responds in kind.
+- **Versatility.** One model covers languages, accents, and speaking styles without extra configuration.
+
+Speech-to-speech models are tuned for talking, not for accuracy. Without safeguards, they're more prone to hallucinate facts, skip steps, or fumble tool calls. Cognigy addresses this by splitting the work between two agents.
+
+## Two agents, one call
+
+Speech to speech splits the work between two agents, so you get real-time voice speed without giving up control:
+
+- **Conversational agent (real time).** The voice that the caller hears. It runs on the voice model and handles the back-and-forth, interruptions, and small talk. Instead of guessing, it hands off to the backend whenever it needs facts or actions.
+- **Delegation agent (backend).** Your existing agent. It owns tools, knowledge, workflows, and guardrails. It does the actual work and hands results back to the conversational agent to say out loud.
+
+The caller talks to one voice. Behind it, the delegation agent keeps answers grounded.
+
+## Prerequisites
+
+- Your environment has speech to speech enabled.
+- Your project has a voice-to-voice language model. To add one, go to **AI & Voice Providers** > **Language Models**, click **Add model**, and select OpenAI GPT Live (`gpt-live-1`).
+
+## Turn on speech to speech
+
+<Tabs>
+  <Tab title="GUI">
+    1. In the left menu, go to **Design** > **Agent**.
+    2. Click the agent. The agent opens on the **Configuration** tab.
+    3. Above the **LLM** section, turn on **Speech-to-speech**. Cognigy selects the first available voice model and saves the change immediately. You don't need to click **Save**.
+    4. In **Voice model**, select the model that hears and speaks with the caller.
+    5. In **Delegation model**, select the model that handles the agent's tools, skills, and reasoning.
+    6. In **Voice**, select a voice. If you don't select one, the agent uses the **Default voice**.
+
+    Your main agent is now the delegation agent. You don't need to rebuild it. It keeps its tools, knowledge, and guardrails, and takes requests from the conversational agent.
+
+    While speech to speech is on, the agent doesn't show the text-to-speech and speech-to-text settings or **Voice studio**.
+  </Tab>
+</Tabs>
+
+## Edit the voice prompt
+
+The voice prompt is the full system prompt that the voice model follows. The default template covers Speaking Style, Conversation, Opening, AI Disclosure, Backend Agent, Language, and Call Context. Tools, knowledge, and guardrails appear as variables.
+
+1. On the **Configuration** tab, click **Open voice prompt**. The button is available only after you select a **Delegation model**.
+2. In **Edit**, change the prompt template. To insert a variable, type `{{`. Lines that start with `#` are headings.
+3. Click **Preview** to check the rendered prompt. The next call uses exactly what the preview shows.
+4. Click **Save**.
+
+To restore the default template, click **Reset to default** and confirm. The prompt can't be empty or longer than 32 KiB.
+
+## More information
+
+- [Voice](/ai/agents/develop/voice/overview)
+- [Voice settings for agents](/ai/agents/develop/voice-configuration)
+- [Speech and telephony](/ai/administer/access/speech-and-telephony)

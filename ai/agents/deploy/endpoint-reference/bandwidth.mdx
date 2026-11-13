@@ -1,0 +1,56 @@
+---
+title: Bandwidth
+keywords: ['bandwidth', 'bandwidth endpoint']
+description: "Connect your agent to your contact center or phone numbers using the Bandwidth endpoint."
+---
+
+import LegacyGenericEndpointSettings from '/snippets/ai/deploy/endpoint/legacy-generic-endpoint-settings.mdx'
+
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/bandwidth.png" alt="Bandwidth Endpoint logo"/>
+</Frame>
+
+The Bandwidth Endpoint enables you to connect your AI Agent to your contact center or other phone numbers using the [Bandwidth Voice API](https://www.bandwidth.com/voice/voice-api/). This Endpoint allows your customers to speak with your AI Agents instead of using a chat.
+
+## Prerequisites
+
+- Access to the [Bandwidth Voice API](https://www.bandwidth.com/).
+
+## Generic endpoint settings
+
+<LegacyGenericEndpointSettings />
+
+## Additional endpoint settings
+
+You can use the following additional settings to customize the endpoint:
+
+- [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer functions](/ai/for-developers/transformers/overview)
+- [Real-time translation](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Inject and Notify](/ai/agents/deploy/endpoints/inject-and-notify)
+
+## Endpoint-specific settings
+
+| **Parameter** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                  |
+|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Async Mode    | When async mode is enabled for the Bandwidth Endpoint, outputs are sent directly as they are processed in a Flow. This mode is useful when the Flow needs to send an HTTP request. <br/><br/>When async mode is off, outputs are sent only after the entire Flow has finished processing the input.<br/><br/>The [Inject and Notify](/ai/agents/deploy/endpoints/inject-and-notify) feature only works when async mode is enabled. |
+
+## How to set up
+
+### Configure in Cognigy
+
+<Accordion title="Create a Bandwidth endpoint">
+  1. In the left-side menu of the Cognigy Project, go to **Deploy > Endpoints**.
+  2. On the **Endpoints** page, click **+ New Endpoint**.
+  3. In the **New Endpoint** section, do the following:
+      1. Select the **Bandwidth** Endpoint type.
+      2. Add a unique name.
+      3. Select a relevant Flow from the list.
+  4. _(Optional)_ Activate the **Async Mode** setting.
+</Accordion>
+## More information
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+- [All Endpoints](/ai/agents/deploy/endpoint-reference/overview)

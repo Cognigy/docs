@@ -1,0 +1,82 @@
+---
+title: Webchat cookies
+sidebarTitle: Cookies
+description: "Understand how Cognigy Webchat uses cookies for session management and privacy configuration."
+keywords: ['webchat', 'cookies', 'privacy', 'session', 'websockets']
+---
+
+This article explains how Cognigy Webchat uses cookies, when each cookie is set, and how to manage cookie behavior through configuration.
+
+## Prerequisites
+
+- Webchat is embedded on your website or application.
+- Basic familiarity with HTTP cookies and general web connectivity concepts.
+
+## Concepts
+
+Webchat uses [WebSockets](https://websockets.spec.whatwg.org/) to create a persistent connection between the user's browser and the Cognigy backend.
+This connection stays open, allowing the browser and backend to exchange messages in real time without sending repeated HTTP requests.
+
+### Cookie types
+
+The table summarizes the cookies used by Webchat, including their purpose, lifetime, and suggested wording for your cookie policy.
+
+<Note>
+  These cookies don't perform cross-site tracking, analytics, or profiling.
+</Note>
+
+| **Cookie name**                       | **Description**                                                                                        | **Lifetime**                                | **Policy wording suggestion**                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------------- |
+| `_752f8` (mandatory session cookie)   | Always required for routing Webchat messages to the Cognigy backend instance.                         | Expires at the end of the browsing session. | Preserves visitor sessions for AI-driven customer support. |
+| `IO` (transport compatibility cookie) | Used in older Webchat versions that supported HTTP polling. This cookie is no longer used.             | -                                           | -                                                           |
+
+### Connection mode
+
+Webchat uses WebSockets as its only connection mode. The diagram shows how the connection is established and how the session cookie is used during the process.
+
+When a user opens Webchat, the browser first performs an HTTP handshake to initiate the WebSocket connection. During this handshake, the browser automatically includes the session cookie (`_752f8`). The backend uses this cookie to identify and route the session. After the connection is successfully upgraded, messages are exchanged over the persistent WebSocket connection without additional HTTP requests.
+
+```mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant W as Webchat
+    participant B as Cognigy Backend
+
+    U->>W: Load page with Webchat
+    W->>U: Initialize WebSocket connection
+
+    U->>B: HTTP handshake (includes _752f8 cookie)
+    B-->>U: Upgrade to WebSocket
+
+    loop Persistent connection
+        U->>B: WebSocket message
+        B->>U: WebSocket response
+    end
+```
+
+## Use cases
+
+- **Standard operation**. Webchat runs exclusively over WebSockets. This behavior is the required setup for all deployments.
+- **Privacy-aware deployment**. Only one session cookie is used. The privacy-aware deployment doesn't use tracking, analytics, or cross-site cookies. This approach simplifies compliance requirements and reduces the overall cookie footprint.
+
+## Use Webchat cookies
+
+The following steps outline how to configure and test Webchat's connection and cookie behavior:
+
+1. Embed Webchat on your website with the [standard documentation steps](/webchat/v3/embedding/hosted-script).
+2. In the [Webchat embedding configuration](/webchat/v3/embedding/hosted-script#customize-webchat-settings), use the `disableWebsockets` and `forceWebsockets` options to control WebSocket behavior.
+
+   | **disableWebsockets** | **forceWebsockets** | **Result**                              | **Cookies set** |
+   | --------------------- | ------------------- | --------------------------------------- | --------------- |
+   | `false`               | `true`              | WebSockets                              | `_752f8`        |
+   | `false`               | `false`             | WebSockets (default)                    | `_752f8`        |
+   | `true`                | any                 | Not supported                           | -               |
+
+3. Test the connection across different browsers and network environments to ensure WebSockets are allowed.
+4. Add information about Webchat cookies to your website's privacy or cookie policy.
+5. Review your consent banner to ensure users are informed that Webchat requires a mandatory session cookie.
+
+## More information
+
+- [Client-side configuration: Webchat options](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md#webchat-options)
+- [Webchat v3: embedding](/webchat/v3/embedding/hosted-script)

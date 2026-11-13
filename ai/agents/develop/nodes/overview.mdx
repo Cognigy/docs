@@ -1,0 +1,93 @@
+---
+title: Nodes
+sidebarTitle: Overview
+keywords: ['nodes', 'flow nodes', 'ai agent', 'flow builder', 'cognigy']
+seo:
+  metatags:
+    description: >-
+      Nodes are the fundamental building blocks of Flows. They define the logic
+      of agents and are used to create complex conversational experiences.
+---
+
+
+_Nodes_ are the fundamental building blocks of [Flows](/ai/agents/develop/projects-and-flows/overview). Nodes define the logic of agents and are used to create complex conversational experiences. Each node represents a specific action, decision point, or interaction in the flow. Users can configure and connect nodes to design guided interactions between agents and users.
+
+Cognigy provides a wide range of [node types](/ai/agents/develop/node-reference/overview) to allow diverse conversational experiences.
+
+Some node types, for example, [If Nodes](/ai/agents/develop/node-reference/logic/if) and [Lookup Nodes](/ai/agents/develop/node-reference/logic/lookup), include child nodes to control the flow execution logic. Child Nodes function as a decision branch in the flow, allowing different outcomes depending on the user input.
+
+## Working with nodes
+
+<Tabs>
+  <Tab title="GUI">
+    You can create and delete nodes in the [flow editor](/ai/agents/develop/projects-and-flows/editor). To edit a node, open the node editor by clicking the node in the flow editor. Node editors include settings specific to each node type. In the flow editor, you can also right-click a node to enable and disable, copy, cut, paste, or delete the node, as well as add comments to it. Child Nodes, such as the cases of a Lookup Node, also offer **Collapse**, **Uncollapse**, and **Create Flow From Branch**.
+    <Tip>
+      To speed up building your agent, use [keyboard shortcuts](/ai/administer/hotkeys).
+    </Tip>
+  </Tab>
+  <Tab title="API">
+    You can view, create, edit, and delete nodes using the [Cognigy API](https://api-trial.cognigy.ai/openapi#tag--Charts-v2.0). You can also search and move nodes and add Locales to them. For nodes that support Generative AI output, you can generate this kind of output through the API as well.
+  </Tab>
+</Tabs>
+
+### JSON data fields in the node editor
+
+Some nodes, such as the [Say Node](/ai/agents/develop/node-reference/basic/say) or [Question Node](/ai/agents/develop/node-reference/basic/question), include JSON fields to send a `data` object with the output.
+
+<Note>
+  The JSON fields enforce JSON formatting at the root level. If you directly enter an array into a JSON field, for example, `["name", "surname", "email"]`, the node unpacks the array into an object. The result is an object at the root level, for example, `{"0": "name", "1": "surname", "2": "email"}`.
+</Note>
+
+### Set nodes as entrypoints
+
+If your agent has, for example, a [Go To Node](/ai/agents/develop/node-reference/logic/go-to) or an [Execute Flow Node](/ai/agents/develop/node-reference/logic/execute-flow) to switch between flows, you can set a node as an _Entrypoint_. An Entrypoint is the node at which the flow starts. The **Start** Node is the default Entrypoint. To set a node as an Entrypoint:
+
+- right-click the node in the flow editor and select **Set Entrypoint**.
+- select ![Menu button](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Set Entrypoint** in the node editor.
+
+<Accordion title="Naming entrypoints">
+  Define unique names for each Entrypoint Node using the **Label** field in the node editor's **Settings** section. This approach is helpful to easily differentiate a node with an Entrypoint from other nodes of the same type.
+</Accordion>
+
+### Node placement rules
+
+Some nodes must be the last node in a flow. If a node can't go after the target node, pasting is blocked and the **Unable to paste** message appears.
+
+### Create flows from node branches
+
+You can split complex flows and create new ones from a child node. To do so, right-click the child node and select the **Create Flow From Branch** option in the context menu. This option appears only on child nodes, such as Lookup cases. In the **Create new Flow from branch** dialog, enter a name in the **Name of new Flow** field.
+
+<Frame>
+  <video controls loop muted playsInline preload="metadata" poster="/_assets/ai/develop/flows/create-flow-from-branch-c26-poster.webp" title="Animation of Create Flow From Branch. Right-click the Technology case Node, select Create Flow From Branch, enter a name in the dialog, and select Cancel." aria-label="Animation of Create Flow From Branch. Right-click the Technology case Node, select Create Flow From Branch, enter a name in the dialog, and select Cancel." style={{ width: '100%' }}>
+    <source src="/_assets/ai/develop/flows/create-flow-from-branch-c26.mp4" type="video/mp4" />
+    <source src="/_assets/ai/develop/flows/create-flow-from-branch-c26.webm" type="video/webm" />
+  </video>
+</Frame>
+
+When you create a flow from a child node, you move the nodes following the child node to the new flow. In the original flow, these nodes are replaced with an Execute Flow Node. The Execute Flow Node triggers the new flow.
+
+<Warning>
+  NLU and flow settings aren't copied to the new flow. Check and adjust the NLU settings of the new flow.
+</Warning>
+
+## Dynamic content in nodes
+
+Most nodes support [CognigyScript](/ai/platform-features/cognigyscript) and [Tokens](/ai/platform-features/tokens) for dynamic content use.
+
+## Fallback value in node fields
+
+A _fallback value_ is a default value automatically applied when required fields are empty due to updates in a node. Fallback values keep existing nodes working when new fields are added or existing ones are changed, so you don't need to reconfigure them immediately.
+
+Fallback values are typically applied in the following cases:
+
+- When a node field is updated in a new release version.
+- When a new node field is added to the node.
+- When you upload a new version of the Node Extension.
+
+Fields that use a fallback value are marked with the fallback icon ![Fallback icon](/_assets/icons/black-and-white/fallback.svg). After you update and save the field, the icon disappears.
+
+## More information
+
+- [CognigyScript](/ai/platform-features/cognigyscript)
+- [Tokens](/ai/platform-features/tokens)
+- [Flows](/ai/agents/develop/projects-and-flows/overview)

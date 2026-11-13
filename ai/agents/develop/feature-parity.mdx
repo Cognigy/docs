@@ -1,0 +1,112 @@
+---
+title: "Feature parity: agents versus flow agents"
+sidebarTitle: "Feature parity"
+keywords: ['feature parity', 'flow agents', 'agents', 'comparison', 'switch to agents']
+description: "Compare the features of flow agents and agents, and learn how to move a flow agent to an agent."
+---
+
+## Feature comparison
+
+The tables compare the features of flow agents and agents, grouped by feature area.
+
+### Context and personalization
+
+These features control which user and conversation data an agent can use to personalize a conversation.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| User Profiles | Contact User Profile (persistent end-user information including name, email and memories), accessible across flows and endpoints for personalization. | Supported |
+| Memory Handling | Configure which user and conversation data the agent can access: contact profile fields (**Long-Term Memory Injection**) and a Context value (**Short-Term Memory Injection**). | Partly supported: The **Contact profile information** setting on the **Guardrails** tab controls which profile fields the agent can use. There is no separate setting for Context or Input data. |
+| CognigyScript | JavaScript superset that gives access to Input, Context and Profile objects for dynamic conversation behavior. | Partly supported: CognigyScript works only in a custom system prompt. |
+
+### Flow integration and handover
+
+These features connect an agent to flows and to human agents in contact centers.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Agents node in Flow Editor | N/A | Supported: Turn on **Enable Agents node** in Agent Settings to show the node. It ends the flow and hands the conversation to an agent. |
+| Run a flow as a tool | **Execute Workflow Tool** | **Execute Tool Flow** tool. End the flow with a **Tool Result** node. |
+| Handover to Live Agent | The **Handover to Human Agent Tool** passes conversations to human agents in contact centers. | Not supported as a tool: Use **Route to Flow** to hand the conversation to a flow that contains a **Handover to Human Agent** Node. |
+| Pre-Turn Flow | N/A | Supported: Configure it in **Hooks** on the **Advanced** tab. It runs before every agent turn and doesn't run on Voice Gateway endpoints. |
+
+### Agent configuration
+
+These features define how you set up an agent: its persona and the model and request settings that it uses.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Persona | Supported | Supported |
+| Custom Model | Supported | Supported: Select a project language model with the **Language model** setting. |
+| Custom Options | JSON-based overrides for LLM request parameters not exposed in the UI (model, temperature, headers, streaming and so on). | N/A |
+
+### Tools and knowledge
+
+These features define what an agent can do and what it knows: its tools, its knowledge retrieval, and how it selects tools.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Knowledge | The Knowledge Tool Node is a child node of the Flow Agent node and gives direct access to knowledge stores for context-aware responses. | Supported |
+| MCP Tool | Supported | Supported |
+| Source Tags & Match Type | Knowledge Source tags can dynamically filter retrieval using CognigyScript. | Not supported |
+| Tool Settings - Strict Mode | When enabled, strict mode ensures that arguments passed to a tool call precisely match the expected parameters. | Not supported |
+| Tool Settings - Tool Choice | Determines how the flow agent selects tools: Auto, Required or None. | N/A |
+
+### Voice
+
+These features control how an agent handles voice conversations: speech models, interruptions, keypad input, background audio, timeouts, and tracing.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Voice Models (TTS/STT) | Supported | Supported |
+| Barge in | Supported | Supported |
+| DTMF | Supported | Supported |
+| Continuous ASR | Supported | Not supported |
+| Atmosphere Sounds | Supported | Supported |
+| Silence Overlay | Supported | Supported |
+| User Input timeout | Supported | Partly supported: Use **Check in after** and **Check in up to** in voice studio. |
+| Flow input timeout | Supported | Supported |
+| Tracing | Supported | Supported only in the Interaction Panel |
+
+### Testing and observability
+
+These features help you test an agent and monitor its behavior: analytics, simulation, mocking, debugging, and error handling.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Insights | Supported | Supported: Agents don't support Goals. |
+| Analyser | Supported | Supported |
+| Simulator | Supported | Supported |
+| Mocking | Supported | Not supported |
+| Debug Settings | Configure logging of the node configuration, knowledge results, token count, system prompt, tool definitions, and LLM latency. | Not supported |
+| Error Handling | Define behavior when the flow agent fails: stop the flow, continue the flow, or go to a node, with an optional error message and logging. | Not supported |
+
+### Response handling
+
+These features control how the responses of an agent are stored, streamed, translated, and localized, and how the agent handles images.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Storage & Streaming | Configure whether LLM responses are stored in Input or Context, or streamed directly to the user using buffer flush tokens. | Not supported: The channel decides how the reply is delivered: REST endpoints return the whole reply in one response, and chat and voice channels receive it in sentence-sized chunks. |
+| Image Handling | Configure image understanding and how images from earlier turns are handled (Keep, Drop, Minify). | Not supported |
+| Translation | Supported | Not supported |
+| Localization | Supported | Not supported |
+
+### Lifecycle and packaging
+
+These features cover how you save, move, and duplicate agents: snapshots, packages, and cloning.
+
+| Feature | Flow agents | Agents |
+| --- | --- | --- |
+| Snapshots | Ability to create a snapshot. | Supported |
+| Packages | Supported | Supported |
+| Clone Agent | Supported | Not supported: You can clone the tools and skills of an agent. |
+
+## Move from a flow agent to an agent
+
+To move a flow agent to an agent, build the agent from scratch and then connect it to the parts of your solution that the flow agent used.
+
+1. **Create an agent from scratch.** Recreate the settings of the flow agent on the agent: its persona, instructions, knowledge, tools, and guardrails. Check the [feature comparison](#feature-comparison) for features that agents don't support. For the building blocks of an agent, see [Designing agents](/ai/agents/develop/designing-agents).
+2. **Link the existing flow to the agent, if necessary.** If your solution depends on logic that you built in a flow, link the flow and the agent. To hand the conversation from the flow to the agent, add an **Agents** node at the end of the flow. To show the node, turn on **Enable Agents node** in Agent Settings. To hand it from the agent to the flow, add the **Route to Flow** tool to the agent. To show the tool, turn on **Enable Route to Flow tool** in Agent Settings. To run a flow as a tool, add the **Execute Tool Flow** tool and end the flow with a **Tool Result** node. For details, see [Bi-directional transfer](/ai/agents/develop/nodes/bi-directional-transfer).
+3. **Link the endpoint to the new agent.** Open the endpoint, go to the **Setup** tab, select the agent from the **AI Agents** group of the **Target type** list, and click **Save**. Endpoints of the MCP Server type can't target an agent.
+4. **Test the agent through the endpoint.** Send a test message and check that the agent responds as expected.

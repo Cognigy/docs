@@ -1,0 +1,104 @@
+---
+title: "Navigate the platform"
+sidebarTitle: "Navigate the platform"
+description: "Where to find everything in the Cognigy.AI interface."
+keywords: ['onboarding', 'navigation', 'user interface']
+---
+
+Cognigy.AI is organized around a few core screens:
+
+- **Main page** — where you land after signing in and can view your [projects](/ai/agents/develop/projects-and-flows/projects).
+- **Resource pages** — where you manage [flows](/ai/agents/develop/projects-and-flows/overview), [knowledge stores](/ai/agents/develop/knowledge), and other resources inside a project.
+- **Navigation menu** — where you move between the pages of a project.
+
+## Main page
+
+<Frame>
+  <img src="/_assets/ai/overview/user-interface/main-page.webp" alt="Cognigy main page with the projects sidebar, a greeting, recently opened projects, the activity feed, and product updates" style={{ width: 'auto' }} />
+</Frame>
+
+The main page is the landing page after you sign in. On it, you can manage your projects and see what changed in them recently.
+
+<AccordionGroup>
+  <Accordion title="Projects sidebar">
+    In the **Projects** sidebar, you can find, open, and manage your projects. Pinned projects appear first, sorted by name. The other projects follow, with the most recently changed first. A colored dot next to a project shows its color.
+
+    | Control | Description |
+    |:-------:|-------------|
+    | **Search projects** | Filters the list by project name. |
+    | ![Pin projects sidebar](/_assets/icons/black-and-white/pin.svg) | Keeps the sidebar open. |
+    | ![New project](/_assets/icons/black-and-white/plus.svg) | Opens the **New project** dialog, where you can [create a project](/ai/agents/develop/projects-and-flows/projects#create-project). |
+
+    To manage a project, hover over it, click ![More options](/_assets/icons/black-and-white/ellipsis.svg), and select one of the following:
+
+    - **Pin project** or **Unpin project** — Pins the project to the top of the list or removes it from there.
+    - **Copy project ID** — Copies the project ID to your clipboard.
+    - **Edit** — Opens the **Edit Project** dialog, where you can change the **Name** and **Color** of the project. Click **Save**.
+    - **Delete** — Opens a confirmation dialog. Enter the project name and click **Delete project**. This permanently deletes the project and everything in it.
+
+    **Edit** and **Delete** are available only if you have the required permissions.
+  </Accordion>
+
+  <Accordion title="Top bar">
+    | Button | Description |
+    |:------:|-------------|
+    | ![Toggle search bar](/_assets/icons/black-and-white/search.svg) | Opens the search bar. |
+    | ![Documentation](/_assets/icons/black-and-white/book-open.svg) | Opens the [Cognigy documentation](https://docs.cognigy.com/) in a new tab. |
+    | ![Toggle user menu](/_assets/icons/user-avatar.svg) | Opens the [user menu](/ai/administer/user-menu/overview), where you can open **Admin Center** (if you have access), open **My Profile**, log out, and see the release version. |
+  </Accordion>
+
+  <Accordion title="Dashboard">
+    | Section | Description |
+    |---------|-------------|
+    | **Recently opened** | Shows cards for the resources you opened most recently across your projects. Each card shows the resource type, the project color, and when you opened it. Click a card to open the resource. |
+    | **Activity** | Lists recent resource changes across your projects, for example, who created or edited a flow. Click a row to open the resource, and click ![Refresh activity](/_assets/icons/black-and-white/refresh-cw.svg) to update the list. |
+    | **Product Updates** | Shows a carousel of product news from your organization's updates feed. Click **Read more** to open the article, **All** to open all updates, or use the arrows and dots to browse. |
+  </Accordion>
+</AccordionGroup>
+
+## Resource pages
+
+Resource pages are where you view and manage the resources that make up your [agent](/ai/agents/overview), such as flows, knowledge stores, and [endpoints](/ai/agents/deploy/endpoints/overview). You reach them from the navigation menu of a project.
+
+The following images show the **Endpoints** page in the card view and in the list view as an example:
+
+<Tabs>
+  <Tab title="Card">
+    <Frame>
+      <img src="/_assets/ai/overview/user-interface/resource-page-card.webp" alt="Endpoints resource page in the card view with the view toggle, search field, new endpoint button, status tabs, channel filter, and endpoint cards" style={{ width: 'auto' }} />
+    </Frame>
+  </Tab>
+  <Tab title="List">
+    <Frame>
+      <img src="/_assets/ai/overview/user-interface/resource-page-list.webp" alt="Endpoints resource page in the list view with a table of endpoints showing the channel, name, status, and last edited columns" style={{ width: 'auto' }} />
+    </Frame>
+  </Tab>
+</Tabs>
+
+<AccordionGroup>
+  <Accordion title="Controls">
+    | Control | Description |
+    |:-------:|-------------|
+    | **Card** and **List** | Switches between the card view and the list view. Available on some resource pages, for example, agents, endpoints, and knowledge stores. |
+    | Search field | Filters the resources by name. |
+    | Create button | Creates a resource, for example, **Add agent** or **New endpoint**. The label depends on the page. |
+    | ![More options](/_assets/icons/black-and-white/vertical-ellipsis.svg) | Opens the actions for a resource. The available actions depend on the resource, for example, **Edit**, **Rename**, **Clone**, **Copy Reference ID**, **Export as package**, and **Delete**. |
+
+  </Accordion>
+</AccordionGroup>
+
+## Navigation menu
+
+<Frame>
+  <img src="/_assets/ai/overview/user-interface/navigation-menu.webp" alt="Navigation menu with the project selector, the design, test, deploy, contact profiles, manage, and advanced groups, and the docs, products, and user menu entries" style={{ width: '40%' }} />
+</Frame>
+
+Inside a project, you use the navigation menu to move between the pages of that project.
+
+At the top of the menu, the project selector shows the current project and lets you switch to another one, and ![Pin](/_assets/icons/black-and-white/pin.svg) keeps the menu open.
+
+At the bottom of the menu, you can find:
+
+- **Docs** — opens the [Cognigy documentation](https://docs.cognigy.com/).
+- **Products** — opens other Cognigy products, for example, [Insights](/insights/overview).
+- **User avatar** — shows your name and email. Click it to open the [user menu](/ai/administer/user-menu/overview), where you can open the admin center and [your profile](/ai/administer/user-menu/my-profile), or log out.

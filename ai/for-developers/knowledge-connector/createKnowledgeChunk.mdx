@@ -1,0 +1,40 @@
+---
+title: createKnowledgeChunk
+description: "Use `createKnowledgeChunk` to add knowledge chunks to a knowledge source."
+keywords: ['createknowledgechunk', 'knowledge api', 'knowledge chunk', 'knowledge source']
+---
+
+## Syntax
+
+`api.createKnowledgeChunk(params)`
+
+## Description
+
+Creates a [knowledge chunk](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) in a [knowledge source](/ai/agents/develop/knowledge-ai/knowledge-source/overview). A knowledge chunk is a discrete piece of knowledge containing text and optional chunk metadata that can be searched and retrieved during agent interactions.
+
+**Parameters:**
+
+- `params`: `CreateKnowledgeChunkParams` — configuration object for the knowledge chunk. The object contains the following parameters:
+
+| Parameter           | Type   | Required | Description                                                                                               |
+| ------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------- |
+| `knowledgeSourceId` | String | Yes      | The ID of the knowledge source.                                                                           |
+| `text`              | String | Yes      | The content of the knowledge chunk.                                                                       |
+| `data`              | Object | No       | Metadata for the chunk. An object where keys are strings and values can be strings, numbers, or booleans. |
+
+**Returns:** `Promise<{}>` — a promise that resolves to an empty object when the knowledge chunk is created.
+
+## Example
+
+```js
+await api.createKnowledgeChunk({
+    knowledgeSourceId: "ks_abc123def456",
+    text: "To reset your password, click 'Forgot Password' on the login page and follow the instructions sent to your email.",
+    data: {
+        category: "account-management",
+        priority: 5,
+        lastUpdated: "2025-11-01",
+        verified: true
+    }
+});
+```

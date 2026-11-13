@@ -1,0 +1,145 @@
+---
+title: Hooks
+keywords: ['hooks', 'pre-Turn Flow', 'Advanced tab', 'Continue to Agent Node', 'agent editor', 'turn context', 'Experimental']
+description: Use hooks to run a pre-Turn Flow before every agent turn, changing a message or adding context before the agent sees it.
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+_Hooks_ provide a way to run a Flow at a fixed point in the conversation, enabling you to change a message or add context before the agent sees it. You set hooks in the **Hooks** section of the **Advanced** tab in the agent editor. The **Advanced** tab is for experienced builders, and the **Hooks** section is marked **Experimental**. An agent has one hook, the _pre-Turn Flow_, which runs before every user message reaches the agent.
+
+Key advantages include:
+
+- **Control over the message.** Change, mask, or rewrite a user message before the agent sees it.
+- **Context for one message.** Add information to a single message, for example a customer's tier from your CRM, without storing it.
+
+## Prerequisites
+
+Before using hooks, ensure the following:
+
+1. You have an agent.
+2. You have a Flow of the type **Pre-Turn Flow**. To create one, select **Create new flow** on the **Advanced** tab. See [Add a pre-Turn Flow](#add-a-pre-turn-flow).
+
+## Restrictions
+
+- Hooks are **Experimental** and not intended for production use.
+
+**Where hooks run**
+
+- Pre-Turn Flows run on most Endpoints. They don't run on voice Endpoints (Voice Gateway, AudioCodes, Bandwidth, Voice Copilot, Twilio voice, Avaya, and Alexa), the CXone webhook, or the A2A and MCP servers. On those Endpoints, the agent skips the Flow and receives the original message. The project log then shows `pre-Turn Flow skipped (Endpoint not supported)`.
+- A pre-Turn Flow runs only for user messages. It doesn't run for signals, control commands, greetings, or when the agent continues after an **Execute Tool Flow** tool answers.
+- While a Flow has the conversation, for example after **Route to Flow**, the pre-Turn Flow doesn't run. It runs again once the conversation is back with the agent.
+
+**Limits**
+
+- An agent can have at most one pre-Turn Flow.
+- Nodes that wait for the user, hand over, run another Flow, or jump aren't available in a pre-Turn Flow, for example Question, Agents, Handover, Execute Flow, Go To, and Stop and Return. Don't use a Code Node to route the conversation elsewhere.
+- Turn context has at most 20 entries. Labels longer than 100 characters and values longer than 500 characters are cut and end with an ellipsis. Entries without a label or without a value are dropped.
+- The hand-back, with its text, data, and turn context, can be at most 32 KB. If it's larger, the **Continue to Agent** Node sends nothing, and the agent doesn't reply to that message. The text is never cut.
+- On Endpoints that answer in the HTTP response, such as REST, the agent doesn't answer a message if the request has been open for 60 seconds by the time the Flow ends.
+- Attachments don't reach the agent.
+- Insights shows the user message twice: as the Flow received it and as the agent received it.
+
+## How to use
+
+### Add a pre-turn flow
+
+A _pre-Turn Flow_ is a Flow of the type **Pre-Turn Flow** that runs before each user message reaches the agent. It works like a Conversation Flow, but some Nodes aren't available in it. It can:
+
+- Change the message text.
+- Add turn context for that one message. Turn context is a set of key and value pairs that the agent reads as reference data, not as instructions.
+- Turn a data-only message, such as a button click or a form submit, into text.
+
+To add a pre-Turn Flow:
+
+1. Open the agent and select the **Advanced** tab.
+2. In the **Hooks** section, find the **Pre-Turn Flow** row. This Flow runs before every agent turn.
+3. In the Flow picker, do one of the following:
+   - Select **Create new flow**. This creates a Flow named `<agent name> pre-Turn Flow` that already ends with a **Continue to Agent** Node, labeled `Continue to AI Agent` in the new Flow. The agent uses the Flow right away, and you don't need to select **Save changes**. The notification **Pre-turn Flow created** appears.
+   - Select an existing Flow, then select **Save changes**. The picker lists only Flows of the type **Pre-Turn Flow**.
+4. To edit the Flow, select **Open Flow**. To return to the tab, select **Back to Agent**.
+5. End the Flow with the **Continue to Agent** Node. This hands the message back to the agent.
+
+The **Continue to Agent** Node has these fields:
+
+| Field | Description | Default |
+|---|---|---|
+| **Text** | Sets the message text that the agent receives. | `{{input.text}}` |
+| **Data** | Sets the input data that the agent receives. Select **Custom JSON** to enter your own data in the **Custom data** field. | Forward current input data |
+| **Turn context** | Sets key and value pairs that the agent reads as reference data for this message. | Empty |
+
+The agent hands each user message to the pre-Turn Flow before it calls the model. The Flow runs on the same message, and the **Continue to Agent** Node hands it back. The agent then answers the handed-back text in the same turn, so the user waits for both. The Flow can read `input.text`, `input.data`, `input.aiAgentV2`, the Contact Profile, and its Context. Context isn't cleared between messages. The agent receives only the text, data, and turn context from the **Continue to Agent** Node. The turn context is added to that one message, and the agent's history keeps only the text.
+
+Inside the Flow, the `input.aiAgentV2` object has these properties:
+
+- `trigger`: always `preTurn`.
+- `agentReferenceId`: the agent's reference ID.
+- `handoffId`: the ID of this run of the pre-Turn Flow.
+- `modality`: always `chat`, because pre-Turn Flows don't run on voice Endpoints.
+- `turnContext`: a list of label and value entries. It's empty when the Flow starts.
+
+#### What happens when the Flow ends
+
+- The **Continue to Agent** Node ends the Flow, so Nodes after it don't run.
+- If the Flow ends without the **Continue to Agent** Node, the agent doesn't reply to that message. The next user message goes to the Flow again.
+- If a Node in the Flow fails, the agent doesn't reply.
+- A hand-back with empty text is valid when it has turn context or data. A Flow can answer a button click with data alone.
+- Data-only messages reach the Flow only when the agent has a pre-Turn Flow. Otherwise, they are ignored.
+- On Webchat and in the Interaction Panel, messages from the Flow, for example from a Say Node, reach the user before the agent's reply.
+
+#### Tips
+
+- Keep the Flow fast. The user waits on every message.
+- To act only on the first message of a session, use a Once Node. NLU Nodes and the LLM Prompt Node are available, so the Flow can classify the message before the agent sees it.
+- Use turn context for facts, not instructions. The agent reads it as reference data.
+
+<Note>
+  When the Flow removes something from the text, the agent never sees it. The removed content doesn't appear in the agent's prompt, history, logs, or Insights records. The Flow itself still records the original message like any Flow, in the project log, the transcript, and Insights. To redact data everywhere, use an Endpoint Input Transformer.
+</Note>
+
+To check what happened, use [tracing](/ai/agents/test/interaction-panel/tracing) in the Interaction Panel. Each message that ran the Flow shows a **Pre-Turn Flow** span first, followed by the Nodes of the Flow. The span shows one of these results: **Handed back to AI Agent**, **Ended without handing back**, or **Failed**. After a hand-back, it also shows the original and final text.
+
+If the selected Flow no longer exists, the row warns that the agent doesn't reply until you select another Flow or select **None**.
+
+#### Test a pre-turn flow
+
+Test a pre-Turn Flow through its agent. You can't run it on its own: the Interaction Panel doesn't list Flows of the type **Pre-Turn Flow**, and outside a pre-Turn run the **Continue to Agent** Node sends nothing.
+
+1. Chat with the agent in the Interaction Panel.
+2. In the trace of your message, select the **Pre-Turn Flow** span to check the result, the turn context, and the original and final text.
+3. In the project log, look for `pre-Turn Flow started`, `pre-Turn Flow handed back`, or `pre-Turn Flow skipped (Endpoint not supported)`.
+
+### Remove a pre-turn flow
+
+1. Open the agent and select the **Advanced** tab.
+2. In the **Pre-Turn Flow** row, select **None** in the Flow picker.
+3. Select **Save changes**.
+
+Removing the pre-Turn Flow removes only the link. The Flow itself stays.
+
+## Example
+
+This pre-Turn Flow masks card numbers of 16 to 19 digits before the agent sees them. It also masks other numbers of that length, such as long order IDs.
+
+1. Create a pre-Turn Flow. Between the Start Node and the **Continue to Agent** Node, add a Code Node.
+2. Add this code to the Code Node:
+
+   ```js
+   // Mask 16-digit card numbers and keep only the last four digits.
+   input.text = input.text.replace(/\b(?:\d[ -]?){12,15}(\d{4})\b/g, "**** **** **** $1");
+   ```
+
+3. Leave the **Text** field of the **Continue to Agent** Node set to `{{input.text}}`.
+
+A user message that contains a 16-digit card number reaches the agent with only the last four digits visible. The Flow still records the original message. For redaction everywhere, use an Endpoint Input Transformer.
+
+## More information
+
+The **Advanced** tab also has a **System prompt** section. See [System prompt](/ai/agents/develop/system-prompt).
+
+- [System prompt](/ai/agents/develop/system-prompt)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Tools](/ai/agents/develop/tools)
+- [Skills](/ai/agents/develop/skills)

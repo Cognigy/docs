@@ -1,0 +1,102 @@
+---
+title: "Voice"
+sidebarTitle: "Voice"
+keywords: ['voice', 'tts', 'stt', 'speech provider', 'voice studio', 'voice tools']
+description: "Learn how voice settings define how an agent speaks and listens on a phone call."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+_Voice_ settings define how an agent speaks and listens on a phone call. You set them for each agent. A consistent voice and predictable call behavior make conversations sound natural.
+
+Voice settings are the defaults that every call starts with. Each new call starts from these defaults, even if a voice tool changed some of them during the previous call. If you leave a setting empty, the call uses the value from its Voice application. A value that you set overrides the application value.
+
+If you turn on [speech to speech](/ai/agents/develop/voice/speech-to-speech) for an agent, the agent doesn't show these voice settings.
+
+## Prerequisites
+
+Set up a speech provider and its connection in your project.
+
+- Customers with NiCE-integrated environments have preconfigured speech providers.
+- All other customers must configure speech providers in **AI & Voice Providers**. For more information, see [Speech and telephony](/ai/administer/access/speech-and-telephony).
+
+## Working with voice
+
+To configure voice settings for an agent, follow these steps:
+
+1. In the navigation menu, go to **Design** > **Agent**. Select the agent.
+2. On the **Configuration** tab, go to the **Voice** section.
+3. Select a **Text-to-speech provider**. This is the service that the agent speaks with.
+5. Select a **Speech-to-text provider**. This is the service that the agent listens with.
+6. Select a **Text-to-speech language**. To find a language, enter its name or code in the search field.
+7. Select a **Voice**. The **Voice** field appears after you select a language. To narrow the list, search by name or gender, or use the **Filter voices** options to show all, male, or female voices.
+8. To hear the voice, click **Play voice sample**. Save changes.
+
+## Voice studio
+
+Voice studio holds all voice settings of an agent in one place: the voice, the speech recognizer, the greeting, turn taking, and listening. To open it, click **Voice studio** in the **Voice** section of the agent's **Configuration** tab. It opens in a full-page view.
+
+    <AccordionGroup>
+      <Accordion title="Voice">
+        | Setting | Description |
+        |---------|-------------|
+        | **Text-to-speech provider** | The text-to-speech provider. The provider that your project uses by default shows a **Default** tag. A provider that NiCE includes shows an **Included** tag. |
+        | **Text-to-speech language** | The language of the voice. The agent answers in this language unless the caller clearly speaks another one. |
+        | **Voice** | The voice that the agent speaks with. |
+      </Accordion>
+
+      <Accordion title="Recognizer">
+        | Setting | Description |
+        |---------|-------------|
+        | **Speech-to-text provider** | The speech-to-text provider. |
+        | **Speech-to-text language** | The language that the agent listens for. If you select a speech-to-text provider and leave this field empty, Cognigy uses the text-to-speech language. |
+      </Accordion>
+
+      <Accordion title="Greeting">
+        Defines what the agent says when it picks up the call. Select one of the following options:
+
+        - **Agent decides**: the agent generates the greeting.
+        - **User defined**: the agent says the text that you enter in **Greeting text**. To hear it, click **Play greeting**. You can't save the settings while **Greeting text** is empty.
+
+        If the agent was set to stay quiet and wait for the caller, neither option is selected.
+      </Accordion>
+
+      <Accordion title="Turn taking">
+        | Setting | Description | Default |
+        |---------|-------------|---------|
+        | **Interruptions** | Defines when the caller can interrupt the agent:<ul><li>**Natural**: any word interrupts the agent.</li><li>**Deliberate**: the caller needs at least two words. Short sounds such as "uh-huh" don't interrupt.</li><li>**Never**: the agent always finishes.</li></ul>If the agent uses another number of words, the field shows **Custom** and the number of words. Cognigy leaves this value unchanged. | Natural |
+        | **Check in after** | The number of seconds of silence before the agent checks in. Select 3 to 20 seconds. | 8 |
+        | **Check in up to** | The number of check-ins before the agent ends the call. Select 0 to 5. With 0, the agent doesn't check in. | 2 |
+      </Accordion>
+
+      <Accordion title="Listening">
+        | Setting | Description | Default |
+        |---------|-------------|---------|
+        | **Callers can use the keypad** | Listens for dual-tone multi-frequency (DTMF) keypad digits from the caller. | Off |
+      </Accordion>
+    </AccordionGroup>
+
+## Voice tools
+
+Voice tools let an agent act during a call. To add a voice tool, go to the agent's **Tools** tab and click **Add tool**. In the **Add to this agent** dialog, select the **Voice tools** tab. For more information, see [Tools](/ai/agents/develop/tools).
+
+In Cognigy, you can use the following voice tools:
+
+| Tool | Description |
+|------|-------------|
+| **Hang up** | The agent says a closing sentence and ends the call. |
+| **Transfer call** | The agent transfers the call to a Session Initiation Protocol (SIP) address that you set. The agent decides when to transfer, but not where. |
+| **Play audio** | The agent plays one of the recordings that you configure, from a URL that you host. |
+
+## How voice studio and voice tools work together
+
+Voice studio sets the defaults for each call, including the voice, greeting, how the agent handles interruptions and silence, and keypad input. Voice tools let the agent take actions during a call, such as ending it, transferring it, or playing audio. Some voice tools can also change call settings while the call is in progress.
+These changes don't affect future calls. Each new call starts with the defaults set in voice studio.
+
+## More information
+
+- [Brand persona](/ai/agents/develop/brand-persona)
+- [Tools](/ai/agents/develop/tools)
+- [Getting started with voice flow agents](/ai/agents/develop/flow-agents/voice)

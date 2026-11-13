@@ -1,0 +1,108 @@
+---
+title: Getting started with Webchat
+sidebarTitle: Getting started
+description: "Create an agent, deploy it using Webchat, and configure feedback forms and conversation starters."
+keywords: ['webchat getting started', 'agent setup', 'conversation flow', 'webchat deployment', 'feedback form']
+---
+
+In this tutorial, you create an agent from scratch, deploy this agent using Webchat, and test the flow in Demo Webchat. Additionally, you configure several Webchat settings, such as adding a feedback form and customizing the home screen with a welcome text and conversation starters.
+
+## Prerequisites
+
+- Configure an LLM in Project resources.
+
+## Set up an agent with a Webchat endpoint
+
+## Create project
+
+1. On Cognigy's main page, click ![create project](/_assets/icons/plus-simple.svg) in the projects bar.
+2. In the **New project** dialog, enter a name for the project and click **Start empty**.
+
+After the project is created, you're redirected to the **Agents** page.
+
+## Create agent
+
+1. On the **Agents** page, click **+ Create agent**.
+2. On the **Agent configuration** tab, configure the following:
+    - **Name** — enter a unique name, for example, `Cognigy Starter`.
+    - **Job** — enter a job description, for example, `Cognigy advisor`.
+    - **Instructions** — enter relevant instructions for the agent to carry out their tasks, for example, `You are responsible for answering questions and help users regarding any doubts to Cognigy`.
+    - **LLM** — select an LLM.
+3. Click **Save**.
+4. Go to the **Skills** tab and click **+ Create skill**.
+5. On the **Create skill** page, configure the following:
+    - **Skill Name** — enter `tech-support`.
+    - **Description** — enter `Retrieves information from Cognigy docs.`
+    - **Instructions** — enter `Invoke this skill when the user sends "I need technical support". Say "Sure, I'll help with some information from the docs". Use search_cognigy_documentation to help the user with their queries.`
+6. In the **Tools** section, click **+ Add tool** and select `search_cognigy_documentation`.
+
+
+After you create your agent, you can deploy it using the Webchat endpoint.
+
+## Create endpoint
+
+1. In the navigation menu of your project, go to **Deploy > Endpoints**.
+2. On the **Endpoints** page, click **+ New endpoint**.
+3. In the **New endpoint** dialog, select **Webchat v3** and click **Create endpoint**.
+4. On the **Setup** tab, configure the following:
+    - **Endpoint name** — enter a unique name, for example, `Cognigy Webchat`.
+    - **Target** — select the agent you previously created.
+5. Click **Save**.
+
+Now, you can change the default settings of the Webchat endpoint.
+
+### Customize Webchat
+
+To customize settings within the Webchat endpoint, follow these steps:
+
+1. Click the preview bar on the right with the ![Show preview](/_assets/icons/black-and-white/chevron-left.svg) icon. The live preview section opens. In this section, you can see the changes you make to the layout in real time.
+2. On the **Layout** tab, go to the **Home screen** section and enter `Welcome Cognigy User! How can we help you?` in the **Welcome text** field.
+3. In the **Conversation starters** section, turn on **Activate conversation starters** and click **+ Create conversation starter**.
+4. In the **Starter 1** section, configure the following:
+    - **Title** — enter `Who are Cognigy?`
+    - **Type** — select **Open a URL**.
+    - **URL** — enter `https://www.cognigy.com/`.
+5. Create other conversation starters:
+    Starter 2:
+        - **Title** — enter `Cognigy Blog`.
+        - **Type** — select **Open a URL**.
+        - **URL** — enter `https://www.cognigy.com/blog`.
+    Starter 3:
+        - **Title** — enter `I need technical support`.
+        - **Type** — select **Send a postback payload**. With this type, the user immediately starts a conversation with the agent.
+        - **Payload** — enter `technical-support`.
+5. Click the **Behavior** tab, go to the **Chat options** section and turn on **Activate chat options**.
+6. In the **Conversation rating** section, select **After every reply** from the **Activate conversation rating** list.
+7. Click **Save**.
+
+After you configure the Webchat settings, test the agent.
+
+## Test agent
+
+To test your agent using Demo Webchat, follow these steps:
+
+1. In the live preview section, click **I need technical support** to start a conversation with the agent.
+    <Frame>
+      <img src="/_assets/webchat/getting-started/home-screen.webp" alt="Webchat home screen with welcome text and conversation starters" style={{ width: '50%' }} />
+    </Frame>
+2. The agent responds with `Sure, I'll help with some information from the docs` as instructed.
+    <Frame>
+      <img src="/_assets/webchat/getting-started/agent-reply.webp" alt="Agent reply with location details and a gallery card" style={{ width: '50%' }} />
+    </Frame>
+2. Send the following message to the agent: `How do I customize Webchat?`
+3. The agent searches the docs and sends you the answer, which contains information about how to customize your Webchat widget.
+4. After receiving the agent's reply, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg).
+5. On the **Chat options** screen, click ![positive feedback](/_assets/icons/black-and-white/thumbs-up.svg) (**thumbs up**) and leave the message `I appreciate the quick response` in the feedback field. Click **Send feedback**.
+   <Frame>
+      <img src="/_assets/webchat/getting-started/feedback-sent.webp" alt="Conversation rating form with thumbs up selected and feedback message" style={{ width: '50%' }} />
+    </Frame>
+7. After you submit feedback, a notification appears at the top of the window. Users can give feedback an unlimited number of times. To return to the conversation you started or view earlier conversations on the home screen, click the **\<** button in the upper-left corner of the screen.
+   <Frame>
+      <img src="/_assets/webchat/getting-started/feedback-confirmed.webp" alt="Confirmation banner after successfully submitting feedback" style={{ width: '50%' }} />
+   </Frame>
+
+## What's next?
+
+- [Explore the key features of Webchat](/webchat/v3/features)
+- [Discover the endpoint settings to tailor Webchat according to your preferences](/webchat/v3/configuration)
+- [Learn how to deploy the application on your website](/webchat/v3/embedding/hosted-script)

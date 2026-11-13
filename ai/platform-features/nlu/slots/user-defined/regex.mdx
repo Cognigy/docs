@@ -1,0 +1,90 @@
+---
+title: Regex slots
+description: "Extract patterns from user input with regex slots, which apply regular expressions in Cognigy NLU. Learn how to define regex patterns."
+keywords: ['cognigy nlu', 'slots', 'user-defined slots', 'regular expressions', 'regex slots']
+---
+
+_Regex slots_ are user-defined slots that apply [regular expressions](https://regex101.com/) (regex) to match and extract specific patterns from user inputs.
+
+Unlike lexicon slots, which rely on keyphrases, regex slots are ideal for structured data that follows a predictable format, such as:
+
+- Phone numbers (`(123) 456-7890`).
+- Email addresses (`user@example.com`).
+- Product codes (`ABC-123-XYZ`).
+
+You can use regex slots only as [slot fillers](/ai/platform-features/nlu/slot-fillers).
+
+## Recommendations
+
+- Regex slots require careful crafting to avoid overly broad or restrictive patterns.
+- Complex regular expressions can be error-prone. Test them thoroughly to avoid missing matches or capturing incorrect data.
+- Ensure unique slot names to avoid conflicts with lexicon slots and system slots.
+
+## Work with regex slots
+
+To start working with regex slots, you can use one of the following options:
+
+<Tabs>
+  <Tab title="Apply to an entire flow">
+         To define a regex pattern that runs on all user inputs in the flow, follow these steps:
+
+         1. Go to **Advanced > NLU > Slot Fillers**. 
+         2. In the upper-left corner, click **+ New Slot Filler**.
+         3. In the **New Slot Filler** sidebar, fill in the following fields:
+            - **Name**. Enter a unique name for the slot filler. For example, `phone_number`.
+            - **Type**. Select **Regular Expression**. 
+            - **Regular Expression**. Enter a regex pattern in the format `/pattern/flags`, for example, `/\d{3}-\d{3}-\d{4}/i`. Flags are optional. The slot filler stores only the first match, so the `g` flag has no effect.
+            - **Store result in Context**. In the **Advanced** section, activate this toggle.
+            - **Context Key**. Enter a key to store the matched data in the Context object. For example, `phone_number`.
+  </Tab>
+  <Tab title="Apply after a specific point in a flow">
+         To define a regex pattern that runs after a specific user input in the flow, follow these steps:
+
+         1. In the flow editor, add a [Regex Slot Filler](/ai/agents/develop/node-reference/ai/regex-slot-filler) node where you want to process the input, for example, after a Question node.
+         2. In the node editor, configure the following fields:
+            - **Regular Expression**. Enter a regex pattern without leading and trailing slashes, for example, `^\d{3}-\d{3}-\d{4}$`.
+            - **Flags**. Enter flags you want to apply to the regular expression, for example, `i` for case-insensitive, `m` for multiline. The default is `gi`. With the `g` flag, the node stores every distinct match. Without it, the node stores only the first match and its capture groups.
+            - **Slot Name**. Enter the slot name to store the matched data in `input.slots.<slot-name>`. For example, `phone_number`.
+
+    Once a regex slot is filled, the extracted data can be used in the conversation logic, for example, for the following purposes:
+
+    - Validating user input, for example, ensuring a valid email format.
+    - Triggering specific actions, for example, saving a phone number to the contact profile.
+    - Combining with Question nodes to prompt users to re-enter missing or incorrectly formatted information.
+  </Tab>
+</Tabs>
+
+## Example
+
+These examples show how a regex slot filler stores a match in the Context object. In both examples, **Store result in Context** is activated.
+
+<AccordionGroup>
+  <Accordion title="Single match">
+
+    **User input**: `My phone number is 555-123-4567`<br/>
+    **Regex pattern**: `/\d{3}-\d{3}-\d{4}/`<br/>
+    **Context Key**: `phone_number`<br/>
+    **Result**: `context.phone_number` is filled with `555-123-4567`. The agent responds with `Thanks for providing your phone number: {{context.phone_number}}!`
+
+  </Accordion>
+  <Accordion title="Multiple matches">
+   When the user input contains multiple values that match the pattern, only the first match is stored.
+
+    **User input**: `The booking codes are 123456 and 789123`<br/>
+    **Regex pattern**: `/\b\d{6}\b/`<br/>
+    **Context Key**: `booking_codes`<br/>
+    **Result**: `context.booking_codes` is filled with `123456`.
+  </Accordion>
+</AccordionGroup>
+
+## Use cases
+
+- Extracting a booking code: `/^[A-Z]{3}-\d{4}$/` to capture `XYZ-1234`.
+- Capturing email addresses with the `@company` domain: `/^[a-zA-Z0-9._%+-]+@company\.com$/`.
+- Identifying dates in specific formats: `/^\d{2}\/\d{2}\/\d{4}$/` for `04/22/2025`.
+
+## More information
+
+- [Lexicon slots](/ai/platform-features/nlu/slots/user-defined/lexicon)
+- [User-defined slots](/ai/platform-features/nlu/slots/user-defined/overview)
+- [System-defined slots](/ai/platform-features/nlu/slots/system-defined)

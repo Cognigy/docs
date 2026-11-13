@@ -1,0 +1,121 @@
+---
+title: "Flow agents"
+sidebarTitle: "Overview"
+keywords: ['flow agents', 'flow-based agent', 'flow agent']
+description: "The flow-based agent model: Persona, Voice, Knowledge, and agent management."
+---
+
+_Flow agents_ covers the flow-based agent model: an agent built from a persona, a job, and a flow.
+
+## In this section
+
+<CardGroup cols={2}>
+  <Card title="Persona" icon="drama" href="/ai/agents/develop/persona">
+    Give an agent a consistent personality, tone, and voice.
+  </Card>
+  <Card title="Voice" icon="mic" href="/ai/agents/develop/flow-agents/voice">
+    Build a voice agent using dial logic and Voice Gateway.
+  </Card>
+  <Card title="Knowledge" icon="book-open" href="/ai/agents/develop/flow-agents/knowledge">
+    Attach a knowledge store when you create an agent.
+  </Card>
+  <Card title="Jobs and tools" icon="sliders-horizontal" href="/ai/agents/develop/flow-agents/configure-jobs-and-tools">
+    Add jobs and tools to an agent, including handovers and MCP.
+  </Card>
+  <Card title="Data privacy and security" icon="shield" href="/ai/agents/develop/flow-agents/data-privacy-and-security">
+    Configure contact profile use and safety instructions.
+  </Card>
+  <Card title="Design-time and run-time features" icon="wand-sparkles" href="/ai/agents/develop/flow-agents/design-time-and-run-time-features">
+    Use generative AI while building a flow and while it runs.
+  </Card>
+</CardGroup>
+
+## Create flow agents
+
+You can create a flow agent from scratch and customize it to fit your business needs.
+
+### Create from scratch
+
+<Tabs>
+  <Tab title="GUI">
+    1. In the left-side menu of the **Project** page, select **Design > Flows**. On the Flows page, open the **Flow agents** tab.
+    2. Click **Create flow agent**. Configure the following settings:
+    <AccordionGroup>
+      <Accordion title="1. General settings">
+        1. In the **General Settings** step, fill in the following fields:
+            - **Name** — enter a name for your flow agent. This name will be visible to end users when the flow agent greets them in the chat or when one flow agent transfers the conversation to another flow agent. For example, `Hello, my name is Sara. How can I help you?` or `Our support specialist Alex will help with this question, transferring the conversation now`.
+            - **Description** — enter a description of the flow agent that shapes its behavior and enhances its ability to understand the desired communication style. For example, describe the flow agent as follows: `Anna works at ACME and is highly skilled at making customers feel comfortable.`
+        2. In the **Avatar** section, select avatar of your choice or upload your custom one by clicking **+** next to avatars.
+           You can use any image as an avatar for your flow agent, or create a Cognigy-style avatar using the [Cognigy PSD template](https://docscognigyassets.blob.core.windows.net/assets/Template.psd). To open and customize the template, you will need Adobe Photoshop or [Paint.net](https://www.getpaint.net/) with the [PSD plugin](https://www.psdplugin.com/) installed. The requirements for the avatar are as follows:
+            - Use an alpha channel for a transparent background.
+            - Set the recommended width to 136px.
+            - Set the recommended height to 184px.
+            - Save the file as `.png`.
+            - Include `_optimized` in the file name.
+      </Accordion>
+
+      <Accordion title="2. Speaking style">
+        1. In the **Speaking Style** step, configure the following settings:
+            - **Set up Style** — configure how the flow agent's choice of wording is influenced by the selected speaking style, which can affect the tone and clarity of its responses:
+                - **Concise/Comprehensive** — adjust the slider to the left for brief responses and to the right for detailed responses.
+                - **Formal/Informal** — adjust the slider to the left for more casual and conversational responses, and to the right for professional and structured responses.
+            - **Voice Configuration** — assign a specific voice to your flow agent if you want to use your flow agent as a voice-based assistant. To configure this setting, ensure you have installed [Voice Gateway](/voice-gateway/index) and set up the [Voice Preview](/ai/agents/test/voice-preview) provider. Then, fill in the fields following the same process you used for [Set Session Config Node](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details):
+                - **TTS Vendor** — select the text-to-speech provider for your flow agent. This setting determines which service will convert the flow agent's text responses into speech.
+                - **TTS Language** — select the language that your flow agent will use for speech output. Ensure this language aligns with the preferred language of the end user.
+                - **TTS Voice** — select the voice from the selected TTS vendor. This setting allows you to customize the tone, gender, and style of your flow agent's voice.
+                - **TTS Label** — select the alternative name of the TTS vendor, as specified in the Voice Gateway Self-Service Portal. If you have multiple speech services from the same vendor, use the label to specify which service to use.
+                - **Disable TTS Audio Caching** — by default, this setting is deactivated. With caching enabled, previously requested TTS audio is stored in the flow agent cache, and repeated requests for the same audio text will use the cached result instead of sending another request. With caching disabled, the flow agent stores the TTS audio but doesn't use it; each request is sent directly to the speech provider. Note that disabling caching can increase TTS costs. For detailed information, contact your speech provider.
+                - **Language Configuration** — by default, this setting is activated. Deactivate automatic language detection to ensure the flow agent always responds in the language defined by your instructions. This setting provides predictable and consistent responses, preventing unintended language switching when users say or type words from more than one language. When active, this setting also simplifies the system prompt, giving you clearer control over language behavior.
+      </Accordion>
+
+      <Accordion title="3. Instructions">
+        1. In the **Instructions** step, configure the following setting:
+            - **Instructions** — provide special instructions to your flow agent in bullet-point form. For example:
+                ```txt
+                 - Greet users warmly and professionally.
+                 - Keep responses concise; expand only if requested.
+                 - Start with a formal tone; adjust as needed.
+                 - Share troubleshooting links for technical issues.
+                 - Apologize if errors occur, then correct promptly.
+                ```
+      </Accordion>
+
+      <Accordion title="4. Knowledge store">
+        1. In the **Knowledge Store** step, configure the following settings:
+            - **Knowledge Store Type** — select or upload a knowledge source that the flow agent will use to access information from the documents you provide. By accessing and understanding these knowledge bases, the flow agent can deliver more accurate, context-aware, and helpful responses to user queries. You need to configure an [embedding model](/ai/agents/develop/knowledge-ai/overview) to use Knowledge AI. Select one of the following options:
+                - **Choose existing Knowledge Store** — select the [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store) that the flow agent will use to access information from the documents you provide.
+                - **Upload Knowledge Source** — upload documents with supported formats, such as PDF, text, DOCX, PPTX, or CTXT file formats. The CTXT file format has restrictions. For more information, refer to the [CTXT](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt) article.
+                - **Upload URL Knowledge Source** — enter the URL of the web page to be used as a Knowledge Source. This type of Knowledge Source has restrictions. For more information, refer to the [Web Page](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/web-page) article.
+      </Accordion>
+
+      <Accordion title="5. Data privacy & security">
+        1. In the **Data Privacy & Security** step, configure the fields described in [Data Privacy and Security](/ai/agents/develop/flow-agents/data-privacy-and-security).
+      </Accordion>
+
+      <Accordion title="6. Job selection">
+        1. In the **Job Selection** step, select one of the following options:
+            - **Default** — create a flow agent with a predefined flow, then click **Create** to save changes and open the flow with the created flow agent. If you haven't added an LLM before, the system will prompt you to [configure a model](/ai/agents/develop/gen-ai-and-llms/llms) to ensure your AI-driven flow works.
+            - **Personality Only** — create a flow agent without a predefined flow, then click **Create** to save changes.
+            - **Job** — select one of the available jobs you want to assign to the flow agent, then click **Create** to save changes.
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+
+  <Tab title="API">
+    You can create a flow agent from scratch using the Cognigy API [`POST /v2.0/aiagents`](https://api-trial.cognigy.ai/openapi#post-/v2.0/aiagents) request.
+  </Tab>
+</Tabs>
+
+## Other operations
+
+<Tabs>
+  <Tab title="GUI">
+    On the **Flow agents** tab, you can view and delete flow agents and copy their Reference ID.
+  </Tab>
+  <Tab title="API">
+    You can create, edit, and delete flow agents using the [Cognigy API](https://api-trial.cognigy.ai/openapi#get-/v2.0/aiagents).
+  </Tab>
+  <Tab title="CLI">
+    You can clone and edit flow agents using [Cognigy CLI](https://github.com/Cognigy/Cognigy-CLI).
+  </Tab>
+</Tabs>

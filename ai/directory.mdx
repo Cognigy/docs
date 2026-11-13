@@ -1,0 +1,64 @@
+---
+title: Directory
+keywords: ['directory', 'extensions', 'knowledge connectors', 'prebuilt']
+description: Install prebuilt extensions and knowledge connectors from the Directory instead of building them yourself.
+---
+
+The _directory_ provides a catalog of prebuilt resources, allowing you to add ready-to-use components to your project and expand your agents' capabilities, for example, with [extension nodes](/ai/for-developers/extensions#extension-nodes) and [knowledge connectors](/ai/for-developers/extensions#knowledge-connectors).
+
+Key advantages include:
+
+- **Faster setup**. Install prebuilt resources instead of building them.
+- **Flexibility**. Customize installed resources for your use case.
+- **Reach**. Install or upload custom resources in your project to reuse.
+
+<img src="/_assets/ai/develop/directory.webp" alt="Directory page with the Extensions tab open, showing extension cards" style={{ width: 'auto' }} />
+
+## How to use
+
+The directory provides prebuilt extensions and lets you upload custom extensions. On the **Extensions** tab, you can manage extensions that extend the functionality of your agents with extension nodes and knowledge connectors.
+
+### Manage extensions
+
+The **Extensions** tab displays all prebuilt or uploaded custom extensions as cards. The extension cards can include the following tags:
+
+- `Nodes` — the extension includes an extension node.
+- `Knowledge` — the extension includes a knowledge connector.
+- `Installed` — the extension is installed.
+- `Custom` — a custom extension that you uploaded.
+
+Use the **Extension nodes** and **Knowledge connectors** toggles to display only extensions that include extension nodes or knowledge connectors.
+
+<AccordionGroup>
+  <Accordion title="Install extensions">
+
+    1. On the **Extensions** tab, select **Extension nodes** or **Knowledge connectors**.
+    2. Click the extension you want to install. The extension card expands with details.
+    3. Click **Install**, then click **Install extension** to confirm that you accept the terms of the third-party providers.
+
+  </Accordion>
+
+  <Accordion title="Update or uninstall an extension">
+
+    Extensions with a newer version show **Update available**. Open the extension, then click **Update** or **Uninstall**. In the dialog, confirm with **Update extension** or **Uninstall extension**.
+
+  </Accordion>
+
+  <Accordion title="Upload a custom extension">
+
+    1. On the **Extensions** tab, click **+ Upload extension**.
+    2. Drag your extension file into the dialog, or click **Browse to upload** and select the extension file from your device.
+    3. Click **Upload**.
+
+    To update a custom extension in your project, first upload the new version of the extension. After updating the extension, the custom extension card will display the **Update** button.
+
+    To build your own extension, see [Custom extensions](/ai/for-developers/extensions#custom-extensions).
+
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Extensions](/ai/for-developers/extensions)
+- [Knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors)
+- [Flow agents](/ai/agents/develop/flow-agents/overview)

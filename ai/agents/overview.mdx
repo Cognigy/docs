@@ -1,0 +1,176 @@
+---
+title: "Agents"
+sidebarTitle: "Overview"
+keywords: ['agents', 'brand persona', 'knowledge', 'skills', 'tools', 'guardrails', 'voice', 'language model', 'agentic ai']
+description: "Learn how agents in Cognigy combine a brand persona, knowledge, skills, tools, and guardrails. Create an agent in the GUI or with the API."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+An _agent_ is a powerful AI system that enables organizations to automate customer conversations. An agent uses a language model and tools to respond to customers and perform actions, for example, to look up an order or send a confirmation email.
+
+## Prerequisites
+
+To build and test agents, you need:
+
+- A language model for agents in your project. If there is none, the **Language Model** field shows the message `No language models configured for this project. Configure one in Project Settings to enable AI agents.` To add a model, see [Language models](/ai/agents/develop/gen-ai-and-llms/llms).
+- An embedding model, if your agents use knowledge. Configure it in the project settings under **Generative AI** > **Knowledge Search**. To learn more, see [Knowledge AI](/ai/agents/develop/knowledge-ai/overview).
+
+## Components
+
+You create the brand persona, the tools, and the skills once at the project level, and you reuse them in as many agents as you need. The knowledge, guardrails, and voice settings belong to each agent.
+
+### Brand persona
+
+A [brand persona](/ai/agents/develop/brand-persona) provides the shared voice of your agents: their tone, level of detail, and formality. It's a project resource that you attach to agents. Each agent uses one brand persona, and many agents can share the same one. This keeps the tone of your agents consistent, and a tone change applies to every agent that uses the persona.
+
+### Knowledge
+
+[Knowledge](/ai/agents/develop/knowledge) lets an agent base its answers on your own content, and not only on the general training data of the language model. You ingest your content into a knowledge store. On the **Knowledge** tab of an agent, the **Search** setting defines when the knowledge store is searched: **Never**, **Always** before the language model answers, or **Agent decides**. This helps customers get answers based on your content. The tab also has a switch to turn knowledge on or off, a **Context** text that tells the agent when to use the knowledge, and the **If search fails** setting. It defines what the agent does when the search fails: **Answer anyway** or **Decline with a generic error**.
+
+### Skills
+
+A [skill](/ai/agents/develop/skills) is a reusable capability that you attach to an agent, for example, checking an order status. A skill combines instructions with the tools that the skill uses. Cognigy loads the instructions in a skill only when the skill is used. By using skills, you give an agent many capabilities without making its core prompt longer.
+
+### Tools
+
+[Tools](/ai/agents/develop/tools) let an agent perform actions. A tool is an action that an agent can run, such as an HTTP request, a knowledge store search, an email, or routing to a Flow. You create a tool once at the project level, and then attach it to one or more agents or bundle it in a skill. You can also import tools from a Model Context Protocol (MCP) server.
+
+### Guardrails
+
+[Guardrails](/ai/agents/develop/guardrails) limit which data an agent can use and add safety instructions for its replies. On the **Guardrails** tab, you set two things:
+
+- **Data Privacy**. Which contact profile information the agent can use: all fields, no fields, only profile memories, or selected fields. The default is **No Profile Fields**, so the agent receives no contact profile information.
+- **Safety Settings**. Four safety instructions: avoid harmful content, avoid ungrounded content, avoid copyright infringements, and prevent jailbreak and manipulation. For new agents, all four are on. You can turn each one off.
+
+These settings help you control which customer data the agent uses and reduce risky output. They don't guarantee the behavior of the language model.
+
+### Voice
+
+Voice settings let an agent handle customer calls. On the **Configuration** tab, the **Voice** panel sets the speech provider, the language, the voice, and the recognizer. **Voice Studio** sets turn taking, sounds, and session parameters. Voice tools let an agent end a call, transfer it, or play audio during a call. This enables you to use the same agent for chat and for voice.
+
+## How an agent works
+
+The agent instructions, the brand persona, and the guardrails define the role and behavior of the language model. Skills, tools, and knowledge give it capabilities and information.
+
+<Frame>
+  <img src="/_assets/ai/overview/agent-overview.webp" alt="Diagram of an agent in Cognigy. The agent exchanges messages with the customer, routes to a Flow and back, and connects to HTTP and email services, MCP servers, and knowledge stores." style={{ width: 'auto' }} />
+</Frame>
+
+In each turn, the agent receives the customer's message and responds. Before it responds, the agent can do the following:
+
+- **Search knowledge**. If **Search** is set to **Always**, Cognigy searches the knowledge store before the agent answers. If **Search** is set to **Agent decides**, the agent searches when needed.
+- **Activate a skill**. The tools in the skill become available to the agent.
+- **Call a tool**. Cognigy runs the tool and returns the result to the agent. The agent then continues with the result. A tool can connect to external systems, such as HTTP services, email, and MCP servers.
+
+Routing to a Flow ends the turn. The Flow takes over and can return the conversation to the agent.
+
+To keep a turn short, Cognigy limits how many tool calls, skill activations, and knowledge searches an agent can make in one turn. When the limit is reached, the agent can't call tools and must answer the customer. If a tool fails, the agent receives an error message and can continue.
+
+## Create an agent
+
+<Tabs>
+  <Tab title="GUI">
+
+    1. In your project, go to **Design** > **Agent**. The **AI Agents** page opens.
+    2. Click **Add Agent**. The **Create New Agent** form opens.
+    3. Enter the **Agent Name**. The name is required and must be unique in the project. It can't contain `\ / : * ? " < > | ¥` and can have up to 200 characters.
+    4. _(Optional)_ Enter the **Job**, the role of the agent. It appears next to the agent name.
+    5. Enter the **Instructions**. They are required. Describe what the agent does and which information it requests first.
+    6. In **Language Model**, select a model. If the list is empty, add a model first. See [Language models](/ai/agents/develop/gen-ai-and-llms/llms).
+    7. In **Brand Persona**, check the selected persona or select another one. A brand persona is required. If your project has none, Cognigy creates a brand persona named `Default` when the form opens.
+    8. Click **Save**.
+
+    After you save, the **Knowledge**, **Tools**, **Skills**, and **Guardrails** tabs become available. Until then, they're disabled.
+
+  </Tab>
+  <Tab title="API">
+
+    You can create, edit, and delete agents with the [Cognigy API](/api-reference/).
+
+  </Tab>
+</Tabs>
+
+## Manage agents
+
+The agent list shows your agents in the **Card** or **List** view. You can search by name or description. In the agent menu, you can edit the agent, copy its reference ID, or delete it.
+
+You can export and import agents, brand personas, tools, skills, and MCP servers with [Packages](/ai/agents/deploy/packages).
+
+## Example
+
+This example shows the configuration of an agent for customer service at Acme Express, a fictional company. The agent tracks shipments, changes deliveries, answers questions, and routes the customer to a human advisor when needed.
+
+### Agent configuration
+
+| Field | Value | Description |
+|-------|-------|-------------|
+| **Agent Name** | `Klara` | Sets a unique identifier for the agent. Required. |
+| **Job** | `Acme Express Customer Service Assistant` | Defines the role of the agent. Appears next to the agent name. |
+| **Instructions** | See the following instructions. | Describes what the agent does and which information it requests first. Required. |
+
+The instructions refer to tools and skills. You add them on the other tabs. Examples are Check Shipment Status, Get Delivery Options, and Knowledge Search.
+
+<Accordion title="Instructions">
+
+```text
+Identity
+Your name is Klara. Acme Express is the company you work for, not your name. You handle Acme Express customer service by voice and web chat.
+Greeting
+If the conversation was routed from the Acme entry Flow (the welcome, language, consent and "How can I help you today?" messages came from the Flow): do not greet, do not repeat your name and do not ask how you can help again. Do not call any tool until the customer has asked for something. If you are asked to reply before the customer has said anything, reply only with: "Go ahead, I'm listening." (in the customer's language). Then respond to the customer's actual request.
+Otherwise, in your first message only, greet with exactly "Hi, I'm Klara from Acme Express. How can I help you today?" (in Dutch or Spanish if the customer writes in that language).
+After your first reply, never introduce yourself or repeat your name. If the customer says hi again later, just reply "How can I help you?" or continue where you left off.
+
+What you help with
+1. Shipment tracking for shipments in transit.
+2. Delivery changes: reschedule via On Demand Delivery, or redirect to an Acme Service Point.
+3. Questions about Acme Express tariffs, products and services.
+4. Handing over to a human advisor when needed.
+
+Language
+Reply in the customer's language: English, Dutch or Spanish (Latin America, neutral). If a handover context contains a language, use it. If the language is unclear or unsupported, offer English, Dutch or Spanish. Only switch if the customer does.
+
+Verification
+Before sharing any shipment details or making any change, the shipment must be verified. If the handover context says it is already verified, do not ask again. Otherwise ask for the 10-digit waybill number and the delivery ZIP/postal code, then call Check Shipment Status. If verified is false, ask the customer to check the details. After two failed attempts, offer an advisor. Share only what the customer needs; never read back full addresses or personal data.
+
+Tracking
+After verification, share status, route (origin to destination), latest location and estimated delivery date and window. Then offer two options: reschedule the delivery, or redirect it to a nearby Acme Service Point.
+
+Delivery changes
+- Reschedule: call Get Delivery Options and offer only the dates returned. Redirect: call Find Service Points and offer only the service points returned.
+- Before calling Reschedule Delivery or Redirect To Service Point, always ask one explicit confirmation question, e.g. "Shall I book 18 August 2025, 09:00-18:00?" or "Shall I redirect your parcel to Central Station (ACM001)?". Wait for a clear yes in the customer's next message. A customer naming a date or service point is not a confirmation.
+- After a successful change, give the confirmation ID and next steps, then call Send SMS once with a short confirmation.
+- If a change fails, explain briefly and offer another option or an advisor.
+
+Questions
+For tariffs, products, service point collection, On Demand Delivery rules and other general questions, call Knowledge Search and answer only from its results. If it has no answer, say so and offer an advisor. Never estimate prices, surcharges or duties.
+
+Handover
+Call Handoff To Advisor when the customer asks for a person, is clearly frustrated or unhappy, needs something out of scope (insurance claims, damaged or lost goods, corporate contracts or rates, billing or customs disputes), or verification failed twice. In the handoff message, tell the customer you are connecting them to an Acme Express specialist. Do not call any other tool in the same turn.
+
+Rules
+- Never invent shipment data, dates, service points, tariffs or policies. Use only tool results and Knowledge Search.
+- One question per turn.
+- End the conversation by asking if there is anything else, then close politely.
+
+Verified state: Once Check Shipment Status has returned verified true in this conversation, treat that shipment as verified for the rest of the conversation. Do not ask for the waybill or ZIP again unless the customer asks about a different shipment.
+
+Delivery changes order: when the customer wants to reschedule or redirect, first load the matching skill and fetch the real options (Get Delivery Options or Find Service Points), then ask for confirmation of one of those options. Never confirm a date, window or service point you have not fetched.
+
+Preferred language memory: If the customer profile memories contain "Preferred language: <language>", reply in that language from your first message, including the greeting. When the customer chooses or switches language, call Save Preferred Language once with the language name in English (English, Dutch or Spanish).
+```
+
+</Accordion>
+
+## More information
+
+- [Designing agents](/ai/agents/develop/designing-agents)
+- [Brand persona](/ai/agents/develop/brand-persona)
+- [Knowledge](/ai/agents/develop/knowledge)
+- [Skills](/ai/agents/develop/skills)
+- [Tools](/ai/agents/develop/tools)
+- [Guardrails](/ai/agents/develop/guardrails)
+- [Language models](/ai/agents/develop/gen-ai-and-llms/llms)
+- [Knowledge AI](/ai/agents/develop/knowledge-ai/overview)

@@ -1,0 +1,113 @@
+---
+title: Collecting metadata
+sidebarTitle: Collecting metadata
+description: "Configure Webchat v3 to collect user metadata such as browser language, geolocation, and device type to personalize agent conversations and analytics."
+keywords: ['webchat metadata', 'browser data collection', 'geolocation', 'user personalization', 'session data']
+---
+
+
+_Collecting metadata_ from the user's browser during a Webchat v3 conversation lets you
+gather additional information that isn't available by default, such as the browser language, geolocation, device type, and operating system.
+This data is stored in the [Input](/ai/agents/develop/ai-agent-memory/input) object, so you can create more tailored and effective interactions with the user.
+After the session, the data is available through the [Insights Conversations explorer](/insights/explorers/conversations) and the [Cognigy OData endpoint](/ai/agents/analyze/odata).
+The metadata includes personal data, such as location, so make sure your privacy notices inform users about data collection and that you obtain their consent.
+
+Using additional metadata gives you the following benefits:
+
+- **Personalization of content**. Adapt the conversational interface to display content in the user's preferred language, consider cultural nuances, provide localized recommendations, and account for time zones.
+- **Interface optimization**. Optimize the user interface for different devices (mobile, tablet, desktop) and operating systems. Ensure compatibility and address issues specific to different browser versions.
+- **Analytics and user experience improvement**. Understand user interactions, assess traffic effectiveness, and analyze user geographic distribution for better targeting and market expansion.
+- **Security and regulatory compliance**. Ensure compliance with local regulations by considering regional specifics when handling user data.
+
+## Webchat v3 object
+
+The additional metadata is stored in the `data._webchat3Metadata` Input object when end users send their first message in the Webchat v3 interface.
+
+JSON example:
+
+```json
+  "data": {
+    "_webchat3Metadata": {
+      "origin": "https://webchat-trial.cognigy.ai",
+      "browser": "Chrome",
+      "browser_version": "126.0.0.0",
+      "os": "Windows",
+      "platform": "desktop",
+      "language": "en-US",
+      "languages": [
+        {
+          "region": "US",
+          "code": "en"
+        },
+        {
+          "region": null,
+          "code": "sv"
+        }
+      ],
+      "geolocation": {
+        "city": "Berlin",
+        "country": "Germany"
+      }
+    }
+  }
+```
+
+The `data._webchat3Metadata` Input object has the following keys:
+
+| Key                 | Type   | Description                                                                                                                                                                                                                        | Example                          |
+|---------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|
+| origin              | String | The URL of the website from which the data was collected.                                                                                                                                                                          | https://webchat-trial.cognigy.ai |
+| browser             | String | The name of the browser that the user has.                                                                                                                                                                                         | Chrome                           |
+| browser_version     | String | The version of the browser that the user has.                                                                                                                                                                                      | 126.0.0.0                        |
+| os                  | String | The operating system of the user's device.                                                                                                                                                                                         | Linux                            |
+| platform            | String | The type of platform or device used.                                                                                                                                                                                               | mobile                           |
+| language            | String | The primary language set in the user's browser.                                                                                                                                                                                    | en-US                            |
+| languages           | Object | The object containing information about the user's language settings.                                                                                                                                                              | -                                |
+| languages.region    | String | The region associated with the user's language settings. Note that not all languages in the browser have an associated region. For example, for Swedish, the region can't be determined. In such cases, the value is `null`. | US                               |
+| languages.code      | String | The language code representing the user's language.                                                                                                                                                                                | en                               |
+| geolocation         | Object | The object containing the geolocation data of the user.                                                                                                                                                                            | -                                |
+| geolocation.city    | String | The city of the user's current location.                                                                                                                                                                                           | Berlin                           |
+| geolocation.country | String | The country of the user's current location.                                                                                                                                                                                        | Germany                          |
+
+## Test metadata collection
+
+You can test the metadata object only in [live follow](/ai/agents/test/interaction-panel/live-follow) mode.
+
+To test receiving metadata, follow these steps:
+
+1. Open the flow where you want to test metadata, or create a new one.
+2. Create a Webchat v3 endpoint or use an existing one.
+3. Go to the **Behavior** tab, and in the **Webchat behavior** section, turn on **Collect metadata**.
+4. Click **Save**.
+5. In the live preview section, click ![open demo in new tab](/_assets/icons/black-and-white/external-link.svg) to start a conversation.
+6. Copy the [user ID](/ai/agents/analyze/user-and-session-identification#user-id) from the chat interaction using your browser's developer tools. For example, in Google Chrome, open Developer Tools, go to **Application > Storage**, and expand **Session Storage**. Click a domain to view its key-value pairs. Next to the `userId` key, copy the value.
+7. In the [Interaction Panel](/ai/agents/test/interaction-panel/overview), select **Live Follow** from the **Input mode** list and paste the user ID into the **User ID to follow** field.
+8. Send a message as a user via the [Webchat live preview](/webchat/v3/configuration#live-preview) interface. When the message is received, the same message appears in the Interaction Panel.
+9. View the metadata in the Interaction Panel:
+    - To view the metadata in the payload, click ![expand](/_assets/icons/black-and-white/expand.svg).
+    - To view the metadata in the Input object, go to **Info > Input**. In the code editor, go to `data._webchat3Metadata`.
+
+If you receive the `data._webchat3Metadata` object and can view it, the metadata settings work as expected.
+
+## Example
+
+This example shows how you can use metadata, such as language preferences and geolocation, to customize and improve customer service interactions.
+The agent detects the user's location and suggests switching to their preferred language (Austrian German).
+The agent also recognizes that the user is in Salzburg and provides location-based options,
+such as picking up the product in Vienna or arranging delivery to Salzburg.
+
+**End user**: With the first message, the user asks for product information. Example: `Hi, I'd like to know if you have product XYZ in stock`.<br/>
+**Agent**: With the first user input, the agent receives the `_webchat3Metadata` object and extracts data from it. Based on the received data, the agent asks a clarifying question. Example: `One moment, please. I'll check that for you. I see your location is Salzburg, Austria. Do you want to switch to German?`<br/>
+**End user**: The user confirms switching to another language. Example: `Yes, please`.<br/>
+**Agent**: The agent switches the language to Austrian German. Example: `Einen Moment bitte, ich überprüfe das für Sie`.<br/>
+**Agent**: Based on the user's geolocation (the user is in Salzburg), the agent offers options to the user. Example: `Leider ist das Produkt XYZ derzeit nicht in Salzburg verfügbar. Sie können es jedoch in Wien abholen oder eine Lieferung nach Salzburg arrangieren. Was bevorzugen Sie?`<br/>
+**End user**: The user makes a choice. Example: `Ich würde es gerne geliefert bekommen`.<br/>
+**Agent**: The agent confirms the option and provides further details. Example: `Kein Problem! Ich habe eine Lieferung des Produkts XYZ nach Salzburg für Sie eingeleitet. Sie sollten es innerhalb von 3-5 Werktagen erhalten. Möchten Sie die Bestellung jetzt abschließen?`<br/>
+**End user**: The user confirms the option. Example: `Ja, bitte`.<br/>
+**Agent**: The agent completes the order. Example: `Super! Ihre Bestellung für das Produkt XYZ wird nach Salzburg geliefert. Sie erhalten eine Bestätigung per E-Mail`.<br/>
+
+## More information
+
+- [Webchat v3: endpoint configuration](/webchat/v3/configuration)
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Input object](/ai/agents/develop/ai-agent-memory/input)

@@ -1,0 +1,59 @@
+---
+title: Set up the inbox for Live Agent
+description: Create and configure the default Live Agent inbox in Cognigy.
+keywords: ['inbox setup', 'live agent', 'project inbox', 'cognigy integration', 'handover configuration']
+
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+After [setting up Live Agent for your organization](/live-agent/getting-started/live-agent-setup/live-agent-setup-org), configure your default Live Agent inbox.
+
+## Create a project inbox
+
+To create a new inbox for the project, follow these steps:
+
+1. In the Cognigy interface, open an existing [project](/ai/agents/develop/projects-and-flows/projects).
+2. In the navigation menu, click **Manage > Settings**.
+3. Scroll down and find **Live Agent Settings**.
+4. Click **Create Cognigy Live Agent Inbox**.
+
+Once the inbox is created, **Overwrite Cognigy Live Agent Inbox** replaces the **Create Cognigy Live Agent Inbox** button, and the section shows the **Cognigy Live Agent Inbox ID**.
+
+<Frame>
+  <img src="/_assets/live-agent/getting-started/project-wide-live-agent-setting-with-inbox-id.png" alt="Live Agent settings showing the inbox ID after inbox creation" style={{ width: 'auto' }} />
+</Frame>
+
+## Troubleshooting
+
+### Create Cognigy Live Agent inbox disabled
+
+The **Create Cognigy Live Agent Inbox** button could also be disabled for the following reasons:
+
+* You don't have the Cognigy Live Agent feature enabled.
+* The organization doesn't have a Live Agent account set up.
+* You don't have permissions to create an inbox for the project.
+
+**Example 1**
+
+The Cognigy Live Agent feature isn't enabled, or a Live Agent account isn't set up at the organizational level.
+
+<Frame>
+  <img src="/_assets/live-agent/getting-started/project-wide-live-agent-settings-not-configured.png" alt="Disabled Create Cognigy Live Agent Inbox button when Live Agent isn't enabled or configured" style={{ width: 'auto' }} />
+</Frame>
+
+**Example 2**
+
+You don't have permissions to create an inbox for Live Agent.
+
+<Frame>
+  <img src="/_assets/live-agent/getting-started/project-wide-live-agent-setting-no-permissions.png" alt="Disabled Create Cognigy Live Agent Inbox button when the user lacks permissions" style={{ width: 'auto' }} />
+</Frame>
+
+If you have both **Theming** enabled and the Cognigy Live Agent feature disabled, the **Live Agent Settings** section on both the **Admin Center** and project **Settings** pages won't be displayed.
+
+## What's next?
+
+Now you need to [set up handover for Live Agent](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover).

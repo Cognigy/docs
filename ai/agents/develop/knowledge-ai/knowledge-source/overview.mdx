@@ -1,0 +1,101 @@
+---
+title: Knowledge source
+sidebarTitle: Overview
+keywords: ['knowledge sources', 'knowledge management', 'content management', 'metadata', 'knowledge chunks', 'document processing']
+description: "Learn how knowledge sources let Knowledge AI extract structured content from documents and connectors, split into searchable knowledge chunks."
+---
+
+
+A _knowledge source_ is structured, easily accessible information that Knowledge AI extracts from documents or external systems and provides to agents.
+You can create knowledge sources from content types, such as PDF, CTXT, web pages, or via [knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors) that link to external knowledge bases. Knowledge AI breaks content into smaller units called [_knowledge chunks_](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk). You can also add [source metadata](#source-metadata) and [knowledge source tags](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-source-tags) to improve how agents use the content. You can create any number of knowledge sources per knowledge store.
+
+## Limitations
+
+- You can upload files with up to 10 MB as knowledge sources.
+- You can add up to 20 source metadata pairs per knowledge source.
+- Source metadata pairs can have up to 1000 characters.
+
+## Knowledge types
+
+Knowledge AI organizes content using content types and knowledge connectors.
+While both provide information for your agents, they are independent and use separate parsers.
+
+<AccordionGroup>
+  <Accordion title="Content types">
+    Content types define the formats of content that can be used as knowledge sources. Supported formats include:
+
+    - [Cognigy text format](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt) (CTXT, recommended)
+    - Files in the following formats:
+      - [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf)
+      - TXT
+      - DOCX
+      - PPTX
+      - JPEG
+      - JPG
+      - PNG
+      - BMP
+      - HEIF
+      - TIFF
+    - [Web Pages](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/web-page)
+
+    Depending on the format of the file you use, you need to configure a specific [parser](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/overview) to convert the content into knowledge sources.
+
+  </Accordion>
+  <Accordion title="Knowledge connectors">
+    [Knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors) link your knowledge store to external systems, such as CRMs, help centers, or databases. They operate independently of content types and include their own parsers to fetch and transform data into usable knowledge for agents.
+    You can use prebuilt knowledge connectors from the Directory, such as Confluence and Diffbot, or create custom ones using the [extension framework](/ai/for-developers/extensions).
+  </Accordion>
+</AccordionGroup>
+
+## Source metadata
+
+_Source metadata_ contains information about the knowledge source and is formatted as JSON key-value pairs. The keys refer to the information the source metadata holds and the value is the information, for example, `publication: Elsevier`.
+
+When retrieving information from knowledge sources, you can store source metadata in the [input object](/ai/agents/develop/ai-agent-memory/input) or [context object](/ai/agents/develop/ai-agent-memory/context) and give your agents access to the source metadata through:
+
+- `input.knowledgeSearch.topK[0].sourceMetadata` in the input object
+- `context.knowledgeSearch.topK[0].sourceMetadata` in the context object
+
+This way, agents can provide relevant information about the source of their replies to users.
+
+### Examples
+
+You can find examples of source metadata in the following table:
+
+| Key     | Description                                                                                                                                                                                                           | Mandatory | Example                                                                      |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------- |
+| `title` | This key defines the document's name. If a user requests the information source, the agent can provide the document's title in the response message.                                                               | no        | `title: Cognigy xApps FAQs`                                                  |
+| `url`   | This key defines a URL as the document's source. If a user requests the information source, the agent can provide the link to the document's source in the response message.                                       | no        | <span style={ {whiteSpace: 'nowrap'} }>`url: https://www.cognigy.com`</span> |
+| `tags`  | This key defines [knowledge source tags](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-source-tags). To add more than one knowledge source tag, use an array. You can add up to 50 knowledge source tags. | no        | `[cognigy, xapps, architecture]`                                             |
+
+You can add any source metadata to a knowledge source and give agents access to the source metadata through `input.knowledgeSearch.topK[0].sourceMetadata.{key}`. For example, if you add the source metadata `author: Cognigy`, where `author` is the key, and store it in the input object, retrieve this information by using `input.knowledgeSearch.topK[0].sourceMetadata.author`.
+
+## Working with knowledge sources
+
+<Tabs>
+  <Tab title="GUI">
+    You can view, create, edit, and delete knowledge sources in **Design > Knowledge**. Also, you can copy knowledge sources' reference ID, disable and export knowledge sources, and [download them as a CTXT file](#download-knowledge-sources-as-ctxt).
+  </Tab>
+  <Tab title="API">
+    You can view, create, edit, and delete knowledge sources using the [Cognigy API](https://api-trial.cognigy.ai/openapi#tag--KnowledgeSources). You can also use the API to upload files as knowledge sources.
+  </Tab>
+  <Tab title="CLI">
+    You can ingest documents to create knowledge sources and view the resulting number of tokens using the [Cognigy CLI](https://github.com/Cognigy/Cognigy-CLI/blob/main/KNOWLEDGE-AI-README.md).
+  </Tab>
+</Tabs>
+
+## Download knowledge sources as CTXT
+
+You can download knowledge sources as a CTXT file, including knowledge sources created from web pages and other file formats. Downloading knowledge sources as CTXT files offers more flexibility in managing knowledge sources. With a CTXT file, you can:
+
+- Back up knowledge sources more easily after you have edited the knowledge chunks.
+- Use knowledge sources across knowledge stores with different embedding vector dimensions.
+- Edit downloaded knowledge sources more efficiently with external tools, such as text editors, with features like search and replace, bulk editing, and integration of AI tools.
+
+## More information
+
+- [Knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store)
+- [Knowledge chunk](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk)
+- [Knowledge source tags](/ai/agents/develop/knowledge-ai/knowledge-source/knowledge-source-tags)
+- [chunk editor](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk-editor)
+- [Input](/ai/agents/develop/ai-agent-memory/input)

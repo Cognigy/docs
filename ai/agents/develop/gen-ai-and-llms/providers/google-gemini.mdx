@@ -1,0 +1,70 @@
+---
+title: Google Gemini
+keywords: ['llms', 'google gemini', 'google gemini models']
+seo:
+  metatags:
+    description: >-
+      To start using a Google Gemini LLMs with Cognigy features, add the LLM
+      and apply it to the corresponding use case.
+---
+
+import GoogleKeyFileRestriction from '/snippets/ai/generative-ai/google-key-file-restriction.mdx';
+import AiGenerativeAiAddModelViaApi from '/snippets/ai/generative-ai/add-model-via-api.mdx'
+import AiGenerativeAiApplyModel from '/snippets/ai/generative-ai/apply-model.mdx'
+import AiGenerativeAiApplyAndTestConnection from '/snippets/ai/generative-ai/apply-and-test-connection.mdx'
+
+
+To start using a Google Gemini model with Cognigy features, follow these steps:
+
+1. [Add models](#add-models)
+2. [Apply the model](#apply-the-model)
+
+## Restriction
+
+<GoogleKeyFileRestriction />
+
+## Add models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add models via GUI
+
+You can add a model provided by Google Gemini to Cognigy in **Manage > AI & Voice Providers > Language Models**. In **Generative AI Connection**, select an existing connection or click the + button to create one. The connection stores the credentials. To add the model, you'll need the following parameters:
+
+<Tabs>
+  <Tab title="Standard model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Credentials File | JSON | To upload the JSON file with a key for your model, you need to obtain this key. If you've previously used a key for the Google Vertex AI connection, you can also use this key for Google Gemini. If you're setting up the connection for the first time, go to the Google Cloud console and find Vertex AI via the search bar. On the **Vertex AI** page, click the **Enable All Recommended APIs** button to activate an API connection, if it isn't activated. Ensure that the Vertex AI API is enabled. In the left-side menu, go to the **IAM & Admin > Service Accounts**. Select **Actions** and click **Manage Keys**. On the **Keys** page, select **Add Key** and click **Create new Key**. In the appeared window, select the **JSON** key type and click **Create**. The file will be downloaded. |
+        | Location | Text | Enter a [region](https://cloud.google.com/vertex-ai/docs/general/locations) for the model. For example, `us-central1`. |
+  </Tab>
+  <Tab title="Custom model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Type | List | Select the **Chat** type. |
+        | Custom model | Text | Enter the name of the model that you want to use as a custom model. To find model names, refer to the [Google Gemini](https://ai.google.dev/gemini-api/docs/models/gemini) documentation. Note that, within this connection, Cognigy supports only the `gemini` models. |
+        | Credentials File | JSON | To upload the JSON file with a key for your model, you need to obtain this key. If you've previously used a key for the Google Vertex AI connection, you can also use this key for Google Gemini. If you're setting up the connection for the first time, go to the Google Cloud console and find Vertex AI via the search bar. On the **Vertex AI** page, click the **Enable All Recommended APIs** button to activate an API connection, if it isn't activated. Ensure that the Vertex AI API is enabled. In the left-side menu, go to the **IAM & Admin > Service Accounts**. Select **Actions** and click **Manage Keys**. On the **Keys** page, select **Add Key** and click **Create new Key**. In the appeared window, select the **JSON** key type and click **Create**. The file will be downloaded. |
+        | Location | Text | Enter a [region](https://cloud.google.com/vertex-ai/docs/general/locations) for the model. For example, `us-central1`. |
+
+  </Tab>
+</Tabs>
+
+<AiGenerativeAiApplyAndTestConnection/>
+
+<AiGenerativeAiAddModelViaApi/>
+
+## Apply the model
+
+<AiGenerativeAiApplyModel/>
+
+## More information
+
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

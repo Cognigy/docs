@@ -1,0 +1,36 @@
+---
+title: Global large language models
+sidebarTitle: Global LLMs
+keywords: ['global resources', 'global llms', 'admin center']
+seo:
+  metatags:
+    description: >-
+      Global large language models are a Cognigy resource that you can assign
+      to and share across different projects in your organization.
+---
+
+
+_Global large language models_ (global LLMs) are [LLMs](/ai/agents/develop/gen-ai-and-llms/llms) at [organization level](/ai/administer/access/admin-center/global-resources/overview) that you can assign to and share across different projects in your organization.
+
+## Restrictions
+
+- Global LLMs don't support [LLM fallback](/ai/agents/develop/gen-ai-and-llms/fallback).
+- Global LLMs can't be set as a [default model](/ai/agents/develop/gen-ai-and-llms/other-operations).
+- Global LLMs can't be cloned.
+
+## Work with global LLMs
+
+<Tabs>
+  <Tab title="GUI">
+
+        You can view, create, edit, and delete global LLMs in the [Admin Center](/ai/administer/access/admin-center/global-resources/overview) under **Resources > LLMs** as well as copy their reference ID.
+
+        To assign a global LLM to a project, go to the global LLM page, click ![assign](/_assets/icons/black-and-white/assign.svg) or ![edit-assign](/_assets/icons/black-and-white/edit-assign.svg) in the **Assigned Projects** section, and select the project.
+
+        You can also view global LLMs in **Manage > AI & Voice Providers > Language Models** and edit their settings.
+  </Tab>
+  <Tab title="API">
+
+        You can [view](/api-reference/large-language-models/get-large-language-models), [create](/api-reference/large-language-models/create-a-large-language-model), [delete](/api-reference/large-language-models/delete-a-large-language-model), and [edit](/api-reference/large-language-models/update-a-large-language-model) global LLMs using the Cognigy API. To do so, set the `resourceLevel` parameter to `organisation` in the JSON body.
+  </Tab>
+</Tabs>

@@ -1,0 +1,203 @@
+---
+title: Build your first xApp
+description: "Build your first xApp in Cognigy, using adaptive cards to create login and registration forms for agents."
+keywords: ['build xapp', 'xapp tutorial', 'adaptive card xapp', 'xapp getting started', 'cognigy xapp']
+---
+
+In this tutorial, you'll learn how to create a simple xApp from scratch. You'll create an agent that asks users whether they're new or existing customers. If the user already exists, the agent directs them to an xApp that collects their login data. If the user is new, the agent guides them to an xApp that collects registration information.
+
+## Configure a basic xApp flow
+
+1. Create a new flow in Cognigy and name it `Basic xApp Tutorial`.
+2. In the flow editor, add an **xApp: Init Session** node to initialize the xApp session.
+3. Below the **xApp: Init Session** node, add an **xApp: Show Adaptive Card** node to update the initialized xApp session with a new adaptive card-based xApp page.
+4. In the **AdaptiveCard Definition** field, paste the following JSON:
+    ```json
+    {
+      "type": "AdaptiveCard",
+      "body": [
+        {
+          "type": "TextBlock",
+          "size": "Medium",
+          "weight": "Bolder",
+          "text": "Please provide your customer status"
+        },
+        {
+          "type": "Input.ChoiceSet",
+          "id": "status",
+          "choices": [
+            {
+              "title": "New Customer",
+              "value": "new"
+            },
+            {
+              "title": "Existing Customer",
+              "value": "existing"
+            }
+          ],
+          "placeholder": "Select Customer Status"
+        }
+      ],
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Submit"
+        }
+      ],
+      "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+      "version": "1.6"
+    }
+    ```
+5. Click **Save Node**.
+6. Below the **xApp: Show Adaptive Card** node, add a **Question** node. Use this node to prompt the user, via the primary channel, to provide data through the xApp. The node then waits for the xApp's submit input before the flow continues.
+7. In **Question Type**, select **xApp** so that the node accepts only data from the xApp as a valid answer.
+8. Select the **Text with Buttons** output type to display a button with the xApp URL.
+9. Configure the prompt message to instruct users to enter their email using the xApp. In the **Text** field, paste the following text:
+   ```text
+   Welcome to the xApp tutorial. Take a look at your xApp
+   ```
+10. Click **Add Button**. Fill in the following fields:
+    - **Button Title** — enter `Open xApp`.
+    - **Select Button Type** — select **URL** from the list.
+    - **URL** — click ![token](/_assets/icons/black-and-white/token.svg) and select the **xApp Session URL** token.
+    - **URL Target** — select **Open URL in a new tab**.
+11. Click **Save**.
+12. If a user types anything in the chat, inform them that they need to use the xApp URL to enter their email. To do that, go to the **Reprompt Options** section and paste the following reprompt message:
+    ```text
+    I can't continue before you make your selection in the xApp
+    ```
+13. Click **Save Node**.
+14. Below the **Question** node, add an **If** node to your flow and set the condition to:
+    ```text
+    input.data._cognigy._app.payload.status = 'new'
+    ```
+    This lets you update the xApp session with a different xApp based on the user's selection.
+15. Click **Save Node**.
+16. In the **Then** branch, add an **xApp: Show Adaptive Card** node to update the initialized xApp session with a new adaptive card-based xApp page.
+17. In the **AdaptiveCard Definition** field, paste the following JSON:
+    ```json
+    {
+      "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+      "type": "AdaptiveCard",
+      "version": "1.0",
+      "body": [
+        {
+          "type": "TextBlock",
+          "text": "Full Name",
+          "size": "Medium"
+        },
+        {
+          "type": "Input.Text",
+          "id": "fullName"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Date of Birth",
+          "size": "Medium"
+        },
+        {
+          "type": "Input.Date",
+          "id": "dateOfBirth"
+        },
+        {
+          "type": "TextBlock",
+          "text": "Email",
+          "size": "Medium"
+        },
+        {
+          "type": "Input.Text",
+          "id": "email",
+          "style": "email",
+          "placeholder": "example@domain.com"
+        }
+      ],
+      "actions": [
+            {
+                "type": "Action.Submit",
+                "title": "Submit"
+            }
+        ]
+    }
+    ```
+    This asks the user to provide their name, date of birth, and email address.
+18. Click **Save Node**.
+19. Repeat the same node for the **Else** branch and paste the following JSON:
+    ```json
+    {
+      "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+      "type": "AdaptiveCard",
+      "version": "1.0",
+      "body": [
+        {
+          "type": "Input.Text",
+          "placeholder": "Username",
+          "id": "username"
+        },
+        {
+          "type": "Input.Text",
+          "placeholder": "Password",
+          "id": "password",
+          "style": "password"
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Submit"
+            }
+          ]
+        }
+      ]
+    }
+    ```
+    This asks the user to log in via their username and password.
+20. Click **Save Node**.
+21. Below the **Then** and **Else** branches, add a **Wait for Input** node. This node waits for the xApp input.
+22. Click **Save Node**.
+23. At the end, add a **Say** node.
+24. In the **Text** field, paste the following text:
+    ```txt
+    Thank you, we got all of the data!
+    {{JSON.stringify(input.data._cognigy._app.payload, undefined, 4)}}
+    ```
+25. Click **Save Node**.
+
+After you build your first xApp, test it via the Interaction Panel.
+
+## Test the app via the interaction panel
+
+1. Open the Interaction Panel and enter a message like `Hi` to trigger the flow.
+2. In the Interaction Panel, click **Open xApp** to access the xApp session. You can also check the **Info** tab to see the xApp's URL in the `input.apps.url` input object.
+
+<Frame>
+  <img class="image-center" src="/_assets/xApps/build/first-xApp/open-xApp.webp" alt="Interaction Panel with the Open xApp button to access the xApp session" style={{ width: 'auto' }}/>
+</Frame>
+
+3. Open the URL in a new tab to view the xApp with the adaptive card and select your customer status.
+
+<Frame>
+  <img class="image-center" src="/_assets/xApps/build/first-xApp/open-url.png" alt="xApp page displaying an adaptive card for selecting customer status" style={{ width: 'auto' }}/>
+</Frame>
+
+4. When you select **New Customer** and submit the action, a new page loads.
+
+<Frame>
+  <img class="image-center" src="/_assets/xApps/build/first-xApp/select-new-customer.png" alt="xApp showing the new page loaded after selecting New Customer" style={{ width: 'auto' }}/>
+</Frame>
+
+5. You can submit data in the entry fields and observe the behavior, for example, `Dan Schneider`, `01.01.1999`, and `dan@cognigy.com`.
+6. Check the input result via the Interaction Panel.
+
+<Frame>
+  <img class="image-center" src="/_assets/xApps/build/first-xApp/check-input-result.webp" alt="Interaction Panel showing the input result after xApp form submission" style={{ width: 'auto' }}/>
+</Frame>
+
+You can download a Cognigy package with the [xApp flow example](https://docscognigyassets.blob.core.windows.net/assets/Flow-xApp-Demo.zip).
+
+## More information
+
+- [Ready-made examples of xApps](https://github.com/Cognigy/xApps/tree/main)
+- [xApp Nodes](/ai/agents/develop/node-reference/xApp/overview)
+- [xApps tutorials](/xApps/build/overview)
+- [About xApps](/xApps/overview)

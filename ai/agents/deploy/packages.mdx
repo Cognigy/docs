@@ -1,0 +1,128 @@
+---
+title: Packaging
+keywords: ['packages', 'packaging', 'resource export', 'project sharing']
+description: "Export and import project resources, such as flows or lexicons, with packages to share them with other teams."
+---
+
+
+_Packaging_ lets you create _packages_ to export and import project resources, such as agents and flows, to share with other teams. With packages, you can transfer resources from one project to another. When you create a package, it automatically includes its direct dependencies for supported resources. After you download a package, you can share it as a ZIP file.
+
+Compared to [snapshots](/ai/agents/deploy/snapshots), packages give you more control over which resources you import and export.
+
+Packages support the following project resources:
+
+- [Connections](/ai/platform-features/connections)
+- [Copilot configurations](/ai/escalate/agent-copilot)
+- [Endpoints](/ai/agents/deploy/endpoints/overview)
+- [Flow agents](/ai/agents/develop/flow-agents/overview)
+- [Flows](/ai/agents/develop/projects-and-flows/overview), including nodes and intents
+- [Goals](/ai/agents/analyze/goals-and-tasks/goals)
+- [Handover providers](/ai/escalate/handovers)
+- [Knowledge stores](/ai/agents/develop/knowledge-ai/knowledge-store)<sup><a href="#footnote1">1</a></sup>
+- [Language models](/ai/agents/develop/gen-ai-and-llms/llms)
+- [Lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon)
+- [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Playbooks](/ai/agents/test/playbooks)
+- [Scenarios](/ai/agents/test/simulator/scenarios)
+
+The Cognigy UI lists new agents as **Agents**, together with their **Personas**, **Tools**, **Skills**, and **MCP servers**. Functions appear in the list but can't be exported yet.
+
+## Limitations
+
+- The maximum package size depends on how you create or upload it:
+    - **Cognigy UI**: You can create and upload packages of up to 8 GB. For on-premises installations, you can increase this limit by setting the `RESUMABLE_UPLOAD_MAX_FILE_SIZE` environment variable in `values.yaml`. The same limit also applies to [snapshots](/ai/agents/deploy/snapshots).
+    - **Cognigy API**: You can create and upload packages of up to 2 GB. Packages that exceed this limit can't be created or uploaded. For on-premises installations, you can increase this limit by setting the `PACKAGE_MAX_FILE_SIZE` environment variable in `values.yaml`.
+- [Endpoints](/ai/agents/deploy/endpoints/overview) in packages must have a name with up to 180 characters. Endpoints with longer names cause the package export to fail.
+- You can't export retired LLMs. You also can't select retired LLMs during the import.
+
+## Restrictions
+
+- Importing packages from a later Cognigy version into an earlier version can cause unexpected errors.
+- Cognigy skips unsupported resources while importing a package, for example, deprecated endpoints or LLMs with outdated configuration schemas.
+- If you export a package from a project with [extensions](/ai/for-developers/extensions), you must also install the respective extensions in the target project before importing the package.
+
+## Work with packages
+
+<Tabs>
+  <Tab title="GUI">
+    You can export and import packages in **Deploy > Packaging**. You can also export a resource as a package from the respective resource page by selecting ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Export as package**.
+
+    To export a package, do the following:
+
+    1. Go to **Deploy > Packaging**.
+    2. On the **Select resources** step, select the resources to export. To find a resource, use the search field. You can't select all resources while a search filter is active.
+    3. Click **Next**.
+    4. On the **Dependencies** step, review the dependencies required by the selected resources and select the ones to include. Cognigy skips this step if the selected resources have no dependencies.
+    5. Click **Next**.
+    6. On the **Configuration** step, enter a package name. The default name is `Package-<project name>`.
+    7. Click **Export**.
+    8. When the package is ready, click **Download package**. To create another package, click **Create another package**.
+
+    To import a package, do the following:
+
+    1. Go to **Deploy > Packaging**.
+    2. On the **Select resources** step, click **Import package** and select a ZIP file, or drop the ZIP file anywhere on the page.
+    3. On the **Configuration** step, select the resources to import under **Resources to be imported**. By default, Cognigy selects all resources except retired LLMs.
+    4. If the package contains duplicates of project resources, [resolve the conflicts](#resolve-import-conflicts).
+    5. Review the warnings that appear before the import runs. They report incomplete packages, references that can't be resolved in the project, and resources outside the package that a replacement also changes.
+    6. Depending on whether the package requires [locale mapping](#map-locales-before-importing-flows-and-endpoints), continue as follows:
+        - If the package requires locale mapping:
+            1. Click **Next**.
+            2. On the **Locale mapping** step, map the locales and click **Import**.
+        - If the package doesn't require locale mapping, click **Import**.
+    7. On the **Done** step, wait until the message **The package import is complete** appears. To start another import or export, click **Start over**.
+  </Tab>
+  <Tab title="API">
+    You can [view](/api-reference/packages/get-packages), [create](/api-reference/packages/create-a-package), and [delete](/api-reference/packages/delete-a-package) packages using the Cognigy API as well as [download](/api-reference/packages/create-a-download-link) and [upload](/api-reference/packages/upload-a-package) them.
+  </Tab>
+</Tabs>
+
+<Note>
+   - Don't import packages for deploying Knowledge AI resources in a production project. Agents' knowledge may be temporarily unavailable during the import.
+   - Node IDs remain unchanged during the import to ensure that hardcoded links between flows and nodes don't break. If you need to import a flow multiple times into a project, delete and recreate the nodes before importing the package to prevent node ID conflicts.
+</Note>
+
+### Map locales before importing flows and endpoints
+
+Locales aren't imported automatically. However, packages that include a flow or endpoint with an assigned locale also include the project's locales. During the import, you can map these package locales to locales in the target project.
+
+Before importing the package, create the required locales in the target project. On the **Locale mapping** step, select a **Project locale** for each **Package locale**. To skip a locale, select **Don't import**.
+
+You must map the project's primary locale to at least one locale of the package. You can map any package locale to the target project's primary locale. If a non-primary package locale has incomplete localized content, Cognigy copies the missing content from the package's primary locale.
+
+When you replace a flow, its localized content from the package overwrites the corresponding content in the target project.
+
+If you don't create the required locale, Cognigy uses the target project's primary locale instead.
+
+### Resolve import conflicts
+
+If the package contains a resource that already exists in your project, you can resolve the conflict in the **Conflict management** section that appears during the import. For each resource that already exists in the project, select one of the following options:
+
+- **Replace existing resource**: Overwrites the version in the project with the version from the package.
+- **Import as a copy**: Imports the resource as a new resource and keeps the existing one. Cognigy adds a counter to the name of the copy. For example, if the resource is a duplicate of a flow named `Main`, the new flow is named `Main (2)`. Imported resources that reference the package resource keep that reference. This option is selected by default.
+
+To apply the same option to all resources, select it in **Select how to handle conflicts for all resources** and click **Apply**.
+
+Knowledge stores can't be imported as a copy. Imported knowledge stores replace the current version.
+
+<Accordion title="FAQ">
+
+  **Q1**: What should I do if I encounter errors during knowledge store import?
+
+  **A1**: Try to upload the package again. During the reupload, select only the knowledge stores that weren't fully imported.
+
+  **Q2**: How can I avoid browser request timeouts during knowledge store package upload?
+
+  **A2**: To avoid browser request timeouts, keep the package size low. Separate your resources into smaller packages.
+</Accordion>
+
+## More information
+
+- [Localization](/ai/platform-features/translation-and-localization/localization)
+
+---
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote1">1</sup>
+  When you import a [package](/ai/agents/deploy/packages) with knowledge stores, the source and target projects must use the same embedding model. If they use different embedding models, recreate the [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) to generate new embeddings with the target project's model.
+</span>

@@ -1,0 +1,56 @@
+---
+title: "Guardrails"
+keywords: ['ai agents', 'guardrails', 'safety settings', 'data privacy', 'contact profile information']
+description: "Guardrails provide safety and data privacy instructions for agents."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+_Guardrails_ are predefined safety and data privacy settings you can activate for an agent. Use guardrails to guide your agent to comply with content and data privacy policies.
+
+## Key benefits
+
+- **Swift configuration**. You can quickly apply content safety policies when creating agents.
+- **Personal data handling**. You can customize how your agent handles contact profile information to comply with data privacy regulations.
+
+## Restrictions
+
+- You can't create custom guardrails. To enforce additional rules, add them to the agent's instructions, or adjust the description of a specific [tool](/ai/agents/develop/tools) or [skill](/ai/agents/develop/skills).
+
+## How to use guardrails
+
+You can configure guardrails when you [create an agent](/ai/agents/overview#create-an-agent) or edit an existing one:
+
+1. Go to **Design > Agent**.
+2. Select the agent.
+3. Go to the **Guardrails** tab and configure the following.
+
+    - In the **Safety settings** section, activate the toggles you need under **Safety instructions**.
+
+        - **Avoid harmful content** — prevents the agent from generating content that could be harmful, offensive, or abusive to end users.
+        - **Avoid ungrounded content** — prevents the agent from generating content that is based on speculation or unsupported claims, ensuring it is reliable and verifiable.
+        - **Avoid copyright infringements** — prevents the agent from generating content that violates intellectual property rights or uses copyrighted material without authorization.
+        - **Prevent jailbreak and manipulation** — prevents attempts to bypass security measures or manipulate the agent into producing unauthorized or unsafe content.
+
+        Activating a safety setting adds it to the agent's prompt, which can increase token usage.
+
+        All safety settings are activated by default.
+
+        Guardrails guide the model but don't guarantee its behavior. Occasional unintended outputs can still occur.
+
+    - In the **Data privacy** section, select an option in **Contact profile information** to define how your agent uses contact profile information to personalize responses.
+
+        - **No profile fields** — the agent doesn't use any contact profile data. This option is selected by default.
+        - **Selected profile fields** — displays the **Profile fields** list, where you select the fields the agent can access.
+        - **All profile fields** — the agent uses all fields from the contact profile.
+        - **Profile memories only** — the agent uses only the [memories](/ai/agents/analyze/contact-profiles#default-profile-schema) field from the contact profile.
+
+4. Click **Save changes**.
+
+## More information
+
+- [Manage agents](/ai/agents/overview#manage-agents)
+- [Contact profiles](/ai/agents/analyze/contact-profiles)
+- [Persona](/ai/agents/develop/persona)

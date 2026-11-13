@@ -1,0 +1,177 @@
+---
+title: Socket.IO
+keywords: ['socket.io', 'socket.io endpoint']
+description: "Connect your agent to a Socket.IO client using the Socket.IO endpoint."
+---
+
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/socket-io.svg" alt="Socket.IO endpoint logo" />
+</Frame>
+
+The Socket.IO endpoint enables you to connect your agent to a Socket.IO client.
+
+## Prerequisites
+
+- Familiarity with the [Socket.IO library](https://socket.io/).
+- Setup of the [Cognigy Socket.IO client](https://github.com/Cognigy/SocketClient).
+
+## Generic endpoint settings
+
+Learn about the generic endpoint settings on the following pages:
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+- [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer functions](/ai/for-developers/transformers/overview)
+- [Real-time translation](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Inject and Notify](/ai/agents/deploy/endpoints/inject-and-notify)
+- [Copilot](/agent-copilot/configure/copilot-section)
+
+## How to set up
+
+### Configure in Cognigy
+
+<Accordion title="Configure a Socket.IO endpoint">
+  1. In the left-side menu of your project, click **Deploy > Endpoints**.
+  2. On the **Endpoints** page, click **+ New Endpoint**.
+  3. In the **New Endpoint** dialog, select the **Socket.IO** endpoint type and click **Create endpoint**.
+  4. On the **Setup** tab, configure the following:
+      **Endpoint name** — enter a unique name.
+      **Target type** — select an agent or flow from the list. Save changes.
+  5. In the **Integration** section, copy the URL from the **Endpoint URL** field. 
+     The endpoint URL consists of two parts separated by a slash:
+
+      - The server address (`<Socket-Endpoint-URL>`), for example, `https://endpoint-trial.cognigy.ai`.
+      - The token (`<URLToken>`) that comes after the slash, for example, `0e77b9a19f33cb68b3f528b3b28d4b32386162559160ceb9ec85036d83dd8f8b`.
+
+      For further configuration, you need to use these two parts separately.
+</Accordion>
+
+### Configure in the third-party provider
+
+<AccordionGroup>
+  <Accordion title="1. Send a request">
+
+  <Tabs>
+    <Tab title="Cognigy Socket.IO client">
+        ```js
+        const { SocketClient } = require("@cognigy/socket-client");
+
+        (async () => {
+          // Create the SocketClient with the server address + URL Token + optional options
+          const client = new SocketClient(
+            "https://endpoint-trial.cognigy.ai",             // the Socket.IO endpoint server address
+            "0e77b9a19f33cb68b3f528b3b28d4b32386162559160ceb9ec85036d83dd8xxx", // the Socket.IO URL token
+            {
+              userId: "user@cognigy.com",  
+              sessionId: "session123", 
+              forceWebsockets: true 
+            }
+          );
+
+          // Listen for messages from the AI Agent
+          client.on("output", (output) => {
+            console.log("AI Agent:", output.text);
+            console.log("Additional data:", output.data);
+          });
+
+          // Listen for errors
+          client.on("error", (error) => {
+            console.error("AI Agent error:", error.message);
+          });
+
+          // Listen for finalPing (bot done processing)
+          client.on("finalPing", () => {
+            console.log("AI Agent finished processing a message");
+          });
+
+          // Connect to the Socket.IO endpoint
+          await client.connect();
+
+          // Send a message — BASIC
+          client.sendMessage("Hello from test!");
+
+          // Send a message — WITH EXTRA DATA
+          client.sendMessage(
+            "Example text with custom data",
+            {
+              passthroughIP: "127.0.0.1", // custom IP if needed
+              resetFlow: false,           // false means: continue flow
+              key: "value"                // any custom data for your flow
+            }
+          );
+
+          // Reset the flow if needed
+          // client.sendMessage(
+          //   "Starting fresh!",
+          //   {
+          //     resetFlow: true
+          //   }
+          // );
+        })();
+        ```
+      </Tab>
+      <Tab title="Other clients">
+        Messages are sent using the processInput event with a payload in the following format:
+
+        ```json
+        {
+            "URLToken": "urlToken",
+            "sessionId": "sessionId",
+            "userId": "user@cognigy.com",
+            "passthroughIP": "127.0.0.1",
+            "resetFlow": "false",  // Resets the flow and starts a new one from the beginning
+            "text": "Example text",  // Can be skipped with "resetFlow": true
+            "data": {
+                "key": "value"
+            }
+        }
+        ```
+
+    | Parameter     | Type   | Description                                                                                                                                                                                                                                                                                                                 | Required                        |
+    |---------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+    | URLToken      | String | An authentication token for connecting to the endpoint.                                                                                                                                                                                                                                                                     | Yes                             |
+    | userId        | String | The ID of the end user.                                                                                                                                                                                                                                                                                                     | Yes                             |
+    | sessionId     | String | The ID used to track the current session and maintain its state. Generate a new unique ID for each new session. For testing, you can use any string and change it whenever you want to start a new session.                                                                                                                 | Yes                             |
+    | passthroughIP | String | The IP address of the user, used for logging or tracking purposes.                                                                                                                                                                                                                                                          | No                              |
+    | resetFlow     | Boolean | When set to `true`, resets the conversation flow. This payload may or may not contain a message. If it contains a message, it will be the first in the new flow. Make sure to set `resetFlow` to `false` for subsequent messages to continue the flow instead of restarting it.     | Yes                             |
+    | text          | String | The text that the assigned flow should process.                                                                                                                                                                                                                                                                             | No, if `resetFlow` is `true`.   |
+    | data          | Object | The data that the assigned flow should process.                                                                                                                                                                                                                                                                             | No                              |
+    </Tab>
+    </Tabs>
+  </Accordion>
+
+  <Accordion title="2. Get a response">
+    Messages can be received by listening to the `output` event. The responses have the following format:
+
+    <Tabs>
+        <Tab title="Cognigy Socket.IO client">
+        ```text
+        AI Agent: I’d be happy to help. Could you please provide your order number?
+        Additional data: {}
+        AI Agent finished processing a message
+        ```
+        </Tab>
+        <Tab title="Other clients">
+        ```json
+        {
+          "type":"output",
+          "data":
+          {
+            "text":"responseText",
+            "data":
+            {
+              "key":"value"
+            }
+          }
+        }
+        ```
+        </Tab>
+   </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)

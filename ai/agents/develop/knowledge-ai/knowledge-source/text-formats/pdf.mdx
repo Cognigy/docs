@@ -1,0 +1,144 @@
+---
+title: PDF
+keywords: ['pdf knowledge source', 'knowledge ai', 'chunk strategy', 'pdf parsing', 'knowledge chunks']
+description: "Create knowledge sources from PDF files."
+---
+
+When you use a PDF file as a knowledge source, you can split the PDF file into knowledge chunks with the following chunk strategies after uploading the file:
+
+- [Default chunk strategy](#default-chunk-strategy)
+- [Alternative chunk strategy](#alternative-chunk-strategy)
+
+## Default chunk strategy
+
+The default chunk strategy extracts content from PDF and splits it into [knowledge chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) based on a fixed token length and recognizes tables. Based on our research, the default chunk strategy returns better structured results and works best with the **Top K** value set to 5 in the [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output) node.
+
+## Alternative chunk strategy
+
+The alternative chunk strategy is effective when your original PDF is divided into paragraphs in a logical order separated by double line breaks. This strategy attempts to distinguish the structure, such as sections, and then splits each of them into one or more knowledge chunks.
+
+To apply the alternative chunk strategy, append `.preset_uiolc_ls.pdf` to the file name when you upload a file. For example, if you have a PDF file named `cognigy.pdf`, rename it to `cognigy.preset_uiolc_ls.pdf` before the upload. The `.preset_uiolc_ls` appendix triggers the alternative chunk strategy after you upload the PDF file.
+
+While processing the PDF file, Knowledge AI may omit complex elements such as visually intricate headers or lists and not include these elements in the knowledge chunks.
+
+## Examples
+
+Assume you have the following text from the [Cognigy blog](https://www.cognigy.com/blog) in a PDF file:
+
+<Accordion title="PDF sample" defaultOpen="true">
+
+  ```markdown
+  # Call tracing: Unlock New Dimensions in VUX Optimization
+  
+  In the burgeoning field of voice technology, optimizing Voice User Experience (VUX) is a sophisticated endeavor fraught with unique challenges. 
+  VUX designers confront intricate variables from timing nuances and intonation accuracy to the unpredictability of human speech and environmental interference.
+  These factors often present hurdles that can transform an otherwise fluid dialogue into a disjointed exchange. 
+  For enterprises aiming to scale and perfect their voice-enabled services, these are not mere technicalities but critical pivots on the customer experience journey.
+  Recognizing this complex landscape, at Cognigy, we're excited to introduce the ultimate tool for developers and VUX designers in their quest for voice excellence: Call tracing.
+  
+  ## Visualizing the Unseen: How call tracing Changes the Game 
+  
+  Traditionally, understanding and monitoring voice interaction requires painstaking analysis of transcriptions, user feedback, and basic audio playback. 
+  Now, Cognigy's call tracing feature offers an actionable visualization of all activities taking place during the call, such as speech recognition and connections, together with the call recording waveforms. 
+  This powerful tool grants VUX designers an unparalleled view of the dynamics of voice interactions.
+  Event and soundwave visualization provides an analytical perspective that goes beyond the audio, giving professionals the ability to dissect and understand voice experiences at a granular level. 
+  It brings critical elements to the forefront that might not be immediately evident in transcriptions or basic audio playback.
+  ```
+
+</Accordion>
+
+You can download the [PDF sample](https://docscognigyassets.blob.core.windows.net/assets/call-tracing-sample.pdf).
+
+### Example 1: default chunk strategy
+
+If you use the default chunk strategy, Knowledge AI splits the PDF file into 3 equal knowledge chunks.
+
+<Accordion title="Default chunk splitting" defaultOpen="true">
+
+  1.
+    ```markdown
+    Call tracing: Unlock New
+    Dimensions in VUX
+    Optimization
+    In the burgeoning field of voice technology, optimizing Voice User Experience (VUX) is a
+    sophisticated endeavor fraught with unique challenges. VUX designers confront intricate
+    variables from timing nuances and intonation accuracy to the unpredictability of human
+    speech and environmental interference.
+    These factors often present hurdles that can transform an otherwise fluid dialogue into a
+    disjointed exchange. For enterprises aiming to scale and perfect their voice-enabled
+    services, these are not mere technicalities but critical pivots on the customer experience
+    journey.
+    Recognizing this complex landscape, at
+    ```
+  2.
+    ```markdown
+      Cognigy, we're excited to introduce the ultimate
+    tool for developers and VUX designers in their quest for voice excellence: Call tracing.
+    Visualizing the Unseen: How call tracing Changes the
+    Game
+    Traditionally, understanding and monitoring voice interaction requires painstaking
+    analysis of transcriptions, user feedback, and basic audio playback. Now, Cognigy's
+    Call tracing feature offers an actionable visualization of all activities taking place during
+    the call, such as speech recognition and connections, together with the call recording
+    waveforms. This powerful tool grants VUX designers an unparalleled view of the
+    dynamics of voice interactions
+    ```
+  3.
+    ```markdown
+    .
+    Event and soundwave visualization provides an analytical perspective that goes beyond
+    the audio, giving professionals the ability to dissect and understand voice experiences
+    at a granular level. It brings critical elements to the forefront that might not be
+    immediately evident in transcriptions or basic audio playback.
+    ```
+</Accordion>
+
+### Example 2: alternative chunk strategy
+
+If you use the alternative chunk strategy, Knowledge AI splits this text into 5 knowledge chunks.
+
+Note that in the first knowledge chunk, a title is missing because it's formatted as a complex element. In comparison, the [default chunk strategy](#example-1-default-chunk-strategy) recognizes and includes the title in the knowledge chunks.
+
+<Accordion title="Alternative chunk splitting" defaultOpen="true">
+  1.
+    ```markdown
+    In the burgeoning field of voice technology, optimizing Voice User Experience (VUX)
+    is a sophisticated endeavor fraught with unique challenges. 
+    VUX designers confront intricate variables from timing nuances and intonation accuracy 
+    to the unpredictability of human speech and environmental interference.
+    ```
+  2.
+    ```markdown
+    These factors often present hurdles that can transform an otherwise fluid dialogue
+    into a disjointed exchange. 
+    For enterprises aiming to scale and perfect their voice-enabled services, 
+    these are not mere technicalities but critical pivots on the customer experience journey.
+    ```
+  3.
+    ```markdown
+    Recognizing this complex landscape, at Cognigy, 
+    we're excited to introduce the ultimate tool for developers
+    and VUX designers in their quest for voice excellence: Call tracing.
+    ```
+  4.
+    ```markdown
+    Traditionally, understanding and monitoring voice interaction requires painstaking analysis of 
+    transcriptions, user feedback, and basic audio playback. 
+    Now, Cognigy's call tracing feature offers an actionable visualization of all activities taking place during the call,
+    such as speech recognition and connections, together with the call recording waveforms. 
+    This powerful tool grants VUX designers an unparalleled view of the dynamics of voice interactions.
+    ```
+  5.
+    ```markdown
+    Event and soundwave visualization provides an analytical perspective that goes beyond the audio, 
+    giving professionals the ability to dissect and understand voice experiences at a granular level. 
+    It brings critical elements to the forefront that might not be 
+    immediately evident in transcriptions or basic audio playback.
+    ```
+</Accordion>
+
+## More information
+
+- [Knowledge AI Overview](/ai/agents/develop/knowledge-ai/overview)
+- [Cognigy text format](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt)
+- [Web Page](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/web-page)

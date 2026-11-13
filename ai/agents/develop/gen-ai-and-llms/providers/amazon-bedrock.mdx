@@ -1,0 +1,76 @@
+---
+title: Amazon Bedrock
+keywords: ['llms', 'amazon bedrock', 'amazon bedrock models']
+seo:
+  metatags:
+    description: >-
+      To start using an Amazon Bedrock LLM with Cognigy features, add the LLM
+      and apply it to the corresponding use case.
+---
+
+import AiGenerativeAiAddModelViaApi from '/snippets/ai/generative-ai/add-model-via-api.mdx'
+import AiGenerativeAiApplyModel from '/snippets/ai/generative-ai/apply-model.mdx'
+import AiGenerativeAiApplyAndTestConnection from '/snippets/ai/generative-ai/apply-and-test-connection.mdx'
+
+
+To start using an Amazon Bedrock model with Cognigy features, follow these steps:
+
+1. [Add models](#add-models)
+2. [Apply the model](#apply-the-model)
+
+## Restrictions
+
+- AWS Bedrock doesn't accept requests with an empty or whitespace-only system prompt and returns an HTTP 400 error. This behavior applies to the following nodes where system prompts are configured:
+    - [LLM Prompt node](/ai/agents/develop/node-reference/service/llm-prompt): **System Prompt** field.
+    - [Question node](/ai/agents/develop/node-reference/basic/question): **LLM Instructions** field.
+    - [AI Agent node](/ai/agents/develop/node-reference/ai/ai-agent): the system prompt is built from **Persona**, **Job Description**, and **Instructions and Context**. The restriction applies only when all three fields are empty.
+
+## Add models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add models via GUI
+
+You can add a model provided by Amazon Bedrock to Cognigy in **Manage > AI & Voice Providers > Language Models**. In **Generative AI Connection**, select an existing connection or click the + button to create one. The connection stores the credentials. To add the model, you'll need the following parameters:
+
+<Tabs>
+  <Tab title="Standard model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Access key ID | Text | Enter the Access Key ID. Log in to the AWS Management Console, go to the IAM dashboard, select **Users**, and choose the IAM user. Navigate to the **Security credentials** tab, and under **Access keys**, create a new access key if one hasn't been created. Copy the Access Key ID provided after creation. |
+        | Secret access key | Text | Enter the Secret Access Key. After creating the access key, you'll be prompted to download a file containing the Access Key ID and the Secret Access Key. Alternatively, you can retrieve the Secret Access Key by navigating to the IAM dashboard, selecting the user, going to the **Security credentials** tab, and clicking **Show** next to the Access Key ID to reveal and copy the Secret Access Key. |
+        | Region | Text | Enter the AWS region where your model is located, for example, `us-east-1` for the US East (N. Virginia) region. |
+        | Location | List | Select the routing behavior of your inference calls. Select one of the following options:<ul><li>**Region**. The data sent in the request to the LLM stays within the AWS region you provided in **Region**. This is the default behavior.</li><li>**Geo**. The data sent in the request can be routed within a geographic boundary. This option allows for higher request throughput while keeping the benefits of a geographic boundary, for example, data residency for compliance with regulations. Enter the geographic boundary in the **Geo** field, for example, `us`, `eu`, or `apac`. The AWS region must be located within the geographic boundary entered in this parameter.</li><li>**Global**. The data sent in the request can be routed worldwide. This option allows for the highest request throughput and best performance for cases with no data residency constraints.</li></ul>For more information, read the [Regional availability](https://docs.aws.amazon.com/bedrock/latest/userguide/models-region-compatibility.html) article. |
+  </Tab>
+  <Tab title="Custom model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Type | List | Select the **Chat** type for models that support the [Converse API](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html). Note that the model will only work if your AWS administrator gives you [access to this model](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html). |
+        | Custom model | Text | Enter the ID of the model that you want to use as a custom model. To find model IDs, refer to the [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html) documentation. |
+        | Access key ID | Text | Enter the Access Key ID. Log in to the AWS Management Console, go to the IAM dashboard, select **Users**, and choose the IAM user. Navigate to the **Security credentials** tab, and under **Access keys**, create a new access key if one hasn't been created. Copy the Access Key ID provided after creation. |
+        | Secret access key | Text | Enter the Secret Access Key. After creating the access key, you'll be prompted to download a file containing the Access Key ID and the Secret Access Key. Alternatively, you can retrieve the Secret Access Key by navigating to the IAM dashboard, selecting the user, going to the **Security credentials** tab, and clicking **Show** next to the Access Key ID to reveal and copy the Secret Access Key. |
+        | Region | Text | Enter the AWS region where your model is located, for example, `us-east-1` for the US East (N. Virginia) region. |
+        | Location | List | Select one of the following routing behaviors for your inference calls:<ul><li>**Region**. The data sent in the request to the LLM stays within the AWS region you provided in **Region**. This is the default behavior.</li><li>**Geo**. The data sent in the request can be routed within a geographic boundary. This option allows for higher request throughput while keeping the benefits of a geographic boundary, for example, data residency for compliance with regulations. Enter the geographic boundary in the **Geo** field, for example, `us`, `eu`, or `apac`. The AWS region must be located within the geographic boundary entered in this parameter.</li><li>**Global**. The data sent in the request can be routed worldwide. This option allows for the highest request throughput and best performance for cases with no data residency constraints.</li></ul>For more information, read the [Regional availability](https://docs.aws.amazon.com/bedrock/latest/userguide/models-region-compatibility.html) article. |
+
+  </Tab>
+</Tabs>
+
+<AiGenerativeAiApplyAndTestConnection/>
+
+<AiGenerativeAiAddModelViaApi/>
+
+## Apply the model
+
+<AiGenerativeAiApplyModel/>
+
+## More information
+
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

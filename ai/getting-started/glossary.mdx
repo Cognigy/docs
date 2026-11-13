@@ -1,0 +1,459 @@
+---
+title: Cognigy glossary
+sidebarTitle: Glossary
+keywords: ['glossary', 'cognigy']
+seo:
+  metatags:
+    description: >-
+      Cognigy Glossary provides a reference for users, administrators, and
+      anyone involved in the operation or understanding of Cognigy software
+      and practices.
+---
+
+Cognigy terms listed in alphabetical order. All terms in the glossary are given for informational purposes.
+
+## A
+
+**Agent**
+
+A fully LLM-driven Cognigy agent. Agents include brand personas, skills, tools, and guardrails that define and govern how they behave.
+
+**Agent Card**
+
+A JSON document that describes an A2A agent so that A2A clients can discover it. The Agent Card lists the agent's name, description, skills, and supported capabilities. For more information, read the [A2A Server](/ai/agents/deploy/endpoint-reference/a2a-server) documentation.
+
+**Agent Copilot**
+
+A Cognigy product that offers a variety of features in a workspace and empowers human agents to provide faster and more accurate customer support. You can customize the Agent Copilot workspace with widgets that display the most relevant information for chat and voice use cases. When embedded into your contact center's desktop, Agent Copilot enhances the overall efficiency of your contact center. For more information, read the [Agent Copilot](/agent-copilot/overview) documentation.
+
+**Agent output**
+
+A message, including text, voice, or data, sent by an agent to a user or system. The agent's response is stored using the AI Agent Output token, for example, in `input.aiAgentOutput`.
+
+**Agent2Agent (A2A) Protocol**
+
+An open interoperability standard that defines how agents from different vendors or platforms can discover each other's capabilities, delegate requests, and exchange results. For more information, read the [A2A Server](/ai/agents/deploy/endpoint-reference/a2a-server) documentation.
+
+**Assertion**
+
+A validation check that verifies an agent's response and other aspects of the flow for each step during a playbook run. Assertion types include text, data, intent, slot, context, and state. For more information, read the [assertions](/ai/agents/test/assertions) documentation.
+
+## C
+
+**Carriers**
+
+Telecommunications providers that operate the networks that carry voice traffic, such as Voxbone, Twilio, and Simwood. Carriers are also known as [SIP trunk providers](#s). For more information, read the [speech and telephony](/ai/administer/access/speech-and-telephony#carriers).
+
+**Channel**
+
+A Cognigy resource that allows you to interact with the agent through multiple interfaces. Each channel is associated with one or more Cognigy [endpoints](#e). Channels include Webchat, Facebook Messenger, Slack, WhatsApp, and other messaging or communication platforms. For more information, read the [channels](/ai/agents/develop/nodes/channels) documentation.
+
+**Child node**
+
+A node that is part of the logic of another node. Child nodes can perform actions, for example, [agent tools](/ai/agents/develop/node-reference/ai/ai-agent#tool), or represent conditional paths, for example, the Then and Else nodes of an [If node](/ai/agents/develop/node-reference/logic/if).
+
+**Chunk editor**
+
+An interface in Cognigy for editing and managing [knowledge chunks](#k). You can edit the text, add new information, delete sections, or rearrange the order of the knowledge chunks to ensure their accuracy and relevance. For more information, read the [knowledge](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk-editor) documentation.
+
+**Click To Call**
+
+A feature that embeds a multimodal widget into your website so that customers can speak directly with agents. Click To Call uses the Web Real-Time Communication (WebRTC) protocol and supports Cognigy features, such as xApps and rich media. For more information, read the [Click To Call](/click-to-call/overview) documentation.
+
+**Client libraries**
+
+Applications developed in different programming languages that connect with Cognigy, hosted on Cognigy's GitHub pages. For example, the REST API client allows direct interaction with Cognigy resources using TypeScript or JavaScript. For more information, read the [client libraries](/ai/for-developers/developers/client-libraries) documentation.
+
+**Cognigy**
+
+Cognigy's conversational AI platform, designed for enterprises to create, deploy, and orchestrate chat and voice agents at scale. Cognigy leverages advanced natural language understanding (NLU) technology and LLMs to develop conversational interfaces that can accurately understand and interpret user queries. For more information, read [About the Cognigy Platform](/ai/getting-started/platform-overview).
+
+**Cognigy API**
+
+An HTTP-based application programming interface (API) provided by Cognigy that allows communication with the Cognigy installation. With the Cognigy API, developers can access various functionalities and resources in Cognigy, control the behavior of agents, and develop custom integrations. For more information, read the [API and CLI](/api-reference/about) article and the [Cognigy API](https://api-trial.cognigy.ai/openapi) documentation.
+
+**Cognigy NLU**
+
+A natural language understanding engine that powers agents in Cognigy. Cognigy NLU allows agents to understand and interpret human language and provide accurate responses. For more information, read the [NLU Overview](/ai/platform-features/nlu/overview) documentation.
+
+**Cognigy products**
+
+Licensed applications and services that Cognigy offers, such as Cognigy, Cognigy Webchat v3, Cognigy Insights, and others.
+
+**Cognigy SaaS**
+
+Cognigy's delivery model. Cognigy SaaS operates on and maintains cloud-hosted instances for customers.
+
+**CognigyScript**
+
+A JavaScript superset developed for Cognigy. CognigyScript lets you configure agents to access and manipulate the input, context, and profile objects dynamically. For more information, read the [CognigyScript](/ai/platform-features/cognigyscript) documentation.
+
+**Connections**
+
+A Cognigy resource that securely stores and manages credentials for integrating external services or APIs with the platform. Connections let agents access and interact with external systems, such as databases, APIs, or third-party services, while ensuring sensitive information, such as API keys or access tokens, is securely encrypted. For more information, read the [connections](/ai/platform-features/connections) article.
+
+**Contact profiles**
+
+The stored data about the users that interact with your agents. Contact profiles persistently store user data and help to personalize conversations, even across different channels. You can access contact profiles from a flow through the [profile](/ai/agents/develop/ai-agent-memory/profile) object and manage them with specific nodes. For more information, read the [contact profiles](/ai/agents/analyze/contact-profiles) article.
+
+**Context object**
+
+A JSON object that stores session-specific data. The context object is generated when a user starts a conversation with an agent, which triggers the start of a session. When the user disconnects from Cognigy, the session data persists in the context object and is retrieved upon reconnection with the same session ID. This method allows for multichannel conversations by accessing the context object when the user connects from a different channel. You can also use CognigyScript to access the context object and generate more context-aware agent responses. For more information, read the [context](/ai/agents/develop/ai-agent-memory/context) documentation.
+
+**Conversation**
+
+A billable unit of interaction between a user and an agent or human agent. For more information about billed conversations, read the [billing](/ai/administer/billing) documentation.
+
+**Conversational AI**
+
+A technology that allows computers to interact with humans in natural language. Conversational AI uses AI and natural language processing to simulate humanlike conversations and is used in various industries for tasks like customer service and information retrieval.
+
+## D
+
+**Data redaction**
+
+A Cognigy feature that provides an easy way to detect and redact any data, including [personally identifiable information (PII)](https://en.wikipedia.org/wiki/Personal_data), to ensure compliant [logging](/ai/agents/test/logs) and [analytics](/ai/agents/analyze/overview). Data redaction is important in the context of conversational AI due to privacy, trust, compliance, and responsible AI practices.
+
+**Design time**
+
+The phase of building an agent, during which LLMs support the agent builder by generating resources such as lexicons, flows, intent sentences, and adaptive cards. For more information, read the [generative AI](/ai/agents/develop/flow-agents/design-time-and-run-time-features#design-time-generative-ai-features) documentation.
+
+**Directory**
+
+A catalog of prebuilt resources, for example, extension nodes, knowledge connectors, and xApps.
+
+## E
+
+**Endpoints**
+
+A Cognigy resource that allows seamless interaction between agents and external systems or platforms so that agents can send and receive messages to and from external services. Each endpoint represents a specific communication channel or interface through which the agent can connect and engage with users or other systems. For more information, read the [endpoints](/ai/agents/deploy/endpoints/overview) documentation.
+
+**Extension**
+
+A custom-built JavaScript module that extends the platform's capabilities beyond its core features. With extensions, you can create custom nodes and integrate knowledge with external knowledge databases to enhance the agent's responses and interactions. For more information, read the [extensions](/ai/for-developers/extensions) documentation.
+
+**Extension node**
+
+A custom node that extends the flows' capabilities. Extension nodes are created using the [extension framework](/ai/for-developers/extensions) and can be used in flows to perform new actions, integrate with external systems, process data, and improve conversational scenarios. For more information, read the [extensions](/ai/for-developers/extensions) documentation.
+
+## F
+
+**Fallback model**
+
+An alternative LLM that an agent automatically uses when the main model fails to respond or returns an error. The fallback model keeps the service running and is selected for capabilities similar to the main model. For more information, read the [LLM fallback](/ai/agents/develop/gen-ai-and-llms/fallback) documentation.
+
+**Flow**
+
+A conversational structure that defines how agents interact with users. Flows are composed of nodes with different functionalities, such as generating output and collecting backend information. When an input comes in through an endpoint, the flow is executed, enabling smooth interactions with users. For more information, read the [flows](/ai/agents/develop/projects-and-flows/overview) documentation.
+
+**Flow Agent**
+
+A Cognigy agent built with flows and nodes that combines deterministic conversation logic with LLMs, including multi-flow setups. Agents also have agentic capabilities, built around a persona and a job, configured through the AI Agent node.
+
+**Flow editor**
+
+A graphical interface where you can create and organize the conversational paths and define the interaction logic by using nodes that represent different actions, conditions, prompts, and responses to design a [flow](#f).
+
+**Functions**
+
+A Cognigy resource that you can define with JavaScript code and run to help with asynchronous processes, for example, interaction with third-party systems through HTTP APIs. Functions are independent of flows, but you can trigger them from a flow. For more information, read the [functions](/ai/for-developers/functions) documentation.
+
+## G
+
+**Generative AI**
+
+A type of artificial intelligence that generates new content, such as images, video, audio, and text, using machine learning algorithms. Generative AI produces new content using LLMs, which are trained on large datasets. Cognigy integrates with multiple LLM providers to improve real-time customer interactions with agents through personalized responses, advanced language understanding, and sentiment analysis. For more information, read the [generative AI](/ai/agents/develop/gen-ai-and-llms/llms) documentation and see [Wikipedia](https://en.wikipedia.org/wiki/Generative_artificial_intelligence).
+
+**Goals**
+
+Structured objectives made up of an initial step and one or more subsequent steps that track specific user interactions in agent conversations through Track Goal nodes. For more information, read the [goals](/ai/agents/analyze/goals-and-tasks/goals) documentation.
+
+**Guardrails**
+
+The safety measures and data privacy settings that constrain an agent's behavior. Guardrails include safety settings, which guide how an agent responds to potentially unsafe or inappropriate requests, and data privacy settings, which control the extent to which an agent can use contact profile information to personalize the user experience. For more information, read the [guardrails](/ai/agents/develop/guardrails) documentation.
+
+## H
+
+**Handover**
+
+A Cognigy feature that allows agents to transfer conversations to human agents when necessary, combining automation with human support for improved customer service. You can integrate handover into a flow using handover providers and the Handover to Human Agent node. This approach allows you to connect agents to various contact center platforms, such as Genesys, 8x8, Salesforce, and many others. For more information, read the [handover](/ai/agents/develop/node-reference/service/handover-to-agent) documentation.
+
+**Handover provider**
+
+A Cognigy resource that acts as a connector between an agent and contact center platforms. You can transfer conversations to contact center platforms using the Handover to Human Agent node. For more information, read the [handover providers](/ai/escalate/handover-reference/overview) documentation.
+
+**Input object**
+
+A JSON object that serves as the short-term memory of the agent. The input object is generated each time the user sends a message or provides a voice input to an agent. The input object stores general data about the user input, such as time and type of input, endpoint-specific data, and results from the NLU intent mapping process, such as the recognized intent and slots. You can use CognigyScript to access the input object and generate more context-aware agent responses. For more information, read the [input](/ai/agents/develop/ai-agent-memory/input) documentation.
+
+**Insights**
+
+A Cognigy product that gathers and displays analytics data in Cognigy. Insights reports and explorers provide a range of key metrics for understanding the deployment and performance of your agents. For more information, read the [Cognigy Insights](/insights/overview) documentation.
+
+**Intent trainer**
+
+A Cognigy feature that analyzes collected conversation records, processes them, and creates intents to improve the comprehension of user input. For more information, read the [intent trainer](/ai/platform-features/nlu/intents/intent-trainer) documentation.
+
+**Intents**
+
+Patterns or categories you can define in Cognigy to allow agents to better understand user input during conversational interactions. Intents represent the intentions or goals behind what a user says or types. Based on the intent, agents can take appropriate actions. For example, if a user says `Book a flight to New York for next Friday`, the intent might be `Book a flight`. For more information, read the [intents](/ai/platform-features/nlu/intents/overview) documentation.
+
+**Interaction panel**
+
+A Cognigy feature that provides a user interface for testing agents in Cognigy. For more information, read the [interaction panel](/ai/agents/test/interaction-panel/overview) documentation.
+
+## K
+
+**Keyphrase**
+
+A specific word or phrase you can define in a [lexicon](#l) for the agent to recognize, and that can be assigned to slots and synonyms. When keyphrases are detected, they are stored in the input object for further use, a process known as slot mapping. For more information, read the [keyphrases](/ai/platform-features/nlu/slots/user-defined/lexicon) and the [slot mapping](/ai/platform-features/nlu/slots/system-defined) documentation.
+
+**Knowledge**
+
+A Cognigy feature that provides agents with RAG capabilities to generate context-aware, tailored answers to user questions. Knowledge combines knowledge sources, embedding, chat, and completion models to improve user interactions with agents. For more information, read the [knowledge](/ai/agents/develop/knowledge-ai/overview) documentation.
+
+**Knowledge chunk**
+
+A knowledge component that represents a unit of information extracted from a knowledge source and can include metadata. Knowledge searches through knowledge chunks to answer user questions. For more information, read the [knowledge](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) documentation.
+
+**Knowledge connector**
+
+A knowledge component that links your knowledge store to external systems such as CRMs, help centers, or databases. You can use prebuilt knowledge connectors from the directory, such as Confluence and Diffbot, or create custom ones using the [extension framework](/ai/for-developers/extensions). For more information, read the [knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors) documentation.
+
+**Knowledge store**
+
+A knowledge component that contains and organizes knowledge sources. The knowledge store helps streamline knowledge management by grouping related knowledge sources, making it easier to search and retrieve relevant information during run-time. For more information, read the [knowledge](/ai/agents/develop/knowledge-ai/knowledge-store) documentation.
+
+**Knowledge source**
+
+A knowledge component that contains the source of information to generate knowledge chunks and can include metadata. You can create knowledge sources from content types, such as PDF, CTXT, web pages, or via [knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors) that link to external knowledge bases. For more information, read the [knowledge](/ai/agents/develop/knowledge-ai/knowledge-source/overview) documentation.
+
+## L
+
+**Large language model (LLM)**
+
+A type of generative AI model that is designed to generate humanlike text based on the user input and the conversation history. LLMs allow agents to understand and respond to questions in a natural way. For more information, read the [large language models](/ai/agents/develop/gen-ai-and-llms/llms) documentation.
+
+**Lexicon**
+
+A collection of keyphrases that you can attach to flows to help agents understand user queries. For more information, read the [lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon) documentation.
+
+**Live Agent**
+
+A Cognigy product that allows human agents to join and assist in conversations handled by agents. [Live Agent](/live-agent/index) is in maintenance mode. Only security updates and bug fixes will be provided, and no new features will be released.
+
+**Localization**
+
+The process of adapting a product or a service, such as agents, to a specific region or country, taking language and culture into account. Cognigy includes a localization feature that allows agents to interact with end users in different languages. For more information, read the [localization](/ai/platform-features/translation-and-localization/localization) documentation.
+
+**Logs**
+
+A Cognigy feature that allows you to track every input and output message in a conversation with an agent along with other metadata, like timestamp, endpoint, and more. Logs' main purpose is to help you troubleshoot agents by reviewing errors and identifying where they occur. For more information, read the [logs](/ai/agents/test/logs) documentation.
+
+## M
+
+**Members**
+
+A Cognigy feature used to manage access rights through roles at the project level. These roles complement the global roles assigned in the access control panel. For more information, read the [members](/ai/administer/access/members) documentation.
+
+**Mocking**
+
+A Cognigy feature that allows you to replace a node's execution behavior with custom mock code for testing purposes. With mocking, you can test agent scenarios without modifying flows, avoid costly or time-consuming requests to external services, and ensure consistent testing interactions with deterministic data. For more information, read the [mocking](/ai/agents/test/mocking) documentation.
+
+**Multivariate**
+
+A testing mode that compares agent behavior across multiple configuration variants, such as different LLMs, prompts, or settings, within a simulation.
+
+## N
+
+**NLU connectors**
+
+A Cognigy feature that provides built-in support for several third-party NLU engines. You can use NLU connectors to connect with third-party NLU engines, such as Google Dialogflow and IBM Watson Assistant. For more information, read the [NLU connectors](/ai/platform-features/nlu/external/nlu-connector-reference/all-nlu-connectors) documentation.
+
+**NLU model**
+
+A machine learning model used for natural language understanding tasks in Cognigy. The NLU model allows agents to understand and interpret natural language input from users. For more information, read the [intents](/ai/platform-features/nlu/intents/overview) documentation.
+
+**Node**
+
+A fundamental building block of flows that defines the logic of agents. Each node represents a specific action, decision point, or interaction during the flow execution. For more information, read the [nodes](/ai/agents/develop/nodes/overview) documentation.
+
+**Node editor**
+
+A graphical interface where you can set the parameters of a node to define the flow behavior. For more information, read the [nodes](/ai/agents/develop/nodes/overview) documentation.
+
+## O
+
+**OData**
+
+A RESTful API endpoint Cognigy provides that allows you to retrieve analytics records of agents' conversations. For more information, read the [OData](/ai/agents/analyze/odata) documentation.
+
+**Organization**
+
+An independent instance of Cognigy within an environment, also known as _tenant_, isolated for a group of users or licenses.
+
+**Outbound call routing**
+
+A feature that selects a carrier for outbound calls and sets the routing rules. Use it when multiple carriers are available.
+
+## P
+
+**Package**
+
+A Cognigy feature that allows you to export and import project resources, such as flows or lexicons, transfer them to other projects, or share them with other teams. For more information, read the [packages](/ai/agents/deploy/packages) documentation.
+
+**Phone numbers**
+
+Numbers that route incoming voice calls to your endpoints, agents, and flows. To assign an application to a phone number, select an account and a carrier. For more information, read [speech and telephony](/ai/administer/access/speech-and-telephony#phone-numbers).
+
+**Playbook**
+
+A Cognigy resource that represents conversation scripts to automatically run tests on agents. You can create playbooks and add assertions to check the agent's responses and other aspects of the flow. For more information, read the [playbooks](/ai/agents/test/playbooks) documentation.
+
+**Profile object**
+
+A JSON object that serves as the long-term memory of the agent. The profile object stores persistent information about the user, displayed in the user's contact profile. When a user disconnects from Cognigy, their data remains in the profile object and is retrieved upon reconnection with the same user ID. This allows for multichannel conversations by accessing the profile object when the user connects from a different channel. You can also use CognigyScript to access the profile object and generate more context-aware agent responses. For more information, read the [profile](/ai/agents/develop/ai-agent-memory/profile) documentation.
+
+**Profile schema**
+
+The structure that organizes contact profile data into fields in a JSON object. The profile schema has a default profile schema structure, but you can customize it to your needs. For more information, read the [contact profiles](/ai/agents/analyze/contact-profiles#profile-schema) documentation.
+
+**Project**
+
+A workspace where you can create, test, and deploy agents. Projects include different resources, such as flows, lexicons, and endpoints, and allow for collaboration with multiple team members. For more information, read the [projects](/ai/agents/develop/projects-and-flows/projects) documentation.
+
+## R
+
+**Resource**
+
+A Cognigy building block, such as a flow, endpoint, connection, or knowledge store.
+
+**Run time**
+
+The phase during which an agent interacts with users. Run-time generative AI features use LLMs to enrich agents with dynamic interactions, such as running prompts, rephrasing outputs, reprompting questions, and retrieving knowledge. For more information, read the [generative AI](/ai/agents/develop/flow-agents/design-time-and-run-time-features#run-time-generative-ai-features) documentation.
+
+## S
+
+**Scenario**
+
+A Simulator component that defines the persona, the mission, and the success criteria for testing an agent. Simulations use scenarios to test how an agent responds to different users. For more information, read the [scenarios](/ai/agents/test/simulator/scenarios) documentation.
+
+**Session**
+
+The complete interaction between a user and an agent or human agent. The session begins when a user sends their initial chat or voice message to the agent, and ends when the user, agent, or human agent completes or terminates the interaction. A session can contain an unlimited number of user inputs and can be carried out across different channels.
+
+**Simulation**
+
+A Simulator component that compiles multiple simulation runs of a scenario to show different agent behaviors. You can start a simulation manually or schedule it to run periodically, which provides continuous validation of the agent's performance and reliability. For more information, read the [simulations](/ai/agents/test/simulator/simulations) documentation.
+
+**Simulation run**
+
+A single execution of a scenario against an agent or a flow to evaluate the agent's performance. Each simulation run produces unique test outcomes for analysis. For more information, read the [simulations](/ai/agents/test/simulator/simulations) documentation.
+
+**Simulator**
+
+An LLM-powered tool that allows you to model and test full conversational scenarios for LLM-based agents.
+
+**SIP trunk**
+
+A connection that links phone systems to the public telephone network by using SIP over an IP network. To route your contact center or phone number to your Voice Endpoint, set up your SIP trunk. Contact [Cognigy technical support](/help/get-help) to configure it. For more information, read the [SIP trunking](https://en.wikipedia.org/wiki/SIP_trunking) article on Wikipedia.
+
+**SIP trunk providers**
+
+Providers that offer SIP trunks so that businesses can make and receive calls over the internet. Voice supports any SIP trunk provider and includes preinstalled configurations for Voxbone, Twilio, Simwood, and TelecomsXChange. SIP trunk providers are also known as [carriers](#c). For more information, read the [SIP trunk providers](/voice-gateway/references/sip-trunk-providers) documentation.
+
+**Skill**
+
+A reusable capability an agent can conditionally invoke, focused on performing specific actions, such as handling an order status inquiry. Skills may include [tools](/ai/agents/develop/tools).
+
+**Slot**
+
+A specific data type or custom phrase that Cognigy NLU can recognize. Slots allow agents to extract structured information from user input and use it dynamically in conversations. For more information, read the [slots](/ai/platform-features/nlu/slots/system-defined) documentation.
+
+**Snapshot**
+
+A Cognigy resource that represents an immutable version of an agent that you can publish to users, use to create backups, or use to revert to an earlier state. For more information, read the [snapshots](/ai/agents/deploy/snapshots) documentation.
+
+**Span**
+
+The atomic unit of work within a [trace](#t), with a defined start, end, inputs, and outputs. A span typically represents one discrete operation, such as an LLM call or a tool invocation.
+
+**State**
+
+A Cognigy feature that limits which intents the agent can recognize during a part of a flow.
+
+**STT**
+
+A speech-to-text (STT) technology that converts spoken language into written text. An STT vendor provides this service. For more information, read the [TTS and STT vendors](/voice-gateway/references/tts-and-stt-vendors) documentation, or see [speech recognition](https://en.wikipedia.org/wiki/Speech_recognition) on Wikipedia.
+
+## T
+
+**Task**
+
+An activity that runs in the background and for which you get notifications, such as training intents, importing snapshots, or creating a new project. The task menu provides an overview of ongoing and completed tasks. For more information, read the [tasks](/ai/agents/develop/projects-and-flows/projects#task-menu) documentation.
+
+**Tenant**
+
+An independent instance of Cognigy within an environment, also known as _organization_, isolated for a group of users or licenses.
+
+**Tokens**
+
+A Cognigy resource that visually represents [CognigyScript](/ai/platform-features/cognigyscript) expressions in the node editor and stores them for reuse. Cognigy has a selection of default tokens that are associated with input, context, and profile objects. For more information, read the [tokens](/ai/platform-features/tokens) documentation.
+
+**Tool (agents)**
+
+A single action an agent can call, for example, looking up a customer's order status or sending an email. Tools are the smallest unit of capability an agent can use.
+
+**Tool (flow agents)**
+
+A child node of an AI Agent node that defines an action the agent can take. When the agent decides to use the tool, the branch below the child node is executed. For more information, read the [tool](/ai/agents/develop/node-reference/ai/ai-agent#tool) documentation.
+
+**Trace**
+
+A collection of spans that represents the complete record of a session, showing the sequence and hierarchy of operations an agent performed to produce its response.
+
+**Tracing**
+
+A Cognigy feature that collects and displays the trace and spans of conversations in the interaction panel.
+
+**TTS**
+
+A text-to-speech (TTS) technology that converts written text into spoken words. A TTS vendor provides this service. For more information, read the [TTS and STT vendors](/voice-gateway/references/tts-and-stt-vendors) documentation, or see [speech synthesis](https://en.wikipedia.org/wiki/Speech_synthesis) on Wikipedia.
+
+**Turn**
+
+A single exchange in a conversation, consisting of one user input and one agent response.
+
+## U
+
+**User input**
+
+A message, including text, data, or voice input, received by Cognigy from a user or system.
+
+**User menu**
+
+A menu interface that provides access to a set of views related to the user that is logged in. For more information, read the [user menu](/ai/administer/user-menu/overview) documentation.
+
+## V
+
+**Voice nodes**
+
+Nodes that expose Voice functionality directly in the flow editor. For more information, read the [Voice nodes overview](/ai/agents/develop/node-reference/voice/voice-gateway/overview) documentation.
+
+## W
+
+**Webchat**
+
+A Cognigy product that integrates agents into websites seamlessly, facilitating interactive engagement with visitors. For more information, read the [Webchat](/webchat/overview) documentation.
+
+## X
+
+**xApps**
+
+A Cognigy product that allows you to build flexible micro-web applications for customer self-service. xApps can be used as a standalone application or complementary to any channel to enhance AI and human agents' capabilities. With xApps, you can overcome channel limitations that compromise user experiences.
+
+## Y
+
+**Yes/No intents**
+
+A Cognigy feature that allows machine learning to recognize yes and no responses similarly to regular intent matching. With yes/no intents, you can train an NLU model to understand different yes and no confirmation phrases based on a small set of example sentences. For more information, read the [yes/no intents](/ai/platform-features/nlu/intents/yes-no-intents) documentation.

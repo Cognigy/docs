@@ -1,0 +1,37 @@
+---
+title: No NLU
+description: "Deactivate built-in Cognigy NLU for an Endpoint with the No NLU connector, meaning no intents or slots are detected."
+keywords: ['no nlu', 'nlu connectors']
+---
+
+The _No NLU_ connector disables built-in Cognigy NLU for the selected Endpoint, meaning no intents or slots are detected.
+
+The No NLU connector lets you handle the NLU process directly within your flow logic. Use it when:
+
+- You need very fine-grained control over how NLU requests are made. 
+- You want to dynamically switch between different NLU services based on the conversation context.
+
+## Use flow logic for NLU execution
+
+Within a flow, you can control NLU execution by selecting the No NLU connector and using the following nodes:
+
+<AccordionGroup>
+  <Accordion title="HTTP request node">
+    Use an [HTTP Request](/ai/agents/develop/node-reference/service/http-request) node
+    to send the user input to your external NLU service
+    and then process the response.
+  </Accordion>
+
+  <Accordion title="Extension node">
+    You can put the HTTP request and response logic in an [Extension node](/ai/for-developers/extensions) to avoid repeating it in every flow. This approach makes your flows cleaner, easier to maintain, and avoids code duplication. The Extension node then becomes your custom NLU connector on the flow level, even though you aren't using the built-in [Code](/ai/platform-features/nlu/external/nlu-connector-reference/code) connector.
+  </Accordion>
+
+  <Accordion title="Execute Cognigy NLU node">
+    By default, Cognigy NLU runs before the flow executes. However, in some cases, you may need to process parts of the flow before triggering NLU analysis to better control when an intent is recognized.
+    To achieve this, add an [Execute Cognigy NLU](/ai/agents/develop/node-reference/ai/execute-cognigy-nlu) node to your flow to trigger Cognigy NLU when needed.
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [NLU connector reference](/ai/platform-features/nlu/external/nlu-connector-reference/all-nlu-connectors)

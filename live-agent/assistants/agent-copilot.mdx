@@ -1,0 +1,68 @@
+---
+title: "Agent Copilot in Live Agent"
+description: Use Agent Copilot in Live Agent to provide human agents a dedicated workspace with AI tools, knowledge bases, and customer context during handovers.
+keywords: ['agent copilot', 'ai copilot workspace', 'live agent', 'human agent assistance', 'handover']
+slug: "ai-copilot"
+---
+
+import AiCopilotBeforeYouBegin from '/snippets/agent-copilot/before-you-begin.mdx'
+import LiveAgentAssistantSetup from '/snippets/live-agent/assistant-setup.mdx'
+
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+
+<AiCopilotBeforeYouBegin/>
+
+<LiveAgentAssistantSetup/>
+
+## Set up endpoints
+
+To configure your endpoint:
+
+1. Go to **Deploy > Endpoints**.
+2. Open your Webchat endpoint.
+3. On the **Advanced** tab, go to the **Copilot** section.
+4. In the **Copilot type** field, select **Workspace**.
+5. In the **Copilot config** field, select a config you recently created via [API](/api-reference/agent-copilot-configuration/create-an-agent-copilot-configuration).
+6. Click **Save**.
+7. In Live Agent, go to **Profile Settings > Agent Copilot Workspace** and select **Enable Agent Copilot Workspace**. Alternatively, you can activate the workspace for all human agents in your project. To do this, go to **Settings > Account Settings > Agent Copilot Workspace** and select **Enable Agent Copilot Workspace**, then click **Update Settings**.
+
+The endpoint setup is completed.
+
+## Test Agent Copilot workspace
+
+To test Agent Copilot, follow these steps:
+
+1. Start a Webchat session.
+2. Complete the handover process to Live Agent.
+3. Once the handover is complete, send a message as a human agent.
+4. After that, send a message as the user in Webchat.
+
+<Frame>
+    <img src="/_assets/live-agent/la-agent-assist-webchat.png" alt="Webchat session during a handover to a Live Agent human agent" style={{ width: 'auto' }} />
+</Frame>
+
+Once the human agent receives this message, the testing behavior will vary depending on how you configured the endpoint beforehand.
+
+This workspace is accessible from the right side of the conversation chat.
+      
+<Frame>
+ <img src="/_assets/live-agent/la-agent-assist-workspace.png" alt="Agent Copilot workspace panel on the right side of the conversation chat" style={{ width: 'auto' }} />
+</Frame>
+
+If the testing is successful, the Agent Copilot setup is complete.
+
+## Troubleshooting
+
+### Transcript tile not sending messages
+
+To send messages from the transcript tile chat to the end user's conversation chat, assign a human agent.
+If the conversation remains unassigned, the transcript tile won't operate properly, as there will be no human agent to associate with the message when it is created.
+
+## More information
+
+- [Agent Copilot](/agent-copilot/overview)
+- [Getting started with Agent Copilot for chat](/agent-copilot/getting-started/chat)

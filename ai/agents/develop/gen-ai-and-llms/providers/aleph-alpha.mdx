@@ -1,0 +1,70 @@
+---
+title: Aleph Alpha
+keywords: ['aleph alpha', 'llms', 'aleph alpha models']
+seo:
+  metatags:
+    description: >-
+      To start using an Aleph Alpha LLM with Cognigy features, add the LLM
+      and apply it to the corresponding use case.
+---
+
+import CompletionApiDeprecation from '/snippets/ai/completion-api-deprecation.mdx'
+import AiGenerativeAiAddModelViaApi from '/snippets/ai/generative-ai/add-model-via-api.mdx'
+import AiGenerativeAiApplyModel from '/snippets/ai/generative-ai/apply-model.mdx'
+import AiGenerativeAiApplyAndTestConnection from '/snippets/ai/generative-ai/apply-and-test-connection.mdx'
+
+
+<CompletionApiDeprecation/>
+
+To start using an Aleph Alpha model with Cognigy features, follow these steps:
+
+1. [Add models](#add-models)
+2. [Apply the model](#apply-the-model)
+
+## Add models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add models via GUI
+
+You can add a model provided by Aleph Alpha to Cognigy in **Manage > AI & Voice Providers > Language Models**. In **Generative AI Connection**, select an existing connection or click the + button to create one. The connection stores the credentials. To add the model, you'll need the following parameters:
+
+<Tabs>
+  <Tab title="Standard model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | API Token | Text | Enter the API key that you created in your [Aleph Alpha account](https://docs.aleph-alpha.com/). |
+        | Use a base address | Toggle | Activate to enter a base address. Use a base address unless your URL is a fully qualified endpoint URL. |
+        | Base address | Text | This parameter appears if **Use a base address** is activated. To control the connection between your clusters and the Aleph Alpha provider, you can route connections through dedicated proxy servers, creating an additional layer of security. To do this, specify the base URL. For example, `https://api.aleph-alpha.com`. |
+  </Tab>
+  <Tab title="Custom model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Type | List | Select the **Completion** type. |
+        | Custom model | Text | Enter the name of the model that you want to use as a custom model. To find model names, refer to the [Aleph Alpha](https://docs.aleph-alpha.com/docs/Deprecated%20Luminous/Deprecated-Luminous/model-card/) documentation.<br/> |
+        | API Token | Text | Enter the API key that you created in your [Aleph Alpha account](https://docs.aleph-alpha.com/). |
+        | Use a base address | Toggle | Activate to enter a base address. Use a base address unless your URL is a fully qualified endpoint URL. |
+        | Base address | Text | This parameter appears if **Use a base address** is activated. To control the connection between your clusters and the Aleph Alpha provider, you can route connections through dedicated proxy servers, creating an additional layer of security. To do this, specify the base URL. For example, `https://api.aleph-alpha.com`. |
+
+  </Tab>
+</Tabs>
+
+<AiGenerativeAiApplyAndTestConnection/>
+
+<AiGenerativeAiAddModelViaApi/>
+
+## Apply the model
+
+<AiGenerativeAiApplyModel/>
+
+## More information
+
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

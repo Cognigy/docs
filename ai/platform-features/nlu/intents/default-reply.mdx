@@ -1,0 +1,77 @@
+---
+title: Default reply
+description: "Set an intent-specific default reply that your agent sends when Cognigy NLU matches an intent to the user input. Learn how to configure it."
+keywords: ['cognigy nlu', 'default reply']
+---
+
+The _default reply_ feature provides a configurable,
+intent-specific response triggered when the NLU model detects a matching intent from the user input.
+
+## Key benefits
+
+- **Instant response delivery**. A predefined reply, for example, `Thank you for your order`, is sent as soon as the intent is recognized, improving the user experience with prompt feedback.
+- **Flexible flow control**. You can decide whether the flow proceeds or pauses after the default reply, offering adaptability to different use cases.
+- **Enhanced understanding of user queries**. With the default reply providing additional context, the agent can better interpret diverse user inputs, leading to improved recognition accuracy and more effective responses.
+
+## Prerequisites
+
+Before using the default reply, ensure the following:
+
+1. You have a flow with at least one intent.
+2. You have access to **Advanced > NLU** to configure the default reply.
+
+## Restrictions
+
+- The default reply is tied to specific intents and requires manual configuration. It won't activate if other settings override it, such as attached flows or Question node validations.
+
+## How to use
+
+Add the default reply to a specific intent.
+If you've configured the default reply for multiple intents, adjust the settings at the flow level to ensure consistent default reply behavior.
+
+### Add the default reply
+
+1. In the navigation menu, go to **Advanced > NLU**, then on the **Intents** tab, select an intent.
+2. Go to the **Default Reply** section and configure the following settings:
+
+| Parameter                                 | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Include Default Reply in NLU Training** | List   | Defines whether the default reply should be used in the NLU model training. You can select one of the following options:<ul><li>**Use Flow Settings**. The NLU training settings follow the configuration in the **Include Default Reply in NLU Training** setting defined on the **Settings** tab of the flow, in **Configuration**.</li><li>**On**. The default reply is included in the NLU model training.</li><li>**Off**. The default reply isn't used in the NLU model training.</li></ul> |
+| **Channel**                               | Tabs   | Specifies the channel to which the response applies. The default channel is **AI**.                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Output Type**                           | List   | Specifies the type of response, supporting the same output types as the [Say](/ai/agents/develop/node-reference/basic/say) node. The default output is **Text**.                                                                                                                                                                                                                                                                                                                                  |
+| **Reset**                                 | Button | Resets the **Output Type** setting to its default value.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+### Configure the default reply for all intents in the flow
+
+1. In the navigation menu, go to **Design > Flows** and open the flow.
+2. Go to the **Settings** tab, then select **Configuration**.
+3. In the **General Flow Logic** section, configure the following settings:
+
+| Parameter                                 | Type   | Description                                                                                                                                                                                                        |
+| ----------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Pass Default Reply into Flow**          | Toggle | Passes the default reply into the `nlu.intentMapperResults.finalIntentDefaultReply` Input object for use in flow logic. The default reply message won't appear in the chat. The setting is deactivated by default. |
+| **Continue Flow after Default Reply**     | Toggle | Continues executing the flow logic immediately after the default reply has been delivered, without waiting for the user input. The setting is deactivated by default.                                              |
+| **Include Default Reply in NLU Training** | Toggle | Includes the default replies in the NLU model training for matching intents. This setting is activated by default and can be customized for each intent.                                                           |
+
+### Test the default reply
+
+1. In the Interaction Panel, enter a phrase that matches the intent, for example, `I want to order a pizza`.
+2. Verify that the default reply is sent immediately.
+
+The flow continues or pauses depending on how you configured the **Continue Flow after Default Reply** setting.
+
+## Example
+
+Imagine a pizza ordering agent.
+
+Intent: `Order Pizza`<br/>
+Default reply: `Great choice! Your order is being processed.`<br/>
+User input: `I'd like a pizza`
+
+The NLU model detects the intent, the agent sends the default reply,
+and the flow either continues to ask for toppings or pauses.
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)
+- [Intent example sentences](/ai/platform-features/nlu/intents/example-sentences)

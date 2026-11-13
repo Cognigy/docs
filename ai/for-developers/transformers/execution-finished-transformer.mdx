@@ -1,0 +1,56 @@
+---
+title: Execution finished transformer
+seo:
+  metatags:
+    description: >-
+      The execution finished transformer converts flow output after a flow
+      execution has finished. The return value of the execution finished
+      transformer is sent to the endpoint.
+keywords: ['execution finished transformer', 'rest-based endpoints', 'output transformation']
+---
+
+import EndpointObject from '/snippets/ai/deploy/endpoint/endpoint-object.mdx'
+import TransformersHttpLibrary from '/snippets/ai/for-developers/transformers-http-library.mdx'
+
+<TransformersHttpLibrary />
+
+The _execution finished transformer_ converts the flow output after a flow execution has finished. The return value of the execution finished transformer is sent to the endpoint. This transformer applies only to REST-based endpoints using the output transformer.
+
+You can configure the execution finished transformer in the `handleExecutionFinished` function in the [endpoint settings or via CLI](/ai/for-developers/transformers/overview#working-with-transformers).
+
+## Transformer function arguments
+
+The following table shows an overview of the function arguments:
+
+| Argument        | Description                                                                            |
+|-----------------|----------------------------------------------------------------------------------------|
+| endpoint        | The configuration object for the [endpoint](#endpoint-configuration-object).           |
+| outputs         | The `outputs` array from the output transformer. This array contains the flow outputs. |
+| processedOutput | The flow output processed into the format that the endpoint expects.                   |
+| userId          | The unique ID of the user.                                                             |
+| sessionId       | The unique ID of the session.                                                          |
+
+<EndpointObject />
+
+## Return values
+
+The return value of the execution finished transformer depends on the endpoint type you're using. There's no validation of the execution finished transformer return value. If the execution finished transformer returns a falsy value, the output isn't sent to the endpoint.
+
+The execution finished transformer takes the `outputs` array from the output transformer and sends it to the endpoint. For example, if you're using the execution finished transformer in a [REST endpoint](/ai/agents/deploy/endpoint-reference/rest), the return value format must meet the REST endpoint response format (`text`, `data`, `userId`, `sessionId`).
+
+Here is an example of the correct return format for a REST endpoint:
+
+```js
+handleExecutionFinished: async ({ processedOutput, outputs, userId, sessionId, endpoint, response }) => {
+
+    const text = outputs.reduce((processedOutput, output) => `${processedOutput}. ${output.text}`, "").trim();
+    const data = outputs.reduce((acc, output) => ({ ...acc, ...output.data }), {});
+
+    return {
+        text,
+        data,
+        userId,
+        sessionId
+    };
+}
+```

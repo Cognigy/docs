@@ -1,0 +1,45 @@
+---
+title: 'Agent Copilot for voice: Transfer node'
+description: "Learn how to configure the Transfer node to hand over calls to human agents and activate Agent Copilot for voice interactions."
+---
+
+When using the Cognigy Voice Gateway, add a [Transfer](/ai/agents/develop/node-reference/voice/voice-gateway/transfer) node to hand over the call to a human agent.
+
+To transfer the call, select the **Dial** option to remain in the session and transcribe the audio streams.
+
+## Enable Copilot
+
+The **Enable Copilot** toggle creates a UUIValue. This UUIValue creates the Agent Copilot URL, which is sent to the contact center when transferring through SIP headers.
+
+The UUIValue has the following structure: `${AgentCopilotBaseUrl}/?userId=${userId}&sessionId=${sessionId}&URLToken=${URLToken}`
+
+## Transcription
+
+In this Transfer node, you need to activate the transcription of audio streams. In **Audio Stream Selection**, select one of the following options:
+
+- **Caller** — the customer audio stream.
+- **Called** — the human agent audio stream.
+- **Caller / Called** — the customer and the human agent audio stream.
+
+## Transcription webhook
+
+Set **Transcription Webhook** to the Endpoint URL of the [Voice Copilot](/ai/agents/deploy/endpoint-reference/voice-copilot) Endpoint that the Agent Copilot workspace flow uses for sending transcriptions.
+
+## Custom SIP headers
+
+Activate **Enable Copilot** to display **Copilot Headers Key**. This key is the header that carries the UUIValue. The key must align with the requirements of your contact center. For example, the header key for Genesys Cloud CX is `User-to-User`.
+
+## More information for voice use cases
+
+- [Voice Copilot](/ai/agents/deploy/endpoint-reference/voice-copilot)
+- [Getting started with Agent Copilot for voice](/agent-copilot/getting-started/voice)
+
+## More general information
+
+- [Agent Copilot](/agent-copilot/overview)
+- [Getting started with Agent Copilot](/agent-copilot/getting-started/overview)
+- [Agent Copilot configuration](/agent-copilot/configure/overview)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Embedded Agent Copilot](/agent-copilot/deploy/embedding)
+- [Getting started with Agent Copilot for chat](/agent-copilot/getting-started/chat)
+

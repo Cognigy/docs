@@ -1,0 +1,88 @@
+---
+title: Install Cognigy
+sidebarTitle: Installation process
+description: Install Cognigy using MongoDB and Cognigy Helm charts on Kubernetes.
+---
+
+## Install Helm charts
+
+To install Cognigy, perform the following steps:
+
+1. Install MongoDB database with the [MongoDB Helm chart for Cognigy](https://github.com/Cognigy/cognigy-mongodb-helm-chart). For up-to-date installation instructions, refer to [README.md](https://github.com/Cognigy/cognigy-mongodb-helm-chart#readme).
+2. Install Cognigy with the [Cognigy Helm chart](https://github.com/Cognigy/cognigy-ai-helm-chart). For up-to-date installation instructions, refer to [README.md](https://github.com/Cognigy/cognigy-ai-helm-chart#readme).
+
+Once both Helm releases are successfully installed, you can open a web browser and visit the URL that you've set in the `serviceUi.host` parameter of the Cognigy Helm release. You should see the login screen of the Cognigy frontend application:
+
+<Frame>
+  <img src="/_assets/ai/installation/cognigy-ai-login-screen.webp" alt="Cognigy login screen" style={{ width: 'auto' }} />
+</Frame>
+
+## Retrieve login credentials
+
+Once you see the Cognigy login screen, you might wonder which credentials to use to log in. We chose not to add a default `admin` user with static credentials, as such users often don't get properly removed from systems and leave software products exposed to potential security attacks. Our system creates random credentials on startup if no credentials exist within the system yet. The credentials are printed into the `service-security` deployment logs during its first startup. To retrieve the initial credentials, execute:
+
+```bash
+kubectl logs -f -n=cognigy-ai --tail 100 deployment/service-security
+```
+
+You should see something along the following lines with the initial user credentials (email and password):
+
+```bash
+{"level":"info","time":"2022-07-18T14:07:53.328Z","name":"SECURITY","message":"This is the initial user account you can use to login","meta":{},"traceId":""}
+{"level":"info","time":"2022-07-18T14:07:53.328Z","name":"SECURITY","message":"email: userc3c6ee0f61@cognigy.com","meta":{},"traceId":""}
+{"level":"info","time":"2022-07-18T14:07:53.328Z","name":"SECURITY","message":"password: 1caf47b6b79efc59d5f11fde0669b261aA1!","meta":{},"traceId":""}
+```
+
+The `service-security` deployment may restart several times during provisioning, and the initial logs may no longer be visible. If `service-security` has restarted only once, you can obtain the logs of the previous container with the `--previous` flag:
+
+```bash
+kubectl logs -n=cognigy-ai --previous deployment/service-security
+```
+
+If `service-security` restarted several times, to reset the initial user credentials, you need to drop the `service-security` database in MongoDB and restart the `service-security` deployment.
+
+**Important**: All organizations and users will be lost during this process. Perform it only during initial Cognigy setup. For more information, read [Reset initial user credentials](/ai/administer/installation/reset-init-user-credentials).
+
+## License key activation
+
+Once you've obtained the initial user credentials, visit the web interface of Cognigy,
+but replace the URL ending `/login` with `/license`.
+This opens the **Install your license** page, which looks similar to the login form but has an additional **License key** field:
+
+<Frame>
+  <img src="/_assets/ai/installation/cognigy-ai-license-key.webp" alt="Cognigy license key activation form" style={{ width: 'auto' }} />
+</Frame>
+
+Enter the initial credentials (email and password) and your license key (including both `====BEGIN LICENSE====` and `=====END LICENSE=====` delimiters), and click **Install license**. If everything worked, the application redirects to the login screen, where you can log in and start using Cognigy.
+
+<Warning>
+  If you open and save the file with the license key on a Windows machine, it may become corrupted with hidden Windows characters. Use a Linux machine to copy the license or a Windows text editor that can handle Linux files properly, for example, [Notepad++](https://notepad-plus-plus.org/).
+</Warning>
+
+<Warning>
+  If you're using [Argo CD](https://argo-cd.readthedocs.io/en/stable/) to manage the deployment of Cognigy, note that Argo CD doesn't support the [lookup function](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-lookup-function) from Helm. Read more details about this issue on [GitHub](https://github.com/argoproj/argo-cd/issues/5202). Cognigy relies heavily on the lookup function to generate secrets dynamically. Since Argo CD doesn't support the lookup function, Cognigy changes the value of the secret with every update. 
+
+  To avoid this, use the `existingSecret` option. All secret templates are structured so that when `existingSecret` is defined, the lookup function won't be used, preventing the previously mentioned issue. The following example shows how to use `existingSecret`:
+
+  ```yaml
+  dbConnectionString:
+    enabled: true
+    services:
+      serviceAi:
+        enabled: true
+        serviceName: service-ai
+        auth:
+          existingSecret: "<secret-name>"
+  ```
+  We suggest following this sequence:
+
+  1. Let the Helm chart create all the secrets during the first-time installation of Cognigy.
+  2. Take a backup of the secrets by following [Cognigy secrets backups](/ai/administer/installation/backups).
+  3. Backport the name of all relevant secrets to the `values.yaml` file as `existingSecret`.
+
+  New secrets are frequently added to Cognigy, so review the newly created secrets after each update and backport them as `existingSecret`. You can identify new secrets by checking `creationTimestamp`. To list secrets with their `creationTimestamp`, run the following command:
+
+  ```bash
+  kubectl get secrets -n <namespace> -o custom-columns="NAME:.metadata.name,CREATED:.metadata.creationTimestamp"
+  ```
+</Warning>

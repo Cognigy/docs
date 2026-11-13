@@ -1,0 +1,189 @@
+---
+title: LLM-based intent reranking
+description: "Improve intent classification accuracy with LLM-based intent reranking, which reorders the intents Cognigy NLU identifies based on the user input."
+keywords: ['intent reranking', 'intent classification', 'external nlu']
+---
+
+
+_LLM-based intent reranking_ is a process that uses a large language model (LLM) to reorganize or reorder identified intents based on data taken from the input text. This process involves using a more advanced language model to better understand the context and meaning of the user's input, which improves the accuracy of intent classification.
+
+Cognigy NLU analyzes user input and identifies up to five most probable intents.
+The result depends on various factors, including the total number of intents, example sentences, rejected intents, thresholds, and language specifics.
+Sometimes the correct intent is returned in the top five but not with the highest priority.
+Adding an LLM request after the Cognigy NLU mapping process can improve accuracy.
+
+Cognigy automatically adds descriptions of intents to the results generated during the mapping process.
+These descriptions become a part of the Input object and are stored in the `input.nlu.intentMapperResults.scores[x].description` object for each mapped intent, where `x` represents the priority of the intent.
+The stored descriptions are sent to an external LLM via a prompt, which you can create in the LLM Prompt node.
+The external LLM analyzes the data and generates a result based on the retrieved descriptions. This result is recorded in the `input.promptResult` object by default.
+
+Once you have the correct intent, you can continue the flow based on this intent. For example, if a user requested information about a product, you can provide product descriptions, answers to frequently asked questions, and options for placing an order.
+
+## Prerequisites
+
+- Add an [external LLM](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) that supports the LLM Prompt node and LLM-powered answer extraction features.
+- Create a flow and intents in it.
+
+## Set up intent reranking
+
+To rerank intents via an external LLM, follow these steps:
+
+<AccordionGroup>
+  <Accordion title="Add descriptions to intents">
+    To add descriptions to intents, follow these steps:
+
+    1. In the navigation menu, go to **Advanced > NLU**.
+    2. From the **Flow** list, select the flow you want to change.
+    3. On the **Intents** tab, locate the intent to which you want to add a description.
+    4. On the intent page, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg), then select **Edit**.
+    5. In the **Edit Intent** pane, go to the **Description** field. Enter a clear and concise description that reflects the content of the example sentences listed in the intent. Note that the **Description** field can contain no more than 200 characters.
+    6. Click **Save**.
+    7. Repeat steps 3–6 for other intents within the flow.
+    8. In the upper-right corner, click **Build Model**.
+  </Accordion>
+
+  <Accordion title="Add an LLM prompt node">
+    To add an LLM Prompt node with the relevant prompt, follow these steps:
+
+    1. In the flow editor, add an LLM Prompt node.
+    2. In the LLM Prompt node, go to the **Instructions (System Message/Prompt)** field and enter the following prompt for reranking:
+
+      ```text
+      You are an expert in intent recognition. Given a list of intents, their descriptions, and a query, you need to choose the right intent for the query.
+
+      Given the following intents and descriptions: 
+
+      {{input.nlu.intentMapperResults.scores.slice(0,5).map((item, index) => `Intent ${index +1}: ${item.name}\nDescription ${index + 1}: ${item.description}\n`).join("\n\n")}}
+
+      And the following query: {{input.text}}
+
+      Choose the correct intent for the query. Output the intent using the JSON format as follows: {"intent": intent_name}
+      ```
+
+    3. Go to the **Advanced** section and configure the recommended parameters as follows:<br/>
+        1. From the **Sampling Method** list, select **Temperature** and set the temperature to `0`.<br/>
+        2. From the **Response Format** list, select **JSON Object**.
+    4. _(Optional)_ If you want the model to return a similar result for subsequent requests, specify a number in the **Seed** field. For example, `123`.
+    5. Click **Save Node**.
+  </Accordion>
+
+  <Accordion title="Retrieve and reuse results">
+    By default, the correct intent will be stored in the `input.promptResult.intent` object.
+    To retrieve this intent for further use, follow these steps:
+
+    1. Below the LLM Prompt node, add a Code node.
+    2. In the **Code** field of the Code node, specify `input.intent = input.promptResult.intent`.
+    3. Click **Save Node**.
+    4. Below the Code node, add a Lookup node.
+    5. In the Lookup node editor, configure the following fields:<br/>
+        1. From the **Type** list, select **Intent**.<br/>
+        2. Set the **Intent Level** field to **Default**, matching intents at the most detailed hierarchy level.
+    6. Click **Save Node**.
+    7. Add child Case nodes of the Lookup node, specifying the intent name in the **Value** field for each node.
+
+    Under each Case node, you can place other nodes, such as Say or Question, which will offer guides to the end user based on the selected intent.
+  </Accordion>
+</AccordionGroup>
+
+## Example
+
+In this example, a user wants to order pizza and shares their preferences. The agent recognizes if the user has ingredient restrictions and determines the correct intent.
+
+### Data
+
+Assume that we have the following intent data:
+
+<AccordionGroup>
+  <Accordion title="Intent data">
+
+    | Intent name      | Intent description                                                                                                                                                                                    | Sentences                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+    | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Meat Pizza       | Intent for ordering a pizza with meat toppings such as pepperoni, sausage, bacon, ham, chicken, and ground beef. A popular choice for meat lovers. Rich in flavor and protein.                        | I'm craving a Meat Pizza loaded with ground beef, sausage, and ham. Could you make that for delivery?<br/>For pickup, I'd like to order a Meat Pizza. Could you make it with plenty of bacon and extra cheese, please?<br/>Can I get a Meat Pizza with ham and chicken as the toppings, cooked to a crispy perfection?<br/>Could I please have a Meat Pizza with a mix of all your meat toppings? That's pepperoni, sausage, bacon, ham, and chicken<br/>I'd like to order a large Meat Pizza with extra pepperoni, sausage, and bacon, please |
+    | Vegetarian Pizza | Intent for ordering a meatless pizza. It contains milk-based products and vegetables. Often has cheese as a main ingredient, such as mozzarella, cheddar, feta, or goat cheese. Good for vegetarians. | May I please place an order for a vegetarian pizza?<br/>I love the combination of fresh vegetables and creamy cheese on a vegetarian pizza<br/>I'd like to order the vegetarian pizza, please. Can you ensure it has mozzarella, cheddar, or feta cheese with a variety of veggies?<br/>I'm interested in the vegetarian pizza, please. Can you describe the cheese options available and the types of vegetables you use?<br/>Could you prepare a vegetarian pizza for me? I prefer it with lots of milk-based cheese and assorted vegetables |
+    | Veggie Pizza     | Intent for ordering a pizza with only vegetable toppings such as tomatoes, mushrooms, bell peppers, onions, olives, spinach, and broccoli. A light and refreshing option for health-conscious eaters. | I'll take a veggie pizza with a mix of tomatoes, olives, and broccoli<br/>I'm in the mood for a veggie pizza loaded with bell peppers and onions<br/>I'm looking forward to trying your veggie pizza with a variety of fresh vegetables<br/>Could I please order a veggie pizza with extra mushrooms and spinach?<br/>Do you have a special veggie pizza?                                                                                                                                                                                      |
+  </Accordion>
+
+  <Accordion title="User input">
+    Consider the example of intent reranking based on the following user input:
+
+    ```text
+    I'd like something low-calorie, but here's the catch — I don't eat any animal products, 
+    and I'm allergic to milk-based ingredients.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Result
+
+<AccordionGroup>
+  <Accordion title="Cognigy NLU">
+    After applying Cognigy NLU intent mapping, `Fallback Reject Intent`
+    is assigned priority `1` with a score of `0.588120879379653`, instead of the correct intent `Veggie Pizza`,
+    which has priority `3` with a score of `0.026957729768803257`.
+
+      ```json
+      {
+        "nlu": {
+          "intentMapperResults": {
+            "scores": [
+              {
+                "id": null,
+                "name": "null - Fallback Reject Intent",
+                "score": 0.588120879379653,
+                "negated": false,
+                "confirmationSentence": null,
+                "confirmationSentences": null,
+                "disambiguationSentence": null,
+                "flow": null,
+                "description": ""
+              },
+              {
+                "id": "8f44b7b1-d984-4da3-9558-6c128a190235",
+                "name": "Vegetarian Pizza",
+                "score": 0.2909909269629138,
+                "negated": false,
+                "confirmationSentence": null,
+                "confirmationSentences": null,
+                "disambiguationSentence": null,
+                "flow": "f212ad29-e38e-4cfc-bc1c-47b12cfd9fc3",
+                "description": "Intent for ordering a meatless pizza. It contains milk-based products and vegetables. Often has cheese as a main ingredient, such as mozzarella, cheddar, feta, or goat cheese. Good for vegetarians."
+              },
+              {
+                "id": "a9418c1b-f956-402b-b317-cabe91950946",
+                "name": "Veggie Pizza",
+                "score": 0.026957729768803257,
+                "negated": false,
+                "confirmationSentence": null,
+                "confirmationSentences": null,
+                "disambiguationSentence": null,
+                "flow": "f212ad29-e38e-4cfc-bc1c-47b12cfd9fc3",
+                "description": "Intent for ordering a pizza with only vegetable toppings such as tomatoes, mushrooms, bell peppers, onions, olives, spinach, and broccoli. A light and refreshing option for health-conscious eaters."
+              }
+            ]
+          }
+        }
+      }
+      ```
+
+    Alternatively, to view up to five probable results, you can output them via a [Say](/ai/agents/develop/node-reference/basic/say) node by including the [prompt](#set-up-intent-reranking) in the **Text** field.
+  </Accordion>
+
+  <Accordion title="Cognigy NLU + external LLM">
+    After applying the Cognigy NLU intent mapping and external LLM reranking, the correct intent `Veggie Pizza` is identified.
+
+      ```json
+      {
+         "promptResult": {
+            "intent": "Veggie Pizza"
+         }
+      }
+      ```
+
+    Once the agent identifies the correct intent, you can continue the flow.
+    For example, the agent can offer pizza options from the identified category `Veggie Pizza`.
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)

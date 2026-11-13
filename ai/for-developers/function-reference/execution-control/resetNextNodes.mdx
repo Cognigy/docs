@@ -1,0 +1,32 @@
+---
+title: resetNextNodes
+seo:
+  metatags:
+    description: resetNextNodes clears any active overrides for the next Node in the
+      conversation flow.
+keywords: ['resetnextnodes', 'execution control functions']
+---
+
+## Syntax
+
+`resetNextNodes()`
+
+## Description
+
+Clears any active overrides for the next Node in the Flow.  
+
+This function is useful when:
+
+- You've changed the next Node using a [`setNextNode()`](/ai/for-developers/function-reference/execution-control/setNextNode) function and you want to return to the default Flow behavior.
+- You want to call [`executeFlow()`](/ai/for-developers/function-reference/execution-control/executeFlow) with `config.flowNode.isGoto = true` and keep the execution in the target Flow.
+
+**Returns:** `void`
+
+## Example
+
+```js
+// Imagine you previously used setNextNode("fallback-node") to redirect the Flow.
+// Now, you want to clear that override so the Flow continues as originally defined.
+
+resetNextNodes();
+```

@@ -1,0 +1,60 @@
+---
+title: Annotations
+description: "Annotate example sentences to tag words as placeholders linked to slots in Cognigy."
+keywords: ['nlu model', 'intents', 'annotate example sentences']
+---
+
+_Annotations_ enable you to tag specific words within example sentences as placeholders.
+These placeholders, linked to slots, allow the NLU model to identify and extract key details from user inputs. 
+For example, in the sentence `I want a shirt`, you could annotate `shirt` as a placeholder tied to a `product` slot,
+helping the NLU recognize similar items, such as `pants` or `hats`.
+
+## Key benefits
+
+- **Improved detail recognition**. Annotations help the NLU pinpoint and extract specific information, for example, names, dates, or products, from user inputs, making conversations more precise and context-aware.
+- **Reduced repetition**. By integrating slots into example sentences, annotations eliminate the need to write repetitive variations.
+
+## How to use
+
+To use annotations, follow these steps:
+
+1. Go to **Advanced > NLU**, select the **Intents** tab, and open the intent you want.
+2. Highlight a word in an example sentence within the text field and click **+**. A row with two lists appears.
+3. Select the slot type and the slot from the lists.
+
+You can add multiple annotations to a single sentence. Each is underlined in a unique color.
+
+<Frame>
+  <img src="/_assets/ai/empower/nlu/intents/annotations.webp" alt="Intent example sentence with annotated slot types highlighted" style={{ width: 'auto' }} />
+</Frame>
+
+### Exact matching
+
+If two sentences are nearly identical but differ only in keyphrases that share the same slot, the NLU model detects them as highly similar. 
+In such cases, it automatically assigns a score of 0.95 to indicate a strong match.
+
+#### Example
+
+Example sentence: `I want a burger`<br/>
+User input: `I want a pizza`<br/>
+Result: If `pizza` and `burger` are both tagged with the same `product` slot in the lexicon, the match score will be `0.95`.
+
+### Recommendations
+
+- **Annotate whole words or phrases**. When you annotate words or phrases by using a lexicon slot in an example sentence, annotate them as a whole to ensure correct matching. For example:
+
+  - In the sentence `I want a monthly subscription`
+      - If you assign only `month` to a lexicon slot, the NLU engine doesn't recognize `monthly`.
+      - If you assign `monthly` to the lexicon slot, the NLU engine recognizes the intent correctly.
+  - In the sentence `Ich möchte ein monatliches Abonnement abschließen`
+      - If you assign only `monatlich` to a lexicon slot, the NLU engine doesn't recognize `monatliches`.
+      - If you assign `monatliches` to the lexicon slot, the NLU engine recognizes the intent correctly.
+
+- **Avoid selecting bordering spaces**. When highlighting a word for annotation, make sure you select only the word itself without leading or trailing spaces. For example, select `monthly` instead of ` monthly` or `monthly `. Including extra spaces in the selection can cause the NLU processing to fail.
+- **Annotate only 50% of your example sentences with slots for optimal intent matching**. This balanced approach instructs the NLU model that the slot is relevant to the intent, while also indicating that identifying the slot isn't mandatory for a successful intent match.
+- **Use common words instead of rare ones**. Replace hard-to-understand terms with simpler ones to help the NLU model understand the context better. For example, instead of `PremiumPayID`, you can use `credit card`. Alternatively, you can include `credit card` in the example sentence and annotate it with a [lexicon slot](/ai/platform-features/nlu/slots/user-defined/lexicon) that maps to `PremiumPayID`.
+
+## More information
+
+- [Intent example sentences](/ai/platform-features/nlu/intents/example-sentences)
+- [Intents](/ai/platform-features/nlu/intents/overview)

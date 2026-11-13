@@ -1,0 +1,118 @@
+---
+title: Intent analyzer
+description: "Check the quality of intents and example sentences in your Cognigy NLU model with the intent analyzer, and get feedback to improve accuracy."
+keywords: ['cognigy nlu', 'intent analyzer', 'analyze intents']
+---
+
+
+The _intent analyzer_ provides immediate feedback on the quality of example sentences and intents within the Cognigy NLU model, enabling you to optimize agents for better understanding and performance.
+
+## Key benefits
+
+- **Rapid quality assessment**. You can evaluate the NLU model's effectiveness at a glance without extensive manual testing.
+- **Targeted improvements**. The intent analyzer includes detailed scoring that highlights specific areas for refinement, thereby improving intent recognition.
+
+## Restrictions
+
+- After editing example sentences, the NLU model must be retrained to update scores.
+- Strong overall intent model scores don't guarantee perfect individual intents. Red or yellow intents may still need work.
+- An intent requires at least five example sentences. If you train it with fewer, a red indicator appears after the build, signaling that while the intent still functions, its performance will be significantly reduced. 
+
+## How to set up
+
+1. Go to **Advanced > NLU** and select the **Intents** tab.
+2. Add a variety of example sentences to each intent. 
+3. In the upper-right corner, click **Build Model** to process the sentences and generate the initial model. 
+4. View scores for the overall model, individual intents, and example sentences.
+
+### Explore intent analyzer
+
+The intent analyzer assesses three main components:
+
+1. **Overall intent model**. Shows a total score for the NLU model's quality.
+2. **Individual intent**. Shows scores for each intent, which reflect how well the NLU model recognizes them and if they overlap with other intents. You'll see the NLU score along with names of any overlapping intents.
+3. **Individual example sentence**. Each example sentence receives a score based on how effective it is within the NLU model. You can see the score and any overlapping intents by hovering over the traffic light in the interface.
+
+The intent analyzer uses a traffic light color system to provide users with three-status scoring feedback.
+
+The color coding is explained in the table.
+
+| **Color** | **Score range**   | **Description**                                                                                                                                                  | **Recommendations**                                                                                                                                                                                                                                         |
+| --------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Green     | Score > 0.8       | A green score indicates high confidence in intent recognition. The NLU model is performing well and is ready for further testing by users.                       | Note that a perfect NLU model, where all sentences score green, isn't necessary. The traffic light system helps quickly identify areas that may need attention and refinement.                                                                              |
+| Yellow    | 0.8 > Score ≥ 0.6 | A yellow score indicates moderate confidence. The NLU model is performing well but shows that the intent recognition could be more consistent.                   | Review example sentences with yellow scores. Add more varied examples or adjust poorly scoring examples to cover additional variations. Monitor intents over time for any further inconsistencies.                                                          |
+| Red       | Score < 0.6       | A red score indicates significant issues with intent recognition. The NLU model may fail to recognize the intent accurately, and urgent improvements are needed. | Review the training data for this intent. Focus on revising or expanding example sentences to better represent the variety of ways users might express the query. Consider retraining the NLU model with additional or revised data to improve recognition. |
+
+## How to test
+
+You can test NLU scores using the following interfaces:
+
+<Tabs>
+  <Tab title="GUI">
+         In the Interaction Panel, activate **Debug Mode** and explore the detailed results in the `input.nlu.intentMapperResults.scores` object.
+  </Tab>
+  <Tab title="API">
+         For more complex testing, you can use the API [POST /v2.0/projects/{projectId}/nlu/scores](/api-reference/projects/generate-nlu-scores) request to test NLU scores without the load from flow execution. 
+
+         For example, assume the user asks the agent: `Can you help me with this issue?` Add this question as the value for the parameter `sentence`. Specify the [project ID](/ai/agents/develop/projects-and-flows/projects), [flow reference ID](/ai/agents/develop/projects-and-flows/overview), and [locale reference ID](/ai/platform-features/translation-and-localization/localization) of the agent you want to test.
+
+         **Request**
+
+         ```json
+         Post /v2.0/projects/{projectId}/nlu/scores
+         Content-Type: application/json
+
+         {
+           "flowReferenceId": "<flow-reference-id>",
+           "localeReferenceId": "<locale-reference-id>",
+           "sentence": "Can you help me with this issue?"
+         }
+         ```
+
+         The response returns a collection of objects that includes matching NLU intents and scores for the given sentence.
+
+         **Response**
+
+         ```json
+         [
+           {
+             "id": "129fdbd3-54d4-4704-a019-b579a7901641",
+             "name": "Flight Booking",
+             "score": 0.9333265866488035,
+             "negated": false,
+             "confirmationSentence": null,
+             "confirmationSentences": null,
+             "disambiguationSentence": null,
+             "flow": "0d59e1c7-17e4-4737-aafa-4b27b48e6885",
+             "description": "Handles queries related to booking flights, including availability, pricing, and reservations"
+           },
+           {
+             "id": "0c22d2d8-edda-4e12-8d8f-6f5177771fc5",
+             "name": "Payments",
+             "score": 0.5039746888040336,
+             "negated": false,
+             "confirmationSentence": null,
+             "confirmationSentences": null,
+             "disambiguationSentence": null,
+             "flow": "0d59e1c7-17e4-4737-aafa-4b27b48e6885",
+             "description": "Manages questions and actions related to payment processes, methods, and issues"
+           },
+           {
+             "id": "11a33c75-d074-4408-b437-5c00071d6c46",
+             "name": "FAQ",
+             "score": 0.0669071045766796,
+             "negated": false,
+             "confirmationSentence": null,
+             "confirmationSentences": null,
+             "disambiguationSentence": null,
+             "flow": "0d59e1c7-17e4-4737-aafa-4b27b48e6885",
+             "description": "Provides answers to frequently asked questions regarding various topics or services"
+           }
+         ]
+         ```
+  </Tab>
+</Tabs>
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)

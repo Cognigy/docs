@@ -1,0 +1,11 @@
+<CodeGroup>
+```powershell PowerShell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes(".\{path}"))
+```
+```bash Bash (macOS)
+base64 -i ./<{path}> | tr -d '\n'
+```
+```bash Bash (Linux)
+cat ./<{path}> | base64 -w0
+```
+</CodeGroup>

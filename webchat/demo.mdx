@@ -1,0 +1,47 @@
+---
+title: Demo Webchat
+description: "Test your Webchat configuration, preview the widget, and validate handover providers before going live."
+keywords: ['demo webchat', 'webchat testing', 'webchat preview', 'endpoint settings', 'user id']
+---
+
+_Cognigy Demo Webchat_ lets you test Webchat integrations with various providers, including handover providers, and preview the appearance of your Webchat before you deploy it in a production environment. Use it to check that your Webchat works as expected and looks the way you want before launch.
+
+## Use Demo Webchat
+
+To start using Demo Webchat, follow these steps:
+
+1. In the navigation menu of the project, go to **Deploy > Endpoints**.
+2. On the **Endpoints** page, select an existing Webchat endpoint or create a new one by clicking **+ New endpoint**.
+3. In the endpoint editor, click the preview bar on the right with the ![Show preview](/_assets/icons/black-and-white/chevron-left.svg) icon. The live preview section opens.
+4. In the live preview section, click ![open demo in new tab](/_assets/icons/black-and-white/external-link.svg).
+
+The Demo Webchat page displays a website that contains the Webchat widget you configured in the endpoint settings.
+
+### Manually define the user ID
+
+By default, when you load the Webchat widget, you are assigned a random `user id` that is stored in local memory, ensuring that you have the same `user id` the next time you use the Webchat.
+
+To test your Webchat as an end user, define the `user id` by adding `?user=<user-id>` to the Demo Webchat URL. For example, in the `https://webchat-trial.cognigy.ai/v2/7e466a9d76611d8decbd15f366f607345efc36805c4e7cff25789ec91ee66457?user=test` URL,
+the `user id` is set to `test`.
+
+To create a new session for the existing user, use `?user=<old-user-id>&sessionId=<new-user-id>`.
+
+To locate the `user id` of past conversations, go to **Manage > Contact Profiles**.
+
+## Demo Webchat settings
+
+The following settings are in the **Demo Webchat settings** section on the **Layout** tab of the Webchat v3 endpoint and only affect the integrated Demo Webchat page. The speech settings are an exception: they're located on the **Behavior** tab and apply to both Demo Webchat and production Webchat.
+
+| Parameter                     | Type   | Description |
+| ----------------------------- | ------ | ----------- |
+| Activate Demo Webchat         | Toggle | Makes Demo Webchat available for testing the endpoint settings. |
+| Activate speech-to-text       | Toggle | Allows users to dictate messages using their device microphone. <br/> This parameter is located in the [Webchat behavior](/webchat/v3/configuration#webchat-behavior) settings. <br/><br/> Mozilla Firefox doesn't support this parameter. |
+| Activate text-to-speech       | Toggle | Activates voice responses for the agent. <br/> This parameter is located in the [Webchat behavior](/webchat/v3/configuration#webchat-behavior) settings. |
+| Background image              | URL    | The image displayed behind the Webchat widget. |
+| Webchat position              | Select | The position of the Webchat widget on the page. Select **Centered** or **Bottom right**. |
+| Use custom Webchat bundle     | Toggle | Overrides the default Webchat bundle with your own. This is an advanced feature. Some endpoint configurations might not work if your Webchat bundle doesn't support them. |
+| Custom Webchat bundle URL     | URL    | This parameter appears if **Use custom Webchat bundle** is activated. Specify the URL of a self-compiled and modified Webchat version. The URL should lead to an accessible cloud storage location that contains your compiled `webchat.js` or `webchat.legacy.js` file. |
+
+## More information
+
+- [Webchat v3: endpoint configuration](/webchat/v3/configuration)

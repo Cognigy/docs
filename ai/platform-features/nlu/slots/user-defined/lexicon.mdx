@@ -1,0 +1,115 @@
+---
+title: Lexicon slots
+description: "Help your agent recognize keyphrases in user input with lexicons and lexicon slots. Learn how to define keyphrases, categories, and equivalent words."
+keywords: ['cognigy nlu', 'slots', 'user-defined slots', 'lexicons', 'lexicon slots']
+---
+
+import AiForbiddenCharacters from '/snippets/ai/forbidden-characters.mdx'
+
+
+_Lexicons_ are structured vocabularies that help your agent recognize specific words or phrases, known as keyphrases, in user inputs. Within a lexicon, you define keyphrases along with their categories and equivalent words. Keyphrases can include examples like product names, car brands, or zip codes.
+
+_Lexicon slots_ are user-defined categories within a lexicon. You assign a lexicon slot to a keyphrase to classify the type of information it represents. This approach provides contextual meaning for the system to understand the keyphrase's role in the conversation.
+
+## Key benefits
+
+- **Improved recognition of user inputs**. Lexicon slots allow the agent to recognize variations of keyphrases (synonyms), enabling flexible user input handling without requiring exact matches.
+- **Consistency across conversations**. Lexicon slots ensure uniform interpretation of terms across different flows, improving reliability.
+- **Easier maintenance**. Centralized lexicon management makes it easy to update lexicon slots, reducing errors.
+
+## Limitations
+
+- Maximum of 250 lexicon slots per lexicon.
+- Maximum of 30 characters per lexicon slot name.
+- Maximum of 50 slots and 50 synonyms per keyphrase in the lexicon editor.
+- Maximum of 100K keyphrases per lexicon.
+
+## Key components of a lexicon
+
+<Frame>
+  <img id="specific-image" src="/_assets/ai/empower/nlu/lexicon-editor.webp" alt="Lexicon editor with keyphrases, synonyms, slots, and data fields" style={{ width: 'auto' }} />
+</Frame>
+
+| Component     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Example                                                                                                     |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| **Keyphrase** | A word or phrase that the NLU should recognize. A keyphrase acts as the main entry in the lexicon. You create keyphrases by clicking **Create keyphrase**.                                                                                                                                                                                                                                                                                                          | `"Apple iPhone"`                                                                                            |
+| **Slots**     | Assign categories to a keyphrase to provide context in a conversation. They help define what type of entity the keyphrase represents. To add a slot, type it in the field and press **Enter**. <br/> You can access detected slots in the flow using the Input object with the following syntax: `{{input.slots.SlotName}}`, where `SlotName` is the name of the slot. For example, if the slot name is `device`, you can reference it as `{{input.slots.device}}`. | `"device": true, "mobile": true` > `"Apple iPhone"` is categorized as both `device` and `mobile`.           |
+| **Synonyms**  | Alternative phrases that map to a keyphrase. If a user types a synonym instead of the keyphrase, the system still understands it as the same keyphrase. To add a synonym, type it in the field and press **Enter**.                                                                                                                                                                                                                                                 | `"Cool phone"` > Recognized as `"Apple iPhone"`                                                             |
+| **Data**      | Stores additional structured data in JSON format related to a keyphrase, such as product IDs, brands, or custom attributes. To show the field, expand **Data**.                                                                                                                                                                                                                                                                                                     | `{ "id": "12345", "brand": "Apple", "releaseYear": 2023 }` > `"Apple iPhone"` is linked to product details. |
+
+## Work with lexicon slots
+
+Lexicon slots are managed within lexicons, which you can create and configure in Cognigy to support conversational flows.
+
+<Tabs>
+  <Tab title="GUI">
+         In the navigation menu, go to **Advanced > Lexicons**. Click **Create lexicon** to create a lexicon. Open a lexicon and click **Create keyphrase** to add keyphrases. You can also upload and download lexicons as CSV files.
+         Also, you can generate keyphrases by using [generative AI](/ai/agents/develop/gen-ai-and-llms/llms).
+  </Tab>
+  <Tab title="API">
+         You can add, download, and upload lexicons using the [Cognigy API](/api-reference/lexicons/get-lexicons).
+  </Tab>
+  <Tab title="CLI">
+         You can clone, restore, push, pull, and diff lexicons using the [Cognigy CLI](https://github.com/Cognigy/Cognigy-CLI/blob/main/README.md).
+  </Tab>
+</Tabs>
+
+### Attach lexicons to use slots
+
+Lexicon slots aren't automatically recognized by the NLU model.
+To use them in a flow, you must [manually attach a lexicon to the flow](/ai/platform-features/nlu/attachments).
+Once the lexicon is attached, slots are populated when keyphrases or their synonyms are detected in user input.
+
+### Upload and download lexicons
+
+For easy slot management, you can upload and download lexicons in CSV format.
+
+<AccordionGroup>
+  <Accordion title="CSV file requirements">
+    To upload the file, make sure your CSV file is UTF-8 encoded.
+
+    The CSV file should have the following format:
+
+    ```txt
+    KEYPHRASE,"TAGS","SYNONYMS","{DATA}"
+    ```
+
+    Example:
+
+    ```txt
+    Keyphrase1,"tag","synonym1","{""key1"":""value""}"
+    Keyphrase2,"tag,tag2","synonym2,synonym2_2","{""key2"":""value""}"
+    Keyphrase3,"tag,tag2,tag3","synonym3,synonym3_2,synonym3_3","{""key3"":""value""}"
+    ```
+
+    <AiForbiddenCharacters/>
+  </Accordion>
+
+  <Accordion title="Upload lexicons">
+    To upload lexicons, follow these steps:
+
+    1. Open the lexicon and click ![upload](/_assets/icons/black-and-white/upload.svg) next to the **Search keyphrase** field.
+    2. In the **Upload Lexicon CSV file** dialog, select one of the following options:
+        - **Skip importing duplicate keyphrases**. Skips importing any synonyms from the CSV file that already exist in the current lexicon. If there are duplicate synonyms in the CSV file, they're ignored during the import process. Only new and unique synonyms are imported.
+        - **Overwrite the current keyphrases**. Replaces all the current keyphrases in the lexicon with the keyphrases from the CSV file. If there are any existing keyphrases in the lexicon, they're completely overwritten, and only the keyphrases from the CSV file are retained.
+        - **Merge tags and synonyms from the current and imported keyphrases**. Merges the synonyms of keyphrases from both the current lexicon and the CSV file. Only unique synonyms are merged. If a synonym exists in both the current lexicon and the CSV file, it isn't merged.
+    3. Click **Upload CSV file** and select the file.
+
+    To track the uploading process, you can view the **Import Lexicon** task by clicking ![task-menu](/_assets/icons/blue/task-menu.svg) in the upper-right corner.
+  </Accordion>
+
+  <Accordion title="Download lexicons">
+    To download lexicons, follow these steps:
+
+    1. Open the lexicon and click ![download](/_assets/icons/black-and-white/download.svg) next to the **Search keyphrase** field. Wait for the CSV file to be generated. To track this process, you can view the **Export Lexicon** task by clicking ![task-menu](/_assets/icons/blue/task-menu.svg) in the upper-right corner.
+    2. When the task is completed, click ![download](/_assets/icons/black-and-white/download.svg) again. The icon is highlighted and its tooltip reads **Download lexicon**.
+
+    The file is downloaded.
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Regex slots](/ai/platform-features/nlu/slots/user-defined/regex)
+- [System-defined slots](/ai/platform-features/nlu/slots/system-defined)
+- [Slots](/ai/platform-features/nlu/slots/overview)

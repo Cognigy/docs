@@ -1,0 +1,38 @@
+---
+title: Web page
+keywords: ['web page knowledge source', 'knowledge ai', 'url crawling', 'knowledge chunks', 'web scraping']
+description: "Create knowledge sources from web pages."
+---
+
+
+Knowledge AI supports using web pages to create [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview).
+
+## Restrictions
+
+- The web page must be hosted on a publicly accessible website.
+- When you create a knowledge source from a web page, Knowledge AI processes all visible text on the web page, including potentially unwanted text, such as cookie notices.
+- Knowledge AI doesn't process web page content with anti-crawling measures.
+- Knowledge AI doesn't support images or Optical Character Recognition (OCR) capabilities.
+
+## Chunking process
+
+When processing a web page, Knowledge AI:
+
+1. Visits the URL as a page in a browser session.
+2. Scrolls to the bottom of the web page. 
+3. Accesses lazy-loaded<sup>[1](#footnote1)</sup> content by checking for any text changes until the web page is stable and no longer loads additional text.
+4. Generates knowledge source content based on the visible text result.
+
+Knowledge AI imports the web page content into a knowledge source once. If the web page you used as a source is updated, and you want to include the new content in the knowledge source, create a new knowledge source based on the updated web page.
+
+## More information
+
+- [Knowledge AI Overview](/ai/agents/develop/knowledge-ai/overview)
+- [Create a knowledge store](/ai/agents/develop/knowledge-ai/getting-started)
+- [Chunk editor](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk)
+- [Cognigy text format](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt)
+- [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf)
+
+---
+
+<sup id="footnote1">1</sup>: Lazy loading is a web development technique that delays loading non-critical or non-visible content until it is necessary. This technique improves web page loading times and user experience.

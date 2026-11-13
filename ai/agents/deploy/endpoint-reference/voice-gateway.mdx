@@ -1,0 +1,419 @@
+---
+title: Cognigy Voice
+keywords: ['endpoint', 'voice endpoint', 'voice channel']
+seo:
+  metatags:
+    description: >-
+      The Cognigy Voice Endpoint enables you to connect your AI Agent to
+      your contact center or other phone numbers using Cognigy Voice
+---
+import MediaPathNote from '/snippets/ai/media-path-note.mdx'
+import ChangeMediaPathActiveCall from '/snippets/voice-gateway/change-media-path-active-call.mdx'
+
+
+<Frame>
+  <img
+    src="/_assets/ai/deploy/endpoint-reference/voice-endpoint.svg"
+    alt="Voice endpoint icon, a yellow letter V between sound waves"
+    style={{ width: '200px' }}
+  />
+</Frame>
+
+The Cognigy Voice Endpoint enables you to connect your AI Agent to your contact center or other phone numbers using [Cognigy Voice](/voice-gateway/index).
+This Endpoint allows your customers to speak with your AI Agents instead of using a chat.
+
+
+## Prerequisites
+
+- An agent, or a Flow with [Voice Nodes](/ai/agents/develop/node-reference/voice/overview).
+- A speech provider in your project. For more information, see [Speech and telephony](/ai/administer/access/speech-and-telephony).
+
+## Generic endpoint settings
+
+Learn about the generic Endpoint settings available for this Endpoint on the following pages. In the Endpoint, **Copilot** and **Real-time translation** are on the **Behavior** tab. **Data protection and analytics** and **Session expiration** are on the **Compliance** tab. **NLU connector** and **Transformer functions** are on the **Advanced** tab.
+
+- [Endpoints Overview](/ai/agents/deploy/endpoints/overview)
+- [Data Protection & Analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer Functions](/ai/for-developers/transformers/overview)
+- [NLU Connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Session Management](/ai/agents/deploy/endpoints/session-management)
+- [Real-Time Translation Settings](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Copilot](/agent-copilot/configure/copilot-section)
+
+## Endpoint-specific settings
+
+The settings are grouped by the tabs of the Endpoint. Each accordion covers one tab.
+
+<AccordionGroup>
+  <Accordion title="Setup tab">
+
+    **Endpoint**
+
+    Choose what answers the call, which speech providers it uses, and which phone numbers reach the Endpoint.
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Endpoint name | String | Sets the name of the Endpoint. It can have up to 200 characters. |
+    | Activate endpoint | Toggle | Turns the Endpoint on or off. |
+    | Endpoint URL | URL | The URL of the Endpoint. Assigned numbers and the Click To Call widget reach the Endpoint on their own. You need this URL only to point an external carrier or SIP trunk at the Endpoint. |
+
+    **Target**
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Target type | Dropdown | Searches for and selects an agent or a Flow. The list groups the items as **AI Agents** and **Flows**. |
+    | Locale | Dropdown | Sets the project locale that the Endpoint uses. The primary locale is marked **Primary**. |
+    | Snapshot | Dropdown | Uses a Snapshot of the project instead of the current project. The agents and Flows in the list come from the Snapshot. The default is **No snapshot**. |
+    | Override snapshot connections | Toggle | Uses the current project Connections instead of the Connections stored in the Snapshot. This setting appears only when you select a Snapshot. |
+
+    If the Snapshot contains no agents, you can't save an agent as the target. Select a Snapshot that contains an agent, or select **No snapshot**.
+
+    **Speech**
+
+    The **Speech** card defines the text-to-speech (TTS) and speech-to-text (STT) providers for calls on this Endpoint. Select from the speech providers in your project. To add a speech provider, see [Speech and telephony](/ai/administer/access/speech-and-telephony).
+
+    <Tabs>
+      <Tab title="Flow target">
+        The providers on this card are the defaults for calls on this Endpoint. If an agent defines its own speech settings, those settings take priority.
+
+        The language and voice settings appear after you select a provider.
+
+        | Parameter | Type | Description |
+        |-----------|------|-------------|
+        | Speech synthesis provider | Dropdown | Sets the TTS provider. |
+        | Speech synthesis language | Dropdown | Sets the TTS language. |
+        | Voice | Dropdown | Sets the TTS voice. Select a language first. |
+        | Speech recognizer provider | Dropdown | Sets the STT provider. |
+        | Speech recognizer language | Dropdown | Sets the STT language. |
+
+        If you select another TTS provider, Cognigy clears the language and the voice. If you change the TTS language, Cognigy clears the voice and the fallback voice. If you select another STT provider, Cognigy clears the STT language.
+      </Tab>
+      <Tab title="Agent target">
+        The **Set on the agent** badge shows that the agent's voice settings define the primary speech providers.
+
+        The **Speaking (TTS)**, **Listening (STT)**, language, and voice rows are read-only and show **From agent**. To change them, click **Edit speech on [agent name]**. For more information, see [Voice](/ai/agents/develop/voice-configuration).
+
+        If you select a Snapshot, the card doesn't show the speech settings of the agent. Open the agent to edit its speech settings. Snapshots created after the edit include the changes.
+      </Tab>
+    </Tabs>
+
+    To use a fallback provider if the primary provider is unavailable, turn on **Add fallback**. The fallback uses the language of the primary settings. Only the provider and the voice change when the Endpoint switches to the fallback.
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Add fallback | Toggle | Turns on a fallback provider that the Endpoint uses if the primary provider is unavailable. |
+    | Fallback speech synthesis provider | Dropdown | Sets the TTS provider for the fallback. |
+    | Fallback voice | Dropdown | Sets the TTS voice for the fallback. |
+    | Fallback speech recognizer provider | Dropdown | Sets the STT provider for the fallback. |
+
+    If you change the target type or select a different agent, Cognigy clears the fallback.
+
+    **Number configuration**
+
+    In the **Number configuration** card, assign the phone numbers of your project to this Endpoint.
+
+    1. Click **Add number**.
+    2. Select one or more phone numbers.
+
+    To remove a number, click the icon next to it. If a number is assigned to another Endpoint, click **Reassign** to assign it to this Endpoint. To add or manage numbers, click the links in the card. For more information, see [Phone numbers](/ai/administer/access/speech-and-telephony#phone-numbers).
+
+  </Accordion>
+  <Accordion title="Click To Call tab">
+
+    The Voice Endpoint includes the Click To Call embedding HTML code and the settings on the **Click To Call** tab for configuring [Click To Call](/click-to-call/overview). Click To Call lets you embed a multimodal widget into your website, customer portal or mobile app so customers can be connected through one click to your voice AI Agent.
+
+    **Appearance**
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Activate Click To Call widget | Toggle | Shows the call button to end users. New endpoints have it on. Turn it off to keep the integration provisioned without showing the launcher. |
+    | Voice agent name | String | Sets the name displayed on the Click To Call widget. |
+    | Subtitle | String | Sets the secondary line under the voice agent name. |
+    | Avatar URL | String | Sets the URL to the image displayed on the Click To Call widget. If the field is empty or the URL is invalid, the widget uses the default AI icon. We recommend JPG, JPEG, SVG, or PNG files. We recommend a size of 28 x 28 pixels. |
+    | Theme | String | Sets the color theme of the Click To Call widget. You can select the following options:<ul><li>**Clean white**: the widget's background is white and the image background is light gray.</li><li>**Dark mode**: the widget's background is black and the image background is dark gray. This option is selected by default.</li><li>**AI purple**: the widget's background is dark purple and the image background has a lighter purple shade.</li></ul> |
+
+    **Transcription customization**
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Show live transcription | Toggle | Displays conversation transcript in messages in the Click To Call widget. By default, the toggle is on. |
+    | Transcription background | Selector | Sets whether the live transcription messages have a background. You can select the following options:<ul><li>**Transparent**: the live transcription messages appear above the Click To Call widget without a chat box. This option is selected by default. If you use this option, make sure that the transcription messages are readable against your website. </li><li>**Custom color**: provides a solid background for the live transcription messages.</li></ul> |
+    | Background color | Color picker | This parameter is only available if you select **Custom color** in the **Transcription background** selector. Sets the background color for the live transcription messages. If you select **Custom color**, the default is black (`#000000`). |
+
+    **Privacy notice**
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Activate privacy notice | Toggle | Displays a privacy notice at the beginning of each chat session to inform users about data handling practices and prompts the users to accept or decline the privacy policy. Accepting the privacy policy is required to start the conversation, ensuring compliance and user trust. If the user declines the privacy policy, the conversation doesn't start. |
+    | Privacy notice title | String | Sets the heading that appears at the top of the privacy notice screen. Displayed only if you turn on **Activate privacy notice**. |
+    | Privacy notice text | String | Sets the message that users see in the privacy notice prompt. This parameter supports Markdown syntax. You can customize this message to provide more detailed information about your data collection, usage practices, and users' rights, ensuring clarity and building trust from the outset of the chat interaction. Displayed only if you turn on **Activate privacy notice**. |
+    | Submit button text | String | Sets the text displayed on the button users click to accept the Privacy Notice. Displayed only if you turn on **Activate privacy notice**. |
+    | Privacy policy link title | String | Sets the text that appears as the title of the privacy policy link. The link title allows you to tailor the label of the link to better match the tone and context of your brand. Displayed only if you turn on **Activate privacy notice**. |
+    | Privacy policy link URL | String | Sets the URL that directs users to your privacy policy. Displayed only if you turn on **Activate privacy notice**. |
+
+    **Demo page**
+
+    To test the widget, click **Open demo in new tab**. The link works after you activate and save the Endpoint.
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Background mode | Selector | Sets how the page background is filled when you use the Demo Widget page. You can use this field to test your website's background against the Demo Widget. You can select the following options:<ul><li>**Color**: provides the **Background color**. This option is selected by default. </li><li>**Image URL**: displays an image as the background for the Demo Widget.</li></ul> |
+    | Background color | Color picker | This parameter is only available if you select **Color** in the **Background mode** selector. Sets the background color for the Demo Widget. By default, the background is white. |
+    | Background image URL | String | This parameter is only available if you select **Image URL** in the **Background mode** selector. Sets the URL to the image displayed as the background for the Demo Widget. |
+    | Widget position | Selector | Sets the position of the Click To Call widget on the page. You can select the following options:<ul><li>**Centered**: the Click To Call widget is centered on the page. This option is selected by default. </li><li>**Bottom right**: the Click To Call widget is positioned at the bottom right of the page.</li></ul> |
+
+    **Embedding HTML**
+
+    To embed the widget in your website, click **Show embedding HTML snippet** and copy the code. For more information, see [Embed the Click To Call widget in your website](/click-to-call/embed).
+
+  </Accordion>
+  <Accordion title="Behavior tab">
+
+    **Generic voice settings**
+
+    These settings are valid for every session of this Endpoint.
+
+    | Parameter                           | Type   | Description                                                                                                                                                                                                                                                                                      |
+    |-------------------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Prosody settings                    | Toggle | If you turn on this parameter, Cognigy uses this configuration to specify changes to speed, pitch, and volume for the text-to-speech output. Set Session Config or Say Nodes with **Activity Parameters** turned on can override the **Prosody settings** option configured within the Endpoint. |
+    | Output speed                        | Number | This parameter is active only when the **Prosody settings** toggle is on. Sets the change in the speaking rate for the contained text, in percent. Value range: -100 to 200.                                                                                                                   |
+    | Output pitch                        | Number | This parameter is active only when the **Prosody settings** toggle is on. Sets the baseline pitch for the contained text, in percent. Value range: -100 to 200.                                                                                                                                     |
+    | Output volume                       | Number | Sets the volume of the contained text in percent or decibels (dB). Before you set a value, check the documentation of your speech provider. This parameter is active only when the **Prosody settings** toggle is on. The range is -200 to 200. |
+    | Show best transcript only          | Toggle | If you turn on this parameter, only the best transcript in the input object is accessible, instead of all variations.                                                                                                                                                                              |
+    | Add Call in progress event       | Toggle | If you turn on this parameter, the [Call in Progress](/voice-gateway/references/events/CALL_IN_PROGRESS) toggle appears in the **Call events** section.                                                                                                                     |
+    | Voice activity detection                          | Toggle | Detects speech with an on-premises voice activity detection (VAD) model. Barge-in uses it only when **Barge In On Speech** is activated in a Set Session Config Node. Overrides Flow-level barge-in tuning. |
+
+     <Note>As with all Speech Provider settings, there are certain differences in the use of this feature. Refer to your Speech Provider's documentation first to understand which values to add. An example would be the difference between Microsoft Azure and Google. For Microsoft Azure, users need to specify the `%` by which they would like to increase or decrease from the default settings. For instance, an example value could be `Output speed -20%`, indicating a `20%` reduction from the default output speed of `100%`, resulting in a new output speed of `80%`. To achieve the same effect with Google, users need to add the final output speed in `%` to the Prosody settings. For example, `Output speed 80%` directly displays the new output speed, as with Google; the final output speed is directly added to the settings.</Note>
+
+    **Call events**
+
+    Call events let you run an action in a Flow when a call event occurs.
+    Select a call event from the [Voice Events](/voice-gateway/references/events/overview) list.
+    This event triggers the action.
+
+    If you have configured the same call event in both the Endpoint and the [Lookup](/ai/agents/develop/node-reference/logic/lookup) Node, the Endpoint settings overwrite the Node settings.
+
+    **Call event settings**
+
+    <Note>As with all other Endpoint settings, you can't test the Call Events settings within the Interaction Panel.</Note>
+
+    | Parameter    | Type     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+    |--------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Action | Dropdown | Select the action to run when the call event is detected: <br/> - **Inject**: inject the defined text and data payload into the current flow. <br/> - **Execute Flow**: trigger a selected Flow when the call event is detected. <br/> - **None**: no action runs when the call event is detected. <br/> - **Transfer**: transfer a call in case [TRANSFER_DIAL_ERROR](/voice-gateway/references/events/TRANSFER_DIAL_ERROR) or [TRANSFER_REFER_ERROR](/voice-gateway/references/events/TRANSFER_REFER_ERROR) call events occur. For this action, you configure the **Transfer type**, **Target**, and **Reason**. For **Dial**, you also configure the **Caller ID**, **Music on hold**, **Timeout**, and **Media path**.                   |
+    | Inject text  | String   | Enter the text to send to your Flow. The parameter is available only for the **Inject** action.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+    | Inject data  | JSON     | Enter the data to send to your Flow in JSON format. The parameter is available only for the **Inject** action.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+    | Execute Flow | Dropdown | Execute the selected Flow. The parameter is available only for the **Execute Flow** action. <br/><br/> Note that you can't use [Go To](/ai/agents/develop/node-reference/logic/go-to) or [Execute Flow](/ai/agents/develop/node-reference/logic/execute-flow) Nodes in the executed Flow. When the Flow is fully processed, with all Nodes from Start to End executed, any dependent Flows won't be triggered.                                                                                                                                                                                                                                                                               |
+
+    **Call failover**
+
+    Call failover handles runtime and speech provider authentication errors that occur on the Cognigy side during the execution of a Flow.
+
+   <Note>
+   For 2026.14.1 or earlier versions:
+        - If you use a SaaS Cognigy installation, contact the support team to activate this feature.
+        - If you use an on-premises Cognigy installation, activate this feature by adding `FEATURE_ENABLE_ENDPOINT_CALL_FAILOVER` in `values.yaml`.
+    </Note>
+    
+    <MediaPathNote />
+
+    | Parameter                          | Type          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Transfer type |
+    |------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+    | Voice agent failover    | Toggle        | If enabled, the configuration below will be used to perform a transfer in case of a runtime error. If the **Speech provider failover** toggle is also enabled, applies to cases of runtime errors or speech provider failures.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | -             |
+    | Speech provider failover   | Toggle        | If enabled, the configuration below will be used to perform a transfer only if speech providers fail:<ul><li>If only a primary speech provider is configured, the call failover occurs after the primary speech provider fails.</li><li>If both primary and fallback speech providers are configured, the call failover occurs only after both speech providers fail.</li></ul> If the **Voice agent failover** toggle is also enabled, the configuration below applies to cases of runtime errors or speech provider failures.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | -             |
+    | Transfer type                      | Dropdown      | There are two transfer types: <br/> - **SIP Refer**: forwarding an existing call. <br/> - **Dial**: creating a new outgoing call. If you want to use this type and still have the old Node version, add a new Voice Transfer Node in the Flow Editor and manually transfer the required settings from the old Node.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | -             |
+    | Reason                             | Text | Sets the reason for the handover. Cognigy sends it in the `X-Reason` SIP header. | All           |
+    | Target                             | Text | E.164 syntax or a SIP URI are supported.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | All           |
+    | Caller ID                          | Text | The caller ID. Some carriers, like Twilio, require a registered number for outgoing calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Dial          |
+    | Dial music                         | URL           | Custom audio or ring-back which plays to the caller while the outbound call is ringing. Only `.wav` or `.mp3` files are supported. The URL doesn't need to include the `.mp3` or `.wav` extension. For example, `https://abc.xyz/music.mp3` or `https://audio.jukehost.co.uk/N5pnlULbup8KabGRE7dsGwHTeIZAwWdr`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Dial          |
+    | Timeout                            | Number        | Sets how long, in seconds, the agent rings before a [no-answer](/voice-gateway/references/events/NO_ANSWER) timeout. The field is empty by default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Dial          |
+    | Activate duration limit | Toggle        | Automatically disconnects transferred calls after a set time to prevent excessive call durations. This setting is useful in the following cases:<br/>- Limit call duration by automatically ending transferred calls that exceed the predefined time, helping manage system performance.<br/>- Free up resources by disconnecting calls if the caller forgets to hang up, making lines available for other callers.<br/>- Reduce costs by preventing unnecessary charges from long, unattended calls.                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Dial          |
+    | Duration limit                     | Number        | This parameter is active only when **Activate duration limit** is selected. Set the maximum duration in seconds. Transferred calls end automatically after this time, even if the caller is on the line. The default value is `600`. The range is 0 to 1200.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Dial          |
+    | Failover transcribe        | Toggle        | Attempts transcription if a call transfer fails. The STT settings below appear only if **Transfer type** is **Dial** and you turn on this toggle.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Dial          |
+    | Media path                         | Dropdown      | Controls the routing of RTP traffic through a media platform, such as FreeSwitch, for monitoring, transcoding, and security purposes. You can also [change this value during an active call](#changing-the-media-path-during-an-active-call) using the `updateCall` API. Select one of the following options:<ul><li>**Full media**: routes all RTP traffic through a media platform. This option is used when complete media capture is required, for example, for logging, monitoring, or other processing workflows.</li><li>**Partial media**: this option is selected by default. Routes through a media platform only when necessary. For example, to enable transcriptions or other optional processing.</li><li>**No media** – routes directly from the caller's SBC to the far SBC or SIP trunk, without passing any media through the media platform. This option is primarily used for compliance purposes. When the option is selected, the system is disconnected from the media stream entirely, ensuring that sensitive data, such as credit card information, can't be captured.</li></ul> When you select **Full media** or **Partial media**, media anchoring process changes the addresses and ports of incoming and outgoing data:<ul><li>Outgoing data: the source IP address and port become the IP address and port of Voice. The destination IP address and port become the IP address and port of the public network. </li><li>Incoming data: the source IP address and port become the IP address and port of Voice. The destination IP address and port become the IP address and port of the PBX system or local telephone.</li></ul> | Dial          |
+    | STT provider                         | Dropdown      | Sets the STT vendor. Select a vendor or enter a custom vendor in lowercase. The suggested vendors are **Default**, **Microsoft**, **AWS**, **Google**, **Soniox**, **Deepgram**, **Deepgram Flux**, **Speechmatics**, **OpenAI**, and **Elevenlabs**. If you change the vendor, Cognigy clears the **STT language** and the **Deepgram model**. | Dial          |
+    | STT language                       | Dropdown      | Sets the language that the STT vendor recognizes, for example, `en-US`. The list depends on the **STT provider**. Some vendors have no language list, for example, **Default** or a custom vendor. For these vendors, the field is disabled. | Dial          |
+    | Deepgram model                     | Dropdown      | This parameter is active only when Deepgram is selected from the **STT provider** list. <br/><br/> Choose a model for processing submitted audio. The field appears only if the selected language has models. Each model is associated with a tier. Ensure that the selected tier is available for the chosen STT language. For detailed information about Deepgram models, see the [Deepgram documentation](https://developers.deepgram.com/docs/model).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Dial          |
+    | Deepgram endpointing | Toggle        | Turns on end-of-speech detection tuning. This parameter is active only when Deepgram is selected from the **STT provider** list. When a pause is detected, Deepgram finalizes the transcript with `speech_final = true`. To change the duration, use the **Deepgram endpointing Time (ms)** parameter. For more information, see the [Deepgram documentation](https://developers.deepgram.com/docs/endpointing). | Dial          |
+    | Flux endpointing                   | Toggle        | Turns on end-of-turn detection using a confidence threshold. This parameter is active only when Deepgram Flux is selected from the **STT provider** list. When a user's speech ends or the timeout is reached, the transcript is finalized. For more information, see the [Deepgram Flux documentation](https://developers.deepgram.com/docs/flux/configuration). | Dial          |
+    | Deepgram endpointing Time (ms) | Number        | This parameter is active only when Deepgram is selected from the **STT provider** list and the **Deepgram endpointing** toggle is enabled. <br/><br/> Customize the duration (in milliseconds) for detecting the end of speech. The default is 250 milliseconds of silence. The range is 10 to 1000. After detecting silence, the system waits until either the speaker resumes or the required silence duration is reached. Once one of these conditions is met, the transcript is sent with `speech_final` set to `true`.                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Dial          |
+    | Deepgram smart formatting | Toggle        | This parameter is active only when Deepgram is selected from the **STT provider** list. <br/><br/> Deepgram's Smart Format feature applies additional formatting to transcripts to optimize them for human readability. Smart Format capabilities vary between models. When Smart Formatting is turned on, Deepgram will always apply the best-available formatting for your chosen model, tier, and language combination. For detailed examples, refer to the [Deepgram documentation](https://developers.deepgram.com/docs/smart-format).                                                                                                                                                                                                                                                             | Dial          |
+    | Google model                       | Dropdown      | This parameter is active only when Google is selected from the **STT provider** list.<br/><br/>Uses one of Google Cloud Speech-to-Text transcription models. The default value is `latest_short`. For a detailed list of Google models, refer to the [Transcription models](https://cloud.google.com/speech-to-text/docs/transcription-model#transcription_models) section in the Google Documentation. Keep in mind that the `default` value is a Google model type that can be used if other models don't suit your use case.                                                                                                                                                                                                                                                                                                                                                                                            | Dial          |
+    | Google custom model | String | This parameter is active only when **Google model** is set to **Custom**. Enter the identifier of your custom Google model. | Dial |
+    | End-of-turn threshold | Slider        | This parameter is active only when **Flux endpointing** is on. Defines the confidence level for detecting when a user's speech ends. Higher values improve accuracy but may increase latency. The range is 0.5 to 0.9. The default value is `0.7`, meaning the system waits until it is 70% confident that the user has finished speaking before finalizing the transcript.| Dial          |
+    | End-of-turn timeout (ms) | Number        | This parameter is active only when **Flux endpointing** is on. Defines the maximum number of milliseconds to wait before finalizing a turn. The timeout acts as a backup if the user stops speaking unexpectedly. The range is 500 to 10000. The default value is `5000` (5 seconds), meaning the turn will be closed after 5 seconds of silence. | Dial          |
+    | Speechmatics endpointing | Toggle | Turns on end-of-speech detection tuning. This parameter is active only when Speechmatics is selected from the **STT provider** list. By default, the toggle is off. | Dial |
+    | Speechmatics endpointing time (ms) | Number | This parameter is active only when the **Speechmatics endpointing** toggle is on. Sets the silence duration in milliseconds before Speechmatics emits end-of-speech. The range is 10 to 5000. The default value is 500. | Dial |
+    | OpenAI endpointing | Toggle | Turns on end-of-speech detection tuning. This parameter is active only when OpenAI is selected from the **STT provider** list. By default, the toggle is off. | Dial |
+    | OpenAI endpointing time (ms) | Number | This parameter is active only when the **OpenAI endpointing** toggle is on. Sets the silence duration in milliseconds before OpenAI emits end-of-speech. The range is 10 to 1000. The default value is 500. | Dial |
+    | NiCE endpointing | Toggle | Turns on end-of-speech detection tuning. This parameter is active only when NiCE is selected from the **STT provider** list. By default, the toggle is on. | Dial |
+    | NiCE endpointing time (ms) | Number | This parameter is active only when the **NiCE endpointing** toggle is on. Sets the silence duration in milliseconds before NiCE emits end-of-speech. The range is 10 to 1000. The default value is 250. | Dial |
+    | Transcription webhook              | URL | The webhook is triggered with an HTTP POST whenever an interim or final transcription is received. If the **STT provider** and **STT language** fields are empty, the system will use the default STT from the [Set Session Config Node](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) (if it exists). <br/><br/> Note that if the [Voice Copilot](/ai/agents/deploy/endpoint-reference/voice-copilot) Endpoint is inactive, you can use any Webhook URL to receive voice call transcripts. However, when the Voice Copilot Endpoint is enabled, ensure that the specified Webhook URL is associated with it for processing. | Dial          |
+    | STT label                          | Text | Routes the transcription to a specific speech provider in your project. If you have created multiple speech services from the same vendor, use the label to specify which service to use.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Dial          |
+    | Audio stream             | Dropdown      | Select the source of the audio stream: <br/> - **Both (called and caller)** - both the incoming and outgoing audio streams of the caller and the called party. <br/> - **Caller only** - the incoming and outgoing audio stream of the caller. <br/>- **Called party only** - the incoming and outgoing audio stream of the called party. <br/> <br/> Ensure that the selected audio stream matches the language specified for transcription. If no audio stream is provided, the system will use the one set in the beginning, which should also match the language specified for transcription.                                                                                                                                                                                                                                                                                                                                                                                    | Dial          |
+    | Referred-By                        | String        | This parameter is optional.<br/><br/> This setting allows you to change the original Referred By value, which can be a SIP URI or a user identifier such as a phone number. To define the Referred By value, you can use the following patterns:<br/>- **SIP URI** - `sip:[referred-by]@custom.domain.com`. In this case, the entire SIP URI will be sent as the Referred-By header. Example: `"Referred-by": "sip:CognigyOutbound@custom.domain.com"`.<br/>- **User Identifier** - `sip:[referred-by]@[SIP FROM Domain from carrier config]`. Example, `"Referred-By": "sip:CognigyOutbound@sip.cognigy.ai"`.                                                                                                                                                                                                                                                                                                                                           | Refer         |
+    | Custom transfer SIP headers        | JSON | Sets the data to send as SIP headers in the generated SIP message. Enter a JSON object, for example, `{"X-Custom-Header": "value"}`. | All           |
+
+    <ChangeMediaPathActiveCall />
+
+  </Accordion>
+  <Accordion title="Compliance tab">
+
+    **Session expiration**
+
+    Session expiration sets the number of minutes that a session stays alive when it is idle. Enter a whole number, 0 or higher. Enter `0` so that the session never expires. An empty field is treated as `0`.
+
+  </Accordion>
+  <Accordion title="Advanced tab">
+
+    **Call recording**
+
+    Call recording records calls on this Endpoint to a bucket that you configure in **AI & Voice Providers**. The setting is off by default and appears only if call recording is enabled for your installation.
+
+    | Parameter        | Type     | Description |
+    |------------------|----------|-------------|
+    | Enabled          | Toggle   | Turns on call recording for this Endpoint. |
+    | Recording bucket | Dropdown | Selects the bucket that stores the recordings. The list shows the vendor and the name of each bucket. A bucket that is turned off is marked **Disabled**. Select a bucket to start recording. If the saved bucket no longer exists, select another one. |
+
+    If your project has no recording buckets, add one in **Manage** > **AI & Voice Providers** > **Telephony** > **Recordings**, and then select it here. To open the page, click **Open AI & Voice Providers**.
+
+    **Transformer functions**
+
+    Transformer functions define when the Endpoint runs a [transformer function](/ai/for-developers/transformers/overview) and what the transformer does.
+
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | Stop execution on transformer function error | Toggle | Drops the message or event if a transformer function throws an error. If you turn it off, Cognigy logs the error and continues processing. |
+    | Activate input transformer | Toggle | Formats data sent by the user before it reaches the Flow or agent. |
+    | Activate output transformer | Toggle | Formats data sent by the agent or Flow before it reaches the user. |
+    | Activate execution finished transformer | Toggle | Formats the Flow output after the Flow execution has finished. This transformer applies only to REST-based Endpoints. |
+    | Activate notify transformer | Toggle | Formats the webhook payload from an external service before a notify API call. This API call sends the data directly to the user. |
+    | Activate inject transformer | Toggle | Formats the webhook payload from an external service before an inject API call. This API call sends the data directly to the Flow or agent. |
+    | JavaScript / TypeScript code | Code | The code of the transformer functions. |
+
+    **Mocking**
+
+    In the **Developer** section, **Mocking** replaces Voice calls with deterministic mocks. Use it only for local development. Don't turn it on in production.
+
+  </Accordion>
+</AccordionGroup>
+
+## How to set up
+
+### Configure in Cognigy
+
+1. In the left-side menu of your Project, click **Deploy > Endpoints**.
+2. On the **Endpoints** page, click **+ New Endpoint**.
+3. In the **New Endpoint** section, select the Voice Endpoint type and enter a name.
+4. Select the agent or Flow that answers the call, and then save the Endpoint.
+5. On the **Setup** tab, configure the target, the speech providers, and the phone numbers. For more information, see [Endpoint-specific settings](#endpoint-specific-settings).
+
+### Configure in your carrier or SIP trunk
+
+To route calls from an external carrier or SIP trunk, send the traffic to the **Endpoint URL** on the **Setup** tab.
+
+## Additional information
+
+<AccordionGroup>
+  <Accordion title="SIP headers">
+    The SIP headers, including any custom headers, are available within the [Input](/ai/agents/develop/ai-agent-memory/input) object.
+    You can find them in `input.data` or `input.data.payload.sip.headers`.
+  </Accordion>
+
+  <Accordion title="Call metadata">
+    Voice identifies information about the caller and adds it to the [Input](/ai/agents/develop/ai-agent-memory/input) object as `input.data.numberMetaData`.
+
+    | Parameter          | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Example            |
+    |--------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+    | number             | String  | The caller's phone number, including country code. The phone number has E.164 format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | +4921154591991     |
+    | country            | String  | The 2-character country code.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | DE                 |
+    | countryCallingCode | String  | The country calling code associated with the phone number.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 49                 |
+    | nationalNumber     | String  | The national number part of the phone number. It excludes the country code and any leading zero.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 21154591991        |
+    | ext                | String  | The extension number, if present. It consists of a numerical sequence, such as 123 or 568, used in PBX systems for streamlined internal phone communications within organizations. Users can dial these numbers for internal calls without needing to dial the full external phone number.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 123                |
+    | valid              | Boolean | The validity of the phone number.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | true               |
+    | type               | String  | The phone number's classification. Can be any of: <br/>- `PREMIUM_RATE`: a number associated with premium rate services, incurring higher charges. <br/>- `TOLL_FREE`: a toll-free number where the recipient pays for the call. <br/>- `SHARED_COST`: a number where call costs are shared between the caller and the recipient. <br/>- `VOIP`: a number associated with Voice over Internet Protocol (VoIP) services. <br/>- `PERSONAL_NUMBER`: a non-geographic number typically associated with individuals. <br/>- `PAGER`: a number associated with a pager device for receiving short messages. <br/>- `UAN`: a universal Access Number for nationwide business services. <br/>- `VOICEMAIL`: a number used for accessing voicemail services. <br/>- `FIXED_LINE_OR_MOBILE`: a fixed-line or mobile number. <br/>- `FIXED_LINE`: a traditional landline phone number. <br/>- `MOBILE`: a number associated with a mobile/cellular device. | FIXED_LINE         |
+    | uri                | String  | The URI associated with the phone number, if applicable.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | tel:+4921154591991 |
+
+    <Note>The data in `input.data.numberMetaData` is available as [Tokens](/ai/platform-features/tokens) inside Cognigy Text fields.</Note>
+
+  </Accordion>
+
+  <Accordion title="Handover">
+    You can use any [handover provider](/ai/escalate/handover-reference/overview) within the Voice integration.
+    Handover enables your voice agent to route calls to the contact center, ensuring efficient communication and swift access to human assistance.
+
+    In contrast to chatting, communication between actors during a voice call occurs using speech recognition technologies (text-to-speech and speech-to-text).
+    Using speech-to-text technology, the voice agent sends the conversation script from the end user to the human agent.
+    Once the script is received, the human agent can respond using text.
+    After that, the voice agent converts the human agent's message to speech using text-to-speech technology.
+    Finally, the converted message is sent to the end user.
+
+    **Configuration**
+
+    To enable handover, add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node in your voice Flow. This Node transfers the conversation from the voice agent to the human agent.
+
+    In this example, an end user seeks billing assistance and interacts with agents in a customer service system via text-to-speech and speech-to-text technologies.
+
+    **End User:** Calls the customer service line. Speaks to the voice agent. Example: `Hello, I need assistance with my billing inquiry`.<br/>
+    **Voice Agent:** Transcribes user's speech into text using speech-to-text technology. Example: `Hello, I need assistance with my billing inquiry`.<br/>
+    **Voice Agent:** Determines the need for human assistance. Initiates handover to the human agent via handover provider.<br/>
+    **Human Agent:** Receives a conversation script containing user's query.<br/>
+    **Human Agent:** Types response on interface. Example: `Hello, thank you for reaching out. Let me check your billing details`.<br/>
+    **Voice Agent:** Receives human agent's typed response. Converts the text message into speech using text-to-speech technology.<br/>
+    **End User:** Hears human agent's response spoken by voice agent. Example: `Hello, thank you for reaching out. Let me check your billing details`.<br/>
+    **End User / Human Agent:** The conversation between the end user and the human agent continues until the issue is resolved or the interaction is concluded.
+
+    **Multilingual support**
+
+    During a handover, you can use translation into other languages.
+    Use the translation feature to overcome language barriers between end users and support staff. This feature is particularly useful in situations where there are no support staff proficient in the end user's language, and urgent issue resolution is necessary.
+
+    For example, if a user communicates in German, the voice agent responds accordingly.
+    However, after transferring the call to the contact center, the dialogue is translated into English.
+    The human agent responds in English, and the response is translated into German for the end user via text-to-speech technology.
+    This method ensures seamless communication despite language differences.
+
+    Note that depending on the language and provider selected,
+    translations may experience delays while they reach the contact center.
+    If the speech-to-text fails to recognize speech for any reason, the message won't appear on the contact center's side.
+    Plan for such scenarios within your Flow and configure the voice agent's behavior accordingly.
+    This approach will ensure that the end user is aware that their message may not be delivered.
+    You can achieve this by adjusting timeout settings and error handling policies.
+
+    To set up a multilingual Flow for the handover use case, follow these steps:
+
+    1. In your voice Flow, navigate to the [Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) Node.
+    2. In the Node editor, go to the **Recognizer STT** section and activate the **Recognize Language** toggle.
+    3. From the **Alternative Language** list, select the additional languages, for example, `German` and `Italian`.
+    4. Below the Set Session Config Node, add a [Lookup](/ai/agents/develop/node-reference/logic/lookup) Node.
+    5. In the parent Lookup Node, select **CognigyScript** from the **Type** list and specify `input.data.payload.speech.language_code` in the **Operator** field.
+    6. In the case Nodes of the Lookup Node, specify the language codes, for example, `de-DE`, `it-IT`.
+    7. Below each case Node, add the second [Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) Nodes.
+    8. Configure the TTS and STT settings for each of the Set Session Config Nodes. This means that one Node should have German language selected, while the other should have Italian. These Nodes will manage the voice agent's communication in the end user's language. If you use an AWS voice, you can also select a **TTS Engine**. For more information, see [Parameter Details](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details).
+    9. Below each Set Session Config Node, add the [Set Translation](/ai/agents/develop/node-reference/other-nodes/set-translation) Nodes. These Nodes will perform translation of a text from the end user's language to the human agent's language.
+    10. In the Set Translation Node, activate the **Translation Enabled** toggle.
+    11. In the **User Input Language** field, specify the language of the user input, for example, `de`, `it`.
+    12. In the **Flow Language** field, specify the language to translate to, for example, `en`.
+    13. At the end of the Flow, place the [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) Node.
+
+    In this example, an end user seeks billing assistance and interacts with actors in a customer service system via text-to-speech and speech-to-text technologies. The end user and human agent speak different languages, but this doesn't hinder their understanding, as the voice agent translates their speech into the required language for each party.
+
+    **End User:** Calls the customer service line. Speaks to the voice agent. Example: `Hallo, ich brauche Hilfe bei meiner Rechnungsanfrage`.<br/>
+    **Voice Agent:** Determines the language and answers using the same language. Example: `Danke für die Informationen. Ich werde Sie an einen menschlichen Agenten weiterleiten, der Ihnen weiterhelfen kann`.<br/>
+    **Voice Agent:** Transcribes user's speech into text using speech-to-text technology. Example: `Hello, I need assistance with my billing inquiry`.<br/>
+    **Voice Agent:** Determines the need for human assistance and initiates the handover to the human agent via the handover provider.<br/>
+    **Human Agent:** Receives a conversation script containing user's query.<br/>
+    **Human Agent:** Types response on interface. Example: `I've found the issue. It seems there was an error in the billing statement. I'll correct it for you`.<br/>
+    **Voice Agent:** Receives human agent's typed response. Converts the text message into speech using text-to-speech technology.<br/>
+    **End User:** Hears human agent's response spoken by voice agent. Example: `Ich habe das Problem gefunden. Es scheint, dass es einen Fehler in der Rechnungsstellung gab. Ich werde es für dich korrigieren`.<br/>
+    **End User/Human Agent:** The conversation between the end user and the human agent continues until the issue is resolved or the interaction is concluded.
+
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Voice](/voice-gateway/index)
+- [Voice Nodes](/ai/agents/develop/node-reference/voice/voice-gateway/overview)
+- [Endpoints Overview](/ai/agents/deploy/endpoints/overview)
+- [Click To Call](/click-to-call/overview)
+- [Voice Events](/voice-gateway/references/events/overview)

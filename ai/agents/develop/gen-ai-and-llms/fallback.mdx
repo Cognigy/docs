@@ -1,0 +1,68 @@
+---
+title: LLM fallback
+keywords: ['llms', 'llm fallback']
+seo:
+  metatags:
+    description: >-
+      LLM Fallback is a mechanism designed to maintain continuous service when a
+      main model fails to respond or encounters an error.
+---
+
+
+_LLM Fallback_ is a mechanism designed to maintain continuous service when a main model fails to respond or encounters an error. 
+In such cases, the system automatically activates an alternative model to handle the request,
+minimizing disruptions for agents during [design](/ai/agents/develop/flow-agents/design-time-and-run-time-features#design-time-generative-ai-features) and [run-time](/ai/agents/develop/flow-agents/design-time-and-run-time-features#run-time-generative-ai-features) operations.
+The fallback model is selected for its similar capabilities to the main model, providing redundancy and improving the reliability of the connection.
+
+Using a fallback model provides the following benefits:
+
+- **Improved user experience**. Automatically switching to a fallback model ensures uninterrupted service, minimizing disruptions when the main model encounters issues.
+- **Quick recovery**. The fallback mechanism allows the system to recover quickly during failures, such as model outages or updates. This approach prevents extended delays and ensures operations resume smoothly without significant downtime.
+- **Greater flexibility**. Fallback models can be deployed in different regions or configured to meet varying resource requirements, providing adaptability. For example, they can serve as regional backups or handle workloads during high-demand periods.
+
+Note that the fallback model serves as a temporary replacement for the main model.
+If the system switches to the fallback model, it indicates that the main model requires attention.
+This model failure can occur if the credentials are outdated or incorrectly modified, or if the LLM provider doesn't respond.
+
+Using a fallback model complements the [default retry mechanism](/ai/agents/develop/gen-ai-and-llms/llms#retry-mechanism).
+If the main model fails to respond, the system first uses the default retry mechanism. If all retry attempts are exhausted, it then switches to the fallback model.
+
+## Restrictions
+
+- Creating fallbacks for embedding models isn't supported.
+- You can add only one fallback to a main model.
+
+## Create fallback models
+
+Creating a fallback model works the same way as creating a main model.
+If your project has only one model, you can add another by choosing one [from the same LLM provider or another provider](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) with similar capabilities.
+
+Some providers, such as [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=python-secure%2Cglobal-standard%2Cstandard-chat-completions) and [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html), allow you to use the same model across different regions.  
+For example, if you're using Azure OpenAI `gpt-4o` in the West US region as your main model, you can also use `gpt-4o` as a fallback model in the Sweden Central region.
+
+## Add fallback models
+
+To add a fallback model, follow these steps:
+
+1. In the navigation menu of the project, go to **Manage > AI & Voice Providers > Language Models**.
+2. In the **Models** view, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) in the row of the model to which you want to add a fallback, and select **Edit**.
+3. Activate the **Fallback model** toggle.
+4. Select a model from the list. If no model is available, [create a new one](#create-fallback-models).
+5. Configure the following fields:
+    - **Number of failed requests**. Specify the number of failed requests to the main model before the fallback model is triggered. You can specify up to five attempts. The default value is `1`.
+    - **Duration in minutes of active fallback**. Define how long the system should use the fallback model instead of the main model. After the specified time, the fallback will deactivate, and the main model will resume. The duration can be up to 30 minutes. The default value is `30`.
+    - **Email notifications**. Add up to five email addresses to receive notifications when the fallback model is triggered. Enter each email in a separate input field using the format `example@domain.com`.
+6. Click **Save**.
+
+## Verify fallback usage
+
+For agents, you can check whether a fallback model answered a call in the [tracing](/ai/agents/test/interaction-panel/tracing#llm-call-details) of the [Interaction Panel](/ai/agents/test/interaction-panel/overview). An LLM call span served by a fallback model shows a warning ring around its status dot, and if the call itself triggered the failover, its details show which model was configured as the primary, which model answered, and why the primary wasn't used.
+
+## More information
+
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [LLM call details for flows](/ai/agents/test/interaction-panel/chat#llm-call-details-for-flows)
+- [Tracing](/ai/agents/test/interaction-panel/tracing)

@@ -1,0 +1,219 @@
+---
+title: "Speech and telephony"
+sidebarTitle: "Speech and telephony"
+keywords: ['speech provider', 'tts', 'stt', 'telephony', 'carrier', 'phone number', 'sip', 'ai & voice providers', 'call recording', 'recording bucket']
+seo:
+  metatags:
+    description: "Speech and telephony settings define the speech providers, telephony connections, and call recording buckets that voice agents need to test and deploy phone calls."
+---
+
+
+_Speech and telephony_ settings define the speech providers and telephony connections that voice agents use. Voice agents need both:
+
+- Speech converts text to speech (TTS) and speech to text (STT). You need it to test voice calls and to deploy them.
+- Telephony allows you to deploy your agents by connecting them to the phone network.
+
+To configure both, select a project on the Main page, then go to **Manage > AI & Voice Providers**. The **Speech Providers** and **Telephony** tabs are available only if voice features are enabled for your organization.
+
+## Prerequisites
+
+- Project settings permissions:
+  - Read access to view.
+  - Create access to add.
+  - Update access to edit.
+  - Delete access to delete.
+
+## Speech providers
+
+A speech provider is a connection to a TTS or STT service. Agents and endpoints select speech providers from this list.
+
+If your environment is integrated with NiCE, speech providers are preconfigured. The list shows a provider with the **Included** tag.
+
+You don't need to configure this provider. You can't edit, clone, or delete it. If your environment isn't integrated with NiCE, you must add a speech provider.
+
+### Provider list
+
+The list shows these columns:
+
+| Column | Description |
+|--------|-------------|
+| **Provider** | Shows the name of the speech provider. |
+| **Speech-to-text** | Shows **Configured** if the provider is used for STT. |
+| **Text-to-speech** | Shows **Configured** if the provider is used for TTS. |
+| **Last used** | Shows when a call last used the provider, or **Never used**. |
+| **Status** | Shows **Ok**, **Untested**, or **Error**. |
+| **Tags** | Shows **Default**, **Default STT**, **Default TTS**, or **Included**. |
+
+To find a provider, enter a name in **Search providers**. To filter the list, select **Default**, **Included**, or **Custom** in **Tags**.
+
+For each provider, you can open the actions menu and select:
+
+- **Edit**
+- **Make default**. For a provider that is used for both STT and TTS, select **Default for both**, **Default STT**, or **Default TTS**. For a provider that is used for only one of them, select **Make default STT** or **Make default TTS**.
+- **Copy reference ID**
+- **Clone**
+- **Test connection**
+- **Delete**. Deleting a speech provider is permanent.
+
+### Default speech providers
+
+The project has a default STT provider and a default TTS provider. When you create an agent, Cognigy selects them for its voice settings.
+
+### Add a speech provider
+
+1. Go to **Manage > AI & Voice Providers > Speech Providers**.
+2. Click **Add speech provider**.
+3. From the **Provider** list, select a provider.
+4. Enter a **Name**. Cognigy suggests the provider name. If you already use that name, Cognigy adds a number, for example, `Deepgram (2)`.
+5. Under **Use this provider for**, select **Both**, **STT only**, or **TTS only**. Some providers support only one of these.
+6. Enter the provider settings. For more information, see [Provider settings](#provider-settings).
+7. Click **Add provider**.
+
+### Edit a speech provider
+
+To edit a provider, click **Edit** in its actions menu. Leave a secret field empty to keep the existing credential. When you finish, click **Save changes**.
+
+### Provider settings
+
+| Provider | Settings |
+|----------|----------|
+| **Microsoft Azure Speech Services** | Select **Use hosted Azure service** and enter the **Region** and **API key**. To use a container instead, select **Use Azure Docker container (on-prem)** and enter the **Container URL for TTS** and **Container URL for STT**. For a container, you can add a **Subscription key (if required)**. To use a custom voice for TTS, turn on **Use a custom voice for TTS** and enter the **Custom voice deployment ID**. To use a custom speech model for STT, turn on **Use a custom speech model for STT** and enter the **Custom speech endpoint ID**. |
+| **Google Speech Services** | Upload the **Service key**, a JSON file of your Google Cloud service account key. |
+| **Deepgram** | Enter the **API key** and select the **Region**. For STT, you can turn on **Use on-prem Deepgram container**, enter the **Container URI**, and select whether to **Use TLS**. **Use TLS** is on by default. You can opt in to the Deepgram Model Improvement Program. |
+| **Deepgram Flux** (STT only) | Enter the **API key** and select the **Region**. You can opt in to the Deepgram Model Improvement Program. |
+| **ElevenLabs** | Enter the **API key**. Optionally, change the **Text-to-speech model** and **Speech-to-text model**. To pass more settings, turn on **Send extra options** and enter them in **Options (JSON)**. |
+| **OpenAI** | Enter the **API key**. Select the **TTS model** and **STT model**. |
+| **Speechmatics** | Enter the **API key** and select the **Region**. |
+| **Amazon Polly** | Enter the **Access key ID** and **Secret access key**. |
+| **Nuance** | Enter the **Client ID** and **Secret**. To use on-premises services, turn on **Use on-prem TTS** and enter the **TTS URI**, or turn on **Use on-prem STT** and enter the **STT URI**. |
+| **Custom** | Enter the **Vendor Name** and **Authentication Token**. Enter the **Custom STT URL** and **Custom TTS URL** for the capabilities that you select. |
+
+Some providers also let you add **Use custom voices** and **Advanced parameters**. For a custom voice, enter an **Assigned name**, **Reported usage**, and **Model**, and click **Add voice**. For an advanced parameter, enter a **Key** and **Value**, and select a **Location**: **Body** or **Query**.
+
+A URI field must contain a valid address, for example, `https://host:port`. Cognigy validates the address when you leave the field.
+
+## Telephony
+
+Telephony connects your voice agents to the phone network. Telephony has the tabs **Carriers**, **Phone numbers**, and, if call recording is enabled, **Recordings**. A call reaches your agent in this order: carrier, phone number, endpoint, agent.
+
+### Carriers
+
+A carrier is the Session Initiation Protocol (SIP) trunk that routes your calls. Add a carrier before you add phone numbers. Each phone number uses a carrier.
+
+To add a carrier:
+
+1. Go to **Manage > AI & Voice Providers > Telephony**.
+2. Go to **Carriers** and click **Add carrier**.
+3. Enter a **Carrier name**.
+4. *(Optional)* In **Select a predefined carrier**, select a carrier. Cognigy fills in the SIP gateways.
+5. Configure the [carrier settings](#carrier-settings).
+6. Add at least one SIP gateway and configure its [settings](#sip-gateway-settings).
+7. Click **Save carrier**. When you edit a carrier, click **Save changes**.
+
+#### Carrier settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Active** | Turns the carrier on or off. | On |
+| **E.164 syntax** | Adds a leading `+` to origination attempts. | Off |
+| **Authenticate outbound calls** | Turns on authentication for outbound calls. Enter a **Username** and **Password**. While **Register with this carrier** is on, this setting is hidden because outbound challenges use the registration credentials. | Off |
+| **Register with this carrier** | Registers your system with the carrier before the carrier accepts calls. Enter the **SIP realm**. Optionally, under **Advanced**, change the **SIP from user** and **SIP from domain**. | Off |
+| **Use public IP in contact** | Uses your public IP address in the SIP contact header instead of your private address. Use this setting for carriers behind network address translation (NAT). | Off |
+| **Tech prefix** | Adds a **Tech prefix value** to outbound calls. | Off |
+| **SIP diversion header** | Adds a **Diversion header value**, a phone number or SIP URI. | Off |
+
+Ask your carrier to allow SIP signaling from the Voice IP addresses. To see the addresses, expand **Have your carriers whitelist our SIP signaling IPs**.
+
+#### SIP gateway settings
+
+For each SIP gateway, configure these settings:
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Address** | Sets the IP address or fully qualified domain name (FQDN) of the gateway. Use an FQDN only for outbound-only gateways. The address and port combination must be unique. | None |
+| **Port** | Sets the port number, from 1 to 65535. | 5060 |
+| **Mask** | Sets the network mask, from 0 to 32. | 32 |
+| **Proto** | Sets the protocol to **UDP**, **TCP**, **TLS**, or **TLS/SRTP**. | Not set |
+| **Active** | Turns the gateway on or off. | On |
+| **Inbound** | Allows inbound calls. | On |
+| **Outbound** | Allows outbound calls. | Off |
+
+Turn on **Inbound**, **Outbound**, or both. If **Outbound** is on and you select a protocol, click **Advanced settings** to see more options. The options that appear depend on the protocol:
+
+| Option | Description |
+|--------|-------------|
+| **Send OPTIONS ping** | Available for all protocols. Periodically sends a SIP OPTIONS request to check that the gateway is reachable. |
+| **Use sips scheme** | Available for **TLS** and **TLS/SRTP**. Sends the SIP Request-URI and contact header with the `sips:` scheme, so the call stays on TLS end-to-end. |
+| **Pad crypto** | Available for **TLS/SRTP**. Pads the SRTP crypto key so that it matches what some carriers expect over TLS/SRTP. |
+
+### Phone numbers
+
+A phone number routes incoming calls to a carrier.
+
+1. Go to **Manage > AI & Voice Providers > Telephony**.
+2. Go to **Phone numbers** and click **Add phone number**.
+3. *(Optional)* Enter a **Name**.
+4. Enter the **Phone number**.
+5. Select a **Carrier**.
+6. Save the phone number.
+
+To turn a number off, edit it and turn off **Active**. After you create the phone number, you can't change the number or the carrier. If the number is already in use, Cognigy shows the error `The number is already provisioned.`
+
+### Connect a phone number to an agent
+
+Assign a phone number to an endpoint. A phone number is unique to one endpoint. The endpoint targets the agent.
+
+1. Open the endpoint and go to **Setup**.
+2. In the **Number configuration** card, click **Add number**.
+3. Select one or more phone numbers.
+
+To use a number that another endpoint uses, click **Reassign** next to it. To add or manage numbers, click **Add a number in Telephony settings** or **Manage numbers in AI & Voice Providers**.
+
+### Recordings
+
+A recording bucket is a storage bucket that you own. Cognigy saves the call recordings of your project in it. **Recordings** is available only if call recording is enabled for your organization.
+
+The list shows these columns:
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Shows the name of the recording bucket. |
+| **Audio format** | Shows the format of the recordings. |
+| **Status** | Shows **Enabled** or **Disabled**. |
+
+To find a bucket, enter a name in **Search buckets**. For each bucket, you can open the actions menu to test the connection, edit the bucket, or delete it. If the last connection test failed, the list shows when it failed.
+
+#### Add a recording bucket
+
+1. Go to **Manage > AI & Voice Providers > Telephony**.
+2. Go to **Recordings** and click **Add recording bucket**.
+3. Enter a **Name**. The name must be unique in the project.
+4. To record calls to this bucket, select **Enable call recording**.
+5. Select an **Audio format**: `mp3` or `wav`.
+6. Select a **Bucket vendor**. You can't change it later. To use another vendor, add a new bucket.
+7. Under **Credentials**, select a Connection that holds the credentials of the bucket, or click **Create a Connection**.
+8. Enter the other settings that the vendor needs, such as the bucket name.
+9. *(Optional)* If the vendor supports tags, click **Add tag** and enter a **Key** and **Value**.
+10. *(Optional)* Click **Test** to check the connection.
+11. Click **Add bucket**. When you edit a bucket, click **Save**.
+
+When you edit a bucket, leave a secret field empty to keep its saved value.
+
+If the connection test fails when you add the bucket, Cognigy still saves the bucket. Click **Test connection** in the actions menu to see the reason.
+
+#### Delete a recording bucket
+
+Deleting a bucket removes it from the project. Recordings that are already stored in the bucket aren't affected. You can't delete a bucket that endpoints use. First, turn off call recording on those endpoints.
+
+#### Record calls on an endpoint
+
+An endpoint records calls to the bucket that you select for it.
+
+1. Open the endpoint and go to **Advanced**.
+2. In the **Call recording** section, turn on call recording.
+3. Select a **Recording bucket**. If the list is empty, click **Open AI & Voice Providers** and add a bucket first.
+
+## More information
+
+- [Voice](/ai/agents/develop/voice-configuration)
+- [Project settings](/ai/administer/access/project-settings)

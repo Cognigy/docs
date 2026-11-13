@@ -1,0 +1,110 @@
+---
+title: "Getting started with Agent Copilot for chat"
+description: "Get started with Agent Copilot for chat: configure your first workspace with widgets that suggest next actions to human agents in your contact center."
+sidebarTitle: "Chat"
+keywords: ['copilot chat setup', 'chat workspace', 'next action widget', 'copilot configuration']
+---
+
+import InitMessage from "/snippets/agent-copilot/init-message.mdx";
+
+In this guide, you'll learn how to configure your first embedded Agent Copilot workspace for the chat agent. This configuration provides an Agent Copilot workspace that includes two widgets that suggest next actions to the human agent.
+
+## Prerequisites
+
+- Configure a contact center platform that you can integrate with a [handover provider](/ai/escalate/handover-reference/overview). For example, for [Live Agent](/ai/escalate/handover-reference/live-agent), you need to have an [Inbox](/live-agent/settings/inboxes) with the [Project ID and the Webhook URL set up](/live-agent/settings/inboxes#edit-inboxes) and, if necessary, the **Enable Agent Copilot Workspace** option activated.
+- Add a [compatible LLM](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) for the LLM Prompt and Copilot: Sentiment Tile nodes and configure it in **Manage > AI & Voice Providers > Language Models**. For more information, see [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms).
+
+## Setup process
+
+The setup process includes the following steps:
+
+1. Create a handover provider. The handover provider connects the agent and Agent Copilot to your contact center.
+2. Create a handover flow. The handover flow controls the interaction with the agent and the handover to a human agent.
+3. Create an Agent Copilot flow. The Agent Copilot flow controls the Agent Copilot workspace and the individual widgets in it.
+4. Test the Agent Copilot workspace through a Webchat v3 Endpoint.
+
+## Set up Agent Copilot for chat
+
+<Steps>
+  <Step title="Create a handover provider">
+    In **Deploy > Handover Providers**, create a [handover provider](/ai/escalate/handovers) according to your contact center platform.
+  </Step>
+  <Step title="Create a handover flow">
+    1. In **Design > Flows**, create a [flow](/ai/agents/develop/projects-and-flows/overview) and give it a clear name, for example, `Handover`.
+    2. In the flow editor, add a [Say](/ai/agents/develop/node-reference/basic/say) node and set its **Text** parameter to `Hi, let's hand you over to the human agents.`.
+    3. Add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) node and configure the following:
+        - **Handover provider** — set to the previously [created handover provider](#create-a-handover-provider), and [configure it accordingly](/ai/escalate/handover-reference/overview). For example, if you use [Live Agent](/ai/escalate/handover-reference/live-agent), you need to set **Inbox ID** in the **Live Agent settings** section.
+        - **Handover acceptance message** — enter `Transferring to human agents...`.
+  </Step>
+  <Step title="Create an Agent Copilot flow">
+    1. In **Design > Flows**, create a flow and give it a clear name, for example, `Agent Copilot`.
+    2. Add a [Copilot: Set Grid](/ai/agents/develop/node-reference/agent-copilot/set-grid) node and configure the grid as follows:
+
+    ```json
+    {
+      "grid": {
+        "columns": 2,
+        "rows": 2,
+        "gap": 5
+      },
+      "tiles": {
+        "next-best-action": {
+          "x": 1,
+          "y": 1,
+          "rows": 1,
+          "columns": 1
+        },
+        "sentiment": {
+          "x": 2,
+          "y": 1,
+          "rows": 1,
+          "columns": 1
+        }
+      }
+    }
+    ```
+    3. After the Copilot: Set Grid node, add an [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) node. Configure it to generate the next best response for the agent based on the user's latest input and to store the result in the Input object:
+      - **System Prompt** — enter the following:
+       ```txt
+       Based on the user's last message, suggest the most helpful next response for a human agent.
+       ```
+      - In the **Storage & Streaming Options** section, configure the following:
+        - **How to handle the result** — set to **Store in Input**.
+        - **Input Key to store Result** — set to `input.promptResult`.
+    4. Add the following Agent Copilot nodes after the LLM Prompt node and configure them as follows:
+        - [Copilot: Next Action Tile](/ai/agents/develop/node-reference/agent-copilot/next-action-tile) node:
+          - **Tile ID** — `next-best-action`
+          - **Text**:
+          ```txt
+          {{input.promptResult.detailedResult.choices[0].message.content}}
+          ```
+          This expression dynamically retrieves the LLM-generated suggestion for the tile.
+          - *(Optional)* In the **Settings** section, set **Label** to `Next Best Action`.
+        - [Copilot: Sentiment Tile](/ai/agents/develop/node-reference/agent-copilot/sentiment-tile) node:
+          - **Tile ID** — `sentiment`.
+          - *(Optional)* In the **Settings** section, set **Label** to `Customer Sentiment`.
+
+  </Step>
+  <Step title="Test Agent Copilot">
+    To test Agent Copilot, create a Webchat v3 Endpoint:
+
+    1. In **Deploy > Endpoints**, click **+ New endpoint**, select **Webchat v3**, and click **Create endpoint**. For more information, see [Webchat v3: endpoint configuration](/webchat/v3/configuration).
+    2. In the Endpoint settings, configure the following:
+        - On the **Setup** tab, set **Target type** to **Flow** and select the previously created handover flow, for example, `Handover`.
+        - On the **Advanced** tab, in the **Copilot** section, set **Copilot type** to **Workspace** and **Copilot Flow** to the previously created Agent Copilot flow, for example, `Agent Copilot`.
+    3. Make sure **Activate endpoint** is activated and click **Save**.
+
+    Then, to simulate a user interaction and test Agent Copilot, follow these steps:
+
+    1. In the live preview section of the Webchat v3 Endpoint settings you created, click the **Open demo in new tab** icon. Demo Webchat opens.
+    2. Click **Start conversation** and send the agent a message, for example, `Hello, I need help with my order`. You should receive a message with the text you set in the Say node followed by the text from the Handover to Human Agent node.
+        <InitMessage />
+    3. Go to your contact center platform and search for the session with the message you sent. The Agent Copilot workspace displays two widgets that suggest next actions.
+  </Step>
+</Steps>
+
+## More information
+
+- [Agent Copilot](/agent-copilot/overview)
+- [Agent Copilot Nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [Getting started with Agent Copilot for voice](/agent-copilot/getting-started/voice)

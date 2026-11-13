@@ -1,0 +1,29 @@
+---
+title: Enable user inactivity
+keywords: ['enable user inactivity', 'user inactivity', 'inactivity detection', 'webchat v3', 'timeout', 'silent user']
+seo:
+  metatags:
+    description: The Enable User Inactivity Node starts watching for user inactivity in a Webchat v3 session and injects an input into the Flow after a timeout.
+---
+
+
+## Description
+
+The Enable User Inactivity Node starts checking for user inactivity in the current Webchat v3 session. When the user stays silent for longer than the timeout, the text and data configured in the [Webchat Endpoint](/webchat/v3/configuration#user-inactivity) are injected into the Flow.
+
+To disable the user inactivity check, use the [Disable User Inactivity node](/ai/agents/develop/node-reference/basic/disable-user-inactivity).
+
+## Prerequisites
+
+- In the Webchat v3 Endpoint settings, set **Flow** to the flow containing this Node and activate **Activate user inactivity** in the **User inactivity** section on the **Behavior** tab. While this setting is deactivated, the Node has no effect.
+
+## Parameters
+
+| Parameter | Type   | Description                                                                                                                                                                                                                                                                                                                                              |
+|-----------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Timeout   | Number | Defines how long to wait for a user message, in seconds, before the user is considered inactive. The timer starts after the AI Agent message and is reset when the user sends a message. The default value is `30`. The minimum value is `3`, and the maximum value is `259200` (72 hours). |
+
+## More information
+
+- [Disable User Inactivity](/ai/agents/develop/node-reference/basic/disable-user-inactivity)
+- [Webchat v3: Endpoint Configuration](/webchat/v3/configuration#user-inactivity)

@@ -1,0 +1,161 @@
+---
+title: "Grid example: real-time translation"
+description: "Configure Agent Copilot for real-time translation in voice-to-chat conversations with multilingual support."
+sidebarTitle: "Real-time translation"
+slug: "real-time-translation"
+keywords: ['real-time translation', 'agent copilot', 'multilingual support']
+---
+
+This guide shows how to configure Agent Copilot for real-time translation in a voice-to-chat application. In this example, the agent receives calls, recognizes the language of the caller, and hands them over to human agents. The human agent can chat and the user receives voice responses in their own language, both in their respective languages.
+
+This guide includes configuring the following:
+
+- Agent flow — configures the agent to receive calls, recognize the caller's language, and hand them over to human agents.
+- Agent Copilot flow — configures the Agent Copilot workspace and the real-time translation widget.
+
+For a comprehensive guide to set up a voice-to-chat application with Agent Copilot, see [Getting started with Agent Copilot for voice-to-chat](/agent-copilot/getting-started/voice-to-chat).
+
+## Prerequisites
+
+- Access to [Voice](/voice-gateway/index).
+- Configure a speech provider in [Cognigy](/ai/administer/access/speech-and-telephony#add-a-speech-provider).
+- Configure settings:
+  - The [phone number](/ai/administer/access/speech-and-telephony#phone-numbers) you use in your contact center.
+  - A Voice Application.
+  - A [speech provider](/ai/administer/access/speech-and-telephony#speech-providers).
+- Create a [Voice Endpoint](/ai/agents/deploy/endpoint-reference/voice-gateway).
+- Create a [handover provider](/ai/escalate/handover-reference/overview) that integrates with your contact center platform.
+- Configure an LLM in **Manage > AI & Voice Providers > Language Models** that supports the [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) node.
+
+## Configure real-time translation for Agent Copilot
+
+### Configure the agent flow
+
+<Steps>
+  <Step title="Create a flow and add a say node for a greeting">
+    1. In **Design > Flows**, create a flow and give it a name, for example, `Real-Time Translation Agent Flow`.
+    2. Add a Say node and configure the following settings:
+        - **Text** — enter a greeting message, for example, `Hello! Welcome to our customer service line!`. Save the node.
+  </Step>
+  <Step title="Add a question node for language recognition">
+    1. Below the Say node, add a Question node and configure the following settings:
+        1. **Question Type** — select **Text**.
+        2. Click ![add channel](/_assets/icons/blue/plus-transparent.svg) and select **Voice** from the list.
+        3. **Text** — enter `What is your preferred language?`.
+        4. Activate **Set Activity Parameters**.
+        5. In the **Recognizer (STT)** section, select your speech provider from the **STT Vendor** list.
+        6. **STT Language** — select the flow language, for example, English (United States).
+        7. Activate **Recognize Language** and select the languages you want to recognize, for example, `German (Germany)`, `Portuguese (Brazil)`, from the **Alternative Language 1** and **Alternative Language 2** lists. Save the node.
+  </Step>
+  <Step title="Add a lookup node for language-specific voice output">
+    1. Below the Question node, add a Lookup node and configure the following settings:
+        - **Type** — select **CognigyScript**.
+        - **Operator** — enter the following:
+        ```javascript
+        input.data.payload?.speech?.language_code
+        ```
+        This value verifies the language code for language recognition. Save the node.
+    2. Set the Case nodes as follows:
+        - Case node 1:
+          - **Value** — enter `de-DE`. For language recognition, use the full [BCP-47 format](https://datatracker.ietf.org/doc/html/rfc5646#appendix-A).
+        - Case node 2:
+          - **Value** — enter `pt-PT`. For language recognition, use the full [BCP-47 format](https://datatracker.ietf.org/doc/html/rfc5646#appendix-A).
+    3. Below each Case node, add a Set Translation node and configure as follows:
+        1. Set Translation node for German:
+            - **User Input Language** — enter `de`. For translation, use the [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
+            - **Flow Language** — enter `en`.
+            - _(Optional)_ In the **Settings** section, enter a name to distinguish the node in the **Label** field, for example, `EN/DE`. Save the node.
+        2. Set Translation node for Portuguese:
+            - **User Input Language** — enter `pt`. For translation, use the [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
+            - **Flow Language** — enter `en`.
+            - _(Optional)_ In the **Settings** section, enter a name to distinguish the node in the **Label** field, for example, `EN/PTBR`. Save the node.
+    4. Below each Set Translation node, add a [Set Session Config](/ai/agents/develop/node-reference/voice/voice-gateway/parameter-details) node and configure the **Synthesizer (TTS)** settings as follows:
+        1. Set Session Config node for German:
+            - **TTS Vendor** — select your speech provider.
+            - **TTS Language** — select **German**.
+            - **TTS Voice** — select a voice for your agent to use when speaking in German.
+        2. Set Session Config node for Portuguese:
+            - **TTS Vendor** — select your speech provider.
+            - **TTS Language** — select **Portuguese** from the **TTS Language** list.
+            - **TTS Voice** — select a voice for your agent to use when speaking in Portuguese.
+  </Step>
+  <Step title="(Optional) Add an LLM prompt node for a human-like handover message">
+    1. Below the Lookup node, add an LLM Prompt node and configure the **System Prompt** field as:
+    ````text
+    Based on the user's message, reply kindly and advise you are handing over to a human agent.
+    ````
+    Save the node.
+
+  </Step>
+  <Step title="Configure the handover">
+    Below the Lookup or the LLM Prompt node, add a Handover to Human Agent node and configure the following:
+      - **Handover provider** — select your [handover provider](/ai/escalate/handover-reference/overview) from the list. Depending on the handover provider, you need to configure additional settings.
+  </Step>
+</Steps>
+
+### Configure the Agent Copilot flow
+
+<Steps>
+  <Step title="Configure the Agent Copilot grid">
+    1. In **Design > Flows**, create a flow and give it a clear name, for example, `Real-Time Translation Copilot Flow`.
+    2. Add a [Copilot: Set Grid](/ai/agents/develop/node-reference/agent-copilot/set-grid) node and set the **Copilot Grid Configuration** as follows:
+
+      <Accordion title="Agent Copilot grid JSON">
+        ```json
+        {
+          "grid": {
+            "columns": 2,
+            "rows": 2,
+            "gap": 5
+          },
+          "tiles": {
+            "next-action": {
+              "x": 1,
+              "y": 1,
+              "rows": 1,
+              "columns": 1
+            },
+            "transcript": {
+              "x": 1,
+              "y": 2,
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        }
+        ```
+      </Accordion>
+
+    3. Below the Copilot: Set Grid node, add an [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt) node and configure it to generate the next best response for the agent based on the user's latest input and to store the result in the Input object:
+
+        - **System Prompt** — enter the following:
+          ```txt
+          Based on the user's last message, suggest the most helpful next response for a human agent.
+          ```
+        - In the **Storage & Streaming Options** section, configure the following:
+          - **How to handle the result** — set to **Store in Input**.
+          - **Input Key to store Result** — set to `input.promptResult`.
+
+    4. Add a [Copilot: Next Action Tile](/ai/agents/develop/node-reference/agent-copilot/next-action-tile) node after the LLM Prompt node and configure the node as follows:
+          - **Tile ID**: `next-action`
+          - **Text**:
+          ```txt
+          {{input.promptResult.detailedResult.choices[0].message.content}}
+          ```
+    5. Add a [Copilot: Transcript Tile](/ai/agents/develop/node-reference/agent-copilot/transcript-tile) node and set **Tile ID** to `transcript`.
+  </Step>
+  <Step title="Create a Voice Copilot endpoint">
+    1. In **Deploy > Endpoints**, click **+ New endpoint**, select **Voice Copilot**, and click **Create endpoint**.
+    2. On the **Setup** tab, configure the following:
+        - **Endpoint name** — enter a unique name, for example, `Real-Time Translation Copilot Endpoint`.
+        - **Target type** — select **Flow**.
+        - **Flow** — select the Agent Copilot flow you created from the list.
+  </Step>
+</Steps>
+
+With this grid, the Agent Copilot workspace displays a widget with the conversation transcript and a widget with an LLM-generated next action that is translated to the user's language when sent to the user. You can test the Real-Time Translation with [Agent Copilot for voice-to-chat applications](/agent-copilot/getting-started/voice-to-chat).
+
+## More information
+
+- [Getting started with Agent Copilot for voice-to-chat](/agent-copilot/getting-started/voice-to-chat)
+- [Set Translation](/ai/agents/develop/node-reference/other-nodes/set-translation)

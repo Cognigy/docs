@@ -1,0 +1,98 @@
+---
+title: Activate Knowledge AI
+keywords: ['knowledge ai', 'activate', 'license', 'knowledge chunks quota', 'feature flag']
+description: "Apply for a license, set quotas, and activate Knowledge AI."
+---
+
+import AiAdministerAccessKnowledgeAiMetrics from '/snippets/ai/administer/access/knowledge-ai-metrics.mdx'
+
+
+To activate Knowledge AI, first complete the following steps:
+
+1. [Apply for a license](#apply-for-a-license)
+2. [Set quotas](#set-quotas)
+3. [Activate the feature flag](#activate-the-feature-flag)
+4. [Familiarize yourself with Knowledge AI metrics](#view-metrics)
+
+## Apply for a license
+
+You need to obtain a license from Cognigy to use Knowledge AI. The license allows you to use Knowledge AI with your installation and allocate knowledge chunk quotas to your organizations. If you exceed your quotas, you can't create new Knowledge AI resources or edit existing ones.
+
+A user with `admin` rights needs to add the license to your installation. If you're using a Cognigy SaaS installation with version 4.78 or later, contact [Cognigy technical support](/help/get-help) to add a quota for your organization. For on-premises installations, contact Customer Success Management or Account Executives at Cognigy.
+
+## Set quotas
+
+After adding the license, you need to set your knowledge chunk quotas based on the number of quotas you purchased within your license. You can set quotas for only one organization or distribute them among multiple organizations.
+
+Only a user with `admin` rights for the Management UI can set quotas via the Management UI or the Cognigy API. For Cognigy SaaS installations, contact [Cognigy technical support](/help/get-help) to configure quotas. For on-premises installations, contact Customer Success Management or Account Executives at Cognigy.
+
+To set quotas, do the following:
+
+<Tabs>
+  <Tab title="Management UI">
+    To set quotas in [Management UI](https://management-ui-v4.cognigy.ai/), select an organization on the **Organisations** page. Then, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Change Organisation Quotas** in the upper-right corner and enter the value in the **Max knowledge chunks** field.
+  </Tab>
+  <Tab title="API">
+    To set quotas via the [Cognigy API](https://api-trial.cognigy.ai/openapi), follow these steps:
+
+    1. Under **AUTHENTICATION > HTTP Basic**, enter your Management UI credentials, then click **SET**.
+    2. Create an organization and set its quota or set the quota for your organization:
+
+    <AccordionGroup>
+      <Accordion title="Create organization and set quota">
+        Use the [POST /management/v2.0/organisations](/api-reference/management-ui/create-an-organization) request.
+        Send the request with a JSON body. In the JSON body, enter a unique name for the new organization and the maximum number of knowledge chunks in the `quotaMaxKnowledgeChunks` parameter.
+
+        ```bash
+        POST /management/v2.0/organisations
+        Content-Type: application/json
+
+        {
+          "name": "My Organization",
+          "quotaMaxKnowledgeChunks": 1000
+        }
+        ```
+        If the response is successful, the server returns a `200` status code with the `organisationId` and the set quota.
+      </Accordion>
+      <Accordion title="Set quota for organization">
+        Use the [PATCH /management/v2.0/organisations/{organisationId}](/api-reference/management-ui/update-an-organization) request.
+        Include the `organisationId` parameter in the path and a JSON body. In the JSON body, specify the maximum number of knowledge chunks in the `quotaMaxKnowledgeChunks` parameter. Find `organisationId` in the **ID** column under **Management UI > Organisations**.
+
+        ```bash
+        PATCH /management/v2.0/organisations/{organisationId}
+        Content-Type: application/json
+
+        {
+          "quotaMaxKnowledgeChunks": 1000
+        }
+        ```
+
+        If the response is successful, the server returns a `200` status code with an empty body.
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+</Tabs>
+
+### Billable units
+
+Knowledge chunks and knowledge queries are billable units:
+
+- **Number of knowledge chunks** — Knowledge AI calculates the number of knowledge chunks you consume when creating or editing knowledge sources or knowledge chunks. If your quota is exceeded, you can't edit any knowledge sources or create new ones.
+- **Number of knowledge queries** — Knowledge AI counts the number of queries performed to retrieve relevant knowledge chunks. The number of knowledge queries is unlimited. However, you will be billed based on the queries you have performed. Each time the following nodes are executed, they increase the number of performed knowledge queries by one:
+    - [AI Agent node](/ai/agents/develop/node-reference/ai/ai-agent)
+    - [Search Extract Output node](/ai/agents/develop/node-reference/other-nodes/search-extract-output)
+    - [Copilot: Knowledge Tile node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile)
+
+## Activate the feature flag
+
+To activate the Knowledge AI feature flag, contact [Cognigy technical support](/help/get-help).
+
+## View metrics
+
+Familiarize yourself with the [Admin Center](/ai/administer/access/admin-center/overview) page. On this page, you can monitor Knowledge AI metrics to manage the consumption of Knowledge AI resources effectively.
+
+<Frame>
+  <img src="/_assets/ai/administer/access/knowledge-ai.png" alt="Knowledge AI metrics in the Admin Center showing queries and chunks" style={{ width: 'auto' }} />
+</Frame>
+
+<AiAdministerAccessKnowledgeAiMetrics/>

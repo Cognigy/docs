@@ -1,0 +1,64 @@
+---
+title: Intent hierarchy
+description: "Structure intents into parent, child, and grandchild groups with the Cognigy intent hierarchy. Learn how to create and manage intent levels."
+sidebarTitle: Overview
+keywords: ['cognigy nlu', 'intent hierarchy', 'intents', 'parent and child intents']
+---
+
+_Intent hierarchy_ allows you to structure intents into layered groups, connecting parent intents with their children and grandchildren.
+This organization of intents helps agents interpret user inputs by letting parent intents optionally inherit example sentences from child intents. It increases flexibility and boosts intent detection accuracy for more natural conversations.
+
+## Restrictions
+
+- Intent hierarchies are limited to three levels (Level 1, Level 2, and Level 3), preventing deeper nesting.
+- By default, parent intents don't use example sentences from their child intents. To change this behavior, use the [inheritance mechanism](/ai/platform-features/nlu/intents/intent-hierarchy/inherit-child-example-sentences) feature.
+- When user input matches both parent and child intents, this overlap may cause ambiguity. Use the [intent mapping priority](/ai/platform-features/nlu/intents/intent-hierarchy/intent-mapping-priority) feature to ensure the agent selects the most specific intent.
+
+## Intent hierarchy structure
+
+An intent hierarchy follows this structure:
+
+- **Parent intents**. Top-level intents that represent a broader category or topic. They can inherit example sentences from their child intents for broader recognition.
+- **Child intents**. More specific intents nested under parent intents. Each child intent focuses on a narrower aspect of the parent's category and can share example sentences with its parent intent.
+- **Grandchild intents**. The most detailed intents, nested under child intents.
+
+<AccordionGroup>
+  <Accordion title="Example: intent hierarchy structure">
+
+    ```txt
+    Flow
+    ├── Intent A
+    │   └── Intent A.1
+    │       └── Intent A.1.1
+    └── Intent B
+    ```
+
+    - **Intent A** (Level 1). The parent intent, representing a broad intent category.
+        - **Intent A.1** (Level 2). A child intent, providing a more specific intent under `Intent A`.
+            - **Intent A.1.1** (Level 3). A grandchild intent, the most detailed intent under `Intent A.1`.
+    - **Intent B** (Level 1). Another parent intent, which stands alone at this level.
+  </Accordion>
+
+  <Accordion title="Example: intent hierarchy structure in a customer support flow">
+    ```txt
+    Customer Support Flow
+    ├── Order Support
+    │   └── Order Status
+    │       └── Tracking Information
+    └── Account Support
+    ```
+
+    - **Order Support** (Level 1). The parent intent, representing general questions about orders.
+        - **Order Status** (Level 2). A child intent under `Order Support` that handles questions about order tracking.
+            - **Tracking Information** (Level 3). A grandchild intent under `Order Status` that deals with requests for tracking numbers or delivery updates.
+    - **Account Support** (Level 1). A separate parent intent, focusing on account-related questions.
+  </Accordion>
+</AccordionGroup>
+
+## Work with intent hierarchy
+
+In **Advanced > NLU**, on the **Intents** tab, drag intents from the list onto a parent intent to build hierarchies.
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)

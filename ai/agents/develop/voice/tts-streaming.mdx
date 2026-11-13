@@ -1,0 +1,71 @@
+---
+title: TTS streaming
+description: "Learn about TTS streaming in Voice for real-time text-to-speech audio delivery, enabling natural voice agent conversations with minimal latency."
+keywords: ['tts streaming', 'text-to-speech', 'real-time audio', 'speech providers']
+---
+
+
+The _TTS streaming_ feature delivers synthesized speech to your voice agent as it's generated, rather than waiting for the entire response to finish processing. It enables faster, more natural-sounding conversations.
+
+Standard TTS systems wait for the entire text to be processed before playing any audio, which introduces a noticeable delay, especially with longer texts. TTS streaming instead processes text in segments and plays each one back as soon as it's synthesized.
+
+<div style={{textAlign: 'center'}}>
+   <video width="650" height="400" controls autoPlay title="Streaming vs. standard TTS" aria-label="A video comparing standard text-to-speech processing, which waits for the full text before generating audio, with streaming text-to-speech, which begins playback as segments are synthesized." style={{border: '1px solid #ccc', borderRadius: '12px', display: 'block', margin: '0 auto'}}>
+      <source src="https://docscognigyassets.blob.core.windows.net/assets/traditional-tts-vs-tts-streaming.mp4" />
+   </video>
+</div>
+
+<Note>
+  Some speech providers use `streaming` to describe their API's connection method, for example, a websocket-based API for submitting multiple texts. This concept is different from TTS streaming in Voice, which refers to audio playout: how quickly synthesized audio starts playing back to the caller.
+</Note>
+
+## Key benefits
+
+- **Lower response latency.** Audio playback starts as soon as the first words are synthesized, instead of after the full text is processed.
+- **More natural conversation flow.** Reduced time-to-first-audio makes voice agent responses feel closer to real-time human conversation, especially with longer text.
+
+## Prerequisites
+
+- A [voice flow agent](/ai/agents/develop/flow-agents/voice) configured.
+- A configured [speech service](/ai/administer/access/speech-and-telephony#speech-providers).
+
+## Restrictions
+
+- The following speech providers don't support TTS streaming: AWS, Google, Nuance, Speechmatics, and Deepgram Flux.
+- For ElevenLabs, Voice uses the [ElevenLabs streaming API](https://elevenlabs.io/docs/api-reference/text-to-speech/stream). The following parameters aren't supported and can't be specified in **Extra Options**:
+    - `seed`
+    - `previous_request_ids`
+    - `next_request_ids`
+    - `apply_text_normalization`
+    - `apply_language_text_normalization`
+    - `use_pvc_as_ivc`
+    - `pronunciation_dictionary_locators`
+
+## Configure TTS streaming
+
+To activate streaming for your voice agent, follow these steps:
+
+<AccordionGroup>
+<Accordion title="1. Configure the speech service">
+
+1. In the navigation menu, select **Speech**.
+2. On the **Speech services** page, select an existing speech service or [create a new one](/ai/administer/access/speech-and-telephony#speech-providers) by clicking **Add a speech service** in the upper-right corner.
+3. On the **Add Speech service** page, make sure that the **Use for text-to-speech** option is activated.
+4. Activate the **Enable text-to-speech streaming** option.
+5. _(Optional)_ For ElevenLabs, configure the **Extra Options** field to customize the TTS streaming behavior. See the list of unsupported parameters in the [Restrictions](#restrictions) section.
+6. Click **Save**.
+
+</Accordion>
+<Accordion title="2. Configure the set session config node in Cognigy">
+
+1. Go to the Set Session Config node in your flow.
+2. In the **Synthesizer (TTS)** section, select your speech service from the **TTS Vendor** list.
+3. Configure **TTS Language** and **TTS Voice** as needed.
+
+</Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Speech services](/ai/administer/access/speech-and-telephony#speech-providers)
+- [TTS and STT vendors](/voice-gateway/references/tts-and-stt-vendors)

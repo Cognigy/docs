@@ -1,0 +1,79 @@
+---
+title: Add another inbox for your project
+description: Create additional inboxes in Live Agent and configure them for handover within your Cognigy flows.
+keywords: ['additional inbox', 'live agent setup', 'inbox configuration', 'handover', 'cognigy integration']
+
+---
+
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+You can create extra inboxes in Live Agent and configure them for handover within your flows.
+
+## Add an additional inbox
+
+To add another inbox in Live Agent, follow these steps:
+
+1. In the sidebar of the Live Agent dashboard, click **Inboxes**.
+2. In the upper-right corner, click the **Add Inbox** button. Live Agent shows you a screen to set up your inbox.
+
+    <Frame>
+        <img src="/_assets/live-agent/getting-started/LA_Inbox_setup.png" alt="Live Agent inbox setup" style={{ width: 'auto' }} />
+    </Frame>
+
+3. On the inbox setup page, fill in the following fields:
+    - **Inbox Name** — create a unique inbox name. For example, `Cognigy Handover`.
+    - **Webhook URL** — enter the domain name of the Cognigy endpoint URL, extended by `/handover/liveagent`. You can find the endpoint URL in the **Integration** section on the **Setup** tab of your endpoint settings. For example, if your endpoint URL is `https://endpoint-trial.cognigy.ai/80be1dc36a16352b361838ae36e868aaf49a7359c700f4efc5a36b105a2c6917`, use `https://endpoint-trial.cognigy.ai/handover/liveagent`.
+
+4. Click the **Create Cognigy.AI Inbox** button. Once you have successfully set up the inbox, you're prompted in the next step to assign your agents to the new inbox.
+5. Select your required agents in the selection list and click **Add agents**.
+
+A new Live Agent inbox has been created.
+
+### Find account and inbox IDs
+
+The new inbox is defined by an account ID and an inbox ID. The inbox ID is required to configure the Handover to Human Agent node.
+
+Both IDs can be found in the Live Agent URL after creating the inbox.
+
+To locate them, follow these steps:
+
+1. Go to **Settings > Inboxes**.
+2. In the **Inboxes** list, find the inbox that you created before, and click the **Settings** icon next to the inbox.
+
+The inbox settings will be displayed,
+and you'll see the address line of your browser as follows:
+`https://liveagent-<your-environment>/app/accounts/<account-id>/settings/inboxes/<inbox-id>`.
+For example, in the URL `https://liveagent-dev.cognigy.ai/app/accounts/2/settings/inboxes/32852`, the account ID is `2`,
+and the inbox ID is `32852`.
+
+<Frame>
+    <img src="/_assets/live-agent/getting-started/LA_Inbox_URL.png" alt="Live Agent browser URL showing the account ID and inbox ID" style={{ width: 'auto' }} />
+</Frame>
+
+## Configure a flow for handover to the additional inbox
+
+To configure a flow for handover to Live Agent, follow these steps:
+
+1. In the Cognigy interface, open the flow that contains the Handover to Human Agent node.
+
+    <Frame>
+        <img src="/_assets/live-agent/Flow_handover_node_config.png" alt="Cognigy flow editor with a Handover to Human Agent node" style={{ width: 'auto' }} />
+    </Frame>
+
+2. Click the **Handover to Human Agent** node to open the node editor.
+3. In the **Live Agent settings** section, enter the **Inbox ID** of your new Live Agent inbox.
+4. Click **Save Node**.
+
+Your flow is now configured for handover to Live Agent.
+
+## What's next?
+
+- [Conversations](/live-agent/conversation/overview)
+- [Conversation routing](/live-agent/conversation/conversation-routing/overview)
+- [Settings](/live-agent/settings/overview)
+- [Teams](/live-agent/settings/teams)
+- [Labels](/live-agent/settings/labels)
+

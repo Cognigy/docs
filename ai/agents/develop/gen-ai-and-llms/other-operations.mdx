@@ -1,0 +1,94 @@
+---
+title: Other LLM operations
+sidebarTitle: "Other operations"
+keywords: ['llm', 'delete llm', 'clone llm', 'default llm', 'export llm']
+seo:
+  metatags:
+    description: >-
+      Once you've added an LLM to Cognigy, you can perform the following
+      operations with your model: clone, set as default, export, or delete.
+---
+
+Once you've added an LLM to Cognigy, you can perform the following operations with your model:
+
+<AccordionGroup>
+  <Accordion title="Clone a model">
+    <Tabs>
+      <Tab title="GUI">
+             To create a copy of the existing model, follow these steps:
+
+             1. Go to **Manage > AI & Voice Providers > Language Models**.
+             2. In the **Models** view, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) in the row of the model.
+             3. Select **Clone** from the list.
+
+             The model will contain the same settings as the initial one.
+      </Tab>
+      <Tab title="API">
+             To create a copy of the existing model, use the [Cognigy API POST /v2.0/largelanguagemodels/{largeLanguageModelId}/clone](/api-reference/large-language-models/clone-a-large-language-model) request.
+
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Set a model as default">
+
+    Setting a default model ensures a smooth transition when a specific model is removed. It guarantees that there's always a model available to handle compatible use cases, even if the assigned model is removed.
+
+    <Tabs>
+      <Tab title="GUI">
+
+            To set a model as the default, follow these steps:
+
+            1. Go to **Manage > AI & Voice Providers > Language Models**.
+            2. In the **Models** view, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) in the row of the model.
+            3. Select **Make default** from the list.
+
+            The setting will be applied for the selected model.
+      </Tab>
+      <Tab title="API">
+            To set a model as the default, use the `"isDefault": true` parameter in the [Cognigy API PATCH /v2.0/largelanguagemodels/{largeLanguageModelId}](/api-reference/large-language-models/update-a-large-language-model) request. 
+      
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Export a model as a package">
+
+    To reuse a model in other projects, package the model.
+
+    To package a model, follow these steps:
+
+    1. Go to **Manage > AI & Voice Providers > Language Models**.
+    2. In the **Models** view, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) in the row of the model.
+    3. Select **Export as package**.
+    4. Once the package is created, a new [task](/ai/agents/develop/projects-and-flows/projects), titled **Create Package**, runs. To view the task, click ![task menu](/_assets/icons/black-and-white/task-menu-clipboard-check.svg) in the upper-right corner.
+
+    When the task is completed, click ![download](/_assets/icons/black-and-white/task-download-arrow.svg) next to the **Create Package** task to download the package.
+    To ensure the model works correctly in a different project, export its [connection](/ai/platform-features/connections) as a package.
+  </Accordion>
+
+  <Accordion title="Delete a model">
+
+    Note that a default model can't be deleted. Before deletion, you need to remove the default tag.
+
+    <Tabs>
+      <Tab title="GUI">
+            To delete a model, follow these steps:
+
+            1. Go to **Manage > AI & Voice Providers > Language Models**.
+            2. In the **Models** view, click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) in the row of the model.
+            3. Select **Delete**.
+            4. Confirm the deletion. Features relying on this model will stop working if no default model is configured to support those features.
+
+            The model will be deleted from the list.
+      </Tab>
+      <Tab title="API">
+            To delete a model, use the [Cognigy API DELETE /v2.0/largelanguagemodels/{largeLanguageModelId}](/api-reference/large-language-models/delete-a-large-language-model).
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

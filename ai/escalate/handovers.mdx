@@ -1,0 +1,55 @@
+---
+title: Handover providers
+description: "Connect agents to contact centers with handover providers for seamless escalation to human agents."
+keywords: ['handover providers', 'handover to human agent', 'contact center integration']
+---
+
+
+_Handover providers_ connect agents to contact centers, allowing seamless handoffs from automated conversations to human agents. Agents can trigger handovers through the Handover to Human Agent [node](/ai/agents/develop/node-reference/service/handover-to-agent) or [tool](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-human-agent-tool). With handovers, agents can escalate conversations when human assistance is required, for example, due to complexity, personalization, or agent limitations. With multiple Handover to Human Agent nodes in your flow, you can route conversations to different contact centers. For example, VIP customers can be directed to NiCE CXone, while basic inquiries go to Cognigy Live Agent.
+
+To enable the handover process, in addition to the Handover to Human Agent node, you'll need:
+
+- [A compatible contact center and its connector](/ai/escalate/handover-reference/overview)
+- [An endpoint that supports handovers](#endpoints-compatible-with-handover-providers)
+
+Cognigy offers a range of tools to manage this escalation effectively:
+
+- Nodes:
+    - [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) — initiates the transfer to a human agent.
+    - [AI Agent](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-human-agent-tool) and [LLM Prompt](/ai/agents/develop/node-reference/service/llm-prompt#handover-to-human-agent-tool) — initiates the transfer through the Handover to Human Agent tool.
+    - [Question](/ai/agents/develop/node-reference/basic/question) — initiates the transfer to a human agent either when a [specific intent is detected](/ai/agents/develop/node-reference/basic/question#escalation-intents) or when the [agent misunderstands the user's input](/ai/agents/develop/node-reference/basic/question#escalation-wrong-answers).
+    - [Check Agent Availability](/ai/agents/develop/node-reference/service/check-agent-availability) — verifies whether human agents are free to take over.
+    - [Lookup](/ai/agents/develop/node-reference/logic/lookup) — monitors handover status, for example, completed, cancelled, error, queue.
+    - [Close Handover](/ai/agents/develop/node-reference/service/close-handover) — ends the handover process when appropriate.
+    - [Set Handover Inactivity](/ai/agents/develop/node-reference/service/set-handover-inactivity) — defines timeouts for inactive handovers.
+- Features:
+    - [User inactivity detection](/ai/escalate/handover-features/user-inactivity-detection) — triggers actions based on user silence.
+    - [Real-time queue notifications](/ai/escalate/handover-features/real-time-queue-notifications) — provides live updates on queue status (applicable to Live Agent, Salesforce Enhanced Chat, and Genesys Cloud Open Messaging).
+
+## Endpoints compatible with handover providers
+
+The following endpoints that support handover:
+
+- [8x8](/ai/agents/deploy/endpoint-reference/8x8)
+- [Azure Bot Service](/ai/agents/deploy/endpoint-reference/azure-bot-services)
+- [Facebook (Meta) Messenger](/ai/agents/deploy/endpoint-reference/facebook-messenger)
+- [LINE Messenger](/ai/agents/deploy/endpoint-reference/line-messenger)
+- [RingCentral Engage](/ai/agents/deploy/endpoint-reference/ringcentral-engage)
+- [Slack](/ai/agents/deploy/endpoint-reference/slack)
+- [Socket](/ai/agents/deploy/endpoint-reference/socketio)
+- [Sunshine Conversations](/ai/agents/deploy/endpoint-reference/sunshine-conversations)
+- [Voice Gateway](/ai/agents/deploy/endpoint-reference/voice-gateway)
+- [Webchat](/webchat/overview)
+- [Webhook](/ai/agents/deploy/endpoint-reference/webhook)
+- [WhatsApp](/ai/agents/deploy/endpoint-reference/whatsapp)
+
+## Working with handover providers
+
+<Tabs>
+  <Tab title="GUI">
+        You can create, rename, edit, delete, and export handover providers as packages in **Deploy > Handover Providers**. To edit a handover provider, open it in the **Handover provider editor** and click **Save changes**.
+  </Tab>
+  <Tab title="API">
+         You can create, view, edit, and delete handover providers using the [Cognigy API](https://api-trial.cognigy.ai/openapi#post-/v2.0/handover/providers).
+  </Tab>
+</Tabs>

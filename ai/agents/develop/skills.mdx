@@ -1,0 +1,176 @@
+---
+title: "Skills"
+sidebarTitle: "Skills"
+keywords: ['ai agents', 'skills', 'bundled tools', 'skill editor', 'skill instructions', 'skill resources']
+seo:
+  metatags:
+    description: "Skills let you define reusable sets of instructions and bundled tools for your agent."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+_Skills_ are building blocks that combine instructions with optional bundled tools and reference files. Adding a skill to an agent gives it one clear ability. For example, a skill can handle tasks such as checking order status or looking up account details.
+
+You create each skill yourself, with your own description, instructions, and tools.
+
+## Key benefits
+
+- **Focused agents.** Each skill bundles the instructions and tools for one ability, so you don't need to put everything in the agent's main configuration.
+- **Reduced context bloat.** A skill puts only its name and description in the agent's prompt. Its instructions, bundled tools, and reference files stay out until needed, so you use fewer tokens than if you included everything upfront.
+- **Progressive disclosure.** The agent first sees only each skill's name and description. When a request matches a skill, the agent loads its instructions and bundled tools. It opens a reference file only when the instructions point to it.
+- **Independent updates.** Each skill is saved separately, so you can change one skill's instructions, tools, or reference files without editing the agent's other skills or its main instructions.
+
+## How the agent uses skills
+
+The agent's prompt lists the name and description of each skill. When a request matches a skill, the agent activates it and receives the skill's instructions and the list of its bundled tools. The bundled tools become available from that point. The agent opens a reference file only when it decides it needs one. A skill stays active for the rest of the conversation, and several skills can be active at the same time.
+
+If you customize the agent's [system prompt](/ai/agents/develop/system-prompt), keep the skills variable in it, or the agent can't tell when to use a skill.
+
+## Limitations
+
+- The maximum length of the **Skill name** field is 64 characters.
+- The maximum length of the **Description** field is 1024 characters.
+- A skill's instructions and all its reference files are saved together, and the total can be at most about 2 MB. Images count about a third more than their file size. The upload dialog accepts files of up to 5 MB, but a skill that's larger than the total limit can't be saved.
+
+## Working with skills
+
+<Tabs>
+  <Tab title="GUI">
+
+    To create a skill, follow these steps:
+
+    1. Go to **Design** > **Agent**.
+    2. Select an existing agent, or create one first. The **Skills** tab is available only after the agent is created.
+    3. On the **Skills** tab, click **Add skill**.
+    4. On the **Create new skill** page, fill in the following fields:
+       - **Skill name** - enter a name for the skill. The agent sees the name together with the description. Give each skill on an agent a different name. Use only lowercase letters, numbers, and hyphens, with no leading, trailing, or consecutive hyphens.
+       - **Description** - describe what the skill does and when the agent should use it. The agent reads the description to decide when to activate the skill.
+       - **Instructions** - describe how the agent behaves while the skill is active. Include the steps, tool calls, conditions, and response requirements the agent must follow. You can use Markdown, such as headings and lists. The agent receives the instructions exactly as you write them. Turn on **Markdown text** to see the formatted result in a read-only preview, and turn it off to edit the instructions. When you open a saved skill, the preview is on.
+    5. _(Optional)_ In the **Tools** section, click **Add tool**. In the **Attach tools to this skill** dialog, select the project tools to bundle with the skill, and click **Attach selected**. The tools become available to the agent whenever the skill is active.
+       A bundled tool is available only while the skill is active, even if the tool is also on the agent's **Tools** tab. A tool that's disabled for the agent stays unavailable through the skill.
+    6. _(Optional)_ To add a reference file, turn off **Markdown text** to edit the instructions. Type `/` where the agent should use the file, then select **Upload** and choose the file, or select a file you already uploaded. A reference chip appears at that position. You can also click **Add reference**, which adds the chip at the end of the instructions. Use references for lookup data, such as status tables, policies, or price lists. The agent can open a file only through a reference chip in the instructions, and it decides when to open it. Reference files can be text files (`.md`, `.json`, `.csv`, `.xml`, `.html`, `.svg`, `.txt`) or images (`.png`, `.jpg`, `.jpeg`, `.gif`). The agent receives every file as text, so it can't view the content of an image.
+    7. Save the skill.
+
+    On the **Skills** tab, you can search skills by name, open a skill to edit it, clone it, or delete it. **Clone** adds a copy named `<skill name>-copy` to the agent right away, and the copy is active together with the original. **Delete** removes the skill and its reference files permanently.
+  </Tab>
+  <Tab title="API">
+    You can list, view, create, edit, and delete skills using the Skills API. A skill you create with the API isn't added to an agent automatically.
+  </Tab>
+</Tabs>
+
+## Tips for writing effective skills
+
+<AccordionGroup>
+<Accordion title="Writing an effective description">
+  Write the description as a set of concrete trigger scenarios rather than a topic label.
+
+  <Note>
+    A description like `Handles refund requests` is too abstract to match reliably. Include the actual phrases a user would type. For example: `I want a refund`, `can I get my money back`, or `this order was wrong, refund me`. The more literal phrasings you include, the more reliably the agent can recognize when to use the skill.
+  </Note>
+
+  - **List trigger phrases, not categories.** Write the words a user would say, not a summary of the topic.
+  - **Include indirect signals.** Make a refund skill match `this is broken and I want my money back`, not only `I want a refund`.
+  - **State the scope clearly if it's broad.** If the skill applies across every use case or persona your agent handles, say so. Don't rely on the agent to guess that from context.
+  - **Mention any need for a bundled tool.** If the skill can't work without a tool, say so in the description, not only in the instructions.
+</Accordion>
+
+<Accordion title="Writing effective instructions">
+  Treat the instructions as a prompt, not a policy summary. The agent receives the instructions exactly as you write them.
+
+  - **Separate when to start from when to stop.** After the agent activates a skill, the skill stays active for the rest of the conversation. Describe what the agent does when the skill starts, how it knows the task is complete, and what to do if the user changes their mind partway through.
+  - **Number the steps and name the tool.** Say which tool the agent calls at each step.
+  - **Say what information to collect.** State what the agent must confirm before acting, one question at a time and in a fixed order. If information is missing, tell the agent to ask for it and wait rather than guess.
+  - **Define how to handle failures.** Describe the failure types you expect. For each one, say exactly what the agent tells the user. Don't say to handle errors gracefully.
+  - **Prevent early success messages.** Tell the agent not to say that an action worked until the tool response confirms that it did.
+  - **Rely on the tool for input validation.** Don't repeat the tool's validation rules in the instructions. Doing this can cause the agent to skip a call it needs to make.
+  - **Say what the agent must not output.** Don't rely only on positive guidance such as be concise or sound natural. Instead, name the exact outputs or patterns to avoid.
+
+  <CodeGroup>
+
+  ```text Weak guidance
+  Keep your reply short and friendly.
+  ```
+
+  ```text Effective guidance
+  Your entire reply must be a single sentence with no header, no list, and
+  no internal reference numbers. For example:
+
+  ✅ "Your refund of $42.00 will arrive in 3-5 business days."
+  ❌ "Refund Details: Amount: $42.00. Status: Processing. Reference: REF-9931."
+  ```
+  </CodeGroup>
+
+  - Give paired good and bad examples of the exact reply shape you want. Don't only describe the tone you want.
+  - Bound the output format when it matters, for example, a single sentence, no headers, no internal IDs.
+  - List specific words or phrases to avoid. Use this if testing shows the agent leaks internal details, such as system names, statuses, or reference IDs. These details mean nothing to the user.
+</Accordion>
+</AccordionGroup>
+
+To test a skill, chat with the agent in the Interaction Panel and look for the **Skill loaded** span in [tracing](/ai/agents/test/interaction-panel/tracing). After you change a skill, start a new conversation, because a conversation that already activated the skill keeps the instructions it loaded. Tracing doesn't show when the agent opens a reference file.
+
+## Examples
+
+<AccordionGroup>
+<Accordion title="Shipment tracking">
+  | Field | Value |
+  |-------|-------|
+  | Skill name | `shipment-tracking` |
+  | Description | Load when the customer asks where their parcel is or when it will arrive, or gives a waybill number. For example: `where is my package`, `has my parcel shipped`, `it still hasn't arrived`. Needs the Check Shipment Status tool. |
+  | Tools | Check Shipment Status |
+
+  **Instructions**
+
+  ```md
+  ## Steps
+
+  1. Ask for the waybill number. Wait for the answer.
+  2. Ask for the ZIP or postal code of the delivery address. Wait for the answer.
+  3. Call **Check Shipment Status** with `waybill` and `zip`.
+  4. If `verified` is `false`, say the details don't match and ask the customer to check them. After two failed attempts, offer to connect them with an advisor.
+  5. If the tool returns an error, say you can't check the shipment right now and offer to connect them with an advisor.
+  6. If `verified` is `true`, share the status, latest location, and estimated delivery date and window in two or three short sentences.
+  7. Ask whether the customer wants to reschedule the delivery or redirect it to a nearby Acme Service Point.
+
+  ## Rules
+
+  - Never share shipment details before `verified` is `true`.
+  - On voice, read the waybill number back in groups, for example 142 859 2406.
+  - Don't mention internal field names such as `verified`.
+  ```
+</Accordion>
+
+<Accordion title="Advisor handover">
+  | Field | Value |
+  |-------|-------|
+  | Skill name | `advisor-handover` |
+  | Description | Load when the customer asks for a person (`can I talk to someone`, `get me a human`), is clearly frustrated, or raises something out of scope: insurance claims, damaged or lost goods, corporate contracts, billing disputes, customs disputes. Also load after two failed verifications or repeated tool errors. Needs the Hand Over to Advisor tool. |
+  | Tools | Hand Over to Advisor |
+
+  **Hand Over to Advisor** is a [Route to Flow](/ai/agents/develop/tools) tool. Set its **History mode** to **AI-generated summary**, so that the target Flow receives the agent's summary in `input.data.handoffContext.summary`. The target Flow hands the conversation over to an advisor, for example with a **Handover to Human Agent** Node.
+
+  **Instructions**
+
+  ```md
+  ## Steps
+
+  1. Write a short summary for the advisor: reason for handover, waybill number if known, verification status, what was already done (including confirmation IDs), customer language, and sentiment.
+  2. Call **Hand Over to Advisor**. Put the summary in `conversationSummary`. In `handoffMessage`, say in one sentence that you're connecting the customer with an Acme Express advisor.
+  3. If the tool returns an error, say no advisor can be reached right now and that the customer can reach Acme Express support through the contact form at acme-express.example/contact. Don't retry more than once.
+
+  ## Rules
+
+  - Don't try to solve the request first.
+  - Don't write a reply before calling the tool. Only tell the customer you're connecting them in `handoffMessage`. It's shown only when the handover works.
+  - Don't promise wait times or outcomes.
+  - Don't ask the customer to repeat information you already have.
+  ```
+</Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Agents overview](/ai/agents/overview)
+- [Brand persona](/ai/agents/develop/brand-persona)
+- [Tools](/ai/agents/develop/tools)

@@ -1,0 +1,91 @@
+---
+title: Projects
+keywords: ['projects', 'agents', 'flows', 'endpoints']
+seo:
+  metatags:
+    description: >-
+      Projects contain collections of conversational AI resources, including
+      flows, lexicons, endpoints, and other resources. You can collaborate on a
+      project with multiple team members.
+---
+
+
+_Projects_ are collections of conversational AI resources to build and deploy [agents](/ai/agents/overview). You can design agents to tackle one specific use case or cover several use cases and handle multiple user intents. You can deploy agents on a wide range of channels within a project. Multiple team members can work on a project at the same time.
+
+Projects include:
+
+- [Agents](/ai/agents/overview)
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Endpoints](/ai/agents/deploy/endpoints/overview)
+- [Connections](/ai/platform-features/connections)
+
+## Limitations
+
+- The maximum number of project invitations per user per day. For example, if the limit is 5, each user can send invitations to at most 5 different projects in a single day. Additional invitation attempts are blocked until the next day. If you have an on-premises installation, you can change this limit by setting the `MAX_ADD_PROJECT_MEMBER_REQUESTS_PER_EMAIL_PER_DAY` environment variable.
+
+## Working with projects
+
+<Tabs>
+  <Tab title="GUI">
+    To create a project, see [Create project](#create-project). In the sidebar on the main page, you can also pin, edit, and delete projects and copy a project's ID.
+  </Tab>
+  <Tab title="API">
+    You can view, create, and manage projects using the [Cognigy API](/api-reference/projects/get-projects).
+  </Tab>
+  <Tab title="CLI">
+    You can access project resources, for example, agents, flows, and endpoints, using the [Cognigy CLI](https://github.com/Cognigy/Cognigy-CLI?tab=readme-ov-file#cognigy-command-line-interface-cli).
+  </Tab>
+</Tabs>
+
+### Create project
+
+1. In the sidebar on the main page, click ![New project](/_assets/icons/black-and-white/plus.svg).
+2. In the **New project** dialog, in the **Project Name** field, enter a name, for example, `Retail Support US`. The name must be unique, can have up to 200 characters, and can't contain any of these characters: `\`, `/`, `:`, `*`, `?`, `"`, `<`, `>`, `|`, `¥`.
+3. Select how to start:
+
+   - **Start empty** — Creates an empty project and opens it.
+   - **Create with AI Assistant** — Creates the project and opens an [AI Assist session](#create-with-ai-assist).
+
+#### Create with AI assist
+
+When you select **Create with AI Assistant** in the **New project** dialog, a session with [AI Assist](/ai/platform-features/ai-assist) opens. AI Assist asks you questions to guide you through building your agent.
+
+After building your agent, AI Assist redirects you to your agent's configuration page and opens the interaction panel. You can start talking to your agent directly in the interaction panel.
+
+## Task menu
+
+_Tasks_ are specific activities, such as training intents, importing snapshots, or creating a package. A task is an asynchronous process that runs in the background and for which you get notifications. The task menu provides an overview of your running, completed, and failed tasks. To open the task menu, click ![Toggle task menu](/_assets/icons/black-and-white/clipboard-check-24.svg) in the upper-right corner.
+
+The icon shows the status of your tasks:
+
+- A blue ring around the icon shows the average progress of your running tasks.
+- A green ring appears briefly when a task completes.
+- A red dot indicates unread updates.
+
+The task menu has the following tabs:
+
+- **Tasks** — Shows the **Running tasks** and **Completed** sections. The **Completed** section includes finished and canceled tasks.
+- **Error** — Shows the failed tasks in the **Errors** section. If a task fails while the task menu is open, the menu switches to this tab.
+
+Each task shows:
+
+- The task status.
+- The task name.
+- The user who started the task.
+- The start time or, for completed tasks, the finish time.
+- A progress bar, for running tasks.
+
+<Accordion title="View tasks">
+  Note that only the most recent 100 tasks are visible in the task menu. To view tasks beyond the latest 100, use the [Get Tasks](/api-reference/tasks/get-tasks) API request as follows:
+
+  - To skip the first 100 tasks that are already visible in the task menu, set the `skip` parameter to 100.
+  - To view, for example, the next 100 tasks, set the `limit` parameter to 100.
+</Accordion>
+
+## More information
+
+- [User menu](/ai/administer/user-menu/overview)
+- [Interaction panel](/ai/agents/test/interaction-panel/overview)
+- [Cognigy Insights](/insights/overview)
+- [Analytics](/ai/agents/analyze/overview)
+- [Agents](/ai/agents/overview)

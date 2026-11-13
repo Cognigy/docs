@@ -1,0 +1,44 @@
+---
+title: Voice call
+keywords: ['voice testing', 'call monitoring', 'call duration', 'interaction panel']
+seo:
+  metatags:
+    description: >-
+      The interaction panel's voice call mode allows you to test voice AI
+      Agents.
+---
+
+
+With _Voice call_ mode, you can initiate a test call to hear how your voice AI Agent sounds. You can target either a [Flow](/ai/agents/develop/projects-and-flows/overview) or an [AI Agent](/ai/agents/overview) directly.
+
+## Prerequisites
+
+- Activate voice call:
+    - For SaaS installations, contact the support team to activate the feature.
+    - For on-premises installations, activate the feature by adding `FEATURE_ENABLE_VOICECALL_WHITELIST` in `values.yaml` and assigning the corresponding organization IDs. For example, `FEATURE_ENABLE_VOICECALL_WHITELIST:<organization-1-id>,<organization-2-id>`. For all organizations, use `*`.
+- Configure a voice provider in the Project's [Voice Preview Settings](/ai/administer/access/speech-and-telephony#add-a-speech-provider) and the AI Agent's [voice and language](/ai/agents/test/interaction-panel/overview).
+- Allow microphone access in your browser, and then in your device settings if needed.
+- To target an AI Agent directly, [create the AI Agent](/ai/agents/overview#create-an-agent) with a [voice configuration](/ai/agents/develop/voice-configuration) first.
+
+<Note>
+If the text-to-speech provider of the project is Amazon Polly, the call ignores the **TTS Engine** default of the Node. It uses the first engine that the selected voice supports, in this order: **Standard**, **Neural**, and **Generative**.
+</Note>
+
+## How to use voice call mode
+
+To start a test call, click the ![voice-call](/_assets/icons/black-and-white/voice-call-interaction-panel.svg) tab in the interaction panel, select whether you want to call a Flow or an AI Agent, and click **Start call** at the bottom. To end the call, click ![End call](/_assets/icons/interaction-panel/end-call.svg).
+
+During a call, you can:
+
+- **Monitor the call duration**. The call header shows how long the call has been active, in the format `mm:ss`, next to the locale. Until the call connects, the header shows **Connecting…**. To hide or show the call details, click **Collapse call details** or **Expand call details**.
+- **Mute yourself**. To stop sending your voice, click **Mute**. To continue, click **Unmute**.
+- **Send DTMF tones**. Click ![Dialpad](/_assets/icons/interaction-panel/dialpad.svg) to open a dialpad and send touch-tone (DTMF) signals during the call. With the dialpad, you can enter codes or navigate menus during a call.
+- **Follow the conversation**. View the real-time conversation transcript in the interaction panel to track the call.
+
+To view and analyze the payload of a voice input, click ![Expand](/_assets/icons/interaction-panel/expand.svg) indicated in the message fields.
+
+## More information
+
+- [Voice Nodes](/ai/agents/develop/node-reference/voice/voice-gateway/overview)
+- [Voice Preview](/ai/agents/test/voice-preview)
+- [Voice](/voice-gateway/overview)

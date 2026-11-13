@@ -1,0 +1,67 @@
+---
+title: Twilio SMS
+keywords: ['twilio sms', 'twilio sms endpoint']
+description: "Connect your agent to Twilio to handle SMS and WhatsApp messages using the Twilio SMS endpoint."
+---
+
+import LegacyGenericEndpointSettings from '/snippets/ai/deploy/endpoint/legacy-generic-endpoint-settings.mdx'
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/twilio.png" alt="Twilio SMS Endpoint logo" />
+</Frame>
+
+The Twilio SMS Endpoint enables you to connect your AI Agent to the [Twilio platform](https://www.twilio.com/) to handle SMS and WhatsApp messages. Via this Endpoint, your end users can interact with your AI Agent through text messaging.
+
+## Prerequisites
+
+- Access to the [Twilio platform](https://www.twilio.com/).
+
+## Generic endpoint settings
+
+<LegacyGenericEndpointSettings />
+
+## Additional endpoint settings
+
+You can use the following additional settings to customize the endpoint:
+
+- [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer functions](/ai/for-developers/transformers/overview)
+- [Real-time translation](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [Session management](/ai/agents/deploy/endpoints/session-management)
+
+## How to set up
+
+### Configure in Cognigy
+
+<Accordion title="Create a Twilio endpoint">
+  To create a Twilio Endpoint, follow these steps:
+
+  1. Go to **Deploy > Endpoints**. 
+  2. On the **Endpoints** page, click **+ New Endpoint**. 
+  3. In the **New Endpoint** section, do the following:
+      1. Select the **Twilio SMS** Endpoint type.
+      2. Specify a unique name.
+      3. Select a Flow from the list. Save changes.
+  4. In the **Configuration Information** section, copy the Endpoint URL and save it for later use.
+</Accordion>
+
+### Configure in Twilio
+
+<AccordionGroup>
+  <Accordion title="1. Get a phone number">
+    1. Open the Twilio Console. Go to the Account Dashboard.
+    2. In the left sidebar, select the **Develop** tab, then go to **Phone Numbers > Manage > Buy a Number**. Select the country and ensure the number supports SMS. Activate **SMS**. You can search for area code, for example, 211, which shows numbers available for Düsseldorf, Germany. Select the number and click **Buy**.
+    3. Some phone numbers require you to validate that your company operates in the same city or region. This approach is common for German numbers. To validate the number, read the [Twilio documentation](https://help.twilio.com/) and upload proof of your company registration. The validation process can take up to 3 business days. US numbers don't require this validation.
+    4. Go to **Active Numbers**. Select the number, then go to **Voice Configuration**. From the **A call comes in** list, select **Webhook**. In the **URL** field, enter the Cognigy Endpoint URL. Click **Save configuration**. To test the connection, send an SMS to your Twilio number.
+  </Accordion>
+
+  <Accordion title="2. Connect your Twilio number to WhatsApp">
+    1. Go to **Explore Products > Messaging**. 
+    2. Select **WhatsApp**. To connect the Twilio number to WhatsApp, your Twilio account must first be approved by WhatsApp.
+  </Accordion>
+</AccordionGroup>
+## More information
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+- [Cognigy Help Center: Twilio Intro](https://support.cognigy.com/hc/en-us/articles/360016308619-Twilio-Intro)

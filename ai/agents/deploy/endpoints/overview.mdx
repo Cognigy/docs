@@ -1,0 +1,66 @@
+---
+title: Overview
+description: "Connect agents to platforms such as Messenger and Slack for chat and voice, and manage shared endpoint settings."
+keywords: ['endpoints', 'integration', 'deployment', 'channels', 'connectors', 'contact center', 'snapshots']
+---
+
+import PublishEverywhereAnimation from "/snippets/ai/deploy/endpoint/publish-everywhere-animation.mdx";
+
+
+<PublishEverywhereAnimation />
+
+_Endpoints_ are connectors between agents and [external systems or platforms](/ai/agents/deploy/endpoint-reference/overview), such as Facebook (Meta) Messenger, Slack, and others.
+
+Endpoints support chat and voice conversations in contact centers and integrate with [handover providers](/ai/escalate/handovers) to manage these interactions.
+
+Endpoints convert [channel-specific](/ai/agents/develop/nodes/channels) input and output, including images, galleries, and voice, into the structure of the [input object](/ai/agents/develop/ai-agent-memory/input). This approach allows the development of platform-agnostic [flows](/ai/agents/develop/projects-and-flows/overview) that require no modification when you add new channels.
+
+## Working with endpoints
+
+<Tabs>
+  <Tab title="GUI">
+    You can create, view, edit, and delete endpoints in **Deploy > Endpoints**.
+  </Tab>
+  <Tab title="API">
+    You can view, create, and edit endpoints using the [Cognigy
+    API](https://api-trial.cognigy.ai/openapi#tag--Endpoints-v2.0).
+  </Tab>
+  <Tab title="CLI">
+    You can manage endpoints using the [Cognigy
+    CLI](https://github.com/Cognigy/Cognigy-CLI).
+  </Tab>
+</Tabs>
+
+## Generic endpoint settings
+
+The following settings are available across endpoints on the **Setup** tab:
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| Enable Endpoint | Toggle | Activates the endpoint. |
+| Endpoint name | Text | Sets a name for the endpoint. |
+| Target | List | Sets the [flow](/ai/agents/develop/projects-and-flows/overview) or [agent](/ai/agents/overview) that the endpoint runs. |
+| Snapshot | List | This parameter is optional. Sets the [snapshot](/ai/agents/deploy/snapshots) you want to use for the endpoint. |
+| Override Snapshot Connections | Toggle | This parameter appears when you select a snapshot. Overrides the [connections](/ai/platform-features/connections) in the snapshot with connections from the project. If only the snapshot has a connection, the connection isn't overridden. If necessary, you need to update such connections manually.<br/><br/>To override the connection of the agent in production, you can:<ul><li>Make the necessary changes in a staging environment, create a snapshot of the same agent, and select the snapshot in the endpoint settings. Deactivate the **Override Snapshot Connections** toggle.</li><li>Import connections from another agent using a [package](/ai/agents/deploy/packages). Activate the **Override Snapshot Connections** toggle.</li></ul> |
+| Locale | List | This parameter is optional and appears only if you've created a locale beforehand. Sets the [locale](/ai/platform-features/translation-and-localization/localization) for the endpoint. |
+| Integration | Text | Provides the URL that serves as the interface to the endpoint. For most third-party platforms, you need to copy it into the channel's settings to configure the connection to Cognigy. The label and additional rows depend on the endpoint. |
+
+## Additional endpoint settings
+
+You can use the following additional settings to customize the endpoint on the following tabs:
+
+- **Behavior**:
+  - [Real-time translation](/ai/agents/deploy/endpoints/real-time-translation-settings)
+  - [File storage](/ai/agents/deploy/endpoints/file-storage)
+- **Compliance**:
+  - [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- **Advanced**:
+  - [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+  - [Transformer functions](/ai/for-developers/transformers/overview)
+  - [Agent Copilot](/agent-copilot/overview)
+  - [Copilot section](/agent-copilot/configure/copilot-section)
+  - [Mocking](/ai/agents/test/mocking#at-the-interface-level)
+
+## Endpoint-specific settings
+
+Each endpoint has specific settings for the platform the endpoint connects to. To find the settings for a specific endpoint, refer to the [endpoint reference](/ai/agents/deploy/endpoint-reference/overview).

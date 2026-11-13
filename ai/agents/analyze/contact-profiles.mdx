@@ -1,0 +1,122 @@
+---
+title: Contact profiles
+description: Cognigy contact profiles contain information about users who interact with your agents. 
+keywords: ['contact profiles', 'user data management', 'user profiles', 'data collection']
+---
+
+
+_Contact profiles_ contain information about users who interact with your agents. In contact profiles, you can view user data collected during conversations with agents, for example, first name and email address. You can also navigate the conversation transcript. With this data, agents can provide personalized interactions and contact management across different channels, such as Webchat, WhatsApp, and Slack. You can access the contact profiles from a Flow through the [Profile](/ai/agents/develop/ai-agent-memory/profile) object and manage them with specific Nodes.
+
+Contact profiles offer the following benefits:
+
+- **Data collection**. You can gather user data during interactions using predefined schemas and custom fields, and store this data in the Profile object.
+- **Management flexibility**. You can manage contact profiles flexibly to navigate conversation history and set expiration dates for data.
+- **GDPR compliance**. Cognigy provides tools to comply with the General Data Protection Regulation (GDPR), including exporting user data, deleting contact profiles, and managing data collection preferences for individual contacts.
+
+## Limitations
+
+- A contact profile is removed after 30 days if not read or modified. If you have an on-premises installation, you can configure an expiration time for contact profiles in the [Management UI](/ai/administer/access/management-ui). In the **Update Organisation TTL Values** dialog, enter the number of minutes in the **Contact Profile Expiration** field.
+- You can't update data in an inactive contact profile. To update an inactive contact profile, activate it first with the [Activate Profile](/ai/agents/develop/node-reference/analytics/activate-profile) Node, then update the data.
+- A [simulated contact profile](/ai/agents/test/simulator/overview) is removed after 5 days if not read or modified. If you have an on-premises installation, you can configure the expiration time for simulated contact profiles with the `SIMULATION_PROFILE_TTL_IN_MINUTES` variable. The default value is 7200 minutes.
+
+## Profile schema
+
+The _profile schema_ organizes the contact profile information into fields that you can customize to meet your needs. By default, the profile schema has the following fields:
+
+<Accordion title="Default profile schema">
+
+| Field                   | Profile object key        | Description |
+|-------------------------|---------------------------|-------------|
+| User ID                 | `profileId`               | A unique identifier assigned to each end user. |
+| First name              | `firstname`               | The first name of the end user. |
+| Last name               | `lastname`                | The last name of the end user. |
+| Accepted Privacy Policy | `privacy_policy`          | Indicates whether the end user has agreed to the privacy policy terms and specifies the time when the agreement was made. This field applies to Webchat v3 when an end user accepts the [Privacy Notice](/webchat/v3/features#privacy-notice). |
+| Accepted GDPR           | `accepted_gdpr`           | Indicates whether the end user has consented to the GDPR compliance terms. |
+| Tasks completed         | `tasks`                   | Refers to all the [tasks](/ai/agents/analyze/goals-and-tasks/tasks) that were completed by the end user during conversations with agents. |
+| Email                   | `email`                   | The email address of the end user. |
+| Gender                  | `gender`                  | The gender identity of the end user, if provided. |
+| Age                     | `age`                     | The age of the end user, in years. |
+| Birthday                | `birthday`                | The date of birth of the end user. |
+| Location                | `location`                | The geographical location or address information associated with the end user. |
+| Profile picture         | `profilepic`              | The profile picture of the end user. |
+| Prevent data collection | `prevent_data_collection` | Indicates whether data collection is deactivated for the end user. |
+| Memories                | `memories`                | The data recorded via [Add Memory Nodes](/ai/agents/develop/node-reference/analytics/add-memory). |
+
+</Accordion>
+
+## Working with contact profiles
+
+<Tabs>
+  <Tab title="GUI">
+    You can view, export, and delete contact profiles in **Contact Profiles**. The list shows the **User ID**, **First name**, **Last name**, **Email**, and **Last changed** columns. To search the list, use the **Search profiles** field. To export or delete a contact profile or copy its ID, open the row menu. Then select **Export profile**, **Delete profile**, or **Copy profile ID**.
+
+    To filter the list, select **All profiles**, **Active profiles**, **Inactive profiles**, or **Simulation profiles**. The **Simulation profiles** option shows only the profiles that the [simulation scenarios](/ai/agents/test/simulator/overview) create. Your browser remembers your last choice.
+
+    The contact profile page displays a list of conversation transcripts, with the stored contact profile data available in the left pane. To view more details about a session, select it in the list. The [Conversations explorer](/insights/explorers/conversations) in Insights opens.
+
+    In the Flow editor, you can manage contact profiles using the following Nodes:
+
+    - [Activate Profile](/ai/agents/develop/node-reference/analytics/activate-profile)
+    - [Deactivate Profile](/ai/agents/develop/node-reference/analytics/deactivate-profile)
+    - [Delete Profile](/ai/agents/develop/node-reference/analytics/delete-profile)
+    - [Update Profile](/ai/agents/develop/node-reference/analytics/update-profile)
+    - [Merge Profile](/ai/agents/develop/node-reference/analytics/merge-profile)
+
+    With these Nodes, you can create personalized experiences. For example, you can deactivate a contact profile if a user requests to stop data collection or update a contact profile with new information.
+  </Tab>
+
+  <Tab title="API">
+    You can view, edit, and delete contact profiles using the [Cognigy API](/api-reference/contact-profiles/get-contact-profiles-performance).
+  </Tab>
+</Tabs>
+
+### Customize the profile schema
+
+<Tabs>
+  <Tab title="GUI">
+    You can add custom fields to the profile schema. To add a custom field, follow these steps:
+
+    1. In **Contact Profiles**, click **Edit schema**. The button is available only if you have the permission to edit profiles.
+    2. In the **Edit profile schema** panel, click **Add field** and configure the following:
+        - **Name** — enter a name for the custom field. The name is required and has up to 200 characters. It can't start or end with a space or contain any of these characters: `\ / : * ? " < > | ¥`.
+        - **Profile object key** — enter a system name for the custom field. Use letters, numbers, and underscores only. The key:
+            - Can't start with a digit.
+            - Must be unique. The check is case-insensitive.
+            - Can't be a reserved name of a built-in field, for example, `firstname`, `email`, `profileId`, `tasks`, or `memories`.
+        - **Type**:
+            - **Text** — for string values. This type accepts any combination of characters, including letters, numbers, symbols, and spaces.
+            - **Number** — for integers. This type accepts whole numbers within the range of `-9,007,199,254,740,991` to `9,007,199,254,740,991`. Numbers outside this range can't be accurately represented in JavaScript.
+            - **Yes/No** — for boolean values.
+            - **Complex** — for objects. This type accepts nested structures containing other data types.
+    3. Click **Save changes**.
+
+    If you change the profile object key of a field, Cognigy removes the existing contact data for that field. If you change the type, Cognigy keeps the existing values.
+  </Tab>
+
+  <Tab title="API">
+    You can add custom fields to the profile schema using the [Cognigy API](https://api-trial.cognigy.ai/openapi#put-/v2.0/profiles/schema/-projectId-).
+  </Tab>
+</Tabs>
+
+The custom field appears in both the profile schema and each contact profile.
+
+To delete a custom field, click the trash bin icon next to the field. In the **Delete schema field** dialog, enter the field name to confirm. Then click **Delete field**.
+
+<Warning>
+  When you delete a custom field, Cognigy removes any data related to this field from all contact profiles. You can't undo this action.
+</Warning>
+
+### Deactivate data collection for contact profiles
+
+Cognigy stores user data in all contact profiles by default. To deactivate data collection for a specific contact profile, follow these steps:
+
+1. In **Contact Profiles**, select a contact profile from the list and deactivate the **Data collection** setting.
+2. In the **Deactivate data collection** dialog, confirm your decision by selecting:
+    - **Keep data** — keeps the previously collected data.
+    - **Delete data** — deletes the current profile data and the conversation history.
+
+## More information
+
+- [Analytics](/ai/agents/analyze/overview)
+- [Profile object](/ai/agents/develop/ai-agent-memory/profile)
+- [Conversations explorer](/insights/explorers/conversations)

@@ -1,0 +1,53 @@
+---
+title: "Quickstart"
+sidebarTitle: "Quickstart"
+description: "Create and chat with an agent in a few minutes."
+keywords: ['onboarding', 'getting started', 'first agent', 'quickstart', 'agent', 'chat agent']
+---
+
+In this guide, you will create a chat [agent](/ai/agents/overview) named `Sam Support` that can help you with questions about the Cognigy platform, and then test it in the interaction panel.
+
+## Prerequisites
+
+- [A Cognigy.AI organization and a Project](/ai/administer/installation/access-to-cognigy-ai).
+- (Optional) Your own large language model (LLM). A new agent includes one, so you don't need to configure it for this tutorial. To use your own, see [LLMs](/ai/agents/develop/gen-ai-and-llms/llms).
+
+## Create the agent
+
+<Steps>
+  <Step title="Configure the agent">
+    1. In the navigation menu of the Project, go to **Design > Agent**.
+    2. In the upper-right corner, click **Add agent**. The **Create new agent** page opens.
+    3. On the **Configuration** tab, configure the following:
+
+       - **Agent name** — Enter `Sam Support`.
+       - **Job** — Enter `Support agent`.
+       - **Agent avatar** — Select an avatar.
+       - **Instructions** — Enter the following text:
+
+         ```text
+         You are Sam, a support agent for Cognigy users. Answer questions about how Cognigy works using the Cognigy documentation. If you don't know the answer, say so and don't guess.
+         ```
+
+       - **Brand persona** — Keep the preselected persona or select another one. A brand persona is required and sets the voice and tone of the agent. To create your own, see [Brand persona](/ai/agents/develop/brand-persona).
+  
+    4. _(Optional)_ In the **LLM** section, select your own LLM from the **Model** list.
+    5. Click **Save**.
+  </Step>
+
+  <Step title="Connect the Cognigy documentation MCP server">
+    1. Go to the **Tools** tab and select **MCP servers**.
+    2. In the **docs** row, click the ![action menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) icon and select **Add as direct tools**. This step allows the agent to use the `search_cognigy_documentation` tool to retrieve information from the Cognigy documentation.
+  </Step>
+</Steps>
+
+## Test the agent
+
+1. In the upper-right corner, click ![interaction panel](/_assets/icons/black-and-white/interaction-panel.svg) to open the interaction panel.
+2. In the interaction panel, enter a question about Cognigy, for example, `What is the best way to create a new agent?`.
+
+## Next steps
+
+- Create your own [brand persona](/ai/agents/develop/brand-persona).
+- Add [knowledge](/ai/agents/develop/knowledge).
+- Improve your agent with [tools](/ai/agents/develop/tools) and [skills](/ai/agents/develop/skills).

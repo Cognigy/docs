@@ -1,0 +1,17 @@
+<button
+    type="button"
+    aria-label="Pause video"
+    className="video-pause-btn"
+    onClick={(e) => {
+      const btn = e.currentTarget;
+      const container = btn.parentElement;
+      const videos = Array.from(container.querySelectorAll('video'));
+      const visibleVideo = videos.find(v => !v.closest('[class*="hidden"]') && v.offsetParent !== null) || videos[0];
+      const isPaused = visibleVideo?.paused;
+      videos.forEach(v => isPaused ? v.play() : v.pause());
+      btn.textContent = isPaused ? '⏸' : '▶';
+      btn.setAttribute('aria-label', isPaused ? 'Pause video' : 'Play video');
+    }}
+  >
+    ⏸
+  </button>

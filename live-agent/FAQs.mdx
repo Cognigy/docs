@@ -1,0 +1,144 @@
+---
+title: Questions and answers
+description: Answers to common Live Agent questions covering user removal, roles, inbox management, OData reporting, and troubleshooting integration issues.
+keywords: ['live agent faq', 'troubleshooting', 'frequently asked questions', 'live agent setup', 'odata']
+
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+## Questions and answers about Live Agent
+
+### How to remove a user?
+
+Removing a user (human agent) from Live Agent can be done from the Cognigy [Members page](/ai/administer/access/members). The `liveAgentAdmin`/`liveAgentAgent` roles need to be removed, and this will prevent the human agent from logging into Live Agent. This can also be achieved by deleting the user from Cognigy.
+
+Head over to [Access control](/ai/administer/access/admin-center/access-control) for more information.
+
+### How to create an agent with multiple roles?
+
+To create an agent with multiple roles, read the [Roles](/live-agent/roles#assign-roles) article.
+
+### What happens if an inbox is deleted?
+
+Inboxes created manually can be safely deleted, except those with the `-default` suffix. Deleting inboxes with `-default` breaks the integration between Live Agent and Cognigy. If this inbox is accidentally deleted, see the solution in the question below.
+
+### What should i do if the inbox is deleted?
+
+You need to create a new inbox. To do that, use the [Add another inbox for your project](/live-agent/getting-started/live-agent-setup/live-agent-setup-additional-inbox) article.
+
+### Where can i check what the default inbox is? does it have a special account ID?
+
+The default inbox has a pattern name `XXXX-default`, for example, `7119-default`. You can rename it in the [inbox settings](/live-agent/settings/inboxes).
+
+### How to fix custom SSL certificate verification error?
+
+That may happen because Cognigy is running under a custom SSL certificate (Error cannot validate certificate). Live Agent is failing to perform the requests to it as SSL requests can't be verified.
+
+Head over to [REST client SSL](/live-agent/installation/helm-values/helm-values#rest-client-ssl) for configuring it.
+
+### How to fix SMTP for no authentication provider?
+
+For on-premises installations, the SMTP configuration needs to be modified.
+
+Head over to [SMTP](/live-agent/installation/helm-values/smtp) for more information.
+
+### How to create labels and assign them to conversations?
+
+Once a label has been created, go to a conversation. There's a section called **Conversation Labels** on the right side, where labels can be added.
+
+Head over to [Labels](/live-agent/settings/labels) for more information.
+
+### How to request a file from a conversation?
+
+Head over to [Attachments](/live-agent/settings/attachments#request-attachments-with-the-plugin) for more information.
+
+### How to add agents to an inbox?
+
+Only users with the `Administrator` role can perform this action.
+
+To add an agent to an inbox, follow these steps:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. Locate the inbox that you want to edit and click the **Settings** icon.
+3. On the **Collaborators** tab, select the agent name from the **Agents** list.
+4. Apply changes by clicking **Update**.
+
+Head over to [Inboxes](/live-agent/settings/inboxes#add-agents-to-inboxes) for more information.
+
+### How to create a team and add members to it?
+
+Go to **Settings > Teams** and click **Create new team**. In the second step, add the desired agents. The added agents can be updated later.
+
+Head over to [Teams](/live-agent/settings/teams) for more information.
+
+### How to get the user access token (API key)?
+
+The user access token is displayed at the bottom of the [Profile settings](/live-agent/profile-settings) page.
+
+### How to view the account ID and the inbox ID?
+
+This information can be obtained from the Live Agent URL.
+
+A quick way is to select an inbox on the dashboard screen. The URL will look like: ``https://<live-agent-domain>/app/accounts/1/inbox/4``.
+
+The URL follows the pattern `accounts/{Account ID}/inbox/{Inbox ID}`, where the account ID is `1` and inbox ID is `4`.
+
+### Can a TTL be set for attachments contained in messages?
+
+Yes, a TTL for attachments contained in messages per account can be defined under the [Account settings](/live-agent/settings/account-settings#ttl-for-attachments).
+
+### Is antivirus file upload scanning enabled for app and trial environments?
+
+The antivirus file upload scanning needs to be configured at the infrastructure level, and it isn't enabled for the Trial and App instances at the moment.
+
+Head over to [File upload antivirus scan](/live-agent/installation/helm-values/helm-values#file-upload-antivirus-scan) for learning how to configure it.
+
+### How to navigate to Cognigy from Live Agent?
+
+Under the profile menu, there's a link called **Cognigy.AI** that opens Cognigy. If it isn't present, head over to [URLs](/live-agent/installation/helm-values/helm-values#urls) for configuring it.
+
+<Frame>
+<img src="/_assets/live-agent/LA-link-cognigy.ai-platform.png" alt="Link to Cognigy" style={{ width: 'auto' }} />
+</Frame>
+
+### Get a Google maps API key
+
+To see a location sent from WhatsApp with Google Maps, you need to get a [Google Maps API key](https://developers.google.com/maps/documentation/javascript/get-api-key). Head over to [App](/live-agent/installation/helm-values/helm-values#app) to configure it.
+
+
+## Live Agent OData service
+
+### Why is the OData service not returning all the information from the database?
+
+The OData service returns data belonging to your account.
+
+Head over to [Live Agent OData analytics endpoint](/live-agent/tools/odata-endpoint) for more information.
+
+### Why is the OData endpoint throwing an unauthorized error while querying?
+
+If you encounter an unauthorized error, ensure that the API access token belongs to a user with the `Administrator` role for the account being used in the query.
+
+### How to retrieve all content from a particular collection?
+
+You can retrieve all content from a particular collection, for example, Conversation, Message.
+
+The following filtering query can be performed:
+
+For example, `http://{{host}}:{{port}}/v1.0/odata/Conversation?$filter=created_at le '2126-11-23T00:00:00'`.
+
+It will return all the fields for the Conversation model created before 23/11/2126. 
+
+Head over to [Live Agent OData analytics endpoint](/live-agent/tools/odata-endpoint) for more information.
+
+### How to filter OData with specific fields?
+
+To filter OData results by specific fields, you can use the `$select` and `$filter` query parameters. 
+
+For example, `http://{{host}}:{{port}}/v1.0/odata/Conversation?$select=id,account_id&$filter=created_at le '2026-11-23T00:00:00'`.
+
+In this example, the request is retrieving the `id` and `account_id` fields from the Conversation model, filtered by the `created_at` field being less than or equal to `2026-11-23T00:00:00`.
+
+For more detailed information, refer to the [Live Agent OData analytics endpoint](/live-agent/tools/odata-endpoint) article.

@@ -1,0 +1,74 @@
+---
+title: "Agent development lifecycle"
+sidebarTitle: "Agent lifecycle"
+description: "An end-to-end look at building and improving a Cognigy agent: design, test, deploy, and analyze, with the features for each phase."
+keywords: ['onboarding', 'agent lifecycle']
+---
+
+Building an agent isn't a one-time setup. It's a loop. You design it, test it, deploy it to real users, analyze how it performs in production, then feed what you learn back into the next round of design. This page walks through each phase and links to the features you'll use along the way.
+
+## Lifecycle phases
+
+<Frame>
+  <img src="/_assets/ai/onboarding/agent-lifecycle-flow.svg" alt="Agent lifecycle: design flows into test, then deploy, then analyze. Issues found during test, and issues found during analyze that need a redesign, both loop back to design." className="block dark:hidden" style={{ width: '150%' }} />
+  <img src="/_assets/ai/onboarding/agent-lifecycle-flow-dark.svg" alt="Agent lifecycle: design flows into test, then deploy, then analyze. Issues found during test, and issues found during analyze that need a redesign, both loop back to design." className="hidden dark:block" style={{ width: '150%' }} />
+</Frame>
+
+### Design
+
+Design is where an agent takes shape. You set up what it knows and how it behaves, and build the conversational logic around it, so it can handle your customers' requests in your brand's voice.
+
+Use the following resources to design your agent:
+
+- [Agents](/ai/agents/overview) — automate customer conversations. An agent uses a language model and tools to respond to customers and perform actions, such as looking up an order or sending a confirmation email. Agents contain:
+    - [Voice](/ai/agents/develop/voice/overview) — let an agent talk to callers over the phone.
+    - [Knowledge](/ai/agents/develop/knowledge) — let an agent answer from your own content.
+    - [Skills](/ai/agents/develop/skills) — attach reusable capabilities to an agent.
+    - [Tools](/ai/agents/develop/tools) — let an agent call APIs, search knowledge, or send emails.
+    - [Hooks](/ai/agents/develop/hooks) — run a flow before every agent turn to change a message or add context.
+    - [System prompt](/ai/agents/develop/system-prompt) — view or replace the prompt that the model receives on every turn.
+- [Flows](/ai/agents/develop/projects-and-flows/overview) — add a deterministic layer to your agent with:
+    - [Nodes](/ai/agents/develop/nodes/overview) — build flows from actions and decision points.
+    - [Extensions](/ai/for-developers/extensions) — add custom nodes and knowledge connectors.
+- [Directory](/ai/directory) — install prebuilt extensions and knowledge connectors.
+- [xApps](/xApps/overview) — add micro-web apps for customer self-service.
+- [Agent Copilot](/ai/escalate/agent-copilot) — give human agents context and next-step suggestions during conversations.
+- [API and CLI](/ai/for-developers/developers/api-and-cli) — build custom integrations, manage agents, and automate workflows.
+- [NiCE Cognigy plugin](/ai/for-developers/developers/cognigy-plugin) — build, test, and improve agents from AI tools such as Claude Code through the Model Context Protocol (MCP).
+
+### Test
+
+Before customers talk to your agent, run conversations with it and automate repeatable checks. This way, you catch broken logic, wrong answers, and regressions while they're still cheap to fix.
+
+Cognigy provides several testing features:
+
+- [Interaction panel](/ai/agents/test/interaction-panel/overview) — chat with or call an agent and trace what it does in each turn.
+- [Simulator](/ai/agents/test/simulator/overview) — model and test full conversations with scenarios powered by large language models (LLMs).
+- [Playbooks](/ai/agents/test/playbooks) — run conversation scripts automatically to test flows.
+- [Mocking](/ai/agents/test/mocking) — replace node logic with mock code to test different scenarios.
+- [Logs](/ai/agents/test/logs) — inspect input and output messages and find where errors occur.
+
+### Deploy
+
+Once the agent passes your tests, release it to production and connect it to the channels your customers already use. Set up a path to human agents too, for conversations that the agent can't handle.
+
+The following features and resources allow you to bring your agents into production:
+
+- [Snapshots](/ai/agents/deploy/snapshots) — create immutable versions of an agent to deploy, back up, or restore.
+- [Packaging](/ai/agents/deploy/packages) — export and import selected project resources to share with other teams.
+- [Endpoints](/ai/agents/deploy/endpoints/overview) — connect agents to external platforms and channels for chat and voice.
+- [Cognigy Webchat](/webchat/overview) — embed a chat interface on your website.
+- [Click To Call](/click-to-call/overview) — let end users talk to a voice agent with a single click.
+- [Handover providers](/ai/escalate/handovers) — hand conversations over to human agents in your contact center.
+
+### Analyze
+
+Real conversations show what your tests couldn't. Review how they went and measure the outcomes to learn where the agent works well and where it needs another design round.
+
+You can use the following metrics and data:
+
+- [Insights](/ai/agents/analyze/insights) — view analytics and visualizations of agent interactions.
+- [Conversation analyzer](/insights/conversation-analyzer/overview) — score conversations against predefined and custom criteria.
+- [Goals and tasks](/ai/agents/analyze/goals-and-tasks/overview) — track specific outcomes and events in a flow.
+- [Contact profiles](/ai/agents/analyze/contact-profiles) — view the data collected about users and their conversations.
+- [Cognigy OData analytics endpoint](/ai/agents/analyze/odata) — export analytics data to BI tools.
