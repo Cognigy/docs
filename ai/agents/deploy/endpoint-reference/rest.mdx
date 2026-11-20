@@ -1,0 +1,418 @@
+---
+title: REST
+keywords: ['rest', 'api', 'rest endpoint']
+description: "Connect your agent to a REST client using the REST endpoint."
+---
+
+
+import ApiKeyAuthSettings from '/snippets/ai/deploy/endpoint/api-key-auth-settings.mdx';
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/REST.png" alt="REST endpoint logo" />
+</Frame>
+
+The REST endpoint enables you to connect your agent to a REST client. The REST client can be any application, tool, or service capable of making HTTP requests to RESTful APIs.
+This includes custom-built applications, third-party tools like Postman or Insomnia, or backend services that interact with external APIs.
+
+## Prerequisites
+
+- Set up a REST client, for example, Postman, Insomnia, a custom application, or any tool capable of sending HTTP requests.
+
+## Generic endpoint settings
+
+Learn about the generic endpoint settings on the following pages:
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+- [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer functions](/ai/for-developers/transformers/overview)
+- [Real-time translation](/ai/agents/deploy/endpoints/real-time-translation-settings)
+
+## Endpoint-specific settings
+
+### Advanced tab
+
+<ApiKeyAuthSettings />
+
+## How to set up
+
+### Configure in Cognigy
+
+<Accordion title="Create a REST endpoint">
+  1. In the left-side menu of your project, go to **Deploy > Endpoints** and click **+ New Endpoint**.
+  2. In the **New Endpoint** dialog, select the **REST** endpoint type and click **Create endpoint**.
+  3. On the **Setup** tab, configure the following:
+      **Endpoint name** — enter a unique name.
+      **Target type** — select an agent or flow from the list. Save changes.
+  4. _(Optional)_ To set up endpoint-specific API authentication, go to the **Advanced** tab and activate the **Require API Key** setting in the **API Key Authentication** section. The **Endpoint API keys** section appears. Follow these steps:
+      1. Click **Generate API Key**.
+      2. In the dialog box, enter a unique name for your API key in the **Key name** field and click **Generate API Key**.
+      3. Click the **Key** field to copy the generated API key for later use in the header of requests to the endpoint URL. Save the API key because you can't retrieve it after closing the dialog. Alternatively, you can create and manage API keys for this endpoint using the `/v2.0/endpoints/{endpointId}/apikeys` routes via [Cognigy API](https://api-trial.cognigy.ai/openapi#tag--Endpoints).
+  5. Save changes. Then, on the **Setup** tab, in the **Integration** section, copy the URL from the **Endpoint URL** field.
+</Accordion>
+
+### Configure in the third-party provider
+
+<AccordionGroup>
+  <Accordion title="1. Send a request">
+
+    Send a `POST` request to the endpoint URL.
+
+    <AccordionGroup>
+      <Accordion title="No authentication">
+
+        <Tabs>
+          <Tab title="cURL">
+            Replace `https://<your-endpoint-url>` with the endpoint URL from the endpoint settings.
+
+            ```bash
+            curl -X POST https://<your-endpoint-url> \
+              -H "Content-Type: application/json" \
+              -d '{
+                "userId": "user123",
+                "sessionId": "session123",
+                "text": "Hello, I need help with my order",
+                "data": {
+                  "exampleKey": "exampleValue"
+                }
+              }'
+            ```
+          </Tab>
+          <Tab title="Postman">
+            1. Open the Postman collection, select **Add a request**, then set the request type to `POST`.
+            2. Enter the endpoint URL as the request URL.
+            3. Go to the **Headers** tab and add `Content-Type: application/json`.
+            4. Go to the **Body** tab, select **raw**, then select **JSON** as the format.
+            5. Paste the request body:
+
+            ```json
+            {
+              "userId": "user123",
+              "sessionId": "session123",
+              "text": "Hello, I need help with my order",
+              "data": {
+                "exampleKey": "exampleValue"
+              }
+            }
+            ```
+          </Tab>
+          <Tab title="Next.js">
+            Replace `https://<your-endpoint-url>` with the endpoint URL from the endpoint settings.
+
+            ```js
+            const axios = require('axios');
+
+            async function sendRequest() {
+              try {
+                const response = await axios.post('https://<your-endpoint-url>', {
+                  userId: "user123",
+                  sessionId: "session123",
+                  text: "Hello, I need help with my order",
+                  data: {
+                    exampleKey: "exampleValue"
+                  }
+                }, {
+                  headers: {
+                    "Content-Type": "application/json"
+                  }
+                });
+
+                console.log(response.data);
+              } catch (error) {
+                console.error('Error:', error.message);
+              }
+            }
+
+            sendRequest();
+            ```
+          </Tab>
+          <Tab title="Python">
+            Replace `https://<your-endpoint-url>` with the endpoint URL from the endpoint settings.
+
+            ```python
+            import requests
+
+            url = "https://<your-endpoint-url>"
+            payload = {
+                "userId": "user123",
+                "sessionId": "session123",
+                "text": "Hello, I need help with my order",
+                "data": {
+                    "exampleKey": "exampleValue"
+                }
+            }
+            headers = {
+                "Content-Type": "application/json"
+            }
+
+            response = requests.post(url, json=payload, headers=headers)
+            print(response.json())
+            ```
+
+            | Parameter | Type   | Description                                                                                                                                                                                                 | Required                                             |
+            | --------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+            | userId    | String | The ID of the end user.                                                                                                                                                                                     | Yes                                                  |
+            | sessionId | String | The ID used to track the current session and maintain its state. Generate a new unique ID for each new session. For testing, you can use any string and change it whenever you want to start a new session. | Yes                                                  |
+            | text      | String | The text that the assigned flow processes.                                                                                                                                                                  | No, if `data` is specified<sup>[1](#footnote1)</sup> |
+            | data      | Object | The data that the assigned flow processes.                                                                                                                                                                  | No, if `text` is specified<sup>[1](#footnote1)</sup> |
+          </Tab>
+        </Tabs>
+
+      </Accordion>
+      <Accordion title="With API key authentication">
+
+        The API key authentication header name depends on your Cognigy version.
+
+        <AccordionGroup>
+          <Accordion title="For Cognigy 2026.16.0 and later">
+
+            Use the `x-cognigy-endpoint-key` header. The endpoint also accepts the legacy `x-rest-endpoint-key` header for backward compatibility, but `x-cognigy-endpoint-key` takes precedence if both are provided.
+
+            <Tabs>
+              <Tab title="cURL">
+                Replace `https://<your-endpoint-url>` with the endpoint URL and `<your-rest-endpoint-api-key>` with an active API key from your endpoint settings.
+
+                ```bash
+                curl -X POST https://<your-endpoint-url> \
+                  -H "Content-Type: application/json" \
+                  -H "x-cognigy-endpoint-key: <your-rest-endpoint-api-key>" \
+                  -d '{
+                    "userId": "user123",
+                    "sessionId": "session123",
+                    "text": "Hello, I need help with my order",
+                    "data": {
+                      "exampleKey": "exampleValue"
+                    }
+                  }'
+                ```
+              </Tab>
+              <Tab title="Postman">
+                1. Open the Postman collection, select **Add a request**, then set the request type to `POST`.
+                2. Enter the endpoint URL as the request URL.
+                3. Go to the **Headers** tab and configure:
+                    - `Content-Type` — select `application/json`
+                    - `x-cognigy-endpoint-key` — the API key you created using the [Cognigy API](#api-key-authentication).
+                4. Go to the **Body** tab, select **raw**, then select **JSON** as the format.
+                5. Paste the request body:
+
+                ```json
+                {
+                  "userId": "user123",
+                  "sessionId": "session123",
+                  "text": "Hello, I need help with my order",
+                  "data": {
+                    "exampleKey": "exampleValue"
+                  }
+                }
+                ```
+              </Tab>
+              <Tab title="Next.js">
+                Replace `https://<your-endpoint-url>` with the endpoint URL and `<your-rest-endpoint-api-key>` with an active API key from your endpoint settings.
+
+                ```js
+                const axios = require('axios');
+
+                async function sendRequest() {
+                  try {
+                    const response = await axios.post('https://<your-endpoint-url>', {
+                      userId: "user123",
+                      sessionId: "session123",
+                      text: "Hello, I need help with my order",
+                      data: {
+                        exampleKey: "exampleValue"
+                      }
+                    }, {
+                      headers: {
+                        "Content-Type": "application/json",
+                        "x-cognigy-endpoint-key": "<your-rest-endpoint-api-key>"
+                      }
+                    });
+
+                    console.log(response.data);
+                  } catch (error) {
+                    console.error('Error:', error.message);
+                  }
+                }
+
+                sendRequest();
+                ```
+              </Tab>
+              <Tab title="Python">
+                Replace `https://<your-endpoint-url>` with the endpoint URL and `<your-rest-endpoint-api-key>` with an active API key from your endpoint settings.
+
+                ```python
+                import requests
+
+                url = "https://<your-endpoint-url>"
+                payload = {
+                    "userId": "user123",
+                    "sessionId": "session123",
+                    "text": "Hello, I need help with my order",
+                    "data": {
+                        "exampleKey": "exampleValue"
+                    }
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "x-cognigy-endpoint-key": "<your-rest-endpoint-api-key>"
+                }
+
+                response = requests.post(url, json=payload, headers=headers)
+                print(response.json())
+                ```
+              </Tab>
+            </Tabs>
+          </Accordion>
+          <Accordion title="For Cognigy 2026.14 and 2026.15">
+            <Tabs>
+              <Tab title="cURL">
+                Replace `https://<your-endpoint-url>` with the endpoint URL and `<your-rest-endpoint-api-key>` with an active API key from your endpoint settings.
+
+                ```bash
+                curl -X POST https://<your-endpoint-url> \
+                  -H "Content-Type: application/json" \
+                  -H "x-rest-endpoint-key: <your-rest-endpoint-api-key>" \
+                  -d '{
+                    "userId": "user123",
+                    "sessionId": "session123",
+                    "text": "Hello, I need help with my order",
+                    "data": {
+                      "exampleKey": "exampleValue"
+                    }
+                  }'
+                ```
+              </Tab>
+              <Tab title="Postman">
+                1. Open the Postman collection, select **Add a request**, then set the request type to `POST`.
+                2. Enter the endpoint URL as the request URL.
+                3. Go to the **Headers** tab and configure:
+                    - `Content-Type` — select `application/json`
+                    - `x-rest-endpoint-key` — the API key you created using the [Cognigy API](#api-key-authentication).
+                4. Go to the **Body** tab, select **raw**, then select **JSON** as the format.
+                5. Paste the request body:
+
+                ```json
+                {
+                  "userId": "user123",
+                  "sessionId": "session123",
+                  "text": "Hello, I need help with my order",
+                  "data": {
+                    "exampleKey": "exampleValue"
+                  }
+                }
+                ```
+              </Tab>
+              <Tab title="Next.js">
+                Replace `https://<your-endpoint-url>` with the endpoint URL and `<your-rest-endpoint-api-key>` with an active API key from your endpoint settings.
+
+                ```js
+                const axios = require('axios');
+
+                async function sendRequest() {
+                  try {
+                    const response = await axios.post('https://<your-endpoint-url>', {
+                      userId: "user123",
+                      sessionId: "session123",
+                      text: "Hello, I need help with my order",
+                      data: {
+                        exampleKey: "exampleValue"
+                      }
+                    }, {
+                      headers: {
+                        "Content-Type": "application/json",
+                        "x-rest-endpoint-key": "<your-rest-endpoint-api-key>"
+                      }
+                    });
+
+                    console.log(response.data);
+                  } catch (error) {
+                    console.error('Error:', error.message);
+                  }
+                }
+
+                sendRequest();
+                ```
+              </Tab>
+              <Tab title="Python">
+                Replace `https://<your-endpoint-url>` with the endpoint URL and `<your-rest-endpoint-api-key>` with an active API key from your endpoint settings.
+
+                ```python
+                import requests
+
+                url = "https://<your-endpoint-url>"
+                payload = {
+                    "userId": "user123",
+                    "sessionId": "session123",
+                    "text": "Hello, I need help with my order",
+                    "data": {
+                        "exampleKey": "exampleValue"
+                    }
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "x-rest-endpoint-key": "<your-rest-endpoint-api-key>"
+                }
+
+                response = requests.post(url, json=payload, headers=headers)
+                print(response.json())
+                ```
+              </Tab>
+            </Tabs>
+          </Accordion>
+        </AccordionGroup>
+
+      </Accordion>
+    </AccordionGroup>
+
+  </Accordion>
+
+  <Accordion title="2. Get a response">
+    The response contains the output text, output data, and the outputStack, which is an array of all flow outputs. The REST endpoint can concatenate agent outputs into a single `text` or `data` output, for example, when you place Say nodes sequentially in the flow. You can use the outputStack for debugging purposes.
+
+    ```json
+    {
+      "text": "Hello, this is the Cognigy Agent. How can I help you?",
+      "data": {},
+      "outputStack": [
+        {
+          "text": "Hello, this is the Cognigy Agent.",
+          "data": {},
+          "traceId": "endpoint-httpIncomingMessage-068f1748-dadb-4792-bd2e-971335e9c88c",
+          "disableSensitiveLogging": false,
+          "source": "bot"
+        },
+        {
+          "text": "How can I help you?",
+          "data": {},
+          "traceId": "endpoint-httpIncomingMessage-068f1748-dadb-4792-bd2e-971335e9c88c",
+          "disableSensitiveLogging": false,
+          "source": "bot"
+        }
+      ],
+      "userId": "user123",
+      "sessionId": "session123"
+    }
+    ```
+
+    | Parameter                           | Type    | Description                                                                                                                                                                                                    |
+    | ----------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | userId                              | String  | The ID of the end user.                                                                                                                                                                                        |
+    | sessionId                           | String  | The ID used to track the current session and to maintain its state. Generate a new unique ID for each new session. For testing, you can use any string and change it whenever you want to start a new session. |
+    | text                                | String  | The text the assigned flow processes.                                                                                                                                                                     |
+    | data                                | Object  | The data the assigned flow processes.                                                                                                                                                                     |
+    | outputStack                         | Array   | An array of outputs generated by the flow, each with detailed metadata.                                                                                                                                        |
+    | outputStack.text                    | String  | The text of the output.                                                                                                                                                                                        |
+    | outputStack.data                    | Object  | The data of the output.                                                                                                                                                                                        |
+    | outputStack.traceId                 | String  | The ID used for tracing and debugging purposes.                                                                                                                                                                |
+    | outputStack.disableSensitiveLogging | Boolean | The flag indicating if logging is disabled. If the value is `true`, this interaction won't be logged for privacy or compliance reasons.                                                                        |
+    | outputStack.source                  | String  | The message source. Always `"bot"` for agent replies.                                                                                                                                                       |
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+
+---
+
+<sup id="footnote1">1</sup>: You must provide at least one of `text` or `data`. You can send either, or both. If both are missing or invalid, the REST endpoint throws an error.

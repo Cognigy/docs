@@ -1,0 +1,44 @@
+---
+title: Global speech providers
+sidebarTitle: Global speech providers
+keywords: ['global resources', 'global speech providers', 'admin center', 'tts', 'stt']
+seo:
+  metatags:
+    description: >-
+      Global speech providers are text-to-speech and speech-to-text providers at organization level that you can assign to projects.
+---
+
+
+_Global speech providers_ are [speech providers](/ai/administer/access/speech-and-telephony#speech-providers) at [organization level](/ai/administer/access/admin-center/global-resources/overview). You can assign them to projects and share them across your organization.
+
+## Prerequisites
+
+- Have the `admin` [global role](/ai/administer/access/admin-center/access-control).
+- Have voice features activated for your organization.
+
+## Work with global speech providers
+
+In the Admin Center, go to **Resources > Speech Providers**. You can add, edit, clone, test, and delete global speech providers, and copy their reference ID.
+
+The form is the same as for project-level speech providers. For the provider settings, see [Provider settings](/ai/administer/access/speech-and-telephony#provider-settings). You can store the provider credentials in a [Connection](/ai/platform-features/connections).
+
+### Set vendor defaults
+
+To make a global speech provider the default for a vendor, turn on the default setting in its form.
+
+Calls in assigned projects use this credential when a flow names the vendor but no credential label. A project's own default for that vendor takes priority. Only one global credential per vendor can be the default.
+
+## Assign to projects
+
+To make a global speech provider available in a project, assign it to the project. For the steps, see [Assign global resources to projects](/ai/administer/access/admin-center/global-resources/overview#assign-global-resources-to-projects).
+
+## Use in projects
+
+In **Manage > AI & Voice Providers > Speech Providers**, global speech providers appear with a **Global** badge. Projects can use them, for example in an endpoint.
+
+Projects can't edit or delete global speech providers. Projects can also clone them, make them the project default, and test them.
+
+## See also
+
+- [Speech and telephony](/ai/administer/access/speech-and-telephony)
+- [Global resources](/ai/administer/access/admin-center/global-resources/overview)

@@ -1,0 +1,45 @@
+---
+title: Handover status
+description: "Manage and respond to the state of conversations handed over to human agents by using the Lookup node and handover statuses."
+keywords: ['handovers', 'handover status', 'contact centers', 'close handover', 'user inactivity detection and handling']
+---
+
+The _handover status_ feature lets you manage and respond to the state of conversations handed over to human agents. This feature provides real-time updates on handover progress, allowing you to design dynamic, context-aware conversational experiences.
+
+When a conversation is handed over to a human agent, your agent can react to the current handover status. The agent can then guide the flow based on whether the conversation is queued, actively handled, completed, or has encountered an issue.
+
+This capability is particularly valuable when building experiences with Agent Copilot flows, as it allows you to deliver contextual messages and implement fallback handling tailored to the current handover state.
+
+## Key benefits
+
+Using handover status in your flows provides several benefits:
+
+- **Improved user experience**. Keep end users informed about their status, estimated wait time, and position in the queue, while preventing confusion from duplicate chats.
+- **Smarter automation**. Automatically route conversations based on real-time status, trigger fallback handling, or escalate when errors occur.
+- **Context-aware communication**. Send tailored messages depending on whether a conversation is queued, active, completed, or in progress.
+- **Flexible integration**. Compatible with multiple platforms, including Cognigy Live Agent, Genesys Cloud, and RingCentral Engage.
+
+## How it works
+
+To allow your agent to react to handover statuses, use a Lookup node directly after the Handover to Human Agent node or tool. A Lookup node creates different flow paths based on a chosen operand. You can use handover status as operands to control how the agent guides the flow forward.
+
+The example shows how to structure your handover logic using a Lookup node with Handover Status:
+
+<Frame>
+  <img src="/_assets/ai/escalate/handover-status.webp" alt="Lookup node with Handover Status after a Handover to Human Agent tool" />
+</Frame>
+
+## Supported statuses
+
+The table lists all handover statuses you can configure in the Case node following a Lookup node.
+
+| Status                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                           | Restrictions                                                                                                           |
+|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Completed                    | A conversation is resolved successfully. Agent assistance is provided.                                                                                                                                                                                                                                                                                                                                                                | –                                                                                                                      |
+| Cancelled                    | The conversation is ended by the user, indicating termination before resolution.                                                                                                                                                                                                                                                                                                                                                           | –                                                                                                                      |
+| Error                        | The conversation is encountering issues. This could be technical, communicative, or due to misinformation. Human agents can step in to resolve.                                                                                                                                                                                                                                                                                         | –                                                                                                                      |
+| Events                       | The conversation is triggered by specific events, such as important updates or time-sensitive actions that guide the flow forward.                                                                                                                                                                                                                                                                                                      | –                                                                                                                      |
+| Active                       | The conversation is actively managed by a human agent.                                                                                                                                                                                                                                                                                                                                                                                  | –                                                                                                                      |
+| Queue                        | The conversation is on hold, waiting for an agent. You can inform the user with a Say node, for example: `Estimated time: {{input.data.request.estimatedWaitTime / (1000 * 60)}} minutes` and `Position: {{input.data.request.position}}`. If you use Agent Copilot, add a Handover to Human Agent node or tool, Lookup node, and a Say node to your Copilot flow. In the Main flow, add a Go To node after the Queue Case node to lead into the Copilot flow.| Only available for:<ul><li>RingCentral Engage (with **Get queue updates** active)</li><li>Live Agent</li><li>Genesys Cloud Open Messaging (with **Estimated wait time** active)</li><li>Salesforce Enhanced Chat (with **Queue position** or **Estimated wait time** active)</li></ul> |
+| Handover Already In Progress | Triggered when the same user ID opens multiple conversations. The older conversation becomes inactive and is linked to the newer one in the same agent chat window. Add a Say node to notify the user that the older chat is now inactive.                                                                                                                                                                                            | Only available for **Genesys Cloud Open Messaging**                                                                         |
+| genericHandoverUpdate        | Used for messages from the Genesys Bot. Normally routed to agents, but you can configure it to also show to end users.                                                                                                                                                                                                                                                                                                                | Only available for **Genesys Cloud Open Messaging**                                                                         |

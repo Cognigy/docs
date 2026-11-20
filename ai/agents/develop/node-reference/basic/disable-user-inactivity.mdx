@@ -1,0 +1,23 @@
+---
+title: Disable User Inactivity
+keywords: ['disable user inactivity', 'user inactivity', 'inactivity detection', 'webchat v3', 'stop timeout']
+seo:
+  metatags:
+    description: The Disable User Inactivity node stops watching for user inactivity in a Webchat v3 session.
+---
+
+<a href="/release-notes/2026.23"><Badge className="version-badge" color="blue">Updated in 2026.23</Badge></a>
+
+## Description
+
+The Disable User Inactivity node stops checking for user inactivity in the current Webchat v3 session. Add this node on flow paths where the conversation ends, so that an inactivity input doesn't restart the flow.
+
+## Prerequisites
+
+- Add the [Enable User Inactivity node](/ai/agents/develop/node-reference/basic/enable-user-inactivity) to your flow.
+- In the [Webchat v3 endpoint settings](/webchat/v3/user-inactivity), set **Flow** to the flow containing this node and turn on **Enable User Inactivity** in the **User inactivity** section on the **Behavior** tab. While this setting is turned off, the node has no effect.
+
+## More information
+
+- [Enable User Inactivity](/ai/agents/develop/node-reference/basic/enable-user-inactivity)
+- [User inactivity detection and handling in Webchat v3](/webchat/v3/user-inactivity)

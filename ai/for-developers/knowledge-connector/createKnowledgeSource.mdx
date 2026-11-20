@@ -1,0 +1,44 @@
+---
+title: createKnowledgeSource
+tag: Deprecated
+description: "Use `createKnowledgeSource` to create knowledge sources in a knowledge store."
+keywords: ['createknowledgesource', 'knowledge api', 'knowledge source']
+---
+
+<Warning>
+  As of Cognigy 2026.5.0, the `createKnowledgeSource` function is deprecated. For knowledge connectors, use [`upsertKnowledgeSource`](/ai/for-developers/knowledge-connector/upsertKnowledgeSource) to create or update knowledge sources that also support knowledge synchronization.
+</Warning>
+
+## Syntax
+
+`api.createKnowledgeSource(params)`
+
+## Description
+
+Creates a [knowledge source](/ai/agents/develop/knowledge-ai/knowledge-source/overview) in a [knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store). A knowledge source is a container for [knowledge chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) to organize and manage your agents' knowledge.
+
+**Parameters:**
+
+- `params`: `CreateKnowledgeSourceParams` — configuration object for the knowledge source. The object contains the following parameters:
+
+| Parameter     | Type   | Required | Description                                                                 |
+| ------------- | ------ | -------- | --------------------------------------------------------------------------- |
+| `name`        | String | Yes      | The name of the knowledge source. Must be unique for each knowledge source. |
+| `description` | String | No       | A description of the knowledge source.                                      |
+| `tags`        | Array  | No       | Source tags associated with the knowledge source, used to filter searches.         |
+| `chunkCount`  | Number | Yes      | The number of knowledge chunks in the knowledge source.                     |
+
+**Returns:** `Promise<{ knowledgeSourceId: string }>` — a promise that resolves to an object containing the ID of the created knowledge source.
+
+## Example
+
+  ```js
+  const result = await api.createKnowledgeSource({
+    name: "Customer Support FAQ",
+    description: "Frequently asked questions from the support portal",
+    tags: ["support", "faq", "customer-service"],
+    chunkCount: 75
+  });
+  
+  console.log(result.knowledgeSourceId);
+  ```

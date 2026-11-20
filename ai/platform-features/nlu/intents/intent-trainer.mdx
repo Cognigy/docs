@@ -1,0 +1,149 @@
+---
+title: Intent trainer
+description: "Use the intent trainer to analyze collected user inputs and add training sentences to intents, improving NLU recognition accuracy over time."
+keywords: ['train intents', 'intent trainer', 'nlu', 'scoring']
+---
+
+
+One of the key strengths of agents is their ability to improve over time.
+Cognigy offers the *intent trainer* feature that allows you to refine agents based on existing dialogs.
+This tool improves the agent's understanding by letting you review user inputs and add them to [Intents](/ai/platform-features/nlu/intents/overview).
+
+## Key features
+
+- **Analysis of collected user inputs**. Review and analyze intent trainer records to identify areas for improvement.
+- **Adding inputs to intents**. Choose which intent trainer records enhance specific intents and add them to the example sentences of those intents.
+- **Instant training**. After refining intent trainer records, quickly update the NLU model on the **Intent Trainer** page. This action eliminates the need to click **Build Model** on the **NLU** page.
+- **Automatic scoring**. The **Train** button automatically scores intents, and you can visually track progress with color-coded icons and scoring data in the list.
+
+## Limitations
+
+- By default, the time-to-live (TTL) of intent trainer records is 10 days (14400 minutes). If you have on-premises installations, you can change this value using the following variable: `TRAINERRECORD_TTL_IN_MINUTES`. For example, to set the TTL to 30 days, configure the variable as follows: `TRAINERRECORD_TTL_IN_MINUTES="43200"`.
+- The maximum file size for uploading intent trainer records is 150 MB.
+
+## Work with the intent trainer
+
+In **Advanced > Intent Trainer**, you can:
+
+1. [Filter intent trainer records](#filter-intent-trainer-records)
+2. [Manage intent trainer records: add to intents, skip, or ignore](#manage-intent-trainer-records)
+3. [Train the NLU model](#train-the-nlu-model)
+4. [_(Optional)_ Import and export intent trainer records](#import-and-export-intent-trainer-records)
+
+### Filter intent trainer records
+
+Review the collected input records from users and search for them using filters.
+To search for a specific user input, enter text in the **Search utterance** field.
+
+The list shows the **Utterance**, **Count**, **Intent and score**, **Last edited**, and **Review status** columns.
+If the NLU didn't find an intent for a record, the **Intent and score** column shows **No intent found**.
+
+| Filter            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Snapshot**      | Select a specific snapshot to view intents and related records. This filter appears only if the project has snapshots. By default, **No Snapshot** is selected.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Locale**        | Filter records by language or locale. This filter appears only if the project has more than one locale. By default, **All** is selected.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Flow**          | Filter records by flow. By default, **All** is selected.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Intent**        | Filter by a specific intent to refine the results. This filter is available after you select a flow. By default, **All** is selected.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Review status** | Filter records by their review status to track progress. By default, **All** is selected. You can select one of the following options: <ul><li>**Not reviewed**. A record wasn't reviewed.</li><li>**Assigned to intent**. A record was added to an intent and reviewed.</li><li>**Ignored**. A record, along with all future inputs containing the same text, is ignored.</li><li>**Skipped**. A record is skipped for now and can be revisited later, with the option to review it again.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Intent found**  | Filter records based on whether an intent was identified. By default, **All** is selected. You can select one of the following options: <ul><li>**Yes**. Shows records where an intent was successfully matched.</li><li>**No**. Shows records where no intent was identified.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Slot found**    | Filter records based on whether the NLU found [slots](/ai/platform-features/nlu/slots/overview). By default, **All** is selected. You can select one of the following options: <ul><li>**Yes**. Shows records where a slot was identified.</li><li>**No**. Shows records where no slot was identified.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Score**         | Filter records by confidence score, shown as color-coded icons. By default, **All** is selected. You can select one of the following options: <ul><li>**Good** (70–100%). High confidence score, indicating a very accurate intent identification.</li><li>**Fair** (30–70%). Medium confidence score, showing a moderately accurate identification.</li><li>**Poor** (0–30%). Low confidence score, meaning the intent wasn't accurately identified.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Input types**   | Filter records by user input type. By default, all input types are selected and the filter shows **Any**. To select or clear all types at once, use **Select all**. You can select one or more of the following input types: <ul><li>**Statement**. User made a declarative statement. For example, `I like this product`.</li><li>**Command**. User issued a command. For example, `turn on the light`.</li><li>**Greeting**. User initiated a greeting. For example, `hi`, `hello`.</li><li>**BGreeting**. User expressed farewell. For example, `goodbye`, `see you later`.</li><li>**whQuestion**. User asked a `why` question. For example, `Why is it included in the package?`.</li><li>**howQuestion**. User asked a `how` question. For example, `How does this work?`.</li><li>**ynQuestion**. User asked a `yes/no` question. For example, `Do you have this item in stock?`.</li><li>**pAnswer**. User responded affirmatively. For example, `yes`, `sure`.</li><li>**nAnswer**. User responded negatively. For example, `no`, `never`.</li></ul> |
+| **Slot type**     | Filter records by slot origin. By default, **Any** is selected. You can select one of the following options: <ul><li>**User-defined**. Records with lexicon-based [slots](/ai/platform-features/nlu/slots/overview), which are user-defined categories.</li><li>**System**. Records with slots that are predefined in the system, such as dates or numbers.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+
+### Manage intent trainer records
+
+Based on the analysis, decide which user inputs improve a particular intent, and add those inputs to the corresponding intent.
+
+The **Review status** column in the list is a drop-down for each record. When you select a status, the change is marked as unsaved. To apply all unsaved changes in one step, click **Save** in the upper-right corner of the page. The button shows the number of unsaved changes, for example, **Save (3)**. To discard all unsaved changes, click **Cancel**.
+
+<AccordionGroup>
+  <Accordion title="Add records to intents">
+
+    <Tabs>
+      <Tab title="GUI">
+        1. In the **Intent Trainer** list, in the **Review status** column of a record, select **Assigned to intent**.
+        2. In the **Add to intent** dialog, select a **Flow** and an **Intent** to which you want to add the record.  
+           If needed, change the text of the record in the **Utterance text** field.
+        3. Click **Add to intent**.
+        4. Click **Save**. Cognigy adds the record as a sentence to the selected intent.
+
+        To create a keyphrase or a synonym for a record, click the record or select **Edit** in the menu of the record to open the utterance page. In the **Lexicon** section, enter a keyphrase in **New Keyphrase** and select a **Slot**, or enter a synonym in **New Synonym** and select a **Keyphrase**. Then click **Save**. Cognigy creates keyphrases and synonyms immediately, while the review status of the record stays unsaved until you click **Save** in the list.
+      </Tab>
+      <Tab title="API">
+        You can add a user input record to a specific intent using the [Cognigy API POST /v2.0/trainer/batch](/api-reference/intent-trainer/perform-batch-operations-on-intent-trainer-records) request. Specify `"op": "addToIntent"` in an object of the `operations` array.
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Skip records">
+
+    <Tabs>
+      <Tab title="GUI">
+        1. In the **Intent Trainer** list, in the **Review status** column of a record, select **Skipped**.
+        2. Click **Save**. This action moves the input to **Skipped** records, but it reappears in **Not reviewed** if the same input is entered again.
+      </Tab>
+      <Tab title="API">
+        You can skip intent trainer records using the [Cognigy API POST /v2.0/trainer/batch](/api-reference/intent-trainer/perform-batch-operations-on-intent-trainer-records) request. Specify `"op": "skip"` in an object of the `operations` array.
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Ignore records">
+
+    <Tabs>
+      <Tab title="GUI">
+        1. In the **Intent Trainer** list, in the **Review status** column of a record, select **Ignored**.
+        2. Click **Save**. This action moves the user input to the **Ignored** records, and if a user enters the same input, it's also ignored.
+      </Tab>
+      <Tab title="API">
+        You can ignore intent trainer records using the [Cognigy API POST /v2.0/trainer/batch](/api-reference/intent-trainer/perform-batch-operations-on-intent-trainer-records) request. Specify `"op": "ignore"` in an object of the `operations` array.
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+### Train the NLU model
+
+After you save records that you added to an intent, click **Train** next to the **Search utterance** field. The **Train** button is available only after you save records that you added to an intent. You don't need to click **Build Model** on the **NLU** page. The intent trainer trains the flows that received new sentences and shows the result in the scoring data and color-coded icons.
+
+### Import and export intent trainer records
+
+You can import and export records between production and development environments.  
+The intent trainer [temporarily stores records](#limitations).
+To ensure data safety, export the records for local storage.
+
+<AccordionGroup>
+  <Accordion title="Import records">
+    <Tabs>
+      <Tab title="GUI">
+        1. Go to **Advanced > Intent Trainer**.
+        2. Next to the **Search utterance** field, click ![upload](/_assets/icons/black-and-white/lucide-upload.svg) (**Import Trainer Records**).
+        3. Select a file in the `CTRAIN` format from your computer and click **Open**.
+
+        Once the file is uploaded, you'll see the **Trainer Records imported.** message.
+      </Tab>
+      <Tab title="API">
+        You can import intent trainer records using the [Cognigy API POST /v2.0/trainer/upload](/api-reference/intent-trainer/upload-an-intent-trainer-records-package) request.
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Export records">
+    <Tabs>
+      <Tab title="GUI">
+        1. Go to **Advanced > Intent Trainer**.
+        2. Next to the **Search utterance** field, click ![download](/_assets/icons/black-and-white/lucide-download.svg) (**Export Trainer Records**).
+        3. In the **Export Intent Trainer Records** dialog, select a date range under **Select Date range** by clicking the date and selecting the desired date in the calendar. By default, the range covers the last seven days.
+        4. To include reviewed records in the file, activate **Include reviewed**.
+        5. Click **Confirm**, then **Download Trainer Records**.
+
+        The file is downloaded in the `CTRAIN` format.
+      </Tab>
+      <Tab title="API">
+        You can export intent trainer records using the Cognigy API. First, create a file via the [POST /v2.0/trainer/package](/api-reference/intent-trainer/package-intent-trainer-records) request, and then download it via the [POST /v2.0/trainer/downloadlink](/api-reference/intent-trainer/create-a-download-link-for-intent-trainer-records) request.
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)

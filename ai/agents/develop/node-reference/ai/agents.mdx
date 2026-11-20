@@ -1,0 +1,90 @@
+---
+title: Agents
+keywords: ['agents node', 'route to agent', 'agent routing', 'flow to agent', 'agentic ai']
+description: "Use the Agents Node to route a conversation from a flow to an agent, share conversation history, and pass parameters to the agent."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+## Description
+
+The Agents Node routes the conversation from a flow to an agent. After the Node runs, the flow ends and the agent handles the rest of the conversation. Use it when a flow collects or checks information first.
+
+The Node writes the routing result to the `input.runtimeHandoff` object. The `status` key is `success` or `error`. If routing fails, the `error` key contains the reason, for example, `hopLimit` or `handoverActive`. The Node has no error branch. If routing fails, the flow stops, the user receives no further message in this turn, and the Interaction Panel shows a debug error with the reason.
+
+To route a conversation from an agent to a flow, use the **Route to Flow** tool. For details, see [Bi-directional transfer](/ai/agents/develop/nodes/bi-directional-transfer).
+
+The agent receives the shared history as earlier messages of its conversation. The **Handoff message** and the visible **Handoff Parameters** appear in the agent's system prompt as reference data, not as instructions, and they stay there for the rest of the conversation. You can also place visible parameters in a custom system prompt. For details, see [System prompt](/ai/agents/develop/system-prompt).
+
+## Prerequisites
+
+- Turn on the **Enable Agents node** setting in the project settings, in the **Agent Settings** section. Without it, the Node doesn't appear in the Node picker.
+
+## Limitations
+
+- The **Handoff message**, **Opening Instruction**, and **Handoff Parameters** together can't exceed 32 KB. If they do, routing fails. If the conversation history makes the total larger, the oldest messages are left out.
+- The platform limits how many times a conversation can be handed off between flows and agents in one session. Handoffs in both directions count toward the limit, and user messages don't reset it. When the limit is reached, routing fails and the conversation stays with the flow.
+
+## Restrictions
+
+- The Node must be the last Node in a flow. If you open the Node picker between two existing Nodes, the Node appears grayed out and can't be selected, and the picker shows the reason under the Node name. To add it, use the **+** button after the last Node in the flow.
+- The Node can't route the conversation while a human agent handover is active.
+- If the Node runs in a turn that the user didn't start, for example right after an agent routed the conversation to this flow, the agent doesn't greet the user, even if **Opening Instruction** is set. Routing still succeeds. This stops a conversation from being routed back and forth without user input.
+- The agent greets the user right after the flow ends only on channels that keep a connection open, such as Webchat and the Interaction Panel. On other channels, such as REST endpoints, the agent ignores **Opening Instruction** and replies to the next user message.
+
+## Settings
+
+### General
+
+| Parameter | Type | Description |
+|---|---|---|
+| Agent | Selector | Specifies the agent that takes over the conversation. This parameter is required. The **Agent Overview** panel shows the number of skills and tools of the selected agent, and its knowledge stores. |
+| Handoff Configurations | Toggle | Shows the parameters that control what the agent receives. The default is off. When the toggle is off, the Node uses the default values of these parameters: the agent greets the user with the default **Opening Instruction** and receives the last exchange. If you turn the toggle off, the parameters return to their default values when you save the Node. |
+
+### Handoff configurations
+
+| Parameter | Type | Description |
+|---|---|---|
+| Handoff message | CognigyScript | Adds context for the agent, for example, why the user needs help. The user doesn't see this message. If you leave the field empty, the agent receives no message. |
+| Opening Instruction | CognigyScript | Defines how the agent greets the user and continues the conversation. The default is "Greet the user and briefly explain how you can help." If you leave the field empty, voice-to-voice agents open the call from their voice prompt, and other agents don't send a greeting. |
+| Share Conversation History | Selector | Controls how much of the earlier conversation the agent receives:<ul><li>**Last exchange only** (default): the last user message and the reply to it.</li><li>**Full conversation**: the last 50 user and assistant messages.</li><li>**None**: no history.</li></ul>Messages from human agents aren't shared. |
+| Handoff Parameters | JSON | Passes extra key-value pairs to the agent. The default is `{}`. Each value can be a plain value or an object with only the `value`, `description`, and `visibility` keys. An object with other keys is passed as a plain value and is visible to the agent. Set `visibility` to `prompt` to make the value visible to the agent, or to `internal` to keep it hidden. If `visibility` is missing or invalid, the value is visible to the agent. |
+
+## Example
+
+### Route a verified customer to an agent
+
+Acme Express has a flow that asks customers for their order number and verifies the number. When the check succeeds, the flow routes the conversation to an agent that handles delivery questions.
+
+1. Add the Agents Node after the last Node of the flow.
+2. From the **Agent** list, select the agent that handles delivery questions.
+3. Turn on **Handoff Configurations**.
+4. In the **Handoff message** field, enter `The customer's order number is {{context.orderNumber}} and the order is verified`.
+5. In the **Opening Instruction** field, enter `Greet the customer and ask how you can help with the delivery`.
+6. From the **Share Conversation History** list, select **Last exchange only**.
+7. In the **Handoff Parameters** field, enter the following JSON:
+
+   ```json
+   {
+     "orderType": {
+       "value": "express",
+       "description": "The delivery service of the order",
+       "visibility": "prompt"
+     }
+   }
+   ```
+
+The agent then greets the customer and can use the order number and the `orderType` value to answer delivery questions.
+
+### Test the node
+
+To test the Node, open the flow in the Interaction Panel and send a message that reaches the Node. The agent's greeting appears right after the flow's output. In the trace, the **Handoff to AI Agent** span shows the transfer. If routing fails, the Interaction Panel shows a debug error with the reason. For details, see [Tracing](/ai/agents/test/interaction-panel/tracing).
+
+## More information
+
+- [Tools](/ai/agents/develop/tools)
+- [Tracing](/ai/agents/test/interaction-panel/tracing)
+- [Bi-directional transfer](/ai/agents/develop/nodes/bi-directional-transfer)
+- [Agentic AI](/ai/agents/overview)

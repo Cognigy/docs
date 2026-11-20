@@ -1,0 +1,76 @@
+---
+title: "Simulator dashboard"
+sidebarTitle: "Dashboard"
+keywords: ['simulator', 'simulations', 'simulate conversations', 'test agents']
+description: "The Simulation dashboard provides insights into agent simulations, including key metrics, performance trends, scheduled simulations, and recent results."
+---
+
+The _Simulator dashboard_ provides a quick overview of the key metrics of simulations through charts, indicators, and tables. It includes performance trends, recent simulations, and general information.
+
+The summary of key metrics is represented in indicators and a bar chart. The tables display the scheduled and recent simulations.
+
+<Frame>
+  <img src="/_assets/ai/test/simulator/simulator-dashboard.webp" alt="Simulator dashboard showing key metrics with indicators, bar charts, and tables of scheduled and recent simulations" style={{ width: 'auto' }} />
+</Frame>
+
+## Prerequisites
+
+- Create at least one scenario to see the Simulator dashboard.
+- An LLM that supports the AI Agent Node feature. Otherwise, the dashboard shows `No LLM configured` and a button to set up an LLM.
+
+## Filters
+
+In the upper-right corner of the dashboard, select a period and scenarios to filter the data:
+
+| Filter    | Description                                                                                                                                                                                    |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Period    | Selects the period for the displayed data. Options:<ul><li>Last 7 days (default)</li><li>Last 30 days</li><li>Last 3 months</li></ul> |
+| Scenarios | Selects the scenarios for the displayed data. All scenarios are selected by default. You can enter a scenario name in the search field at the top of the list or select all scenarios at once.               |
+
+Your browser remembers your filter selection for the Project when you return to the dashboard.
+
+<Tip>
+  Use filters to focus on a group of related scenarios and track their performance over time.
+</Tip>
+
+## Indicators
+
+### Total scenarios
+
+The **Total scenarios** indicator displays the number of scenarios in the Project. If you filter by scenarios, it displays the number of selected scenarios.
+
+### Total simulations
+
+The **Total simulations** indicator displays the number of simulation runs created in the selected period. It includes runs that are in progress or have failed.
+
+### Avg. success rate
+
+The **Avg. success rate** indicator displays the average success rate of the simulation runs in the selected period. Simulations with more runs have more weight in the average.
+
+### Schedules
+
+The **Schedules** indicator displays the number of active schedules. If you filter by scenarios, it displays only the schedules of the selected scenarios.
+
+## Chart
+
+### Success rate over time
+
+The **Success rate over time** chart displays the number of succeeded and failed simulation runs during the selected period. The horizontal axis shows days for the last 7 days and weeks for the last 30 days and last 3 months. The vertical axis shows the number of simulation runs. The lower part of each bar shows succeeded runs. The upper part shows failed runs. Hover over a bar to view more details, for example, the total number of runs and the number and percentage of succeeded and failed runs.
+
+## Tables
+
+### Scheduled simulations
+
+The **Scheduled simulations** table displays the scenarios that have a scheduled simulation, with the date and time of the next run and the frequency. To view schedule details, click a scenario. The **Schedule** panel opens on the **Scenarios** tab.
+
+### Recent simulations
+
+The **Recent simulations** table displays the 20 most recent simulations in the selected period, with their date and time, number of runs, and success rate. The table includes single and multivariate simulations with any status. Click a single simulation to open the simulation results overview. Click a multivariate simulation to open the **Multivariate test report**.
+
+## Simulator dashboard API
+
+You can use the [Cognigy Simulator API](/api-reference-simulator/) to access the Simulator dashboard data.
+
+## More information
+
+- [Simulator overview](/ai/agents/test/simulator/overview)

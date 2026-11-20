@@ -1,0 +1,71 @@
+---
+title: Knowledge
+keywords: ['agent knowledge', 'knowledge store', 'rag', 'knowledge tool', 'search trigger']
+description: Attach knowledge stores to an agent from the Knowledge tab so it can search and cite your content during conversations.
+---
+
+import ParserHyperlinkLimitation from '/snippets/ai/knowledge-ai/parser-hyperlink-limitation.mdx'
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+_Knowledge_ is the agent's retrieval-augmented generation (RAG) capability. This capability is based on [Knowledge AI](/ai/agents/develop/knowledge-ai/overview) and allows you to add information to your agent's context so that the agent can search and use the provided information to reply to end users instead of answering from the model's general training alone.
+
+Knowledge uses [knowledge stores](/ai/agents/develop/knowledge-ai/knowledge-store) and [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) to manage your agent's access to information.
+
+## Prerequisites
+
+- **As a tool**. Attach a [knowledge tool](/ai/agents/develop/flow-agents/configure-jobs-and-tools#configure-tools-for-flow-agents) to the agent's job. The agent decides when to search, based on the tool description. This is the usual choice, and it lets you attach several stores for different subjects.
+- **On the persona**. Attach a [knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store) when creating the agent. Use this when the agent should always draw on one body of content.
+
+## Restrictions
+
+- You can only upload the following file formats to create knowledge stores: PDF, TXT, CTXT, DOCX, PPTX, JPEG, JPG, PNG, BMP, HEIF, TIFF.
+<ParserHyperlinkLimitation />
+
+## How to use knowledge
+
+You can add knowledge to your agent in two ways:
+
+- **To the agent persona**. Assign a [knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store) directly to the agent. Use this approach when the agent always needs to retrieve information from one source.
+- **As a tool**. Add a [Knowledge Search tool](/ai/agents/develop/flow-agents/configure-jobs-and-tools#configure-tools-for-flow-agents) to the agent. The agent decides when to search, based on the tool description. This approach lets you add several knowledge stores for different subjects.
+
+### Add knowledge to agent persona
+
+You can configure knowledge on the **Knowledge** tab when you create an agent from scratch, or by editing an agent:
+
+1. Go to **Design > Agent**.
+2. Click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg)**> Edit** in an agent tile.
+3. In the list under **Select knowledge store**, select a knowledge store. If you don't have a [knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store), create one by dragging and dropping a file into **Create knowledge store** or by clicking **Browse files**. The knowledge store shows up in the list under **Select knowledge store**. You can upload only one file for the knowledge store. You can add more files to the knowledge source you created later in **Design > Knowledge**.
+4. In the **Search** list, select when to search the knowledge store:
+    - **Always** — the agent always retrieves the knowledge store content before answering the user.
+    - **Agent decides** — the agent decides based on the context whether to search the knowledge store content before answering the user.
+5. In the **If search fails** list, select how the agent behaves in case of an error during the knowledge search process:
+    - **Answer anyway** — the agent generates an answer based on context and the LLM's training data.
+    - **Decline with generic error** — the agent throws an error.
+6. Click **Save**.
+
+### Add knowledge as a tool
+
+You can add a Knowledge Search tool to an agent so the agent searches the knowledge stores of your project for passages that are relevant to a query. The agent decides when to call the tool based on its description.
+
+1. Go to **Design > Agent**.
+2. Click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Edit** in an agent tile.
+3. Open **Tools** and create a new tool.
+4. Configure the following:
+    - **Name** — enter a name for the tool, for example, `Knowledge Search`.
+    - **Description** — describe what the tool does, when the agent should call it, and what it returns, for example, `Search the project's knowledge stores for passages relevant to a query`.
+5. Under **Standard Parameters**, configure the following:
+    - **Query** — set to **AI filled**. This option allows the agent to determine what to search based on the conversation.
+    - **Topk** — enter the maximum number of passages to return. The default value is `5`.
+    - **Limit to knowledge stores** — select the knowledge stores to search. If you leave this field empty, the tool searches all knowledge stores in the project, including the ones you add later.
+    - **Language** — enter the language tag of the search, for example, `en-US`. The default value is `en-US`.
+6. Click **Save**.
+
+## More information
+
+- [Knowledge](/ai/agents/develop/knowledge-ai/overview)
+- [Knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store)
+- [Knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors)
+- [Search Extract Output node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/search-extract-output)
+- [Tools](/ai/agents/develop/tools)

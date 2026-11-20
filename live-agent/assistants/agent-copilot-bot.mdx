@@ -1,0 +1,103 @@
+---
+title: Agent Copilot bot
+description: Set up Agent Copilot bots as personal virtual assistants for human agents in Live Agent to automate workflows and assist with complex customer inquiries.
+keywords: ['agent copilot bot', 'virtual assistant', 'human agents', 'live agent', 'ai assistance']
+
+---
+
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+_Agent Copilot bots_ are personal virtual assistants for human agents. These assistants automate service processes, give human agents access to relevant resources, and assist in answering common customer questions.
+
+Human agents can interact with Agent Copilot bots in every customer conversation to solve complex customer issues more efficiently and faster to improve customer experience.
+
+Only users with the `Administrator` role can create, edit, or delete Agent Copilot bots in Live Agent.
+
+Differing from other Agent Copilot assistants, a human agent can use multiple Agent Copilot bots within a single conversation.
+While the Agent Copilot assistants listen to the conversation and attempt to follow it,
+an Agent Copilot bot acts as an independent secondary bot with built-in logic to assist the human agent.
+For instance, if the human agent requires additional expertise during the conversation,
+they can activate a specialized Agent Copilot bot, such as one for technical support or order processing.
+
+<Frame>
+   <img src="/_assets/live-agent/conversation/la_ai_copilot_bot.png" alt="Agent Copilot bot overview in Live Agent" style={{ width: 'auto' }} />
+</Frame>
+
+## Before you begin
+
+To use Agent Copilot bots in a Live Agent conversation, you need to create two flows and two endpoints in Cognigy that comply with the following conditions:
+
+- The **Main** flow for interaction between an agent and an end user. Within this flow, add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) node to transition the conversation from the agent to a human agent. The inbox ID must be included in the Handover to Human Agent node.
+- The endpoint for the **Main** flow.
+- The **Agent Copilot bot** flow for interaction between an Agent Copilot bot and a human agent.
+- The endpoint for the **Agent Copilot bot** flow.
+
+## Create Agent Copilot bots
+
+You can create multiple Agent Copilot bots within an inbox.
+
+To create an Agent Copilot bot, do the following:
+
+1. In the Live Agent interface, go to **Settings > Inboxes**.
+2. To edit the previously created inbox settings, click **Settings** next to the inbox.
+3. On the **Settings** tab, click **Add Bots**.
+4. In the **Create New Copilot Bot** window, fill in the following fields:
+    - **Name** — enter a unique name for your bot. This name is helpful if there are multiple bots within the same inbox, allowing you to distinguish them easily.
+    - **Endpoint URL** — enter the URL copied from the endpoint settings in Cognigy. You can find and copy the URL in the **Integration** section on the **Setup** tab of the Webchat endpoint for the previously created Agent Copilot bot flow in Cognigy.
+5. Click **Add**.
+
+The created Agent Copilot bot will be available for all assigned human agents within the inbox.
+
+## Use Agent Copilot bots in conversations
+
+Note that you can use multiple Agent Copilot bots within a conversation. Each bot creates a separate session that needs to be [manually closed](#complete-agent-copilot-bot-sessions) after ending the conversation.
+
+To use Agent Copilot bots in a conversation, do the following:
+
+1. Go to your conversation.
+2. At the top of the conversation window, click **More details**.
+3. On the right side of the **Conversation Details** window, select the **Copilot** tab.
+4. Open the dropdown list and select one of the available bots.
+5. In the text field at the bottom of the window, write your request to the Agent Copilot bot. The Agent Copilot bot performs research as configured in the Agent Copilot bot flow and sends back the result in a separate Live Agent chat, such as a product video, image, text, and more.
+6. To forward the provided content to the Live Agent conversation, click directly on the content item. It will be sent to the **Reply to User** field in the main conversation chat.
+7. Click **Send** to provide the content item to the customer in the main conversation chat.
+
+This way, the Agent Copilot bot becomes a dependable assistant for human agents, enabling them to delegate tasks to the bot and then share the outcomes with the customer.
+
+## Complete Agent Copilot bot sessions
+
+To complete a session with an Agent Copilot bot, do the following:
+
+1. Go to your conversation.
+2. At the top of the conversation window, click **More details**.
+3. On the right side of the conversation window, select the **Copilot** tab.
+4. Click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg).
+5. In the dropdown list, select **Reset Session**.
+
+The session will stop, the interaction with the bot will finish, and the Agent Copilot bot communication history will be cleared.
+
+## Send transcripts to assigned agents
+
+In case you want to send a conversation transcript to a specific email address or to the assigned human agents, do the following:
+
+1. Go to your conversation.
+2. In the upper-right corner of the conversation window, click **Send Transcript**.
+3. In the **Send conversation transcript** window, select one of the following options:
+    - **Send the transcript to the assigned agent** — the conversation transcript will be sent to a human agent currently assigned to handle the interaction. This is useful when you want the assigned human agent to have a record of the conversation for reference or follow-up.
+    - **Send the transcript to another email address** — the conversation transcript will be sent to a different email address. This is helpful when you need to share the conversation details with someone other than the assigned human agent, such as a supervisor, team member, or any other relevant party.
+4. Click **Submit**.
+
+A transcript will be sent to the selected receiver.
+
+<Note>
+  The email transcript includes only the conversation history between a human agent and their customer. If the human agent calls an Agent Copilot bot for help, that interaction takes place on a separate channel and in a different session, and it won't be included in the transcript.
+</Note>
+
+## More information
+
+- [Live Agent assistants](/live-agent/assistants/overview)
+- [Endpoints](/ai/agents/deploy/endpoints/overview)
+- [Inboxes](/live-agent/settings/inboxes)

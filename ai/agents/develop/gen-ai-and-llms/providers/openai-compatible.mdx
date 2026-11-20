@@ -1,0 +1,69 @@
+---
+title: OpenAI-compatible LLMs
+description: "Add an OpenAI-compatible LLM to Cognigy with an API key or OAuth2 connection, and apply the model to the corresponding use case."
+keywords: ['llms', 'openai compatible', 'openai compatible llms']
+---
+
+import CompletionApiDeprecation from '/snippets/ai/completion-api-deprecation.mdx'
+import AiGenerativeAiAddModelViaApi from "/snippets/ai/generative-ai/add-model-via-api.mdx";
+import AiGenerativeAiApplyModel from "/snippets/ai/generative-ai/apply-model.mdx";
+import AiGenerativeAiApplyAndTestConnection from "/snippets/ai/generative-ai/apply-and-test-connection.mdx";
+
+
+<CompletionApiDeprecation alternative="Switch to the `https://api.openai.com/v1/chat/completions` API instead before the removal date."/>
+
+<Warning>
+  You're subject to the terms and conditions of the third-party LLM providers
+  you're using.
+</Warning>
+
+To start using an OpenAI-compatible model with Cognigy features, follow these steps:
+
+1. [Add models](#add-models)
+2. [Apply the model](#apply-the-model)
+
+## Add models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add models via GUI
+
+You can add a model compatible with OpenAI's API standards to Cognigy in **Manage > AI & Voice Providers > Language Models**. In **Generative AI Connection**, select an existing connection or click the + button to create one. The connection stores the credentials. To add the model, you'll need the following parameters:
+
+| Parameter | Type | Description |
+|---|---|---|
+| Connection Type | List | Select one of the following authentication methods:<ul><li>**API Key**. Authenticate with an API key from the provider.</li><li>**OAuth2**. Authenticate with the OAuth 2.0 client credentials flow. Use this method if your provider issues short-lived access tokens instead of static API keys.</li></ul> |
+| API Key | Text | This parameter appears if you select **API Key** in **Connection Type**. Add an API key from the respective provider. |
+| Client ID | Text | This parameter appears if you select **OAuth2** in **Connection Type**. Enter the client ID assigned to your application by the provider. |
+| Client Secret | Text | This parameter appears if you select **OAuth2** in **Connection Type**. Enter the client secret of your application. |
+| OAuth2 URL | Text | This parameter appears if you select **OAuth2** in **Connection Type**. Enter the URL of the `/token` endpoint on the authorization server that returns the access token. |
+| Scope | Text | This parameter appears if you select **OAuth2** in **Connection Type**. Enter the scopes for the requested permissions. |
+| Additional Header Name | Text | This parameter appears if you select **OAuth2** in **Connection Type**. Optional. Enter the name of an additional HTTP header your provider requires, such as `Subscription-Key`. Cognigy sends it with the token request and with model requests. |
+| Additional Header Value | Text | This parameter appears if you select **OAuth2** in **Connection Type**. Enter the value of the optional additional header. |
+| Type | List | Select one of the following options:<ul><li>**Chat**. Lets you use either the [Chat Completions](https://platform.openai.com/docs/api-reference/chat) or [Responses](https://platform.openai.com/docs/api-reference/responses) API for chat models.</li><li>**Completion**. Uses the `https://api.openai.com/v1/completions` API.</li><li>**Embedding**. Uses the `https://api.openai.com/v1/embeddings` API.</li></ul>For more information, refer to the [OpenAI Text Generation Models](https://platform.openai.com/docs/guides/text-generation) documentation. |
+| Configuration name | Text | Enter a name for the model configuration. This name is displayed in the models list in **Manage > AI & Voice Providers**. |
+| API Type | List | This parameter appears if you select **Chat** in **Type**. Select one of the following API options for chat models:<ul><li>**Chat Completion**. Uses the `https://api.openai.com/v1/chat/completions` API. This option is selected by default.</li><li>**Responses**. Uses the `https://api.openai.com/v1/responses` API.</li></ul>Make sure that your LLM provider supports the selected API type. |
+| Custom auth header | Text | Enter the name of a custom HTTP header for authentication, such as `X-Custom-Auth`. This parameter is helpful when integrating with OpenAI-compatible models or third-party APIs that don't accept the standard `Authorization` header. Instead of sending the API key as `Authorization: Bearer <your-api-key>`, the system will send it using your custom header name. For example, `X-Custom-Auth: <your-api-key>`. |
+| Use a base address | Toggle | Activate to enter a base address. Use a base address unless your URL is a fully qualified endpoint URL. |
+| Base address | Text | This parameter appears if **Use a base address** is activated. Enter the base URL of the LLM provider. For example, `https://api-inference.huggingface.co/v1/` for Hugging Face. |
+| Fallback model | Toggle | Activate to switch automatically to another model if this connection becomes unavailable. After you activate it, configure the following settings:<ul><li>**Fallback model selection**. Select the model to switch to. **None** is selected by default.</li><li>**Number of failed requests**. Use the slider to set a value from 1 to 5.</li><li>**Duration in minutes of active fallback**. Use the slider to set a value from 1 to 30 minutes.</li><li>**Email notifications**. Click **Add email** to add up to 5 email addresses to receive notifications when the fallback is triggered. If you leave this field empty, no notifications are sent.</li></ul> |
+| Custom model | Text | Enter the name of the model supported by the respective provider. To find model names, refer to the LLM provider's documentation. |
+
+<AiGenerativeAiApplyAndTestConnection/>
+
+<AiGenerativeAiAddModelViaApi />
+
+## Apply the model
+
+<AiGenerativeAiApplyModel />
+
+## More information
+
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)
+- [Microsoft Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai)

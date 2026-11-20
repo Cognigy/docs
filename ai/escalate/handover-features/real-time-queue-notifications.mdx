@@ -1,0 +1,224 @@
+---
+title: Real-time queue notifications
+keywords: ['handovers', 'queue notifications', 'wait time', 'real-time updates', 'handover queue', 'queue position']
+description: Provide end users with live updates on their queue position and estimated wait time to enhance transparency and reduce anxiety during handovers to human agents.
+---
+
+
+_Real-time queue notifications_ keep end users informed about queue updates by providing real-time information on their position and estimated wait time. This feature helps reduce anxiety and creates transparency, making end users feel valued and respected.
+
+By analyzing the data collected from the queue, you can identify patterns and trends for further analysis. For example, you might identify peak times when the queue is longest or determine the typical wait time for a response from a human agent.
+
+## Key benefits
+
+- **Reduced user anxiety**. End users receive continuous updates about their queue position and estimated wait time.
+- **Increased transparency**. Real-time visibility into queue status builds trust and sets clear expectations.
+- **Alternative messaging**. Automatically sends a customized message when queue conditions exceed defined thresholds.
+- **Pattern analysis**. Collected queue data helps identify peak times and typical response times.
+
+## Prerequisites
+
+- A [handover provider](/ai/escalate/handover-reference/overview) is configured. Real-time queue notifications are supported by [Cognigy Live Agent](/ai/escalate/handover-reference/live-agent), [Salesforce Enhanced Chat](/ai/escalate/handover-reference/salesforce-enhanced-chat), and [Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging).
+- For Genesys Cloud Open Messaging, an active [Amazon EventBridge Source integration](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge) and admin access to Genesys Cloud to configure use and integration settings are required.
+- The endpoint that supports the selected handover provider is configured. For testing purposes, you can use the [Webchat v3 endpoint](/webchat/v3/overview) with [Demo Webchat](/webchat/demo).
+
+## How it works
+
+To set up real-time queue notifications, follow these steps:
+
+1. Configure the following nodes in your flow:
+    1. [Handover to Human Agent](#configure-settings-for-handover-to-human-agent-node-or-tool) node or [AI Agent node with the Handover to Human Agent tool](#configure-settings-for-handover-to-human-agent-node-or-tool) — allows queue position and wait time tracking.
+    2. [Lookup](#add-lookup-node) — routes the flow based on handover status.
+    3. [If](#add-if-node) — evaluates queue conditions.
+    4. [Say](#add-say-nodes) — displays queue updates or alternative messages to the user.
+    5. [Go To](#add-go-to-node) — loops back to continue monitoring the queue.
+2. Configure the provider-side settings to enable queue notifications for [Salesforce Enhanced Chat](#configure-settings-in-salesforce-enhanced-chat) or [Genesys Cloud Open Messaging](#configure-settings-in-genesys-cloud-open-messaging).
+3. _(Optional)_ Configure the [Agent Copilot workspace](/live-agent/assistants/agent-copilot).
+
+## Configure settings for handover to human agent node or tool
+
+<Tabs>
+  <Tab title="Handover to human agent node">
+  1. In the flow editor, add a [Handover to Human Agent](/ai/agents/develop/node-reference/service/handover-to-agent) node.
+  2. In the Handover to Human Agent node, select **Live Agent**, **Salesforce Enhanced Chat**, or **Genesys Cloud Open Messaging** from the **Handover provider** list.
+  3. For the queue position, configure the following:
+      - **Queue position** — activate the setting to retrieve the end user's current queue position. This setting isn't available for Genesys Cloud Open Messaging, which doesn't provide a queue position. If you use Genesys Cloud Open Messaging, skip this step and go to step 4.
+      - **Update interval** — enter the interval (in seconds) to receive updates on the queue status. For example, set the interval to `30` seconds to receive updates every half-minute. This setting is applicable only to Live Agent.
+  4. For estimated wait time, configure the following settings:
+      - **Estimated wait time** — activate the setting to retrieve the estimated wait time for the end user.
+      - **Update interval** — enter the interval (in seconds) to receive updates on the wait time. For example, set the interval to `30` seconds to receive updates every half-minute. This setting isn't available for Salesforce Enhanced Chat.
+  5. Configure alternative update options:
+      - **Fallback message** — activate the alternative update options that trigger when certain conditions are met, such as reaching the maximum queue position or maximum estimated wait time.
+      - **Maximum queue position** — enter the maximum queue position. If you set this to `5`, the system sends an alternative message when the user's position exceeds 5. This setting isn't available for Genesys Cloud Open Messaging, which doesn't provide a queue position.
+      - **Maximum estimated wait time** — enter the maximum estimated wait time in milliseconds. Set this to `300000` milliseconds (5 minutes). If the estimated wait time exceeds this time, the system sends the alternative message set in the **Message text** field.
+      - **Message text** — enter a message that is sent when either the maximum queue position or maximum wait time is reached. For example, `Thank you for your patience. We are experiencing higher than usual wait times. Please hold on, and an agent will assist you shortly.`
+  6. Click **Save Node**.
+
+  </Tab>
+  <Tab title="Handover to human agent tool">
+  1. In the flow editor, add an AI Agent node and a [Handover to Human Agent tool](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-human-agent-tool).
+  2. In the Handover to Human Agent tool, select **Live Agent**, **Salesforce Enhanced Chat**, or **Genesys Cloud Open Messaging** from the **Handover provider** list.
+  3. In the **Event settings** section, activate **Send queue event**. If this setting is inactive, the flow doesn't continue after the handover starts, and queue updates can't reach the nodes below the AI Agent node.
+  4. For the queue position, configure the following:
+      - **Queue position** — activate the setting to retrieve the end user's current queue position. This setting isn't available for Genesys Cloud Open Messaging, which doesn't provide a queue position. If you use Genesys Cloud Open Messaging, skip this step and go to step 5.
+      - **Update interval** — enter the interval (in seconds) to receive updates on the queue status. For example, set the interval to `30` seconds to receive updates every half-minute. This setting is applicable only to Live Agent.
+  5. For estimated wait time, configure the following settings:
+      - **Estimated wait time** — activate the setting to retrieve the estimated wait time for the end user.
+      - **Update interval** — enter the interval (in seconds) to receive updates on the wait time. For example, set the interval to `30` seconds to receive updates every half-minute. This setting isn't available for Salesforce Enhanced Chat.
+  6. Configure alternative update options:
+      - **Fallback message** — activate the alternative update options that trigger when certain conditions are met, such as reaching the maximum queue position or maximum estimated wait time.
+      - **Maximum queue position** — enter the maximum queue position. If you set this to `5`, the system sends an alternative message when the user's position exceeds 5. This setting isn't available for Genesys Cloud Open Messaging, which doesn't provide a queue position.
+      - **Maximum estimated wait time** — enter the maximum estimated wait time in milliseconds. Set this to `300000` milliseconds (5 minutes). If the estimated wait time exceeds this time, the system sends the alternative message set in the **Message text** field.
+      - **Message text** — enter a message that is sent when either the maximum queue position or maximum wait time is reached. For example, `Thank you for your patience. We are experiencing higher than usual wait times. Please hold on, and an agent will assist you shortly.`
+  7. Click **Save Node**.
+  </Tab>
+</Tabs>
+
+When the settings are configured, you can test this configuration by creating a handover via [Demo Webchat](/webchat/demo). In the chat, as an end user, you receive the message in the following format:
+
+```json
+{
+  "request": {
+    "position": 3,
+    "estimatedWaitTime": 300000
+  }
+}
+```
+
+In the following sections, you convert this message to make it more accessible and to configure the **Message text** message output.
+
+## Add lookup node
+
+1. Below the Handover to Human Agent node or tool, add a [Lookup](/ai/agents/develop/node-reference/logic/lookup) node.
+2. Click the Lookup node and select **Handover Status** from the **Type** list.
+3. Click **Save Node**.
+4. In the Case node of the Lookup node, select **Queue** from the **Handover Status** list and click **Select**.
+5. Click **Save Node**.
+6. Remove the second Case node.
+
+## Add if node
+
+1. Below the Case node, add an [If](/ai/agents/develop/node-reference/logic/if) node.
+2. In the If node, click **Use Advanced Editor** and add the following condition:
+
+    ```txt
+    {{input.data.request.position}} < 2 && {{input.data.request.estimatedWaitTime / (1000 * 60)}} < 200
+    ```
+
+    where:
+
+    - `{{input.data.request.position}} < 2` — checks if the customer's position in the queue is less than 2. If true, it means the customer is either in first or second position in the queue.
+    - `{{input.data.request.estimatedWaitTime / (1000 * 60)}} < 200` — calculates the estimated wait time in minutes. The estimated wait time is provided in milliseconds. Dividing it by `(1000 * 60)` converts it to minutes. This CognigyScript expression checks if this wait time is less than 200 minutes. If true, it means the estimated wait time is manageable.
+
+3. Click **Save Node**.
+
+## Add say nodes
+
+1. Below the condition **Then**, add a [Say](/ai/agents/develop/node-reference/basic/say) node.
+2. Click the Say node and enter the following text into the **Text** field:
+
+    ```txt
+    Position: {{input.data.request.position}}
+
+    Estimated time: {{input.data.request.estimatedWaitTime / (1000 * 60)}} minutes
+    ```
+
+    where:
+
+    - `input.data.request.position` — the user's current position in the queue.
+    - `input.data.request.estimatedWaitTime / (1000 * 60)` minutes — the estimated wait time in minutes. The `estimatedWaitTime` is initially provided in milliseconds. It's divided by 1000 to convert it to seconds, and then by 60 to convert it to minutes.
+
+3. Click **Save Node**.
+4. Below the condition **Else**, add another Say node and configure the following:
+    - **Text** — enter `{{input.handover.data.alternativeText}}`. This CognigyScript expression returns the text from the **Message text** field of the Handover to Human Agent node or tool that [you configured earlier](#configure-settings-for-handover-to-human-agent-node-or-tool).
+    - _(Optional)_ **Label** — enter `Alternative text`.
+
+5. Click **Save Node**.
+
+## Add go to node
+
+1. Right-click the Lookup node and select **Set Entrypoint**.
+2. Below the Say nodes, add a [Go To](/ai/agents/develop/node-reference/logic/go-to) node.
+3. In the Go To node, configure the following:
+    - **Select Flow** — select the current flow.
+    - **Select Node** — select **Lookup**.
+    - In the **Advanced** section, select **Go to Node and wait for Input** from the **Execution Mode** list.
+4. Click **Save Node**.
+
+<Frame>
+    <img src="/_assets/live-agent/conversation/real-time-queue-notifications.webp" alt="Flow configuration for real-time queue notifications with Say and Go To nodes" style={{ width: '80%' }} />
+</Frame>
+
+## Configure settings in Salesforce Enhanced Chat
+
+If you use [Salesforce Enhanced Chat](/ai/escalate/handover-reference/salesforce-enhanced-chat) as your handover provider, activate queue notifications in the Salesforce settings:
+
+1. In Salesforce, go to the **Setup** page, enter `Messaging Settings` in the **Quick Find** box, and click **Messaging Settings**. Alternatively, go to **Feature Settings > Service > Messaging > Messaging Settings** in the navigation menu.
+2. In the **Channels** section, find the channel you want to configure, click the arrow-down icon, and select **Edit**.
+3. Go to the **Queue wait time and position** section.
+4. From the **Notification** list, select one of the following options:
+    - **Estimated wait time** — sends the estimated wait time to the end user.
+    - **Queue position** — sends the user's current position in the queue.
+5. Click **Save**.
+
+## Configure settings in Genesys Cloud Open Messaging
+
+If you use [Genesys Cloud Open Messaging](/ai/escalate/handover-reference/genesys-cloud-open-messaging) as your handover provider, real-time queue notifications rely on the [Amazon EventBridge integration](/ai/escalate/handover-reference/genesys-cloud-open-messaging-with-amazon-eventbridge). Complete the following configuration in Genesys Cloud.
+
+<Note>
+Genesys Cloud Open Messaging doesn't provide a queue position. Estimated wait time is the only parameter available and is calculated internally by Genesys Cloud Open Messaging.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="1. Add the `user.start` topic filter to the integration">
+
+    Cognigy needs to receive the event indicating when a human agent accepts (answers) a conversation. This event is delivered through the Amazon EventBridge Source's event stream.
+
+    1. In Genesys Cloud, go to **IT and Integrations > Integrations**.
+    2. On the **Integrations** page, select the **Amazon EventBridge Source** that you created previously.
+    3. Open the **Configuration** tab.
+    4. Go to **Properties > Topic Filtering**.
+    5. Select `v2.detail.events.conversation.{id}.user.start`.
+    6. Click **Save and Activate**.
+
+    For more information, see the [UserStartEvent documentation](https://developer.genesys.cloud/analyticsdatamanagement/analytics/detail/analytics-detail-events#userstartevent) in the Genesys Cloud Developer Center.
+
+  </Accordion>
+  <Accordion title="2. Set the maximum capacity">
+
+    Estimated wait time is only calculated once an agent has reached maximum capacity and additional conversations are placed on hold.
+
+    1. In Genesys Cloud, go to **Digital and Telephony > Interaction Assets > Utilization**.
+    2. On the **Organization** tab, go to **Channels**.
+    3. In the **Message** row, click **Edit** in the **Actions** column.
+    4. Set **Maximum Capacity** to `1`, or the value needed for your setup.
+
+    When a human agent reaches this capacity, any additional conversation is placed on hold, and Genesys begins polling and returning an estimated wait time for it.
+
+    <Warning>
+    A direct transfer between human agents overrides maximum capacity. Skipping the hold and estimated-wait-time behavior is a native Genesys Cloud Open Messaging capability and can't be changed in Cognigy.
+    </Warning>
+
+  </Accordion>
+</AccordionGroup>
+
+## (Optional) Agent Copilot
+
+If you use the [Agent Copilot workspace](/live-agent/assistants/agent-copilot) and Agent Copilot is active in your contact center, the Agent Copilot flow needs additional configuration to send queue update messages.
+
+To configure the Agent Copilot flow for sending queue update messages, complete the following steps:
+
+1. Add a Handover to Human Agent node to the Agent Copilot flow. Configure this node the same way as the [Handover to Human Agent node](#configure-settings-for-handover-to-human-agent-node-or-tool) in your main flow.
+2. Add a Lookup node for the Queue status, followed by an If node, Say nodes, and a Go To node. Mirror the logic you already configured in the main flow:
+   - [Add Lookup node](#add-lookup-node)
+   - [Add If node](#add-if-node)
+   - [Add Say nodes](#add-say-nodes)
+   - [Add Go To node](#add-go-to-node). In the Agent Copilot flow, point the Go To node to the Agent Copilot flow's own Lookup node so the queue keeps updating.
+3. In the main flow, below the [Case node that checks the Queue status](#add-lookup-node), add a [Go To node](/ai/agents/develop/node-reference/logic/go-to) that points to the Agent Copilot flow's Lookup node.
+
+## More information
+
+- [Handover status](/ai/escalate/handover-features/handover-status)
+- [User inactivity detection and handling](/ai/escalate/handover-features/user-inactivity-detection)
+- [Lookup](/ai/agents/develop/node-reference/logic/lookup)
+- [Agent Handover](/ai/agents/develop/node-reference/service/handover-to-agent)

@@ -1,0 +1,60 @@
+---
+title: 'Copilot: Knowledge tile node'
+keywords: ['knowledge tile', 'agent copilot', 'knowledge ai', 'human agent assist', 'knowledge search']
+description: "Use the Copilot: Knowledge Tile node to show Knowledge AI search results to human agents in the Agent Copilot dashboard."
+---
+
+
+The _Copilot: Knowledge Tile node_ is an [Agent Copilot node](/ai/agents/develop/node-reference/agent-copilot/overview) that uses [Knowledge AI](/ai/agents/develop/knowledge-ai/overview) to provide human agents with accurate information about customer questions.
+
+## Key features
+
+- The Copilot: Knowledge Tile adds an [Agent Copilot widget](/agent-copilot/configure/nodes) in which human agents can use a search bar to access [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) and find information to answer questions from customers.
+- With the [Copilot: Knowledge Tile node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile), you can use the [Search Extract Output node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/search-extract-output) to retrieve context-aware information, along with additional materials such as references and videos, with [source metadata](/ai/agents/develop/knowledge-ai/knowledge-source/overview#source-metadata) and [chunk metadata](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk).
+
+## Prerequisites
+
+- You have configured [Agent Copilot](/agent-copilot/getting-started/chat).
+- You have added a [large language model (LLM) to your project](/ai/agents/develop/gen-ai-and-llms/providers/all-providers) that supports [knowledge search and answer extraction](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+- You have created [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview).
+
+## Set up the Copilot: Knowledge tile
+
+To set up the Copilot: Knowledge Tile, select the flow where you configured Agent Copilot in **Design > Flows** and add the following nodes in the flow editor:
+
+- [If node](#if-node) — separates the Copilot: Knowledge Tile node from other Agent Copilot nodes. This separation prevents the content of other widgets from updating while the agent uses the Copilot: Knowledge Tile node.
+- [First Copilot: Knowledge Tile node](#first-copilot-knowledge-tile-node) — starts the knowledge retrieval.
+- [Once node](#once-node) — guarantees that the flow executes the Copilot: Knowledge Tile node once.
+- [Second Copilot: Knowledge Tile node](#second-copilot-knowledge-tile-node) — a duplicate of the first Copilot: Knowledge Tile node that executes the knowledge retrieval.
+
+### If node
+
+1. Click **+** under **Start** and add an [If node](/ai/agents/develop/node-reference/logic/if).
+2. In the **Condition** field, enter `input.data._cognigy._agentAssist.payload.tileId === TILE_ID`, where `TILE_ID` is the Tile ID you created in the [Agent Copilot configuration](/agent-copilot/configure/overview).
+
+### First Copilot: Knowledge tile node
+
+1. After the **Then** child node of the If node, add the first Copilot: Knowledge Tile node.
+    - **Tile ID** — enter the Tile ID you created in the [Agent Copilot configuration](/agent-copilot/getting-started/chat).
+    - **Knowledge Source** — select the knowledge source from which you want to retrieve information.
+
+### Once node
+
+1. Add a [Once node](/ai/agents/develop/node-reference/logic/once) after the If node.
+
+### Second Copilot: Knowledge tile node
+
+To copy the first Copilot: Knowledge Tile node and paste it after the **On First Time** child node, do the following:
+
+1. Click the first Copilot: Knowledge Tile node and press **Cmd + C** or **Ctrl + C**.
+2. Click the **On First Time** child node and press **Cmd + V** or **Ctrl + V**.
+
+For more detailed information about the Copilot: Knowledge Tile node, read the [Copilot: Knowledge Tile node reference](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile).
+
+## More information
+
+- [Getting Started with Agent Copilot](/agent-copilot/getting-started/overview)
+- [Knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview)
+- [Agent Copilot nodes](/ai/agents/develop/node-reference/agent-copilot/overview)
+- [If node](/ai/agents/develop/node-reference/logic/if)
+- [Copilot: Knowledge Tile node](/ai/agents/develop/node-reference/agent-copilot/knowledge-tile)

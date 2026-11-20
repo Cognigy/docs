@@ -1,0 +1,43 @@
+---
+title: Included models
+keywords: ['llms', 'included models', 'platform-provided llm', 'cognigy llm']
+seo:
+  metatags:
+    description: >-
+      Use LLMs and embedding models that NiCE Cognigy provides with your license, without creating a model or entering API credentials.
+---
+
+
+_Included models_ are LLMs and embedding models that NiCE Cognigy provides as part of your license. Their usage is included in the conversation price. You don't need to create a model or enter API credentials.
+
+<Note>
+  Before you can use included models, note the following:
+
+  - You must sign a new SKU to enable included models.
+  - Included models are available only to installations integrated with NiCE CXone.
+
+  To set up included models for your organization, contact your customer success manager.
+</Note>
+
+## Activate included models
+
+Models available in your region are activated by default. For models outside your region, an admin must activate them in the Admin Center under **Resources > LLMs**. Only users with admin role can activate included models.
+
+To activate a model, follow these steps:
+
+1. Go to the admin center and navigate to **Resources > LLMs**. The included models are listed in the **Included models** section.
+2. Turn on the toggle for each model you want to use.
+
+    - For a model with the **In region** tag, the toggle takes effect immediately. These models are activated by default.
+    - For a model with the **Outside region** tag, a dialog asks you to confirm that you accept processing data outside your regional boundary. Select the checkbox and click **Accept & enable**. If your organization can't accept this, use your own model instead.
+
+Once an admin activates a model, it's available in all projects in the organization.
+
+To turn off an included model, switch off its toggle and click **Disable**. The model is no longer available in any project, so any resource that uses it stops working until you assign another model.
+
+## Apply included models
+
+To apply included models in a project, follow these steps:
+
+1. In the navigation menu of the project, go to **Manage > AI & Voice Providers**. In **Language Models > Models**, you can identify the included models by the **Included** tag.
+2. Go to **Language Models > Assignments** and select the included model next to the feature that should use it.

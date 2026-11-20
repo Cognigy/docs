@@ -1,0 +1,24 @@
+---
+title: "Data privacy and security"
+sidebarTitle: "Data privacy and security"
+keywords: ['data privacy', 'security', 'ai agent', 'contact profile', 'safety instructions']
+description: "Configure contact profile use and safety instructions when creating a flow agent from scratch."
+---
+
+When you [create a flow agent from scratch](/ai/agents/develop/flow-agents/overview#create-from-scratch), configure the following fields in the **Data Privacy & Security** step:
+
+- **Contact Profile Information** — select which information the flow agent should use from the [Cognigy Contact Profile](/ai/agents/analyze/contact-profiles):
+    - **None** — no data will be used from the contact profile.
+    - **Selected Profile Fields** — enter specific fields from the contact profile for targeted data use. Specify the field using the [Profile keys](/ai/agents/analyze/contact-profiles#profile-schema) format and press <kbd>Enter</kbd> to apply it.
+    - **Complete Profile** — use all fields from the contact profile to provide comprehensive user details. This option is selected by default.
+    - **Profile Memories** — use the [Memories](/ai/agents/analyze/contact-profiles#profile-schema) field from the contact profile.
+- **Safety Instructions** — adjust the flow agent's safety settings to guide content generation, interactions, and responses, ensuring compliance with ethical, legal, and operational standards. Although these settings reduce risks, unexpected outputs can still occur. The selected safety instructions are included in the prompt to enhance safety, which may increase token usage. Select the safety instructions you want to apply. All four are selected by default:
+    - **Avoid harmful content** — prevent generating content that could be harmful, offensive, or abusive to end users.
+    - **Avoid ungrounded content** — prevent generating content that is based on speculation or unsupported claims, ensuring it is reliable and verifiable.
+    - **Avoid copyright infringements** — prevent generating content that violates intellectual property rights or uses copyrighted material without authorization.
+    - **Prevent jailbreak and manipulation** — prevent attempts to bypass security measures or manipulate the flow agent into producing unauthorized or unsafe content.
+
+## More information
+
+- [Manage flow agents](/ai/agents/develop/flow-agents/overview)
+- [Contact Profiles](/ai/agents/analyze/contact-profiles)

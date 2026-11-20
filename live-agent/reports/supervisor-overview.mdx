@@ -1,0 +1,106 @@
+---
+title: Supervisor overview report
+description: Monitor real-time conversation activity with the Live Agent supervisor overview report, tracking agent status and key metrics for the past 24 hours.
+keywords: ['supervisor report', 'live agent report', 'live agent supervisor overview']
+---
+
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+<Note>
+  This report is only visible with the [Supervisor role](/live-agent/roles#supervisor).
+</Note>
+
+This report offers an overview of all conversations related to a specific inbox,
+including the number of conversations received within the last 24 hours.
+All displayed data is relevant to this 24-hour time period.
+Additionally, you'll find an overview of agent status and conversation handling metrics.
+At the bottom of the report, there's a list of conversations that indicate the agents' ongoing work.
+
+The summary of key metrics is represented in the following charts:
+
+- [Indicators](#indicators)
+- [Line charts](#line-charts)
+- [Tables](#tables)
+
+<Frame>
+<img src="/_assets/live-agent/LA_Supervisor_overview_1.webp" alt="Live Agent supervisor overview" style={{ width: 'auto' }} />
+</Frame>
+
+## Indicators
+
+### Open conversations
+
+Indicates the number of conversations that have the following statuses: `Open`, `Queued`, `Unassigned`, or `Escalated`.
+The number of `Escalated` conversations changes only when the [Allow agents to escalate conversations to supervisors](/live-agent/settings/inboxes#escalate-conversations-to-supervisors) setting is activated at the inbox level and an agent clicks the **↑ Escalate to Supervisor** button in the [Conversation Actions](/live-agent/conversation/assign-conversations#assign-supervisors) section of the conversation chat.
+
+### Today
+
+Indicates the number of conversations that were handled on the current day.
+
+### Agent status
+
+Indicates the number of agents who are currently `Online`, `Busy`, `Away`, or `Offline`.
+
+### Conversation handling
+
+Conversation handling indicates the following real-time metrics:
+
+| Metric                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **First Response Time (Avg)** | The average time it takes for an agent to respond to a customer in a conversation.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Resolution Time (Avg)**     | The average time required to resolve conversations with a customer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Queue Time (Avg)**          | The average time that an incoming conversation waits for assignment to a human agent.<br/>This value is measurable in two scenarios:<ul><li>When [auto-assigning conversations](/live-agent/conversation/conversation-routing/automatic-mode#automatic-assignment) is turned off for the inbox.</li><li>When the [conversation limit per agent](/live-agent/settings/account-settings#conversation-limit-per-agent) is activated, and all agents in an inbox with auto-assignment activated are at full capacity and unable to take on additional conversations.</li></ul> |
+
+## Line charts
+
+### Conversation metrics
+
+Indicates conversation details in a 24-hour time grid, visualized with colored lines:
+
+| Line graph                      | Description                                                     |
+|---------------------------------|-----------------------------------------------------------------|
+| **Incoming Conversations**      | Number of conversations that were created in the last 24 hours. |
+| **Conversation Duration (min)** | Minutes it took to solve a conversation from start to finish.   |
+| **Queued Conversations**        | Number of conversations that aren't assigned to a human agent.  |
+
+## Tables
+
+### Conversations by agents
+
+Provides information about the status and performance of agents:
+
+| Column                      | Description                                                             |
+|-----------------------------|-------------------------------------------------------------------------|
+| **Status**                  | Indicates the status of the agent: `Away`, `Busy`, `Online`, `Offline`. |
+| **Open**                    | Number of active conversations pending.                                 |
+| **Queued**                  | Indicates the number of assigned conversations waiting.                 |
+| **Avg First Response Time** | Indicates the average value when an agent responded first.              |
+| **Avg Resolution Time**     | Indicates the average value when an agent resolved a conversation.      |
+| **Resolved**                | Indicates how many conversations were resolved by agents.               |
+
+You can modify an agent's status when they're online by clicking an agent icon in the **Agent** column of the table.
+You can set their status as `Busy` or `Away`.
+However, if the agent is offline, any changes you attempt to make to their status won't be applied.
+
+Additionally, you can filter the table data by agent status.
+
+<Frame>
+<img src="/_assets/live-agent/LA_Supervisor_overview_2.png" alt="Live Agent supervisor overview 2" style={{ width: 'auto' }} />
+</Frame>
+
+## View reports
+
+To view a report, do the following:
+
+1. In the Live Agent interface, go to **Reports > Overview**.
+2. At the top of the report, from the **Select Inbox** list, select an inbox you want to inspect.
+
+The report is updated with the corresponding data related to the selected inbox.
+
+## More information
+
+- [Reports](/live-agent/reports/overview)
+- [Administrator reports](/live-agent/reports/admin/overview)

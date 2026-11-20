@@ -1,0 +1,24 @@
+---
+title: Search extract output node
+keywords: ['search extract output', 'knowledge ai', 'embedding model', 'knowledge store', 'rag']
+description: "Use the Search Extract Output node to search knowledge stores and generate answers in a flow."
+---
+
+
+The Search Extract Output node uses an embedding model to search [knowledge stores](/ai/agents/develop/knowledge-ai/knowledge-store) and a generative AI model to extract relevant information and generate outputs. For example, you can upload manuals and technical documents as [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) to create an agent that helps customers with technical issues.
+
+
+## Prerequisites
+
+- For the Search only mode, you need access to an embedding model that [supports knowledge search](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+- For the Search & Extract & Output and Search & Extract modes, you need access to both an embedding model and a generative AI model to support [knowledge search and answer extraction](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+
+## Modes
+
+The Search Extract Output node has the following modes:
+
+- **Search & Extract & Output** — With this mode, the agent searches knowledge sources, extracts answers, and outputs the results automatically as text or an adaptive card.
+- **Search & Extract** — With this mode, the agent searches knowledge sources and extracts answers. You have the flexibility to use these answers in other nodes or extension nodes.
+- **Search only** — With this mode, the agent searches knowledge sources and returns the results in the Input object. You can use the results in other nodes.
+
+For more detailed information about the Search Extract Output node, read the [node reference](/ai/agents/develop/node-reference/other-nodes/search-extract-output).

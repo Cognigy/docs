@@ -1,0 +1,143 @@
+---
+title: "Scenarios"
+keywords: ['simulator', 'scenarios', 'personas', 'success criteria', 'test agents']
+description: "Create Simulator scenarios that define personas, missions, and success criteria to test agents."
+---
+
+A _scenario_ defines the persona, the mission, and the success criteria of a simulated conversation. [Simulations](/ai/agents/test/simulator/simulations) use scenarios to test how an agent responds to different users.
+
+## Limitations
+
+- The maximum number of scenarios per Project is 100. You can change this limit as follows:
+  - For SaaS installations, contact [Cognigy technical support](/help/get-help).
+  - For on-premises installations, add the `MAX_SIMULATIONS_PER_PROJECT` environment variable with the new limit under `cognigyEnv` in `values.yaml`.
+- The maximum number of success criteria per scenario is 10.
+- The maximum length of the scenario name and the persona name is 200 characters. The maximum length of the persona description and the mission is 10,000 characters.
+- The maximum number of CSV transcripts per upload is 10. The maximum file size is 10 MB. The maximum total size of all files is 50 MB.
+- An upload request for transcripts expires after 10 minutes. To continue, start a new upload.
+
+## Create a scenario
+
+In the Simulator, you can create a scenario automatically, manually, or from transcripts. Alternatively, you can create a scenario from a transcript in the [Conversations Explorer](/insights/explorers/conversations).
+
+To start, go to **Test > Simulator > Scenarios** and click **Create scenario**. The page asks how you want to create the scenario and shows three cards: **Generate from agent**, **Generate from transcripts**, and **Create manually**. The **Generate from agent** card has the **Recommended** badge.
+
+<Note>
+  A card is unavailable if its feature isn't enabled in your environment.
+</Note>
+
+Select the card for the method that you want to use:
+
+<Tabs>
+<Tab title="Automatically">
+  1. On the **Generate from agent** card, click **Generate**. The **Generate scenario with AI** window opens.
+  2. In the **Target type** field, select the agent or flow for your scenario. The list shows agents and flows. To search the list, enter a name in the search field. To narrow the list, select **All**, **AI Agents**, or **Flows** at the top of the list. If agent targets aren't available in your environment, the list shows only flows and has no filter.
+  3. If you selected a flow, select the AI Agent Node to analyze in the **AI Agent Node** field. The flow must contain a configured AI Agent Node.
+  4. Click **Generate**. Cognigy generates persona and mission options based on the configuration of the agent or Node.
+  5. Select a persona and a mission. Cognigy applies your selection to the form immediately. The **Success criteria** list shows criteria that match the selected mission.
+  6. Review the generated scenario and adjust it if necessary. To generate new text for a field, click the **Regenerate with AI** icon next to it.
+</Tab>
+<Tab title="Manually">
+  1. On the **Create manually** card, click **Create**. The scenario form opens.
+  2. Fill in the following fields:
+      - **Scenario name** – enter a name that reflects the test scenario and focus area. Example: `Menu Exploration – Exotic Dish Focus`.
+      - **Persona name** – enter a name for the persona to simulate that reflects the user's role and context. Example: `Alex – The Curious Foodie`.
+      - **Persona description** – enter the description of the persona. To simulate user behavior, define key attributes: customer segment, demographics, familiarity with technology and AI, and interaction style. Example: `An adventurous diner who loves trying new and exotic dishes. Asks detailed questions about ingredients, preparation methods, and flavor profiles`.
+      - **Mission** – enter the persona's goal for the simulation. The goal can test how well the agent handles specific customer inquiries or tasks. Example: `Explore exotic menu options and get detailed recommendations for trying new dishes based on preferences`.
+  3. In the **Success criteria** section, add at least one and up to 10 criteria to evaluate the simulation's success:
+      - **Add goal** – select an item from the list. This option is available only if your Project supports goals. If the list is empty, you can [create a new one](/ai/agents/analyze/goals-and-tasks/goals). Select the item that matches the outcome you want to simulate. Example: `Receive personalized recommendations for exotic dishes`.
+      - **Add AI judge** – generate or enter action-oriented criteria that determine whether the simulation succeeded. They can include numeric results, for example, 90% accuracy, or specific objectives for the agent. Examples: `The Agent recommends exotic dishes based on user preferences, achieving 90% accuracy in matching user preferences.`, `Answers questions about ingredients`.
+  4. _(Optional)_ In the **Evaluation profiles** field, select one or more evaluation profiles to score each simulation run against shared criteria. To skip the evaluation, leave the field empty. This field is available only if Evaluation Profiles are enabled in your environment.
+  5. To set the maximum number of back-and-forth messages (turns) in a simulated conversation, adjust the **Max turns** slider. Each turn consists of one user input and one agent response. The value range is 1 to 30. The default value is 15.
+</Tab>
+<Tab title="From transcripts">
+  1. On the **Generate from transcripts** card, click **Generate**.
+  2. In the **Upload conversation transcripts** window, drag and drop CSV files or click **Browse files**.
+     Before uploading the CSV files, ensure that they meet the following requirements:
+
+        <Accordion title="CSV format requirements">
+
+         The CSV must contain a header row with the following columns:
+
+         1. `speaker` — the name of the person or system sending the message. Use consistent names such as `customer` for the end user and `bot` for the agent.
+         2. `message` — the text of the message, enclosed in double quotes (`" "`).
+         3. `created_at` — the timestamp in ISO 8601 UTC format (`YYYY-MM-DDTHH:mm:ssZ`).
+
+         **Example:**
+
+         ```csv
+         speaker,message,created_at
+         customer,"Hello, I need help with my order.",2026-03-12T09:15:00Z
+         bot,"Good morning! Can you provide your order number?",2026-03-12T09:15:05Z
+         ```
+     </Accordion>
+     <Accordion title="Content requirements">
+       - The uploaded transcripts must contain at least 100 words in total. Cognigy counts the words in the `message` column and the speaker names. Cognigy doesn't count words in the `created_at` column.
+       - Each CSV file must include messages from both a customer-side speaker and an agent-side speaker. Cognigy recognizes the following speaker names:
+          - Agent side: `agent`, `representative`, `rep`, `advisor`, `support`, `operator`, `assistant`, `bot`
+          - Customer side: `customer`, `client`, `caller`, `user`, `visitor`, `member`, `guest`
+       - The `created_at` column must follow chronological order.
+       - Each row must represent one message.
+       - Each message must be a complete sentence or meaningful utterance.
+       - Messages can include punctuation, emojis, or line breaks.
+     </Accordion>
+  3. Click **Generate**. Cognigy generates persona and mission options based on the uploaded transcript.
+  4. Select a persona and a mission. Cognigy applies your selection to the form immediately. The **Success criteria** list shows criteria that match the selected mission.
+  5. Review the generated scenario and adjust it if necessary. To generate new text for a field, click the **Regenerate with AI** icon next to it.
+
+  You can also create a scenario from an existing conversation transcript in the [Conversations Explorer](/insights/explorers/conversations#scenarios).
+</Tab>
+</Tabs>
+
+Click **Create**.
+
+After you create a scenario, the Interaction Panel opens in simulation mode with the new scenario selected. To run it, see [Simulation mode](/ai/agents/test/interaction-panel/simulation).
+
+To create scenarios through the API, use the [Cognigy Simulator API](/api-reference-simulator/).
+
+## Example
+
+This example shows how to create scenarios for a flow with an agent. We'll work with Sophie, the Restaurant Guide. Sophie assists users with dinner planning and restaurant recommendations.
+
+1. Set up a flow that uses Sophie as the agent.
+2. Create three scenarios with different personas to test various use cases:
+
+<AccordionGroup>
+  <Accordion title="Persona 1. 🧑‍🍳 Alex – The curious foodie">
+    | **Parameter**           | **Value**                                                                                                                                                                                                               |
+    |-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Scenario name           | Menu Exploration – Exotic Dish Focus                                                                                                                                                                                    |
+    | Persona name            | Alex – The Curious Foodie                                                                                                                                                                                               |
+    | Persona                 | An adventurous foodie in their late 20s who loves discovering new and exotic dishes. Tech-savvy and curious, Alex uses mobile apps and AI chat tools to explore unique menu items and expand their culinary experience. |
+    | Mission                 | Test the agent's ability to recommend exotic dishes and assist Alex in placing an order or booking a table.                                                                                                          |
+    | AI judge                | <ul><li>Accurately handle free-text menu queries</li><li>Suggest complementary drinks after exotic dishes are added</li><li>Recognize and add at least one manually named exotic dish</li></ul>                         |
+  </Accordion>
+
+  <Accordion title="Persona 2. 👨 Jordan – The corporate guest">
+    | **Parameter**           | **Value**                                                                                                                                                                                                          |
+    |-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Scenario name           | Quick Reservation – Dietary Notes                                                                                                                                                                                  |
+    | Persona name            | Jordan – The Corporate Guest                                                                                                                                                                                       |
+    | Persona                 | Marketing manager at a nearby company, 35 years old, with short lunch breaks. Tech-savvy, uses AI tools frequently, and expects fast, concise communication. Prefers professional tone and minimal back-and-forth. |
+    | Mission                 | Test how well the agent handles quick lunch queries and reservation requests under time constraints.                                                                                                            |
+    | AI judge                | <ul><li>Reservation completed with dietary requirements noted</li><li>Minimal back-and-forth (1–2 exchanges)</li><li>Confirmation provided in under 30 seconds</li></ul>                                           |
+  </Accordion>
+
+  <Accordion title="Persona 3. 👩 Maya – The tourist planner">
+    | **Parameter**           | **Value**                                                                                                                                                                                                                                        |
+    |-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | Scenario name           | Family-Friendly Group Dinner                                                                                                                                                                                                                     |
+    | Persona name            | Maya – The Tourist Planner                                                                                                                                                                                                                       |
+    | Persona                 | A woman in her early 40s visiting from out of town, organizing a dinner for a group of 6, including kids. Familiar with basic chat tools, occasionally uses AI assistants. Communicates politely and needs detailed answers to plan confidently. |
+    | Mission                 | Evaluate how well the agent handles group reservations and provides family-friendly recommendations.                                                                                                                                          |
+    | AI judge                | <ul><li>Group reservation successfully created</li><li>At least one child-friendly menu item suggested</li><li>Additional info (for example, parking, high chairs) proactively offered</li></ul>                                                 |
+  </Accordion>
+</AccordionGroup>
+
+To run simulations with these scenarios, see the [example](/ai/agents/test/simulator/simulations#example) on the Simulations page.
+
+## More information
+
+- [Simulator](/ai/agents/test/simulator/overview)
+- [Simulations](/ai/agents/test/simulator/simulations)
+- [Conversations Explorer](/insights/explorers/conversations)

@@ -1,0 +1,104 @@
+---
+title: Slot fillers
+description: "Monitor every user input for slot matches and store them in the Context object with slot fillers."
+keywords: ['slot fillers', 'cognigy nlu', 'slots']
+---
+
+_Slot fillers_ let you monitor every user input for specific [slot](/ai/platform-features/nlu/slots/overview) matches
+and store them in the [Context](/ai/agents/develop/ai-agent-memory/context) object.
+This way, if an answer is already provided, the agent skips the corresponding question in the Question node.
+For example, if a user says
+`I'm flying from San Francisco on United` and the agent asks
+`What city are you departing from?`, this question would be redundant and create a poor user experience.
+Instead, slot fillers ensure that only missing information is requested.
+
+## Key benefits
+
+- **Collecting and remembering information**. With slot fillers, all required data is gathered and retained throughout the conversation, reducing errors and making conversations with the agent smoother and more natural.
+- **Handling different input types**. Slot fillers accept various formats, for example, dates and numbers, making them flexible for user inputs.
+
+## Restrictions
+
+- Slot fillers fail when multiple values share the same slot type, making it impossible to distinguish between them. For example, in `I'm flying from SFO to ORD on United`, the agent can't distinguish between the departure airport and the arrival airport because both match `airport_code`.
+  To avoid this restriction, you can:
+    - Create separate slot fillers for each value:
+        - `Departure Airport`: use a context key, for example, `departure_city`.
+        - `Arrival Airport`: use a context key, for example, `arrival_city`.
+    - Modify the flow to ask distinct questions for each slot instead of extracting both from a single user input.
+
+## Work with slot fillers
+
+<Tabs>
+  <Tab title="GUI">
+         You can create, edit, and delete slot fillers in **Advanced > NLU > Slot Fillers**.
+  </Tab>
+  <Tab title="API">
+         You can create, edit, and delete slot fillers by using the [Cognigy API](/api-reference/slot-fillers/perform-batch-operations).
+  </Tab>
+</Tabs>
+
+To capture and store slot matches, specify the slot filler in your Question node by selecting the **Slot** question type, and activate **Skip if Answer exists in Context**.
+
+### Slot filler settings
+
+<AccordionGroup>
+  <Accordion title="Required fields">
+
+     | Parameter              | Type | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+     | ---------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+     | **Name**               | Text | The display name of the slot filler, used for identification. For example, `Departure Airport Slot`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+     | **Type**               | List | Defines the type of input expected. The list groups the options into **Lexicon** and **System**. Select from the following options: <ul><li>**Slot**. A [lexicon slot](/ai/platform-features/nlu/slots/user-defined/lexicon). Make sure a lexicon is attached and that this slot is included in it.</li><li>**Regular Expression**. A [regex slot](/ai/platform-features/nlu/slots/user-defined/regex).</li><li>**Intent**. Extracts values based on recognized intents. Useful when slot filling is tied to intent classification.</li><li>**Date**, **Number**, **Temperature**, **Age**, **Duration**, **Email**, **Money**, and **Percentage**. [System-defined slots](/ai/platform-features/nlu/slots/system-defined) that automatically extract common entity types.</li></ul> |
+     | **Slot Name**          | Text | This parameter appears if the **Slot** type is selected. Specifies which slot this filler is associated with. For example, `airport_code`, `date`, or `name`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+     | **Regular Expression** | Text | This parameter appears if the **Regular Expression** type is selected. Enter the regular expression to extract specific patterns from user input. Use the format `/pattern/flags`, for example, `/^\d{3}-\d{3}-\d{4}$/` or `/\d{5}/i`. Flags are optional. The slot filler stores only the first match, so the `g` flag has no effect.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+     | **Context Key**        | Text | This parameter appears if **Store result in Context** is activated. The variable name used to store the extracted value in the Context object. For example, `departure_city` or `arrival_date`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+  </Accordion>
+
+  <Accordion title="Optional fields">
+
+     The following parameters are in the **Advanced** section.
+
+     | Parameter                                    | Type   | Description                                                                                                                                                                                                                                                                                                                                                    |
+     | -------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+     | **Additional Validation**                    | Text   | Allows extra validation rules to ensure correct formatting or values. For example, ensure the date format is `YYYY-MM-DD`.                                                                                                                                                                                                                                     |
+     | **Result Location**                          | Text   | Determines where to extract the slot value from. By default, the slot value is extracted from the user input. You can set a CognigyScript expression in this parameter to override the detected slot value with a value from the [Input, Context, or Profile objects](/ai/agents/develop/ai-agent-memory/overview). For example, `{{input.bookingReference}}`. |
+     | **Store result in Context**                  | Toggle | Stores the extracted value in the Context object. For example, `"departure_city": "SFO"`.                                                                                                                                                                                                                                                                      |
+     | **Store result in Contact Profile**          | Toggle | Stores the extracted value in the contact profile for future interactions. For example, store `"preferred_airline"` for returning users.                                                                                                                                                                                                                       |
+     | **Profile Key**                              | Text   | This parameter appears if **Store result in Contact Profile** is activated and is required in that case. Enter the key under which to store the extracted value in the contact profile. For example, `preferred_airline`.                                                                                                                                      |
+     | **Store Detailed Results**                   | Toggle | Stores metadata about the extracted slot, such as a confidence score of `0.92` for `"ORD"`.                                                                                                                                                                                                                                                                    |
+     | **Use positive keyphrases only**             | Toggle | This parameter appears if the **Slot** type is selected. Limits slot extraction to predefined keyphrases. For example, only accept `"San Francisco"` for `departure_city`.                                                                                                                                                                                     |
+     | **Skip if the result is already in Context** | Toggle | Prevents asking for the slot again if a valid value already exists in the Context object. For example, if `"departure_city": "LAX"` is set, the agent doesn't ask again.                                                                                                                                                                                       |
+  </Accordion>
+</AccordionGroup>
+
+## Example
+
+<AccordionGroup>
+  <Accordion title="Step 1. add slot fillers">
+    1. Create a new flow called `Slot Fillers`.
+    2. Go to **Advanced > NLU** and attach relevant lexicons, for example, `airports` and `airlines`.
+    3. On the **Slot Fillers** tab, follow these steps:
+        1. Create a new slot filler named `Airline`.
+        2. Select **Slot** from the **Type** list.
+        3. Enter `airline` in the **Slot Name** field. In the **Advanced** section, activate **Store result in Context** and enter `airline` in the **Context Key** field.
+    4. Repeat steps 3.1 through 3.3 to create another slot filler named `Airport`, then enter `airport_code` in the **Slot Name** and **Context Key** fields.
+    5. Click **Build Model**.
+  </Accordion>
+
+  <Accordion title="Step 2. configure question nodes">
+    1. Create a Question node, enter `What is your departure airport?` in the **Text** field, and select **Slot** from the **Question Type** list.
+    2. Enter `airport_code` in the **Slot Name** and **Context Key to use** fields.
+    3. Activate **Skip if Answer exists in Context**.
+    4. Repeat the process for `What is your airline?`, then enter `airline` in the **Slot Name** and **Context Key to use** fields.
+  </Accordion>
+
+  <Accordion title="Step 3. test slot fillers">
+    Provide all information at once: <br/>
+    **User input**: `I'm leaving San Francisco on United.`<br/>
+    **Result**: No additional questions are asked.<br/><br/>
+    Provide partial information: <br/>
+    **User input**: `I'm flying on United.`<br/>
+    **Agent**: `What is your departure airport?`<br/>
+    **User input**: `SFO`<br/>
+    **Result**: The agent skips asking for the airline.
+  </Accordion>
+</AccordionGroup>

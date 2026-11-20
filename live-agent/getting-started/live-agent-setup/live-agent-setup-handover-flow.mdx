@@ -1,0 +1,83 @@
+---
+title: Set up a Cognigy flow for handover
+description: Configure a Cognigy flow with a Handover to Human Agent node to route conversations from an agent to a human agent in Live Agent.
+keywords: ['handover flow', 'live agent setup', 'cognigy flow', 'handover node', 'agent handover']
+
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+Once you've set up a handover provider for Live Agent, the next step is configuring your flow for this purpose within Cognigy.
+
+## Set up flows for handover
+
+Once you have [set up a Cognigy endpoint for handover](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-endpoint), you can set up your flow for handover to Live Agent.
+
+To create a Live Agent flow, follow these steps:
+
+<Steps>
+  <Step title="Create a flow">
+
+    1. In the Cognigy interface, open the project.
+    2. In the navigation menu of the project, go to **Design > Flows**.
+    3. Click **+ New Flow**.
+    4. Specify a unique name and provide a relevant description. For example, `Customer Support Flow`.
+    5. Click **Create**.
+
+  </Step>
+  <Step title="Configure a say node">
+
+    1. In the flow editor, add a Say node.
+    2. Open the node editor by clicking the Say node.
+    3. In the **Text** field, enter the following text: `Hi, let's hand you over to the humans`.
+    4. Click **Save Node**.
+
+  </Step>
+  <Step title="Configure a handover to human agent node">
+
+    1. Below the Say node, add a Handover to Human Agent node.
+    2. Open the node editor by clicking the Handover to Human Agent node.
+    3. In the **Handover acceptance message** field, enter the following text: `Performing the Handover...`
+    4. In the **Live Agent settings** section, fill in the following fields:
+        - **Inbox ID** — enter the inbox ID that you obtained in the [previous step](/live-agent/getting-started/live-agent-setup/live-agent-setup-handover-endpoint).
+        - **Skills** — enter a list of skills that should be used to filter the available agents. For example, `technical support, billing`.
+        - **Languages** — enter a list of languages that should be used to filter the available agents. For example, `english, spanish`.
+        - **Priority** — select a priority for the conversation from the list. For example, `Urgent`.
+    5. Click **Save Node**.
+
+  </Step>
+</Steps>
+
+## Test your connection
+
+1. Go to the endpoint that you created in the Cognigy interface.
+2. Click **Open Demo Webchat**.
+3. Start the conversation by typing `Hi` and clicking the **Send** button.
+
+    <Frame>
+        <img src="/_assets/live-agent/LA-webchat-hi.png" alt="Demo Webchat with the initial Hi message sent by the user" style={{ width: 'auto' }} />
+    </Frame>
+
+4. In the navigation menu, click **Products > Live Agent**.
+5. In the sidebar of the Live Agent interface, select **Conversations**.
+   On the **All** tab, the conversation that you started should appear in the conversation list.
+6. Open the conversation.
+7. In the **Reply to User** section, send a message to the user as a human agent.
+
+    <Frame>
+       <img src="/_assets/live-agent/LA-conversation-example.png" alt="Live Agent conversation panel showing the human agent's reply in the Reply to User section" style={{ width: 'auto' }} />
+    </Frame>
+
+8. This message should also appear in the Cognigy Webchat window.
+
+    <Frame>
+        <img src="/_assets/live-agent/LA-webchat.png" alt="Cognigy Webchat showing the human agent's reply message received from Live Agent" style={{ width: 'auto' }} />
+    </Frame>
+
+You have successfully completed your first conversation in Live Agent.
+
+## What's next?
+
+Next, you can [add more users](/live-agent/getting-started/live-agent-setup/live-agent-setup-agents) with `Agent` and `Administrator` roles, and assign them to inboxes in Live Agent.

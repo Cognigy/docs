@@ -1,0 +1,28 @@
+---
+title: Session management
+description: "Set how long user sessions stay active on an endpoint before they expire."
+keywords: ['session management', 'session expiration', 'user sessions', 'conversation management', 'endpoint settings']
+---
+
+For some endpoints, you can set how long sessions last in the **Session management** section. Once a session expires, the conversation restarts with the next user input.
+
+The following endpoints support session expiration:
+
+- [Facebook (Meta) Messenger](/ai/agents/deploy/endpoint-reference/facebook-messenger)
+- [Line](/ai/agents/deploy/endpoint-reference/line-messenger)
+- [Slack](/ai/agents/deploy/endpoint-reference/slack)
+- [TwilioSMS](/ai/agents/deploy/endpoint-reference/twilio)
+
+<AccordionGroup>
+  <Accordion title="Default session expiration">
+    The default session expiration is set to 30 minutes.
+  </Accordion>
+
+  <Accordion title="Disable session expiration">
+    You can disable session expiration by setting it to 0. This will prevent a user from having multiple sessions in the **Contact Profile**, which reduces the **Analytics** effectiveness.
+  </Accordion>
+</AccordionGroup>
+
+## Limitations
+
+- By default, the limit is 30 minutes. For on-premises installations, this value can be overridden if a lower value is set in the [Management UI](/ai/administer/access/management-ui#change-expiration-values) or via the `MAX_SESSION_STATE_TTL_IN_MINUTES` environment variable.

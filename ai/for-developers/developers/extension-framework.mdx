@@ -1,0 +1,79 @@
+---
+title: Extension framework
+sidebarTitle: Overview
+description: Build custom Cognigy Extensions with TypeScript, including Extension Nodes for integrations and Knowledge Connectors for external knowledge databases.
+keywords: ['extension framework', 'custom extensions', 'knowledge connectors', 'custom nodes', 'typescript']
+---
+
+The _Extension Framework_ provides developers with the ability to create custom Extensions with Extension Nodes and Knowledge Connectors that go beyond the default and marketplace Nodes.
+
+## Custom extensions
+
+Custom Extensions can offer:
+
+- Extension Nodes that perform new actions, integrate with external systems, process data, and improve conversational scenarios for users.
+- Knowledge Connectors that offer new integration with external knowledge databases and improve RAG capabilities.
+
+## Development requirements
+
+Developing custom Extensions requires:
+
+- Knowledge of TypeScript/JavaScript.
+- Installation of Node.js and NPM packages.
+
+## Getting started
+
+To start implementing a custom Extension, refer to the [Extension's npm package Readme](https://www.npmjs.com/package/@cognigy/extension-tools/v/0.16.5-rc2).
+
+## API reference
+
+The framework exposes two sets of functions. Which one you use depends on what you are building.
+
+<CardGroup cols={2}>
+  <Card
+    title="Node execution API"
+    icon="code"
+    href="/ai/for-developers/function-reference/execution-control/setNextNode"
+  >
+    Functions available inside an Extension Node while a Flow is running.
+  </Card>
+  <Card
+    title="Knowledge connector API"
+    icon="book-open"
+    href="/ai/for-developers/knowledge-connector/upsertKnowledgeSource"
+  >
+    Functions for writing Knowledge Sources and Chunks into a Knowledge Store.
+  </Card>
+</CardGroup>
+
+### Node execution API
+
+Use these functions in the code of an Extension Node to read and write conversation state, control where the Flow goes next, and send output to the user. They are grouped by what they act on:
+
+| Group                  | What it covers                                                                                       |
+| ---------------------- | ---------------------------------------------------------------------------------------------------- |
+| Execution Control      | Change which Node runs next, execute another Flow, stop execution, and manage execution counts.       |
+| Context Object         | Read, add to, remove from, and reset the [Context](/ai/agents/develop/ai-agent-memory/context) object. |
+| Input and Output       | Send messages to the user and add data to the [Input](/ai/agents/develop/ai-agent-memory/input) object. |
+| Contact Profiles       | Update, merge, activate, and deactivate [Contact Profiles](/ai/agents/analyze/contact-profiles).       |
+| Logging and Monitoring | Write log entries, read LLM token usage, and control sensitive logging.                               |
+| CognigyScript          | Evaluate CognigyScript conditions and text at runtime.                                                |
+| xApps                  | Set the state of an [xApp](/xApps/overview) from within a Flow.                                       |
+| Other                  | Complete Goals, evaluate rules, and set regex Slots.                                                  |
+
+### Knowledge connector API
+
+Use these functions in a Knowledge Connector to bring content from an external system into a [Knowledge Store](/ai/agents/develop/knowledge-ai/knowledge-store):
+
+| Function                 | Purpose                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------- |
+| `upsertKnowledgeSource`  | Create or update a Knowledge Source. Supports knowledge synchronization, so prefer this one. |
+| `createKnowledgeSource`  | Create a Knowledge Source. Deprecated in favour of `upsertKnowledgeSource`.                  |
+| `deleteKnowledgeSource`  | Remove a Knowledge Source from the store.                                                    |
+| `createKnowledgeChunk`   | Add a Knowledge Chunk to an existing Source.                                                 |
+
+## More information
+
+- [Extensions](/ai/for-developers/extensions)
+- [Knowledge Connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors)
+- [Code Node](/ai/for-developers/code/api-functions)

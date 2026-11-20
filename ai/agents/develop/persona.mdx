@@ -1,0 +1,88 @@
+---
+title: "Persona"
+description: "Learn how personas give AI Agents a consistent digital identity, including personality, tone, and voice, across every conversation and channel."
+sidebarTitle: "Persona"
+keywords: ['ai agents', 'personas', 'ai agent job']
+"seo":
+  {
+    "metatags":
+      {
+        "description": "Personas are the digital identities of flow agents. A persona gives the flow agent a consistent personality, tone, and voice.",
+      },
+  }
+---
+
+_Personas_ are the digital identities of flow agents. A persona gives the flow agent a consistent personality, tone, and voice.
+
+You can apply the same persona across different tasks, which makes the AI's interactions with users more predictable and flexible.
+
+Key Benefits:
+
+- **Consistent Branding**. Ensures a uniform personality and tone across multiple customer touchpoints.
+- **Flexible Task Assignment**. Allows one persona to handle different jobs in various [Flows](/ai/agents/develop/projects-and-flows/overview).
+- **Enhanced User Trust**. Provides a recognizable and reliable interaction style for users.
+
+## Concepts
+
+| **Concept**      | **Description**                                                                                                                                                                      |
+| -----------------| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Persona          | Defines how the flow agent interacts, including its personality, voice, tone, and basic knowledge. Acts as the how-to template for interaction: task-agnostic and reusable. |
+| Job              | Defines what the flow agent performs. Task-specific logic assigned to [Flow Agent nodes](/ai/agents/develop/node-reference/ai/ai-agent) within flows.                                                                                   |
+| Knowledge Store  | Defines an external knowledge base, for example, FAQs, product details that the flow agent may reference during execution.                                                                   |
+
+### Key principles
+
+- A persona can be reused across many jobs.
+- Jobs are defined at the node level in flows. A persona may power multiple flows.
+
+<Accordion title="Example: Persona Sophie">
+  Sophie is an AI persona with a friendly and knowledgeable voice. She maintains this consistent personality even as her roles change.
+
+  - **Flow A:** Restaurant Guide: When acting as a restaurant guide, Sophie uses her cheerful, helpful persona to recommend dining options, provide directions, and help users book reservations. Her voice is welcoming and enthusiastic, making the user feel like they're talking to a well-informed friend.
+  - **Flow B:** Delivery Assistant: As a delivery assistant, Sophie's core voice remains the same, but her focus shifts to efficiency and clear communication. She uses her dependable, friendly persona to provide real-time updates on orders, confirm delivery details, and resolve any issues with a reassuring tone. Her goal is to make the delivery process as smooth and stress-free as possible.
+</Accordion>
+
+## Use cases
+
+- **Customer Support**. A persona named Sophie guides users through troubleshooting in one flow and handles billing inquiries in another, maintaining her consistent tone.
+- **Multichannel Assistance**. A persona named Sophie assists customers via chat in one flow and voice interactions in another, ensuring a seamless brand experience.
+
+## How to use
+
+<Steps>
+  <Step title="Create a persona">
+    Create a persona by defining general settings, speaking style, instructions, knowledge, and data privacy.
+    For detailed instructions, refer to [Manage flow agents](/ai/agents/develop/flow-agents/overview).
+    <Frame>
+        <video
+          autoPlay
+          loop
+          controls
+          playsInline
+          title="Creating a new flow agent persona in Cognigy"
+          aria-label="The video shows a step-by-step configuration of a flow agent persona."
+          className="w-full aspect-video"
+          src="https://docscognigyassets.blob.core.windows.net/assets/create-new-ai-agent.mov"
+        ></video>
+    </Frame>
+  </Step>
+  <Step title="Assign a job">
+    When you created a persona, Cognigy generates:
+    - A new flow.
+    - A [Flow Agent node](/ai/agents/develop/node-reference/ai/ai-agent) with the persona you created.
+    - Pre-filled job instructions.
+     <Frame>
+          <img src="/_assets/ai/overview/ai-agent-job-configuration.webp" alt="Flow agent job configuration with pre-filled instructions" />
+      </Frame>
+  </Step>
+  <Step title="Test and deploy">
+    Test your flow agent in the [Interaction Panel](/ai/agents/test/interaction-panel/overview), then deploy by selecting one of the endpoints. You can also test it via [Demo Webchat](/webchat/demo).
+  </Step>
+</Steps>
+
+## What's next?
+
+- Go to the [Job Market](/ai/agents/overview) to hire a skilled flow agent to avoid creating it manually.
+- Add [tools](/ai/agents/develop/node-reference/ai/ai-agent#child-nodes) and use the [MCP protocol](/ai/agents/develop/node-reference/ai/ai-agent#mcp-tool) to extend your flow agent's capabilities.
+- Explore how to [orchestrate interactions between different personas](/ai/agents/develop/node-reference/ai/ai-agent-handover).
+- Learn how to effectively embed [knowledge into your flow agent](/ai/agents/develop/knowledge-ai/overview) to improve responses.

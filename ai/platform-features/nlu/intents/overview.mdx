@@ -1,0 +1,171 @@
+---
+title: Intents
+description: "Learn how intents help Cognigy NLU understand what a user wants. Create intents, add example sentences, and train your agent to recognize them."
+sidebarTitle: Overview
+keywords: ['intents', 'cognigy nlu']
+---
+
+
+In Cognigy, _intents_ identify users' goals based on their input.
+Each intent is defined by example sentences that show how users might express a specific request.
+For example,
+an intent named `OrderFood` might include sentences like `Can you get me some food?` or `I'd like to order a pizza`.
+The NLU engine analyzes and scores these intents to match user inputs.
+
+Each intent includes:
+
+- [Example sentences](#add-example-sentences)
+- [Additional configuration](#apply-additional-settings)
+
+## Work with intents
+
+<Tabs>
+  <Tab title="GUI">
+         You can create, edit, and manage intents, as well as download and upload them, in **Advanced > NLU** on the **Intents** tab.
+  </Tab>
+  <Tab title="API">
+         You can create, edit, and manage intents, as well as download and upload them, using the [Cognigy API](/api-reference/intents/get-intents).
+  </Tab>
+</Tabs>
+
+### Download and upload intents
+
+You can upload intents to and download them from Cognigy as CSV or JSON files. Use these files to import intents, edit them using your favorite spreadsheet or developer tools, and move them between flows.
+
+<AccordionGroup>
+  <Accordion title="CSV">
+    Your CSV should be formatted as follows:
+
+    - Don't include a header row.
+    - Cognigy automatically detects various CSV formats. If you encounter any issues, use UTF-8 encoding, a comma (`,`) as the delimiter, double quotes (`"`) as your quote character, and newline (`\n`) as your line terminator.
+    - You're required to fill in the following columns:
+
+    | Name                                                                                                                | Property type                                                                                                                                                                                                                                                                                                                                                                                                | Value                                                                                                        |
+    | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+    | The name of the intent used for identification and processing in Cognigy. The intent name is a `string` type value. | The property type corresponds to the following intent components and settings:<ul><li>`exampleSentence`: a sample user input.</li><li>`defaultReply`: the standard response when the intent is triggered.</li><li>`confirmationSentence`: a response that asks the user for confirmation.</li><li>`rules`: the conditions to handle the intent and guide the conversation based on the user input.</li></ul> | The value is a `string` type value and corresponds to an example sentence utterance, such as `I want pizza`. |
+
+    CSV format example:
+
+    ```txt
+    |--------------|----------------------|------------------------------------------------|
+    | rejectIntent | exampleSentence      | This request cannot be fulfilled at this time. |
+    | Intent1      | exampleSentence      | Could you please assist me with this issue?    |
+    | Intent1      | defaultReply         | Your request has been successfully processed.  |
+    | Intent1      | defaultReply         | Thank you for your inquiry.                    |
+    | Intent1      | confirmationSentence | Are you sure you want to proceed?              |
+    | Intent2      | exampleSentence      | I'd like to make a reservation, please.        |
+    | Intent2      | exampleSentence      | I need assistance with my account.             |
+    ```
+
+    <Warning>
+      Keep regional settings consistent on your operating system (OS), as they affect the CSV delimiter. Mismatched settings can break the file and cause upload failure.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="JSON">
+    The JSON format is a comprehensive specification for defining intents in Cognigy.
+
+    The following JSON example illustrates the structure and content of an intent, including the intent name (`Pizza`), example sentences, rules, tags, disambiguation sentence, default reply, and other intent-related settings.
+
+    JSON format example:
+
+    ```json
+    [
+        {
+            "name": "Pizza",
+            "exampleSentences": [
+                "I'd like to order many pizzas",
+                "Do you have any meat pizza options?",
+                "I'm interested in trying a vegan pizza",
+                "Could I have a cheese pizza, please?",
+                "I'm craving pizza right now"
+            ],
+            "rules": [],
+            "tags": [],
+            "condition": "",
+            "disambiguationSentence": "",
+            "childFeatures": false,
+            "biasTowardsParentOrChildIntents": "parents",
+            "parent": "",
+            "defaultReply": {},
+            "entryPoint": "",
+            "isRejectIntent": false,
+            "isDisabled": false,
+            "overrideIntentDefaultRepliesAsExamples": ""
+        }
+    ]
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Add example sentences
+
+When you create an intent, add [example sentences](/ai/platform-features/nlu/intents/example-sentences) that help the NLU model recognize user queries.
+
+### Build the NLU model
+
+Whenever you make changes to the intent or its related settings, you need to rebuild the NLU model.
+
+If the NLU model needs rebuilding, the [red indicator](/ai/platform-features/nlu/intents/intent-analyzer#explore-intent-analyzer) appears:
+
+- Next to the flow name in the flows list
+- Next to the **Build Model** button in **Advanced > NLU**
+
+If your flow includes states and intents with [intent conditions](/ai/platform-features/nlu/intents/conditions),
+you can exclude them from training using **Quick Build**.
+This approach speeds up the NLU model building process,
+especially for large flows that contain many states and intent conditions.
+If you don't use these features,
+both **Build Model** and **Quick Build** deliver the same model quality and training speed.
+
+You can build the NLU model for a single flow or for all flows in your project:
+
+<AccordionGroup>
+  <Accordion title="Single flow">
+    1. In the navigation menu, go to **Advanced > NLU**.
+    2. In the flow selector at the top, select the flow that you want to train.
+    3. On the **Intents** tab, click **Build Model** or click the dropdown arrow next to it and select **Quick Build**.
+
+    If you've attached flows to the current flow, the model is automatically built for the attached flows. In the UI, trained attached flows appear as untrained (with a red indicator), which you can ignore.
+  </Accordion>
+
+  <Accordion title="All flows">
+    1. In the navigation menu, go to **Design > Flows**.
+    2. On the **Flows** page, click **Train all Flows**. If **Train all Flows** isn't available, for version 2026.2 or earlier, set `FEATURE_TRAIN_ALL_PROJECT_FLOWS: "true"` in `values.yaml` for on-premises installations, or upgrade to version 2026.3 for SaaS.
+
+    Note that during training, flows are retrieved from the database sequentially, following their default storage order. Training doesn't run in parallel. Each flow is trained one after another, regardless of the number of service replicas or deployed locales.
+
+    If the NLU model is built successfully, you receive a green success notification.
+    Otherwise, an error notification appears with details. For example, you may need to add more example sentences.
+  </Accordion>
+</AccordionGroup>
+
+### Apply additional settings
+
+<AccordionGroup>
+  <Accordion title="Basic additional settings">
+
+    | Parameter                                        | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+    | ------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | **Inherit Example Sentences from Child Intents** | Toggle  | Allows the parent intent to inherit example sentences from child intents. For more information, read [Intent hierarchy](/ai/platform-features/nlu/intents/intent-hierarchy/overview).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+    | **Intent Mapping Priority**                      | List    | Defines the priority of the intent when mapped against other intents during the recognition process. For more information, read [Intent mapping priority](/ai/platform-features/nlu/intents/intent-hierarchy/intent-mapping-priority).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+    | **Rules**                                        | Text    | Allows configuring rules to restrict intent execution based on specific conditions. For more information, read [Intent rules](/ai/platform-features/nlu/intents/rules).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+    | **Default Reply**                                | Section | Defines the fallback response if no other reply is configured or applicable. For more information, read [Default reply](/ai/platform-features/nlu/intents/default-reply).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+    | **Intent Entrypoint**                            | List    | Determines where the flow execution starts when the intent is triggered. You can select one of the following options:<ul><li>**Execute from START in this Flow**. The flow begins from the **Start** node when the intent is triggered. This option is selected by default.</li><li>**Execute normally**. The flow execution continues from the node where the intent was recognized, without restarting the flow. This option is useful when you want to maintain the conversation's context and avoid restarting the flow.</li><li>**Execute from a Node in this Flow**. The flow execution starts from a specific node when the intent is triggered. This option provides flexibility to define custom entrypoints within the flow.</li></ul> |
+  </Accordion>
+
+  <Accordion title="Advanced additional settings">
+
+    | Parameter                   | Type | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+    | --------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | **Tags**                    | Text | Allows assigning tags to the intent for easier organization and filtering.                                                                                                                                                                                                                                                                                                                                                                                   |
+    | **Condition**               | Text | Defines the conditions that must be met for the intent to be executed. For more information, read [Intent conditions](/ai/platform-features/nlu/intents/conditions).                                                                                                                                                                                                                                                                                         |
+    | **Confirmation Sentence**   | Text | Specifies the sentence used to confirm the intent with the end user. For more information, read [Confirmation words](/ai/platform-features/nlu/intents/confirmation-words).                                                                                                                                                                                                                                                                                  |
+    | **Disambiguation Sentence** | Text | Provides a sentence to clarify the intent if there's ambiguity during recognition. The disambiguation sentence is exposed in the Input object:<ul><li>`input.nlu.intentMapperResults.finalIntentDisambiguationSentence`: the disambiguation sentence for the best-matching intent that was selected.</li><li>`input.nlu.intentMapperResults.scores[0].disambiguationSentence`: the disambiguation sentence for a specific intent that was matched.</li></ul> |
+    | **Analytics step**          | Text | Sets the analytics step label of the intent for analytics tracking, allowing it to be included in analytical reports in Insights and OData.                                                                                                                                                                                                                                                                                                                  |
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [NLU overview](/ai/platform-features/nlu/overview)

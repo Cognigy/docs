@@ -1,0 +1,167 @@
+---
+title: User inactivity detection and handling in Webchat v3
+sidebarTitle: User inactivity
+description: "Detect when a Webchat v3 user goes silent and inject an input into the flow to re-prompt, route, or end the conversation."
+keywords: ['webchat user inactivity', 'user inactivity detection and handling', 'inactivity detection', 'webchat v3 inactivity timeout', 'inject input into flow', 'silent user', 'enable user inactivity', 'disable user inactivity']
+---
+
+The _user inactivity detection and handling_ feature detects when an end user goes silent in a Webchat v3 conversation and injects an input into the flow, so you can re-prompt the user, route abandoned conversations, or end them cleanly.
+
+## Key benefits
+
+- **Fewer abandoned conversations**. Re-prompts users who stop responding.
+- **Clean endings**. Routes or closes conversations that stalled.
+
+## Prerequisites
+
+- A [Webchat v3 endpoint](/webchat/v3/overview) is configured. For testing, you can use [Demo Webchat](/webchat/demo).
+- A flow assigned to the endpoint that waits for user input, for example, with a [Question](/ai/agents/develop/node-reference/basic/question), [Optional Question](/ai/agents/develop/node-reference/basic/optional-question), or [Wait for Input](/ai/agents/develop/node-reference/logic/wait-for-input) node.
+
+## Restrictions
+
+- This feature is available for Webchat v3 endpoints only.
+
+## How to use
+
+To use this feature, turn on user inactivity in the [endpoint settings](/webchat/v3/configuration), add the [Enable User Inactivity node](/ai/agents/develop/node-reference/basic/enable-user-inactivity) to your flow, and test the flow in Demo Webchat. While **Enable User Inactivity** is turned off, the Enable and Disable User Inactivity nodes have no effect.
+
+### How to set up
+
+<AccordionGroup>
+  <Accordion title="1. Configure the endpoint">
+    1. In the navigation menu of the project, go to **Deploy > Endpoints** and open your Webchat v3 endpoint.
+    2. On the **Behavior** tab, in the **User inactivity** section, turn on **Enable User Inactivity**.
+    3. In the **Action** list, select what happens when the user is inactive:
+        - **Inject into current flow** — sends the injected text and data to the flow that the conversation is in. This option is selected by default. For this example, select this option.
+        - **Execute flow** — switches the conversation to the selected flow, starting at its first node. When you select this option, the **Flow** list appears. Select the flow that the conversation switches to. When that flow ends, the user's next message starts the endpoint's flow again from its first node.
+    4. In the **Injected text** field, enter the text that the flow receives as the user's input when the user is inactive, for example, `You seem to have disconnected`. Leave the field empty to send data only.
+    5. _(Optional)_ In the **Injected data** field, enter a JSON object that is added to the input data, for example, `{ "reason": "no_reply" }`. The input data always includes the `userInactivity` key with details about the timeout. Leave the field empty to send no custom data.
+    6. Save changes.
+  </Accordion>
+
+  <Accordion title="2. Greet the user">
+    1. In the flow editor, add the [Flow Agent node](/ai/agents/develop/node-reference/ai/ai-agent).
+    2. In the Flow Agent node, configure the agent to greet the user, for example, with a short welcome message.
+    3. Save changes.
+  </Accordion>
+
+  <Accordion title="3. Turn on user inactivity detection">
+    1. Below the **Default** child node of the **Flow Agent** node, add the [Enable User Inactivity node](/ai/agents/develop/node-reference/basic/enable-user-inactivity).
+    2. In the **Timeout** field, enter `60` (seconds). This sets the timeout to one minute.
+    3. Save changes.
+
+    <Note>
+    The default timeout is `30` seconds, the minimum is `3` seconds, and the maximum is `259200` seconds (72 hours). Your installation may set a lower maximum. A value above the allowed maximum is reduced to that maximum. The timer starts after the agent message and resets when the user sends a message. Cognigy injects the input between the timeout and the timeout plus a short check interval, never earlier.
+    </Note>
+  </Accordion>
+
+  <Accordion title="4. Ask the user">
+    1. Below the **Enable User Inactivity** node, add the [Question node](/ai/agents/develop/node-reference/basic/question).
+    2. In the **Question Type** list, select **Text**.
+    3. In the **Text** field, enter `Are you ready for your order? Answer yes or no.`.
+    4. Save changes.
+  </Accordion>
+
+  <Accordion title="5. Handle the answer">
+    1. Below the **Question** node, add the [If node](/ai/agents/develop/node-reference/logic/if).
+    2. In the **Condition** field, click **Use Advanced Editor** and enter `input.text.toLowerCase() === "no"`.
+    3. Below the **Then** child node, do the following:
+        1. Add the [Disable User Inactivity node](/ai/agents/develop/node-reference/basic/disable-user-inactivity). This node stops the inactivity detection, so the user isn't prompted while they get ready.
+        2. Below the **Disable User Inactivity** node, add the [Say node](/ai/agents/develop/node-reference/basic/say) and enter the text `Okay, I'll wait. Just let me know when you're ready.`.
+    4. Below the **Else** child node, do the following:
+        1. Add the **Question** node.
+        2. In the **Question Type** list, select **Text**.
+        3. In the **Text** field, enter `What would you like?`. This node waits for the user's answer. If the user doesn't respond within the timeout, the injected inactivity input answers the question.
+    5. Save changes.
+  </Accordion>
+
+  <Accordion title="6. Use the injected input">
+    _(Optional)_ When the user is inactive, Cognigy sends the **Injected text** and **Injected data** from step 1 to the flow as if the user sends them. The second **Question** node takes them as the answer. To use them in the flow, do the following:
+
+    1. Below the second **Question** node, add the **Say** node.
+    2. In the **Text** field, enter `{{input.text}}`. The agent then outputs the **Injected text**, for example, `You seem to have disconnected`.
+    3. To use the **Injected data**, add `{{input.data.reason}}` to a text field of any node below the second **Question** node.
+    4. Save changes.
+
+    You can also read the timeout details that Cognigy adds to the input:
+
+    | Token | Description |
+    |-------|-------------|
+    | `{{input.data.userInactivity.timeoutMs}}` | The timeout that applied, in milliseconds, for example, `60000`. |
+    | `{{input.data.userInactivity.consecutiveCount}}` | The number of inactivity inputs sent in a row without a user message in between. |
+    | `{{input.data.userInactivity.waitingForInput}}` | Indicates whether the flow was waiting for an answer to a question. |
+
+    Without this step, the flow still continues after the injected input answers the question.
+  </Accordion>
+</AccordionGroup>
+
+### How to test
+
+1. Open [Demo Webchat](/webchat/demo) for your endpoint.
+2. When the agent asks `Are you ready for your order? Answer yes or no.`, answer `yes`. The agent then asks `What would you like?`.
+3. Don't type or send anything for longer than one minute.
+4. If you completed the optional step 6, check that the agent responds with `You seem to have disconnected`.
+5. On the [Logs](/ai/agents/test/logs) page, check for entries that start with `[User Inactivity]`. They report when detection is enabled, when inactivity is detected, and when the input is injected or detection is disabled. The injected input doesn't appear as a message in the chat.
+6. Start a new conversation and answer `No`. Check that the agent responds with `Okay, I'll wait. Just let me know when you're ready.` and that no inactivity message follows after one minute, because the Disable User Inactivity node turned detection off.
+
+## Example flow
+
+The following example uses the flow from [How to set up](#how-to-set-up). Select a tab to see how the conversation changes depending on the user's answer.
+
+<Tabs>
+  <Tab title="User stays silent">
+    <Steps>
+      <Step title="The agent asks a question">
+        The agent asks `Are you ready for your order? Answer yes or no.`, and the user answers `yes`.
+      </Step>
+      <Step title="The agent waits for an answer">
+        The agent asks `What would you like?`. The Enable User Inactivity node starts the 60-second timer.
+      </Step>
+      <Step title="The user doesn't respond">
+        After 60 seconds without a message, Cognigy considers the user inactive and writes a `[User Inactivity]` entry to the Logs page.
+      </Step>
+      <Step title="The injected input answers the question">
+        The flow receives the following input:
+
+        ```json
+        {
+          "text": "You seem to have disconnected",
+          "data": {
+            "reason": "no_reply",
+            "userInactivity": {
+              "timeoutMs": 60000,
+              "consecutiveCount": 1,
+              "waitingForInput": true
+            }
+          }
+        }
+        ```
+      </Step>
+      <Step title="The agent responds">
+        If you completed the optional step 6, the Say node outputs `You seem to have disconnected`.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="User answers No">
+    <Steps>
+      <Step title="The agent asks a question">
+        The agent asks `Are you ready for your order? Answer yes or no.`, and the user answers `no`.
+      </Step>
+      <Step title="Detection is turned off">
+        The Disable User Inactivity node stops the inactivity detection, so the user isn't prompted while they get ready.
+      </Step>
+      <Step title="The agent confirms">
+        The Say node outputs `Okay, I'll wait. Just let me know when you're ready.`
+      </Step>
+      <Step title="No inactivity message follows">
+        Even after one minute without a message, the flow receives no injected input and the Logs page shows no `[User Inactivity]` entry.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## More information
+
+- [Enable User Inactivity node](/ai/agents/develop/node-reference/basic/enable-user-inactivity)
+- [Disable User Inactivity node](/ai/agents/develop/node-reference/basic/disable-user-inactivity)
+- [Webchat v3 endpoint configuration](/webchat/v3/configuration)

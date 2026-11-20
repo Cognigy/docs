@@ -1,0 +1,35 @@
+---
+title: Text extraction with content parsers
+keywords: ['text extraction', 'content parsers', 'knowledge ai', 'basic parser', 'advanced parser']
+sidebarTitle: Overview
+description: "Learn about the content parsers that Knowledge AI uses to extract text from uploaded files."
+---
+
+Knowledge AI uses content parsers to extract text from uploaded files in different formats. The content parsers are categorized based on their complexity and the techniques they use.
+
+You can use the following content parsers:
+
+- [Basic parser](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/basic-parser)
+- [Advanced parser (default)](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/advanced-parser)
+- [Azure AI Document Intelligence](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/azure-ai)
+
+## Content parsers overview
+
+The table provides a comparative overview of the content parsers.
+
+| Details       | Basic parser                                                                                                                                                      | Advanced parser (default)                                                                                                                                                                                                                                   | Azure AI Document Intelligence                                                                                                                                      |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Functionality | Fundamental text extraction.                                                                                                                                      | Advanced text extraction.                                                                                                                                                                                                                                   | Advanced, cloud-based text extraction.                                                                                                                              |
+| Use cases     | Extracting text from simple documents.                                                                                                                            | Extracting text from complex documents that include tables, images, footers, and more.                                                                                                                                                                      | Extracting text from complex documents that include tables, images, footers, and more.                                                                              |
+| Advantages    | <ul><li>Fast processing.</li><li>Low resource consumption.</li></ul>                                                                                              | <ul><li>Better accuracy.</li><li>Handles various formats.</li><li>Includes OCR.</li></ul>                                                                                                                                                                   | <ul><li>Better accuracy.</li><li>Handles various formats.</li><li>Includes OCR.</li><li>Customizable settings on the Azure AI Document Intelligence side.</li></ul> |
+| Limitations   | <ul><li>Limited handling of complex documents. </li><li>Less accuracy. </li><li>Limited file format support. </li><li>Lack of customization capability.</li></ul> | Lack of customization capability.                                                                                                                                                                                                                           | <ul><li>Dependency on a third-party service. </li><li>Payment for using the service.</li></ul>                                                                      |
+| Price         | Free of charge for all environments. Included in the Knowledge AI license.                                                                                        | <ul><li>Free of charge for SaaS installations. Included in the Knowledge AI license.</li><li>For on-premises installations, payment proceeds through Azure AI Document Intelligence in accordance with their pricing policy.</li></ul> | For all installations, payment proceeds through Azure AI Document Intelligence in accordance with their pricing policy.                                             |
+
+## Automatic fallback to basic parsing
+
+If the advanced parser or Azure AI Document Intelligence fails, Knowledge AI falls back to the basic parser automatically.
+
+## More information
+
+- [Knowledge source](/ai/agents/develop/knowledge-ai/knowledge-source/overview)
+- [PDF](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/pdf)

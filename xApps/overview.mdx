@@ -1,0 +1,94 @@
+---
+title: About xApps
+description: Learn about Cognigy xApps concepts, including sessions, screens, and how to build flexible micro-web applications for customer self-service within conversational journeys.
+keywords: ['xapps overview', 'micro-web applications', 'customer self-service', 'xapp nodes', 'adaptive cards']
+---
+
+import AiXappPricing from '/snippets/ai/xApp/pricing.mdx'
+
+
+<AiXappPricing/>
+
+Cognigy xApps are infinitely flexible micro-web applications for customer self-service.
+You can use xApps standalone or as a complement to any channel to enhance AI and human agents'
+capabilities and to overcome channel limitations that compromise user experiences.
+
+A set of [xApp nodes](/ai/agents/develop/node-reference/xApp/overview) controls the behavior of xApps.
+You can build the actual xApp pages in two ways,
+by providing [HTML code](/ai/agents/develop/node-reference/xApp/set-html-xApp-state)
+or by specifying an [adaptive card in JSON](/ai/agents/develop/node-reference/xApp/set-AdaptiveCard-xApp-state).
+Alternatively, for more customization, you can [create your own node](/xApps/build/custom-xApp-node) by implementing and uploading an Extension.
+
+Watch this webinar to get a quick overview of what xApps are, how they work, and in which scenarios you can use them. The webinar also includes a tutorial on how to build a simple xApp.
+
+<iframe width="701" height="438" src="https://www.youtube.com/embed/4qvZGG6qK6w" title="Design Multimodal Customer Journeys with Cognigy xApps" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="centered-iframe"></iframe>
+
+## Compatibility
+
+- Cognigy xApps are compatible with the [supported browsers and channels](/xApps/supported-browsers-and-channels).
+
+## Concepts
+
+### Session concept
+
+You can access an xApp session via the URL and initialize it using the [xApp: Init Session](/ai/agents/develop/node-reference/xApp/init-xApp-session) node. An xApp session displays a sequence of xApp pages that you can configure as needed. You can initialize a maximum of one xApp session per Cognigy session.
+
+### Screen concept
+
+The shell page has a set of configurable built-in screens. You can use these default screens to interact with end users, for example, when the xApp content isn't displayed. These default screens are part of the shell page, which holds the connection to the Cognigy backend.
+
+#### xApp screen
+
+The xApp screens appear when the xApp page launches, fails to launch, encounters an error, or is halted.
+
+<Frame>
+    <img src="/_assets/xApps/success-screen.png" alt="xApp success screen displayed when a page launches successfully" style={{ width: 'auto' }} />
+</Frame>
+
+<Frame>
+    <img src="/_assets/xApps/error-screen.png" alt="xApp error screen displayed when a page fails to launch" style={{ width: 'auto' }} />
+</Frame>
+
+#### Intermediate screen
+
+Intermediate screens appear while no xApp page is configured. You can replace the default intermediate screen with a custom-built xApp page.
+
+<Frame>
+    <img src="/_assets/xApps/intermediate-screen.png" alt="Default intermediate screen shown while no xApp page is configured" style={{ width: 'auto' }} />
+</Frame>
+
+#### Connection screen
+
+Connection screens appear while the real-time connection to the backend is re-established. You can replace the default connection screen with a custom-built xApp page.
+
+<Frame>
+    <img src="/_assets/xApps/connection-screen.png" alt="Connection screen shown while re-establishing the backend connection" style={{ width: 'auto' }} />
+</Frame>
+
+#### Session ended screen
+
+The session ended screen appears when the xApp session ends, for example, when the channel connection is closed. The screen informs the user that no further input is accepted. You can customize this message using the **'Session Ended' Text** parameter on the [xApp: Init Session](/ai/agents/develop/node-reference/xApp/init-xApp-session) node.
+
+<Frame>
+    <img src="/_assets/xApps/end-session-screen.webp" alt="Session ended screen shown when the xApp session ends, for example, when the channel connection is closed." style={{ width: 'auto' }} />
+</Frame>
+
+#### PIN screen
+
+The PIN screen prompts the end user to enter the xApp session PIN. The user needs to provide the correct PIN to access the xApp pages. Requesting a PIN to enter the session is optional.
+
+<Frame>
+    <img src="/_assets/xApps/pin-screen.png" alt="PIN entry screen prompting the user to access the xApp session" style={{ width: 'auto' }} />
+</Frame>
+
+## How it works
+
+To learn more about how an xApp works, read the [xApp use cases](/xApps/use-cases) and [Build your first xApp](/xApps/build/first-xApp) articles.
+You can find ready-made examples of xApps in the [Cognigy GitHub](https://github.com/Cognigy/xApps/tree/main) repository.
+
+## More information
+
+- [xApp architecture](/xApps/architecture)
+- [xApp Nodes](/ai/agents/develop/node-reference/xApp/overview)
+- [xApp tokens](/xApps/tokens)
+- [xApp flow API](/xApps/api)

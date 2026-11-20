@@ -1,0 +1,71 @@
+---
+title: "Simulator"
+sidebarTitle: "Overview"
+keywords: ['simulator', 'simulations', 'simulate conversations', 'test agents']
+description: "Cognigy Simulator is an LLM-powered tool in Cognigy that allows users to model and test full conversational scenarios for LLM-based agents."
+---
+
+_Simulator_ is an LLM-powered tool in Cognigy that allows users to model and test full conversational scenarios for LLM-based agents.
+
+Use the Simulator to mimic user interactions in controlled environments and evaluate the performance, behavior, and reliability of agents through metrics displayed on the Simulator dashboard. In contrast to Playbooks, which follow predefined test paths, the Simulator uses Generative AI to create dynamic, realistic conversations.
+
+The Simulator contains the following components:
+
+- **Scenarios** — define personas, missions, and success criteria for testing agents.
+- **Simulation runs** — simulate scenarios to evaluate the performance of agents.
+- **Simulations** — the compilation of multiple simulation runs displaying different agent behaviors in the same scenario. Each simulation run provides unique test outcomes for analysis. Additionally, you can automate testing by scheduling periodic simulations, and ensure continuous validation of your agent's performance and reliability.
+
+The Simulator is primarily designed for testing LLM-based agents, but it can also be used with any flow, with some restrictions.
+
+<Frame>
+ <img src="/_assets/ai/test/simulator/simulation-overview.webp" alt="Simulations tab of the Simulator showing the results of one simulation: key metrics, turn distribution, LLM metrics, success criteria, and a table of simulation runs with the conversation of the selected run" style={{ width: 'auto' }} />
+</Frame>
+
+## Key benefits
+
+- **Realistic end-to-end testing**. Simulate full conversations, from greetings to resolutions. Use multiple personas to test how your agent handles different user personas and Scenarios.
+- **Simulations across multiple interfaces**. Run simulations in the Simulator or the Interaction Panel. The Interaction Panel shows the results of the simulations that you start there. To review simulated conversations, use the Conversations Explorer.
+- **Early issue detection and optimization**. Detect gaps, edge cases, and quality issues before deployment to improve reliability and deliver a better user experience.
+- **Faster, automated QA**. Automatically test agents across environments, ensuring high coverage and consistent quality.
+- **Scheduled simulations**. Schedule simulations to automate periodic tests at a specified frequency. Regular testing helps ensure that new deployments work as expected.
+
+## Prerequisites
+
+- To start a simulation, you need an LLM that supports the Simulator.
+- To generate scenarios automatically, you need to:
+  - Configure an LLM for [design-time features](/ai/agents/develop/flow-agents/design-time-and-run-time-features#design-time-generative-ai-features). Select the platform-provided LLM or another model that [supports design-time features](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+  - Make sure that your Project includes an agent or a flow with a [Flow Agent Node](/ai/agents/develop/node-reference/ai/ai-agent).
+
+## Restrictions
+
+- The following features aren't supported:
+    - Voice interactions. The Simulator only supports text-based conversations.
+    - Multivariate simulations in the Interaction Panel. To run a multivariate simulation, use the [Simulator](/ai/agents/test/simulator/simulations).
+    - Handovers to human agents. The Interaction Panel will show the message `Agent Handover is not supported in the Interaction Panel, please use the Webchat or another channel`.
+- Simulations support only handoffs from an agent to a flow that the agent triggers with the Handoff to Flow system tool.
+
+## How the simulator works
+
+<Frame>
+  <video autoPlay loop muted playsInline controls title="Simulator workflow" aria-label="The Simulator workflow: create a scenario, simulate it, and evaluate the results." style={{ width: '100%', maxWidth: '600px', display: 'block', margin: '0 auto' }}>
+    <source src="https://docscognigyassets.blob.core.windows.net/assets/create-simulate-evaluate.mp4" type="video/mp4" />
+  </video>
+</Frame>
+
+1. **Create a scenario**. Set the persona, mission, and success criteria. See [Scenarios](/ai/agents/test/simulator/scenarios).
+2. **Simulate**. Start the simulation and let the agent interact with the persona that you created. Run the simulation multiple times to gather more accurate insights. See [Simulations](/ai/agents/test/simulator/simulations).
+3. **Evaluate**. View key metrics on the [Simulator dashboard](/ai/agents/test/simulator/dashboard), such as complete success rate, average sentiment, and number of turns. You can then adjust the flow logic, training data, or system prompts based on the results. Rerun simulations to verify improvements.
+
+## Simulator API
+
+Use the [Cognigy Simulator API](/api-reference-simulator/) to create scenarios, run simulations, and retrieve results from simulations and simulation runs.
+
+## More information
+
+- [Scenarios](/ai/agents/test/simulator/scenarios)
+- [Simulations](/ai/agents/test/simulator/simulations)
+- [Simulator dashboard](/ai/agents/test/simulator/dashboard)
+- [Simulation mode](/ai/agents/test/interaction-panel/simulation)
+- [Conversations Explorer](/insights/explorers/conversations)
+- [Contact Profiles](/ai/agents/analyze/contact-profiles)
+- [Agentic AI](/ai/agents/overview)

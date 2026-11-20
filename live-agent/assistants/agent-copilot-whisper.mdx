@@ -1,0 +1,66 @@
+---
+title: Agent Copilot Whisper
+description: Configure Agent Copilot Whisper in Live Agent to provide human agents with AI-powered reply suggestions and next-action hints directly in the chat window.
+keywords: ['agent copilot whisper', 'ai suggestions', 'human agents', 'live agent', 'real-time assistance']
+
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+import LiveAgentAssistantSetup from '/snippets/live-agent/assistant-setup.mdx'
+
+<MaintenanceMode />
+
+<LiveAgentAssistantSetup/>
+ 
+### Supported output types
+
+Agent Copilot Whisper supports all output types that can be selected in the [Say](/ai/agents/develop/node-reference/overview), [Question](/ai/agents/develop/node-reference/overview), or [Optional Question](/ai/agents/develop/node-reference/overview) nodes.
+
+## Set up an endpoint
+
+To configure your endpoint:
+
+1. Go to **Deploy > Endpoints**.
+2. Open your Webchat endpoint.
+3. On the **Advanced** tab, go to the **Copilot** section.
+4. In the **Copilot type** field, select **Whisper (Live Agent)**.
+5. In the **Copilot Flow** field, select the name of the Agent Copilot flow you've created in the previous step.
+6. Click **Save**.
+
+The endpoint setup is completed.
+
+## Test Agent Copilot Whisper
+
+To test Agent Copilot Whisper, follow these steps:
+
+1. Start a Webchat session.
+2. Complete the handover process to Live Agent.
+3. Once the handover is complete, send a message as a human agent.
+4. After that, send a message as the user in Webchat.
+
+<Frame>
+    <img src="/_assets/live-agent/la-agent-assist-webchat_f.png" alt="Webchat session during a handover for testing Agent Copilot Whisper" style={{ width: 'auto' }} />
+</Frame>
+
+Once the human agent receives this message, the testing behavior will vary depending on how you configured the endpoint beforehand:
+
+1. The human agent will receive a dropdown menu **Agent Copilot**.
+2. In this menu, the human agent will find the results from the flow sent via Agent Copilot Whisper.
+       <Frame>
+           <img src="/_assets/live-agent/la-agent-assist-agentview_f.png" alt="Agent Copilot dropdown menu showing whisper results from the flow" style={{ width: 'auto' }} />
+       </Frame>
+3. The human agent can click the blue arrow to forward content to the user.
+      <Frame>
+           <img src="/_assets/live-agent/la-agent-assist-agentview-forward_f.png" alt="Forward Agent Copilot content to the user" style={{ width: 'auto' }} />
+      </Frame>
+
+       <Frame>
+           <img src="/_assets/live-agent/la-agent-assist-webchat-complete_f.png" alt="Webchat showing the forwarded Agent Copilot Whisper response to the end user" style={{ width: 'auto' }} />
+       </Frame>
+
+If the testing is successful, the Agent Copilot Whisper setup is complete.
+
+## More information
+
+- [Agent Copilot in Live Agent](/live-agent/assistants/agent-copilot)
+- [Agent Copilot](/agent-copilot/overview)

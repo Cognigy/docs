@@ -1,0 +1,47 @@
+---
+title: Request rating
+description: "Use the Request Rating Node to prompt end users to rate their conversation."
+keywords: ['request rating', 'conversation rating', 'user feedback', 'analytics', 'insights']
+---
+
+import AiNodesInsightsForRating from "/snippets/ai/nodes/insights-for-rating.mdx";
+import AiNodesRating from "/snippets/ai/nodes/rating.mdx";
+
+<Frame>
+  <img
+    src="/_assets/ai/develop/node-reference/analytics/request-rating.png"
+    alt="Request Rating Node"
+    style={{ width: "auto" }}
+  />
+</Frame>
+
+## Description
+
+This Node prompts end users to give feedback or rate their conversation experience using a rating widget in a chat.
+The Node is typically placed at the end of a Flow to collect final feedback from conversations with either AI or human agents.
+
+In contrast to the [Set Rating Node](/ai/agents/develop/node-reference/analytics/set-rating), the Request Rating Node doesn't rate a conversation automatically.
+
+## Parameters
+
+| Parameter                            | Description                                                                                                                                                                                                                                                                    |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Rating Screen Title                  | Sets the text for the screen title of the rating widget. The default text is `Conversation Rating`.                                                                                                                                                                                   |
+| Rating Title Text                    | Sets the text for the title of the rating widget. The default text is `Please rate your chat experience`.             |
+| Rating Comment Placeholder           | Sets the placeholder text for the comment field in the rating widget. The default text is `Type something here...`. |
+| Rating Submit Button Text            | Sets the text that appears on the button users click to submit their chat ratings and feedback. The default text is `Send feedback`.                                                                                                           |
+| Rating Submitted Event Banner Text   | Sets the text that appears in a banner after a user successfully submits their rating and feedback. The default text is `Your feedback was submitted`.                                                                                         |
+| Rating Submitted Chat Status Message | Sets the status message that appears in the chat after a user successfully submits their rating and feedback. The default text is `Feedback submitted`.                                                                                        |
+
+## Track ratings in Insights
+
+<AiNodesInsightsForRating />
+
+## Use cases
+
+<AiNodesRating />
+
+## More information
+
+- [Set Rating](/ai/agents/develop/node-reference/analytics/set-rating)
+- [Insights](/insights/overview)

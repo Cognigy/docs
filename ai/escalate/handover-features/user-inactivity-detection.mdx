@@ -1,0 +1,155 @@
+---
+title: User inactivity detection and handling
+keywords: ['handovers', 'handover inactivity', 'contact centers', 'close handover', 'user inactivity detection and handling']
+description: "Detect user inactivity during handovers and handle it by auto-closing the handover, sending automated responses, or triggering further actions."
+---
+
+
+The _inactivity detection and handling_ feature detects user inactivity during handovers and enables automated responses, handover closures, or custom actions to optimize human agent efficiency.
+
+## Key benefits
+
+- **Efficient resource use**. Automatically frees human agents from inactive conversations.
+- **Improved user experience**. Sends timely prompts or closes stalled handovers smoothly.
+
+## Prerequisites
+
+- A [handover provider](/ai/escalate/handover-reference/overview), for example, [NiCE CXone](/ai/escalate/handover-reference/nice-cxone/nice-cxone-integrated), is configured.
+- The endpoint that supports a selected handover provider is configured. For testing purposes, you can use the [Webchat v3 endpoint](/webchat/v3/overview) with [Demo Webchat](/webchat/demo).
+
+## Restrictions
+
+- This feature triggers flows via inactivity timeouts only when the handover status is `queue` or `active`. User inputs won't trigger flows after a handover begins, except for [Agent Copilot](/agent-copilot/index) flows.
+
+## How to use
+
+To use this feature, add a Handover to Human Agent node or an AI Agent node with a Handover to Human Agent tool to your flow, then add the nodes that handle inactivity and test your flow via Demo Webchat and any handover providers, for example, Cognigy Live Agent.
+
+### How to set up
+
+<AccordionGroup>
+  <Accordion title="1. Add handover to human agent node or tool">
+    To ensure proper detection and handling of inactivity during queue time or active handovers, follow these steps:
+
+    <Tabs>
+      <Tab title="Handover to human agent node">
+        1. In the flow editor, add the Handover to Human Agent node.
+        2. Click the Handover to Human Agent node, then go to the **Event settings** section.
+        3. Toggle on the **Send queue event** and **Send active event** parameters:
+            - **Send queue event** — triggers an event when the user enters the queue. This option allows tracking inactivity while waiting for a human agent.
+            - **Send active event** — triggers an event when the human agent sends the first message. This option allows tracking inactivity during an active conversation.
+        4. Save changes.
+      </Tab>
+      <Tab title="Handover to human agent tool">
+        1. In the flow editor, add an AI Agent node and a [Handover to Human Agent tool](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-human-agent-tool).
+        2. Click the Handover to Human Agent tool, then go to the **Event settings** section.
+        3. Toggle on the **Send queue event** and **Send active event** parameters:
+            - **Send queue event** — triggers an event when the user enters the queue. This option allows tracking inactivity while waiting for a human agent.
+            - **Send active event** — triggers an event when the human agent sends the first message. This option allows tracking inactivity during an active conversation.
+        4. Save changes.
+      </Tab>
+    </Tabs>
+  </Accordion>
+
+  <Accordion title="2. Configure lookup node">
+    Set up the Lookup node with handover statuses:
+
+    1. In the flow editor, below the Handover to Human Agent node or tool, add the Lookup node.
+    2. Click the Lookup node and select **Handover Status** from the **Type** list. Save changes.
+        <Frame>
+            <img src="/_assets/ai/escalate/handover-reference/scenarios/1-handover-lookup.webp" alt="Lookup node configured with Handover Status type" style={{ width: 'auto' }} />
+        </Frame>
+    3. Click a Case node and enter the `active` handover status in the **Value** field. This status allows you to detect and handle inactivity while a human agent is handling the conversation. Save changes.<br/>
+        <Frame>
+            <img src="/_assets/ai/escalate/handover-reference/scenarios/2-handover-child-lookup.webp" alt="Case node with active handover status value" style={{ width: 'auto' }} />
+        </Frame>
+    4. Click the second Case node and enter the `queue` handover status in the **Value** field. This status allows you to detect and handle inactivity while the end user is in the queue. Save changes.<br/>
+        <Frame>
+            <img src="/_assets/ai/escalate/handover-reference/scenarios/3-handover-second-child-lookup.webp" alt="Case node with queue handover status value" style={{ width: 'auto' }} />
+        </Frame>
+    5. Add **completed** and **error** child nodes by analogy.
+  </Accordion>
+
+  <Accordion title="3. Set inactivity time">
+    If you want to detect inactivity during the queue time, start the timer once the end user enters the queue.
+
+    To do this, add the Once node to start the inactivity timer when you receive the queue event:
+
+    1. Below the **queue** child node, add the Once node.
+    2. Below the **On First Time** child node, add the Set Handover Inactivity node and enter the inactivity timeout in minutes in the **Timer** field, for example, `1`.  
+    After each user input, the inactivity timer resets. Once the timer expires, an inactivity event is sent to the flow. Save changes.
+    3. If you want to detect and handle inactivity during active handovers, repeat the same steps for the **active** child node.
+
+        <Frame>
+            <img src="/_assets/ai/escalate/handover-reference/scenarios/4-set-handover-inactivity.webp" alt="Set Handover Inactivity node with timeout configuration" style={{ width: 'auto' }} />
+        </Frame>
+
+    The timer is set in minutes and can vary by up to one minute. If there's no user input, the timer expires after the specified time. If a user input is received before the timeout, the timer resets.
+  </Accordion>
+
+  <Accordion title="4. Loop back after starting inactivity">
+    Set a Go To node to return to the Lookup node. This arrangement allows the flow to execute the correct Lookup child branch based on incoming events. To do so, follow the instructions:
+
+    1. Right-click the Lookup node and select **Set Entrypoint**.
+    2. Below the Set Handover Inactivity node, add a Go To node.
+    3. In the Go To node, configure the following:
+        
+        - **Select Node** — select your Lookup node.
+        - In the **Advanced** section, select **Go to Node and wait for Input** from the **Execution Mode** list.
+
+    <Frame>
+       <img src="/_assets/ai/escalate/handover-reference/scenarios/5-handover-go-to.webp" alt="Go To node configured to return to the Lookup node" style={{ width: 'auto' }} />
+    </Frame>
+  </Accordion>
+
+  <Accordion title="5. Handle inactivity">
+    An example of how to handle inactivity:
+
+    1. At the end of the Lookup node branches, add an If node and set **Condition** to `input.handover.inactivityCount >= 2`. This allows handling inactivity when the inactivity time reaches 2 minutes. Note that `input.handover.inactivityCount` is reset to 0 after an end user sends a message.
+    2. To ask the end user, based on detected inactivity, if they are still there, add a Say node and configure the following below the **Else** child node:
+        - **Text** — enter `Are you still there? The conversation will be automatically closed soon`.
+        - In **Handover Settings > Handover Output Destination**, select **User Only** to only show the message to the user and not the human agent. Save changes.
+    3. Below the Say node, add a Set Handover Inactivity node to start a subsequent inactivity timer.  
+        If the inactivity time is 2 minutes or greater, it triggers the close handover process.
+    4. To automatically close the handover after the inactivity timer reaches 2 minutes, add a Close Handover node below the **Then** child node.
+    5. Below the Close Handover, add a Say node and configure the following:
+        - **Text** — enter `You are back with the agent now!`.
+        - In **Handover Settings > Handover Output Destination**, select **User and Agent**. Save changes.  
+          If the inactivity time is less than 2 minutes, the flow waits for the user to respond, which prevents the conversation from closing. If the inactivity time reaches 2 minutes, the conversation closes or restarts a flow from the beginning.
+
+    <Frame>
+       <img src="/_assets/ai/escalate/handover-reference/scenarios/6-handover-if.webp" alt="If node handling inactivity with Say and Close Handover nodes" style={{ width: 'auto' }} />
+    </Frame>
+  </Accordion>
+
+  <Accordion title="6. Loop back after handling inactivity">
+    To loop back to the Lookup node, follow these steps:
+    
+    1. After the If node branches, add a Go To node.
+    2. In the Go To node, configure the following:
+        - **Select Node** — select Lookup.
+        - From the **Execution Mode** list in the **Advanced** section, select **Go to Node and wait for Input**.
+    <Frame>
+      <img src="/_assets/ai/escalate/handover-reference/scenarios/7-handover-loop-back.webp" alt="Go To node looping back after handling inactivity" style={{ width: '80%' }} />
+    </Frame>
+  </Accordion>
+</AccordionGroup>
+
+### How to test
+
+1. Use Demo Webchat to start a handover.
+2. Wait past the set inactivity timeout, for example, 1 minute, without responding.  
+3. Check for the `Are you still there?` message after the first timeout and handover closure after the second timeout.
+
+## Example
+
+A user in a queue stops responding. After 1 minute, they see `Are you still there? The conversation will be automatically closed soon`. If they remain inactive for another minute, the handover closes, and they get `You are back with the agent now!`. The automatic closing frees the human agent and keeps the chat flowing.
+
+## More information
+
+- [Set Handover Inactivity](/ai/agents/develop/node-reference/service/set-handover-inactivity)
+- [Close Handover](/ai/agents/develop/node-reference/service/close-handover)
+- [Handover providers](/ai/escalate/handover-reference/overview)
+- [Agent Handover](/ai/agents/develop/node-reference/service/handover-to-agent)
+- [Handover to Human Agent tool](/ai/agents/develop/node-reference/ai/ai-agent#handover-to-human-agent-tool)
+- [Real-time queue notifications](/ai/escalate/handover-features/real-time-queue-notifications)

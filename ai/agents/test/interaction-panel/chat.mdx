@@ -1,0 +1,87 @@
+---
+title: Chat
+keywords: ['debug mode', 'nlu analysis', 'intent detection', 'flow execution', 'debug messages', 'advanced mode', 'tracing']
+seo:
+  metatags:
+    description: >-
+      The interaction panel's chat mode allows you to test, debug, and improve
+      your AI Agent.
+---
+
+
+With _Chat_ mode, you can chat with your AI Agent to test, [debug](#debug-mode), and improve it.
+
+## How to use chat mode
+
+To open chat mode, click the ![chat](/_assets/icons/black-and-white/chat-interaction-panel.svg) tab in the [interaction panel](/ai/agents/test/interaction-panel/overview). Chat mode works as a common chat interface that simulates your [Flows](/ai/agents/develop/projects-and-flows/overview) based on the [interaction panel settings](/ai/agents/test/interaction-panel/overview). You can also click ![Microphone](/_assets/icons/interaction-panel/mic.svg) to activate your device's microphone and record voice input.
+
+Additionally, you can use the [debug mode](#debug-mode) to analyze the [natural language understanding](/ai/platform-features/nlu/overview) (NLU) results, Flow transitions, and specific Node outputs.
+
+If the AI Agent doesn't respond within a set time, the interaction panel stops waiting and shows a notification that the message may still be processing, so you shouldn't resend it right away.
+
+### Debug mode
+
+<Note>
+To trace an agent, turn on **Advanced mode** and use [tracing](/ai/agents/test/interaction-panel/tracing). The trace shows the LLM calls, tool calls, and skills of each turn.
+</Note>
+
+Debug mode displays more information about the flow execution than just user and agent messages for better understanding of the conversation. In the interaction panel, debug mode events appear in tracing, which you enable with **Advanced mode**. **Advanced mode** is off by default. With this mode, you can check:
+
+- Triggered [Intents](/ai/platform-features/nlu/intents/overview) and their [scores](/ai/platform-features/nlu/intents/intent-analyzer)
+- Triggered [Yes/No Intents](/ai/platform-features/nlu/intents/yes-no-intents) and their [scores](/ai/platform-features/nlu/intents/intent-analyzer)
+- Matched [Slots](/ai/platform-features/nlu/slots/overview)
+- Found [Lexicon Keyphrases](/ai/platform-features/nlu/slots/user-defined/lexicon)
+- Flow Transitions, for example, when executing a [Go To Node](/ai/agents/develop/node-reference/logic/go-to), an [Execute Flow Node](/ai/agents/develop/node-reference/logic/execute-flow), or triggering an [Attached Flow](/ai/platform-features/nlu/attachments)
+- Node-specific output, for example, from an [HTTP Request Node](/ai/agents/develop/node-reference/service/http-request)
+- LLM call details for flows. For more information, see [LLM call details for flows](#llm-call-details-for-flows).
+
+Some Nodes have settings that let you further configure their debug mode output.
+
+You can explicitly trigger debug messages either using the [Debug Message Node](/ai/agents/develop/node-reference/basic/debug-message) or [debug api functions](/ai/for-developers/code/api-functions) in the Code Node.
+
+<Frame>
+  <img src="/_assets/ai/test/interaction-panel/interaction-panel-chat-tab-debug-mode.webp" alt="Chat view of the interaction panel with Advanced mode on. A user message and the agent's reply are followed by four tracing spans: Pre-turn flow, Node, LLM call, and Response sent." style={{ width: 'auto', maxWidth: '360px' }} />
+</Frame>
+
+### LLM call details for flows
+
+
+With **Advanced mode** on, the trace shows an **LLM call** span for each call of an [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt), an [AI Agent Node](/ai/agents/develop/node-reference/ai/ai-agent), or a Search Extract Output Node. The span details show how the call was served, including:
+
+- The model that served the call
+- Latency metrics, such as total latency, time to first token, time per output token, tokens per second, and inter-token latency
+- Prompt, completion, and total token counts, plus a cache token breakdown (cache read, cache write, and uncached tokens) when the model reports it
+- The stop reason and the number of retries
+- A callout when a [fallback model](/ai/agents/develop/gen-ai-and-llms/fallback) served the call instead of the main model, along with the reason for the failover
+- On a failed call, a breakdown of every model that was attempted and why each attempt failed
+
+If a call has no model data, the span details show **No model details reported for this call**. For more information, see [Tracing](/ai/agents/test/interaction-panel/tracing#llm-call-details).
+
+## Connection loss and reconnection
+
+If the interaction panel loses its connection, it automatically tries to reconnect and keeps your conversation. You don't need to reload the page.
+
+- **Short interruptions.** If the connection returns within about 5 seconds, nothing appears.
+- **Longer interruptions.** A banner appears above the message input. If your browser is offline, the banner says so. Otherwise, it says that the connection was lost and that the interaction panel is reconnecting. The message input stays enabled, and any text you typed is kept.
+- **Retries.** The interaction panel keeps retrying with increasing delays between attempts, up to 30 seconds. To retry immediately, click **Try now**.
+- **After 30 seconds.** The **Reload page** button appears. The interaction panel continues to retry in the background, so the banner disappears if the connection comes back. Reloading the page starts a new conversation and the current one is lost, so use it only as a last resort.
+
+When the connection is restored, the banner disappears and the conversation continues. The banner is only shown in chat mode.
+
+### Messages typed during a connection loss
+
+If the interaction panel loses its connection while you chat, it doesn't fail the messages you send. Instead, it holds them in a queue above the message input and delivers them in order once the connection returns.
+
+- **Brief interruptions:** if the connection drops and recovers within about 5 seconds, no connection warning appears. Queued messages look the same as any other queued message.
+- **Longer interruptions:** when the connection banner appears, queued messages are highlighted with a warning color and the label **Waiting for connection**. A screen reader announces that the message is waiting for a connection.
+- **Multiple messages:** if two or more messages are queued, the queue shows a count of queued messages. Click the menu button to view and manage the individual messages.
+- **Remove a message:** click the **X** button on a queued message to remove it before it's sent.
+- **Full queue:** when the queue reaches its maximum length, a hint below the message input says that the queue is full. Remove a queued message or wait for one to send before adding more.
+
+## More information
+
+- [interaction panel](/ai/agents/test/interaction-panel/overview)
+- [Intents](/ai/platform-features/nlu/intents/overview)
+- [Slots](/ai/platform-features/nlu/slots/overview)
+- [Lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon)
+- [LLM fallback](/ai/agents/develop/gen-ai-and-llms/fallback)
