@@ -1,0 +1,120 @@
+---
+title: Tracing
+keywords: ['tracing', 'advanced mode', 'trace', 'spans', 'debugging', 'llm call', 'tool call', 'interaction panel']
+seo:
+  metatags:
+    description: "Tracing shows what an agent does in each turn of a test conversation, including LLM calls, tool calls, and skills, so that you can debug and improve the agent."
+---
+
+
+_Tracing_ shows what an agent does in each turn of a conversation in the [interaction panel](/ai/agents/test/interaction-panel/overview). You can see which skills the agent loaded, which tools it called, how the language model answered, and where an error occurred. Use this information to debug the agent and to improve its instructions, tools, and skills.
+
+Tracing records the steps of a turn as _spans_. Each span is one step, such as an LLM call or a tool call. A span shows its duration and whether it succeeded.
+
+## Prerequisites
+
+- An agent in your project.
+- **Advanced mode** turned on. Tracing is on when **Advanced mode** is on. To turn it on, click the flask icon in the header, or use the settings. The mode is off by default.
+
+## Restrictions
+
+- Tracing shows data from the current test session. The interaction panel keeps this data only in your browser tab. It clears the data when you reset the session or start a voice call, live follow, simulation, or Playbook run.
+- The trace doesn't show the results of guardrails. If a guardrail blocks a response, you see it only indirectly, for example, as the stop reason **Blocked by the content filter** on an LLM call.
+- For voice calls, the trace shows the call transcript and the call events. It doesn't offer audio playback or call recordings.
+- Tracing data isn't available through the [Cognigy OData endpoint](/ai/agents/analyze/odata).
+
+## Working with tracing
+
+### Inline trace summary
+
+With **Advanced mode** on, each turn shows a trace summary below its last message. The summary shows the number of spans, the duration of the turn, and the number of errors, for example, `5 spans · 2.40s · 1 error`. To show or hide the spans of a turn, click **Expand trace details** or **Collapse trace details**.
+
+By default, the interaction panel expands the spans of each turn. To change this, turn off **Tracing spans per turn** in the settings. To show only spans with errors in the full tracing view, turn on **Display only error spans** in the settings. This filter doesn't apply to the inline trace summary.
+
+If an agent turn used a custom system prompt, the summary and the turn header show a **Custom** badge. Hover over the badge to see the explanation. This badge isn't related to the **Custom** source of skills and tools.
+
+### Full tracing view
+
+To see all turns of the session in the main area of the page, click **Full tracing view** in a trace summary. The full tracing view shows the following:
+
+| Element | Description |
+|---------|-------------|
+| **Session ID** and **User ID** | Show the identifiers of the session and of the user. To copy a value, click the copy button next to it. The **User ID** is the ID of your platform user account, unless the session data contains a user ID. |
+| **Total LLM tokens** | Adds up the tokens of all LLM calls in the session. |
+| **Total Spans Duration** | Adds up the durations of all spans in the session. |
+| **Conversation Turns** | Lists the turns of the session. Each turn shows its number, the user message, the duration, and a failure indicator. The last turn is open. |
+| **Errors only** | Shows only turns with failures, and in them only spans with errors. |
+| **Node steps** | Shows or hides the execution steps of flow nodes in the trace. This toggle is on by default. |
+| **Inline spans** | Shows or hides the spans below each turn in the interaction panel. This toggle is on by default. If you turn it off, you see the spans only in the full tracing view. |
+| **Expand all** and **Collapse all** | A button that opens or closes all turns that are shown. Its label changes between the two. |
+| Failure badge | Shows the number of failures. To go to the next failure, click the badge. |
+
+To open the details of a span, click it. The span details sidebar opens. To close the full tracing view, click **Close execution trace**.
+
+### Span types
+
+The trace shows spans such as the following for agents:
+
+| Span | Description |
+|------|-------------|
+| **Skill loaded** | Shows that the agent loaded a skill. |
+| **Tool call** | Shows that the agent called a tool, with the arguments of the call. |
+| **Tool result** | Shows the output of a tool call. If the output contains an error, Cognigy marks the span as an error. |
+| **Execute Tool Flow** | Shows that the agent ran a flow as a tool. |
+| **LLM call** | Shows that the agent called the language model. |
+| **System: Response sent** | Shows that Cognigy sent the agent's response to the user. |
+| **Handoff to Flow** | Shows that Cognigy routed the conversation from the agent to a flow. |
+| **Handoff to AI Agent** | Shows that Cognigy routed the conversation from a flow to an agent. |
+| **Pre-Turn Flow** | Shows that a pre-Turn Flow ran before the agent's turn. The span shows the result (**Handed back to AI Agent**, **Ended without handing back**, or **Failed**), the turn context, and the original and final text. |
+| **Call event** and **Call details** | Voice calls only. Show voice input events and the call's session configuration. |
+| **Message not sent** | Shows that Cognigy couldn't send a message. |
+
+The trace also shows spans for flows, such as **Flow Transition**, **Intent matched**, **System Slot Match**, **Node**, **Debug message**, **Debug error**, **Node error**, **Track Goal**, and **System: JSON data payload**. LLM calls of flows also appear as **LLM call** spans.
+
+Spans of skills, tool calls, and tool results show where the tool or skill comes from: **System** (built-in tools), **Custom**, or **MCP** (Model Context Protocol). Tool calls and tool results appear one level below the LLM call that triggered them.
+
+### LLM call details
+
+To see how the language model handled a call, click an LLM call span. The span details sidebar shows the following:
+
+- Model and performance. The **Model** that answered the call, the **Model latency** that the provider measured, the **Stop reason**, and the number of **Retries**. For streaming calls, also the **Time to first token**. If a value isn't available, the sidebar shows **Not reported**. The stop reason is one of **Completed**, **Called a tool**, **Called a function**, **Hit the token limit**, **Blocked by the content filter**, or **Unknown**.
+- **Tokens.** The prompt, completion, reasoning, cache read, cache write, and uncached tokens. The cache values are part of the prompt tokens.
+- Pace. The **Time per output token**, the **Tokens per second**, and the **Inter-token latency**. These values are available only for streaming calls.
+- Fallback model. If a [fallback model](/ai/agents/develop/gen-ai-and-llms/fallback) answers the call, the span shows a warning ring around its status dot. The callout **Served by a fallback model** explains why the primary model didn't answer. A fallback is a warning, not an error. **Failed attempts** lists each model that Cognigy tried and the error that the model returned.
+
+If the call fails, Cognigy marks the span as an error. The sidebar shows the reason. For example, the provider timed out, or the provider blocked the request as unsafe. The failure also appears in the failure badge and in the **Errors only** filter.
+
+If a call has no model data, the sidebar shows **No model details reported for this call**.
+
+#### System prompt details
+
+For agent LLM calls, the span details sidebar can show a **System prompt** section. It shows the following:
+
+- **Custom prompt configured.** Whether the agent has a custom system prompt.
+- **Prompt sent.** The prompt that Cognigy sent to the model: **Custom**, **Default**, or **Built-in**.
+- **Build time** and **Evaluation time.** How long Cognigy took to build the prompt and to evaluate its expressions.
+- **Evaluations.** Each expression in the prompt with its type, **CognigyScript** or **Data**, and its value.
+- **Prompt text.** To read the prompt, click **Show prompt**. To copy it, click **Copy the system prompt**.
+
+If the build fails or Cognigy falls back to another prompt, the span shows a warning triangle. If sensitive logging is off, the interaction panel doesn't show the prompt text and values.
+
+### Tool call details
+
+To see what a tool received and returned, click a **Tool call** or **Tool result** span. The span details sidebar shows the call ID, the name and origin of the tool, and the arguments or the output as JSON. You can copy the JSON or open it in a larger view.
+
+For a call of the knowledge search tool, the sidebar shows the **Query**, the **Knowledge store**, and each **Result**. Each result has a **Distance**, **Source name**, **Source type**, and **Text**. If the search returns nothing, the sidebar shows **No results returned**.
+
+### Error analysis
+
+If a span has an error, click **Show error details** to see the data of the turn as JSON. The data includes the spans of the turn and the input, context, and profile at that point. To send this data to AI Assist, click **Analyze**. The button appears only if AI Assist is available in your environment. The data contains session data. Check the data before you share it.
+
+### Voice calls
+
+During and after a voice call, the trace shows the call transcript as turns. Voice input events appear as **Call event** spans, and the call's voice settings appear as a **Call details** span.
+
+## More information
+
+- [interaction panel](/ai/agents/test/interaction-panel/overview)
+- [Chat](/ai/agents/test/interaction-panel/chat)
+- [Voice call](/ai/agents/test/interaction-panel/voice-call)
+- [LLM fallback](/ai/agents/develop/gen-ai-and-llms/fallback)

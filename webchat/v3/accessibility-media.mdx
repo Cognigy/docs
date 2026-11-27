@@ -1,0 +1,156 @@
+---
+title: 'Webchat: accessible audio and video'
+sidebarTitle: Accessible audio and video
+description: "Provide transcripts, captions, and audio descriptions for audio and video messages in Webchat so that all users can access the content."
+keywords: ['webchat transcripts', 'webchat captions', 'audio transcript', 'video captions', 'vtt', 'audio description']
+---
+
+If your agent includes media content, such as a video clip or an audio track, support users with different accessibility needs in understanding this material. For video and audio, provide the same content in an alternate format, such as a transcript and captions.
+
+For images, links, adaptive cards, and message structure, see [accessible messages](/webchat/v3/accessibility-messages).
+
+## Audio
+
+Provide an audio track along with the transcript for this track. In the [Say](/ai/agents/develop/node-reference/basic/say), [Question](/ai/agents/develop/node-reference/basic/question), or [Optional Question](/ai/agents/develop/node-reference/basic/optional-question) nodes, for the **Audio** output type, add the audio file and paste the transcript into the **Audio Alternate Text** field.
+
+To convert your audio into text, you can use third-party tools such as [Transkriptor](https://transkriptor.com/) and [Sonix](https://sonix.ai/).
+
+The transcript must accurately reflect the number of speakers and their lines, include all the voice content present in the audio, and account for any background music. The audio transcript can have the following format:
+
+<Accordion title="Audio transcript sample">
+
+  ```txt
+  [00:00] Background Music: Soft instrumental music begins playing.
+
+  [00:05] Speaker 1: How are you today?
+
+  [00:10] Speaker 2: I'm doing well, thank you. How about you?
+
+  [00:15] Speaker 1: I'm good, just busy with work. Have you seen the latest updates from Cognigy?
+
+  [00:20] Speaker 2: Yes, I checked them out! The new features look really promising.
+
+  [00:25] Speaker 1: I agree! I'm particularly excited about the NLU improvements.
+
+  [00:30] Speaker 2: Same here! I think it will really enhance our user experience.
+
+  [00:35] Speaker 1: Absolutely. Let’s plan a time to discuss how we can implement these changes.
+
+  [00:40] Speaker 2: Sounds great! I’ll send out a calendar invite.
+  ```
+
+</Accordion>
+
+In Webchat, the transcript is available in the audio player under ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Download transcript** in `.txt` format. Screen readers announce the message as `An audio message with transcript`.
+
+<Frame>
+  <img src="/_assets/webchat/v3/a11y-audio-more-options.png" alt="An audio message in Webchat with a play button, a progress slider showing 0:04, a volume slider, and an open More options menu listing 'Download transcript' and 'Playback speed'." style={{ width: 'auto' }} />
+</Frame>
+
+## Video
+
+Provide a video clip along with the transcript and captions for this clip. In the [Say](/ai/agents/develop/node-reference/basic/say), [Question](/ai/agents/develop/node-reference/basic/question), or [Optional Question](/ai/agents/develop/node-reference/basic/optional-question) nodes, for the **Video** output type, add the video file, provide the alternate text (a downloadable transcript), and the URL for captions.
+
+<Frame>
+  <img src="/_assets/webchat/v3/video-captions.png" alt="Video output type settings with alternative text and captions URL fields" style={{ width: 'auto' }} />
+</Frame>
+
+### Transcript
+
+Paste the video transcript into the **Video Alternate Text** field. To convert your video into text, you can use third-party tools such as [Transkriptor](https://transkriptor.com/) and [Sonix](https://sonix.ai/). The video transcript can have the following format:
+
+<Accordion title="Video transcript sample">
+
+  ```txt
+  [00:00] Speaker 1: Welcome to our tutorial on video transcription.
+
+  [00:08] Speaker 2: In this video, we'll cover the basics of creating transcripts.
+
+  [00:16] Speaker 1: Transcripts help make your content accessible to a broader audience.
+
+  [00:21] Speaker 2: They are also useful for improving search engine optimization.
+
+  [00:25] Speaker 1: Now, let’s go over how to create a transcript step-by-step.
+
+  [00:33] Speaker 2: Be sure to check the description for links to the tools mentioned.
+
+  [00:37] Speaker 1: Thank you for watching, and don't forget to subscribe for more tutorials.
+  ```
+
+</Accordion>
+
+In Webchat, the transcript is available in the video player under the **Download transcript** button in `.txt` format.
+
+### Captions
+
+Captions are designed to make content accessible to people who are deaf or hard of hearing, and they include not only spoken dialogue but also relevant non-verbal audio cues.
+
+Paste a URL that links to the captions into the **Video Captions Url** field. The captions file must be in `.vtt` (WebVTT) format.
+
+To create captions, you can use YouTube. Upload a video, and once the captions are generated, go to **Subtitles** in YouTube Studio, click the video, and select **Download** to export the captions in `.vtt` format. Alternatively, you can use [Veed.io](https://www.veed.io/) or [Kapwing](https://www.kapwing.com/) to generate, edit, and export captions in `.vtt` format.
+
+The file that includes captions must have the following `.vtt` format:
+
+<Accordion title="Video captions sample">
+
+  ```txt
+  WEBVTT
+
+  1
+  00:00:01.000 --> 00:00:03.500
+  [Music playing]
+
+  2
+  00:00:03.600 --> 00:00:07.000
+  Welcome to our tutorial on video transcription.
+
+  3
+  00:00:07.100 --> 00:00:10.200
+  In this video, we'll cover the basics of creating transcripts.
+
+  4
+  00:00:10.300 --> 00:00:14.000
+  [Background noise: office sounds]
+
+  5
+  00:00:14.100 --> 00:00:18.000
+  Transcripts help make your content accessible to a broader audience.
+
+  6
+  00:00:18.100 --> 00:00:21.500
+  They are also useful for improving search engine optimization.
+
+  7
+  00:00:21.600 --> 00:00:25.000
+  Now, let's go over how to create a transcript step-by-step.
+
+  8
+  00:00:25.100 --> 00:00:28.000
+  [Background noise fades out]
+
+  9
+  00:00:28.100 --> 00:00:32.000
+  Be sure to check the description for links to the tools mentioned.
+
+  10
+  00:00:32.100 --> 00:00:35.500
+  Thank you for watching, and don't forget to subscribe for more tutorials.
+
+  11
+  00:00:35.600 --> 00:00:37.000
+  [Music fades out]
+  ```
+
+</Accordion>
+
+In Webchat, users activate captions in the video player by clicking ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) **> Captions**.
+
+### Audio description
+
+The video player doesn't provide a control to turn an audio description on or off. If your video requires an audio description, provide a video file that already includes the audio description track.
+
+## More information
+
+- [Webchat: test accessibility](/webchat/v3/accessibility-testing)
+- [Say](/ai/agents/develop/node-reference/basic/say)
+- [Question](/ai/agents/develop/node-reference/basic/question)

@@ -1,0 +1,112 @@
+---
+title: Inject and notify API
+description: "Use inject and notify requests to send data from external processes to an active session."
+keywords: ['api', 'external processes', 'inject', 'notify', 'endpoint communication']
+---
+
+The _Inject_ and _Notify_ API requests handle external processes that need to communicate back to an active session in Cognigy. You can use these API requests when an agent needs to run external processes, for example, document analysis, outside of Cognigy before continuing the conversation. After the external process has concluded, it needs to trigger Cognigy.
+
+## Limitations
+
+Only the following endpoints support the inject and notify API requests:
+
+- [Facebook (Meta) Messenger](/ai/agents/deploy/endpoint-reference/facebook-messenger)
+- [LINE Messenger](/ai/agents/deploy/endpoint-reference/line-messenger)
+- [Azure Bot Service](/ai/agents/deploy/endpoint-reference/azure-bot-services)
+- [RingCentral Engage](/ai/agents/deploy/endpoint-reference/ringcentral-engage)
+- [Slack](/ai/agents/deploy/endpoint-reference/slack)
+- [Socket](/ai/agents/deploy/endpoint-reference/socketio)
+- [Sunshine Conversations](/ai/agents/deploy/endpoint-reference/sunshine-conversations)
+- [Cognigy Voice](/ai/agents/deploy/endpoint-reference/voice-gateway)
+- [WhatsApp](/ai/agents/deploy/endpoint-reference/whatsapp)
+- [Webchat](/ai/agents/deploy/endpoint-reference/webchat)
+- [Webhook](/ai/agents/deploy/endpoint-reference/webhook)
+
+## Inject
+
+An inject API request sends text and data from an external service to a flow. This approach allows you to convert them into complex information, for example, into lists and galleries, and then send it to the user through the endpoint. You can send a simple message to your flow, for example, `makeList`, along with the data from an external API request, and use the nodes in the flow to recognize the message and send a list to the user with information from an external API.
+
+## Notify
+
+A notify API request sends text or data to the user through the endpoint. With this approach, the user receives the text or data from the external API without any additional flow logic.
+
+## How to use inject and notify
+
+You can use the [HTTP Request node](/ai/agents/develop/node-reference/service/http-request) or [Code node](/ai/for-developers/code/overview) to trigger external processes through the Cognigy API and pass the necessary data to the inject and notify API requests in addition to the specific external payload.
+
+### Inject and notify API URLs
+
+For the inject and notify API methods, use the endpoint service for the API URL. You can find your endpoint URL and URL token in the [endpoint settings](/ai/agents/deploy/endpoints/overview) under the **Endpoint URL** field or **Config URL** field, for Webchat endpoints. The API routes are:
+
+- Notify: `{EndpointURL}/notify/{URLToken}`
+- Inject: `{EndpointURL}/inject/{URLToken}`
+
+For example, if your endpoint URL is `https://endpoint-trial.cognigy.ai/4e5e2f01110c935fff81ec54bbce12c175b831d8105dc69face36a8983feec17`, the base URL is `https://endpoint-trial.cognigy.ai` and URL token is `4e5e2f01110c935fff81ec54bbce12c175b831d8105dc69face36a8983feec17`. In this case, the API routes are:
+
+- Notify: `https://endpoint-trial.cognigy.ai/notify/4e5e2f01110c935fff81ec54bbce12c175b831d8105dc69face36a8983feec17`
+- Inject: `https://endpoint-trial.cognigy.ai/inject/4e5e2f01110c935fff81ec54bbce12c175b831d8105dc69face36a8983feec17`
+
+### Payload
+
+You can retrieve the necessary data for the inject and notify payload from the [input object](/ai/agents/develop/ai-agent-memory/input) with [CognigyScript](/ai/platform-features/cognigyscript), as follows:
+
+| Payload parameter | CognigyScript  |
+|-------------------|----------------|
+| text              | ci.text        |
+| data              | ci.data        |
+| sessionId         | ci.sessionId   |
+| userId            | ci.userId      |
+| URLToken          | ci.URLToken    |
+
+### Response format
+
+Requests to the endpoint service URLs, `{EndpointURL}/inject/{URLToken}` and `{EndpointURL}/notify/{URLToken}`, always return a plain-text reply, for example, `Message was sent to AI for Flow processing`. These URLs ignore the `Accept` header.
+
+The REST API routes for inject and notify, `POST /new/v2.0/endpoint/inject` and `POST /new/v2.0/endpoint/notify`, also return a plain-text reply by default. Some integrations require JSON. To receive the reply in another format, set the `Accept` header in the request to the REST API route. For all supported `Accept` values, see [Response format](/api-reference/about#response-format).
+
+The shape of the reply depends on the `Accept` value:
+
+| `Accept` header value | Reply |
+|-----------------------|-------|
+| `application/json` | A JSON string, not an object. Your client must parse the body as a JSON value. |
+| `application/hal+json`, `application/xml`, `text/xml`, `text/csv` | An object with a `message` property. |
+
+For the REST API routes, authenticate with an API key in the `X-API-Key` header and send the `URLToken` in the request body. For example:
+
+```bash
+# Send an inject request to the REST API and receive the reply as JSON
+curl -X POST "https://api-trial.cognigy.ai/new/v2.0/endpoint/inject" \
+  -H "X-API-Key: {APIKey}" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"URLToken": "{URLToken}", "userId": "user-id", "sessionId": "session-id", "text": "makeList", "data": {}}'
+```
+
+Response:
+
+```text
+Content-Type: application/json
+
+"Message was sent to AI for Flow processing"
+```
+
+### HTTP error codes
+
+When inject or notify API requests fail, the API returns one of the following HTTP error codes:
+
+| HTTP error code | Description                                                                                  |
+|-------------|----------------------------------------------------------------------------------------------|
+| 400         | The request is malformed. For example, a required parameter, such as `sessionId`, is missing. |
+| 404         | The endpoint associated with the URL token wasn't found. Verify that the URL token is correct and that the endpoint exists. |
+| 500         | An internal server error occurred. Try again later or contact [Cognigy technical support](/help/get-help) if the issue persists. |
+
+For the REST API routes, only `400` errors follow the `Accept` header: the endpoint returns the error message in the requested format. `404` and `500` errors always have an empty body.
+
+## Inject and notify in transformers
+
+There are cases where you don't have control over the payload that the external process sends to the inject or notify API requests. In these cases, you can use the [inject](/ai/for-developers/transformers/inject-transformer) or [notify](/ai/for-developers/transformers/notify-transformer) transformers to change the request and extract the necessary parameters from the request body before calling the actual notify or inject API.
+
+## More information
+
+- [Inject transformer](/ai/for-developers/transformers/inject-transformer)
+- [Notify transformer](/ai/for-developers/transformers/notify-transformer)

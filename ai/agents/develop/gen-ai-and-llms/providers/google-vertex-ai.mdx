@@ -1,0 +1,78 @@
+---
+title: Google Vertex AI
+keywords: ['llms', 'google vertex ai', 'google vertex ai models']
+seo:
+  metatags:
+    description: >-
+      To start using a Google Vertex AI LLMs with Cognigy features, add the
+      LLM and apply it to the corresponding use case.
+---
+
+import GoogleKeyFileRestriction from '/snippets/ai/generative-ai/google-key-file-restriction.mdx';
+import CompletionApiDeprecation from '/snippets/ai/completion-api-deprecation.mdx';
+import AiGenerativeAiAddModelViaApi from "/snippets/ai/generative-ai/add-model-via-api.mdx";
+import AiGenerativeAiApplyModel from "/snippets/ai/generative-ai/apply-model.mdx";
+import AiGenerativeAiApplyAndTestConnection from "/snippets/ai/generative-ai/apply-and-test-connection.mdx";
+
+
+<CompletionApiDeprecation/>
+
+To start using a Google Vertex AI or Gemini model with Cognigy features, follow these steps:
+
+1. [Add models](#add-models)
+2. [Apply the model](#apply-the-model)
+
+## Restriction
+
+<GoogleKeyFileRestriction />
+
+## Add models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add models via GUI
+
+You can add a model provided by Google Vertex AI to Cognigy in **Manage > AI & Voice Providers > Language Models**. In **Generative AI Connection**, select an existing connection or click the + button to create one. The connection stores the credentials. To add the model, you'll need the following parameters:
+
+<Tabs>
+  <Tab title="Standard model (Cognigy 2025.15 and earlier versions)">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Credentials File | JSON | To upload the JSON file with a key for your model, you need to obtain this key. Go to the Google Cloud console and find Vertex AI via the search bar. On the **Vertex AI** page, click the **Enable All Recommended APIs** button to activate an API connection, if it isn't activated. Ensure that the Vertex AI API is enabled. In the left-side menu, go to the **IAM & Admin > Service Accounts**. Select **Actions** and click **Manage Keys**. On the **Keys** page, select **Add Key** and click **Create new Key**. In the appeared window, select the **JSON** key type and click **Create**. The file will be downloaded. You can also use this key for [Google Gemini](/ai/agents/develop/gen-ai-and-llms/providers/google-gemini). |
+        | Location | Text | Enter a [region](https://cloud.google.com/vertex-ai/docs/general/locations) for the model. For example, `us-central1`. |
+        | API Endpoint | Text | Enter a [service endpoint](https://cloud.google.com/vertex-ai/docs/reference/rest#service-endpoint) for the model. For example, `us-central1-aiplatform.googleapis.com`. Note that the endpoint should be specified without `https://` or `http://`. |
+        | Publisher | Text | Enter an owner's name of the model. If not specified, `Google` will be used by default. |
+
+  </Tab>
+  <Tab title="Custom model">
+
+        | Parameter | Type | Description |
+        |---|---|---|
+        | Type | List | Select the **Completion** type. |
+        | Custom model | Text | Enter the name of the model that you want to use as a custom model. To find model names, refer to the [Google Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versioning) documentation. Note that, within this connection, Cognigy supports only the `text-bison` models. |
+        | Credentials File | JSON | To upload the JSON file with a key for your model, you need to obtain this key. Go to the Google Cloud console and find Vertex AI via the search bar. On the **Vertex AI** page, click the **Enable All Recommended APIs** button to activate an API connection, if it isn't activated. Ensure that the Vertex AI API is enabled. In the left-side menu, go to the **IAM & Admin > Service Accounts**. Select **Actions** and click **Manage Keys**. On the **Keys** page, select **Add Key** and click **Create new Key**. In the appeared window, select the **JSON** key type and click **Create**. The file will be downloaded. You can also use this key for [Google Gemini](/ai/agents/develop/gen-ai-and-llms/providers/google-gemini). |
+        | Location | Text | Enter a [region](https://cloud.google.com/vertex-ai/docs/general/locations) for the model. For example, `us-central1`. |
+        | API Endpoint | Text | Enter a [service endpoint](https://cloud.google.com/vertex-ai/docs/reference/rest#service-endpoint) for the model. For example, `us-central1-aiplatform.googleapis.com`. Note that the endpoint should be specified without `https://` or `http://`. |
+        | Publisher | Text | Enter an owner's name of the model. If not specified, `Google` will be used by default. |
+
+  </Tab>
+</Tabs>
+
+<AiGenerativeAiApplyAndTestConnection/>
+
+<AiGenerativeAiAddModelViaApi/>
+
+## Apply the model
+
+<AiGenerativeAiApplyModel />
+
+## More information
+
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

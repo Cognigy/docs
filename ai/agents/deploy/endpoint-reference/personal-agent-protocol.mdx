@@ -1,0 +1,171 @@
+---
+title: Personal Agent Protocol
+sidebarTitle: Personal Agent Protocol
+keywords: ['personal agent protocol', 'poppy', 'poppy endpoint', 'personal agents', 'oauth issuer', 'personal agent protocol endpoint']
+description: "Make a flow or agent reachable for Personal Agents through the Personal Agent Protocol (Poppy) endpoint."
+tag: experimental
+---
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/personal-agent-protocol.png" alt="Personal Agent Protocol endpoint logo" />
+</Frame>
+
+<Warning>
+ The Personal Agent Protocol endpoint is experimental and isn't recommended for production use. This endpoint may change or be removed in future releases. Use it only in development or staging environments.
+</Warning>
+
+The Personal Agent Protocol (Poppy) endpoint makes a [flow](/ai/agents/develop/projects-and-flows/overview) or an agent reachable for Personal Agents. Personal Agents are AI assistants that act on behalf of your customers. Cognigy.AI generates the discovery document (`poppy.json`), runs the conversations, and verifies access tokens. Your organization publishes the discovery document on its own domain and, optionally, connects its own OAuth authorization server so that customers can sign in.
+
+For details about the protocol, see the [Poppy documentation](https://personalagentprotocol.org/docs/introduction).
+
+## Key benefits
+
+- **Discoverable by Personal Agents**. The discovery document describes your organization and its agent.
+- **Optional sign-in**. Customers can sign in at your own authorization server, so your flow or agent knows whose account it works on.
+
+## Restrictions
+
+- Only JSON Web Token (JWT) access tokens sent as bearer tokens are accepted. Opaque tokens and DPoP aren't supported.
+- Your authorization server must meet the requirements in the Poppy documentation.
+- Access tokens must be JWTs with the header value `typ` set to `at+jwt`. They must use your organization URL as audience and include the claims `client_id` and `sub`. The `scope` claim is optional.
+- Sign tokens with RS256, PS256, or ES256.
+- Serve the issuer metadata and its keys over public HTTPS.
+- Handover to a live agent, streaming of events, Direct Conversations, tasks, and protocol extensions aren't supported.
+
+## Prerequisites
+
+- A flow or agent that can respond to text messages.
+- A domain that you control. You must be able to proxy paths on this domain to the endpoint.
+- Optional: an OAuth authorization server. It must publish its metadata at `<issuer>/.well-known/oauth-authorization-server` and list `https://<organization domain>` under `protected_resources`.
+
+## Generic endpoint settings
+
+Learn about the generic endpoint settings on the following pages:
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+- [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+
+## Endpoint-specific settings
+
+### Setup tab
+
+#### Get started with Poppy
+
+This card appears next to the settings and lists the steps for your organization:
+
+1. Fill in the **Organization** section and save.
+2. On your organization domain, proxy `/.well-known/poppy.json` to the **Discovery document** URL in the **Integration** section. Personal Agents look for it only on your own domain.
+3. Optional: set the **OAuth issuer** on the **Advanced** tab, then proxy `/.well-known/oauth-protected-resource` in the same way.
+4. Test the endpoint by pointing a Personal Agent at your organization domain and starting a conversation.
+
+The card also links to the [Poppy documentation](https://personalagentprotocol.org/docs/introduction) and to the [implementation skill](https://github.com/personal-agent-protocol/personal-agent-protocol/tree/main/skills/implement-personal-agent-protocol). Use the skill to set up the domain proxy and the OAuth server. On the **Advanced** tab, the card explains how to set up sign-in with OAuth.
+
+#### Organization
+
+This section defines what Personal Agents read about your company and its agent in `poppy.json`.
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| Organization name | Text | Sets the display name of your company in `poppy.json`. |
+| Organization domain | Text | Sets the host that serves `/.well-known/poppy.json`, for example, `example.com`. Enter a host name without protocol or path. Personal Agents address your company as `https://<domain>`. Session tokens are accepted only for this domain. |
+| Agent description | Text area | Optional. Describes what the agent can help with, for example, `Anything about your orders, returns and account`. Personal Agents use it to decide what to bring to the agent. The maximum length is 500 characters. If you leave it empty, `poppy.json` contains a generic description with your organization name. |
+
+When you create the endpoint, it sets the organization name to the endpoint name and the organization domain to a placeholder (`example.com`). Replace both.
+
+#### Integration
+
+This section shows the endpoint URL and links to the documents that you proxy from your organization domain.
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| Endpoint URL | Text | Provides the URL of the endpoint in the format `https://endpoint.cognigy.ai/poppy/v1/{token}`. |
+| Discovery document | Button | Provides the `poppy.json` that Personal Agents read to find this agent. Click **Open poppy.json** to open it at `{endpoint URL}/.well-known/poppy.json`. Proxy `/.well-known/poppy.json` on your organization domain to this URL. |
+| Protected resource metadata | Button | Names your OAuth issuer to Personal Agents. This parameter appears only after you set an OAuth issuer. Click **Open protected resource metadata** to open it at `{endpoint URL}/.well-known/oauth-protected-resource`. Proxy `/.well-known/oauth-protected-resource` on your organization domain to this URL. |
+
+### Advanced tab
+
+#### Account access
+
+This section is optional. Without an OAuth issuer, every conversation is signed out. With an issuer, Personal Agents sign your customers in at your authorization server and send an access token. Cognigy.AI verifies the tokens against the keys the issuer publishes and never issues them.
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| OAuth issuer | Text | Sets the issuer identifier of your authorization server, for example, `https://auth.example.com`. Use an HTTPS URL without query, fragment, or trailing slash. Leave it empty for signed-out conversations only. |
+| Sign-in disabled | Toggle | Keeps the issuer as the company identifier but offers Personal Agents no sign-in. This parameter is available only when an OAuth issuer is set. When you save, the endpoint sets `auth.disabled: true` in `poppy.json`. |
+| Require sign-in | Toggle | Tells Personal Agents that the agent needs the user's account before it can help. This parameter is available only when an OAuth issuer is set and **Sign-in disabled** is turned off. When you save, `poppy.json` contains `access: "signed_in"`. |
+
+If you remove the issuer, the endpoint resets both toggles when you save. If you turn on **Sign-in disabled**, the endpoint turns off **Require sign-in**.
+
+## How to set up
+
+The endpoint serves two documents from its own URL. Personal Agents read them from your organization domain, so you proxy both paths to the endpoint. Optionally, you connect an OAuth authorization server so that customers can sign in.
+
+### Configure in Cognigy
+
+<Accordion title="Configure the Personal Agent Protocol endpoint">
+   1. In the left-side menu of your project, click **Deploy > Endpoints**.
+   2. On the **Endpoints** page, click **+ New Endpoint**.
+   3. In the **New Endpoint** dialog, in the **Developer** category, select **Personal Agent Protocol** and click **Create endpoint**.
+   4. On the **Setup** tab, in the **Organization** section, enter the **Organization name**, **Organization domain**, and, optionally, an **Agent description**. Save changes.
+   5. In the **Integration** section, click **Open poppy.json**. Copy the URL of the page that opens.
+   6. Optional: to let customers sign in, go to the **Advanced** tab. In the **Account access** section, enter the **OAuth issuer** and save changes. Then, on the **Setup** tab, click **Open protected resource metadata** in the **Integration** section and copy the URL.
+   7. Optional: on the **Advanced** tab, turn on **Require sign-in** if the agent needs the user's account before it can help.
+</Accordion>
+
+### Configure on your organization domain
+
+<Accordion title="Proxy the discovery documents">
+   1. On your organization domain, proxy `/.well-known/poppy.json` to the URL that you copied from **Open poppy.json**.
+   2. Optional: if you set an OAuth issuer, proxy `/.well-known/oauth-protected-resource` to the URL that you copied from **Open protected resource metadata**.
+   3. Make sure your authorization server meets the requirements in [Prerequisites](#prerequisites) and [Restrictions](#restrictions).
+</Accordion>
+
+### Use the account in your flow
+
+<Accordion title="Read the Poppy data and request sign-in">
+   Each message from a Personal Agent carries the following protocol fields in `input.data._poppy`:
+
+   | Field | Description |
+   | ----- | ----------- |
+   | `author` | Who wrote the message: the person or the Personal Agent. |
+   | `context` | The user's situation, as the Personal Agent sends it. |
+   | `account` | Only for signed-in requests. Contains the `sub` claim and the scopes of the access token. |
+
+   Any other `data` that the Personal Agent sends with the message is available in `input.data`.
+
+   One Poppy conversation is one Cognigy session. Users are identified by pseudonymous IDs that each Personal Agent assigns, so the endpoint doesn't create contact profiles for them.
+
+   The endpoint returns the text and data that your flow or agent outputs to the Personal Agent as messages. If the flow fails, the Personal Agent receives the generic message `The agent failed to process this request.` instead of the error details.
+
+   To ask for sign-in during a conversation, output the following data from your flow or agent:
+
+   ```json
+   {
+     "_poppy": {
+       "authorization": { "scope": "orders:read" }
+     }
+   }
+   ```
+</Accordion>
+
+### Verify the setup
+
+<Accordion title="Check the discovery document">
+   1. On the **Setup** tab, click **Open poppy.json**.
+   2. Check that the document shows your organization and `protocol_version: "1.0"`. The agent description appears under `agent.protocols[0]`.
+   3. If you set an OAuth issuer, check that `poppy.json` contains `auth.issuer`.
+</Accordion>
+
+## Troubleshooting
+
+| **Issue** | **Cause** | **Solution** |
+| --------- | --------- | ------------ |
+| Personal Agents can't find the agent | The discovery document isn't served on your organization domain. | Proxy `/.well-known/poppy.json` on your organization domain to the **Discovery document** URL. Make sure the **Organization domain** matches the domain you proxy. |
+| The protected resource metadata returns a 404 error | No OAuth issuer is set. | Enter the **OAuth issuer** on the **Advanced** tab and save changes. |
+| Authentication failed | The access token is missing, expired, or doesn't meet the token requirements. | Make sure the token is a JWT with `typ` set to `at+jwt`, the issuer you configured, your organization URL as audience, and the `client_id` and `sub` claims. |
+| The endpoint returns a temporary error when a customer signs in | The endpoint can't reach your authorization server. | Make sure your issuer publishes its metadata and keys over public HTTPS. |
+| Conversation not found | The conversation belongs to a different signed-in account. | Start a new conversation. A conversation that used an account stays bound to that account. |
+
+## More information
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)

@@ -1,0 +1,126 @@
+---
+title: Automation
+description: Set up Live Agent automation rules to auto-assign conversations, add labels, set priorities, and trigger actions based on custom workflow conditions.
+keywords: ['automation rules', 'live agent', 'workflow automation', 'conversation triggers', 'auto assign']
+
+---
+
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+
+_Automation rules_ are a powerful tool to enhance efficiency and streamline processes by automating various tasks within your workflow. With these rules, you can easily assign conversations to specific agents or teams, add labels, adjust priorities, and more without manual intervention. By leveraging automation rules, you save time and resources, allowing your team to focus on their core competencies and minimize the time spent on routine tasks.
+
+## Automation rule components
+
+Each automation rule contains the following components:
+
+- [Events](#events)
+- [Conditions](#conditions)
+- [Actions](#actions)
+
+### Events
+
+Automation events serve as triggers for when you want your automation to be executed.
+
+| Events               | Description                                                                                                          |
+|----------------------|----------------------------------------------------------------------------------------------------------------------|
+| Conversation Created | Triggers when a new conversation is created in your system. This will include conversations created by all channels. |
+| Conversation Updated | Triggers when a conversation is updated.                                                                             |
+| Message Created      | Triggers when any new message inside a conversation is created.                                                      |
+| Conversation Opened  | Triggers when a conversation is reopened in your system.                                                             |
+
+### Conditions
+
+Conditions are the criteria that are verified before executing the action. The conditions are evaluated in the order they are defined.
+
+| Condition types  | Description                             | Applicable events                                                                |
+|------------------|-----------------------------------------|----------------------------------------------------------------------------------|
+| Assignee Name    | Based on conversation assignee.         | Conversation Updated, Conversation Opened                                        |
+| Status           | Based on conversation status.           | Conversation Created, Conversation Updated                                       |
+| Inbox            | Based on the inbox of the conversation. | Conversation Created, Conversation Updated, Conversation Opened, Message Created |
+| Priority         | Based on the conversation's priority.   | Conversation Created, Conversation Updated, Conversation Opened                  |
+| Team Name        | Based on the assigned team.             | Conversation Updated, Conversation Opened                                        |
+| Message Type     | Based on the type of message.           | Message Created                                                                  |
+| Message Contains | Based on the content of the message.    | Message Created                                                                  |
+
+### Actions
+
+Actions are tasks or processes that are executed when the conditions are met.
+
+| Actions               | Description                                      |
+|-----------------------|--------------------------------------------------|
+| Assign an agent       | Assigns a specific agent to the conversation.    |
+| Assign a team         | Assigns the conversation to a specific team.     |
+| Add Label             | Adds a label to the conversation.                |
+| Send Email to Team    | Sends an email notification to the team.         |
+| Send Email Transcript | Sends an email with the conversation transcript. |
+| Mute Conversation     | Mutes notifications for the conversation.        |
+| Snooze Conversation   | Temporarily suppresses the conversation.         |
+| Resolve Conversation  | Marks the conversation as resolved.              |
+| Send Attachment       | Sends an attachment to the conversation.         |
+| Send Message          | Sends a message to the conversation.             |
+| Change Priority       | Adjusts the conversation's priority.             |
+
+## Create automation rules
+
+To create an automation rule, follow these steps:
+
+1. In the Live Agent interface, go to **Settings > Automation**.
+2. In the upper-right corner, click **Add Automation Rule**.
+3. In the **Rule Name** field, enter a unique name for the rule.
+4. In the **Description** field, enter a relevant description for the rule.
+5. From the **Event** list, select the desired event.
+6. In the **Conditions** section, set up a condition:
+    - Left operand — select a [condition type](#conditions).
+    - Operator — a comparison operator that checks whether the value of the left operand is `Equal to` or `Not equal to` the value of the right operand.
+    - Right operand — select values corresponding to condition types. For example, if you choose `Status` as a condition type, you can add multiple statuses, such as `Open`, `Pending`, `Resolved`.
+7. _(Optional)_ Add an additional condition by clicking **Add Condition**. Repeat the same steps as you did for the first condition and select one of the following operators:
+    - **AND** — all conditions must be true for the overall condition to be true. For example, `Condition A AND Condition B` means that both `Condition A` and `Condition B` must be true to trigger the action.
+    - **OR** — at least one of the conditions must be true for the overall condition to be true. For example, `Condition A OR Condition B` means that if either `Condition A` or `Condition B` is true, the action will be triggered.
+8. In the **Actions** section, select an action. Note that you need to provide additional information depending on which type of action you selected. For example, if you select **Send Email to Team**, you need to choose a team and write an email template.
+9. _(Optional)_ Add one more action.
+10. Click **Create**.
+
+The automation rule appears in the automation rule list and is automatically activated.
+
+To deactivate the rule, move the toggle switch to the left position.
+
+### Example
+
+You can use multiple conditions with the `AND` or `OR` operator as in the example below.
+
+When Agent Copilot is active, and a new conversation is created with the Open status, the conversation is assigned to a team.
+
+- **Rule Name**: Sales
+- **Description**: This automation assigns new **Open** status conversations to the Sales team.
+- Select **Conversation Created** as the event.
+- Add two conditions and combine them using the `AND` operator:
+    - Condition 1: Check if the **Status** is **Open**.
+    - Condition 2: Verify that the **Inbox** is set to **AI Copilot bot-default** selected from the dropdown menu.
+- Add an action: Assign the conversation to the Sales team by selecting it from the dropdown menu. Make sure the Sales team is created before executing this action.
+
+<Frame>
+    <img src="/_assets/live-agent/add-automation-rule.png" alt="Adding an automation rule with conditions and actions in Live Agent" style={{ width: 'auto' }} />
+</Frame>
+
+## Edit automation rules
+
+To edit an automation rule, click the **Edit** icon next to the desired automation rule in the list.
+
+## Clone automation rules
+
+To make a copy of an existing automation rule, click the **Clone** icon next to the automation rule you want to copy.
+A replica of the automation rule with the same conditions and actions will be created.
+
+## Delete automation rules
+
+To delete an automation rule, click **Delete** next to the desired automation rule in the list. Note that this action is permanent and can't be undone.
+
+## More information
+
+- [Settings](/live-agent/settings/overview)
+- [Conversations](/live-agent/conversation/overview)
+- [Conversation routing](/live-agent/conversation/conversation-routing/overview)

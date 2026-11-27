@@ -1,0 +1,66 @@
+---
+title: Mistral AI
+keywords: ['llms', 'mistral', 'mistral models']
+seo:
+  metatags:
+    description: >-
+      To start using a Mistral AI LLM with Cognigy features, add the LLM and
+      apply it to the corresponding use case.
+---
+
+import AiGenerativeAiAddModelViaApi from '/snippets/ai/generative-ai/add-model-via-api.mdx'
+import AiGenerativeAiApplyModel from '/snippets/ai/generative-ai/apply-model.mdx'
+import AiGenerativeAiApplyAndTestConnection from '/snippets/ai/generative-ai/apply-and-test-connection.mdx'
+
+
+To start using a Mistral AI model with Cognigy features, follow these steps:
+
+1. [Add models](#add-models)
+2. [Apply the model](#apply-the-model)
+
+## Add models
+
+You can add a model using one of the following interfaces:
+
+- [GUI](#add-models-via-gui)
+- [API](#add-models-via-the-api)
+
+### Add models via GUI
+
+You can add a model provided by Mistral AI to Cognigy in **Manage > AI & Voice Providers > Language Models**. In **Generative AI Connection**, select an existing connection or click the + button to create one. The connection stores the credentials. To add the model, you'll need the following parameters:
+
+<Tabs>
+  <Tab title="Standard model">
+    <Note>
+      The `*-latest` suffix indicates that the model you select points to the latest version of the model. For more information, read the [Mistral AI's models](https://docs.mistral.ai/getting-started/models/compare) documentation.
+    </Note>
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | API Key | Text | Enter the API key that you [generated](https://docs.mistral.ai/getting-started/quickstart/) under **API > API Keys** in your [Mistral AI](https://mistral.ai/) account. |
+    | Custom URL | Text | This optional parameter allows you to specify a custom URL for the [Mistral AI chat completions endpoint](https://docs.mistral.ai/studio/conversations/chat-completion). Use this URL to route requests through a dedicated proxy server for enhanced security. Enter the full URL of the chat completions endpoint, for example, `https://proxy.example.com/v1/chat/completions`. Cognigy sends requests to the URL you specify. |
+  </Tab>
+  <Tab title="Custom model">
+    | Parameter | Type | Description |
+    |---|---|---|
+    | Type | List | Select **Chat**. |
+    | Custom model | Text | Enter the name of the model that you want to use as a custom model. To find model names, refer to the [Mistral AI models](https://docs.mistral.ai/getting-started/models/compare) documentation. |
+    | API Key | Text | Enter the API key that you [generated](https://docs.mistral.ai/getting-started/quickstart/) under **API > API Keys** in your [Mistral AI](https://mistral.ai/) account. |
+    | Custom URL | Text | This optional parameter allows you to specify a custom URL for the [Mistral AI chat completions endpoint](https://docs.mistral.ai/studio/conversations/chat-completion). Use this URL to route requests through a dedicated proxy server for enhanced security. Enter the full URL of the chat completions endpoint, for example, `https://proxy.example.com/v1/chat/completions`. Cognigy sends requests to the URL you specify. |
+  </Tab>
+</Tabs>
+
+<AiGenerativeAiApplyAndTestConnection/>
+
+<AiGenerativeAiAddModelViaApi/>
+
+## Apply the model
+
+<AiGenerativeAiApplyModel/>
+
+## More information
+  
+- [Other LLM operations](/ai/agents/develop/gen-ai-and-llms/other-operations)
+- [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms)
+- [All LLM providers](/ai/agents/develop/gen-ai-and-llms/providers/all-providers)
+- [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature)

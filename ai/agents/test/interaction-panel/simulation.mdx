@@ -1,0 +1,38 @@
+---
+title: "Simulation mode"
+sidebarTitle: "Simulation"
+keywords: ['debug mode', 'simulator', 'interaction panel', 'test agents']
+description: "Learn how to use Simulation mode to test agents in the interaction panel."
+---
+
+With _Simulation_ mode, you can simulate conversations for your LLM-based agents using [predefined scenarios](/ai/agents/test/simulator/scenarios). Use it to test and debug the behavior of your agent in various situations without real user input.
+
+## Restrictions
+
+- Multivariate simulations aren't supported. This mode runs single simulations only. To compare variants, run a [multivariate simulation](/ai/agents/test/simulator/simulations) in the Simulator.
+
+## How to use simulation mode
+
+To open simulation mode, click the ![simulation](/_assets/icons/black-and-white/simulation.svg) tab in the [interaction panel](/ai/agents/test/interaction-panel/overview). The mode is labeled **Simulator**. In the **Select scenario** list, select the scenario that you want to simulate. Then click **Run simulation**.
+
+The simulation of the selected scenario starts with the following predefined settings:
+
+- The simulation runs against the flow that is open in the interaction panel. It uses the Locale and the Snapshot that you selected there. This mode doesn't support agent targets, so you can't run a scenario that Cognigy generated from an agent.
+- The simulation runs once. You can't change this.
+- The simulation uses the **Mocking** setting of the interaction panel. If mocking is activated, Nodes that have mock code run the mock code instead of their original logic.
+- The simulation uses the [default LLM](/ai/agents/develop/gen-ai-and-llms/other-operations#set-a-model-as-default) selected on the **Large Language Models** page if it supports the Simulator. Otherwise, Cognigy uses the platform-provided LLM. If no LLM is available, the simulation doesn't start.
+
+While the simulation runs, the exchanged messages appear in the interaction panel. To cancel the simulation, click **Stop simulation**. When the simulation finishes, the interaction panel shows the results. They include whether the persona accomplished the mission, which success criteria it met, and the sentiment.
+
+## Troubleshooting
+
+| **Message**                                                                              | **Description**                                                                                              | **How to resolve**                                                                                                                                                                             |
+|------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `This scenario was created from an Agents V2 agent and cannot be run against a Flow`    | You clicked **Run simulation** for a scenario that Cognigy generated from an agent. This mode runs simulations only against flows. | Select a scenario that you created manually or generated from a flow. To run the scenario against an agent, follow the steps on the [Simulations](/ai/agents/test/simulator/simulations) page. |
+| `Unable to run simulation`                                                               | The simulation didn't start. For example, no LLM in the Project supports the Simulator.                      | Read the details in the message. If no LLM is available, configure an LLM that supports the Simulator and set it as the default on the **Large Language Models** page.                         |
+| `Could not connect to run the simulation. Please try again.`                             | The selected Snapshot doesn't contain the open flow or the selected Locale.                                  | Select a Snapshot that contains the flow and the Locale, or use the current version of the flow. Then run the simulation again.                                                                |
+
+## More information
+
+- [Simulator](/ai/agents/test/simulator/overview)
+- [interaction panel](/ai/agents/test/interaction-panel/overview)

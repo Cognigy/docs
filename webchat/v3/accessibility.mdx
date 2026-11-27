@@ -1,0 +1,69 @@
+---
+title: 'Webchat: accessibility'
+sidebarTitle: Overview
+description: "Learn how Webchat meets WCAG 2.2 Level AA and follow the steps to review built-in features, configure settings, create accessible content, and test your Webchat."
+keywords: ['webchat accessibility', 'wcag 2.2', 'keyboard navigation', 'screen reader support', 'focus indicator', 'reduce motion']
+---
+
+Webchat is designed to adhere to accessibility standards, specifically [WCAG 2.2 Level AA (Web Content Accessibility Guidelines)](https://www.w3.org/TR/WCAG22/). These guidelines offer detailed recommendations for making web content more accessible to people with various disabilities, including visual, auditory, physical, speech, cognitive, language, learning, and neurological impairments.
+
+Webchat provides keyboard operation, screen reader support, and sufficient color contrast out of the box. However, the accessibility of your deployed Webchat also depends on how you configure it and on the content you send from your Flows. Cognigy encourages conversation designers and developers to build solutions with accessibility in mind.
+
+## Make your Webchat accessible
+
+<Steps>
+  <Step title="Learn what Webchat provides">
+    Start here to see which accessibility features work without any setup:
+
+    <CardGroup cols={2}>
+      <Card title="Built-in features" icon="badge-check" href="/webchat/v3/accessibility-features">
+        Review keyboard operation, screen reader support, and visual presentation.
+      </Card>
+    </CardGroup>
+  </Step>
+  <Step title="Set up Webchat">
+    Adjust the endpoint and the web page that embeds Webchat:
+
+    <CardGroup cols={2}>
+      <Card title="Accessibility settings" icon="settings" href="/webchat/v3/accessibility-settings">
+        Translate screen reader texts, activate the launcher pause button, keep custom colors accessible, and prepare the embedding page.
+      </Card>
+    </CardGroup>
+  </Step>
+  <Step title="Create accessible content">
+    Add accessibility information to the messages that your Flows send:
+
+    <CardGroup cols={2}>
+      <Card title="Accessible messages" icon="message-square-text" href="/webchat/v3/accessibility-messages">
+        Write alternative text and link texts, label adaptive cards, structure messages, and make plugins, xApps, and Extensions accessible.
+      </Card>
+      <Card title="Accessible audio and video" icon="captions" href="/webchat/v3/accessibility-media">
+        Provide transcripts, captions, and audio descriptions for media messages.
+      </Card>
+    </CardGroup>
+  </Step>
+  <Step title="Test your Webchat">
+    Check the result in your own deployment:
+
+    <CardGroup cols={2}>
+      <Card title="Test accessibility" icon="list-checks" href="/webchat/v3/accessibility-testing">
+        Test with the keyboard, a screen reader, axe DevTools, and a contrast checker.
+      </Card>
+    </CardGroup>
+  </Step>
+  <Step title="Review conformance and responsibilities">
+    Document what Webchat conforms to and what you are responsible for:
+
+    <CardGroup cols={2}>
+      <Card title="Conformance report (VPAT)" icon="clipboard-check" href="/webchat/v3/accessibility-conformance">
+        Find the Accessibility Conformance Report, known limitations with workarounds, and the table of responsibilities by WCAG success criterion.
+      </Card>
+    </CardGroup>
+  </Step>
+</Steps>
+
+## More information
+
+- [Webchat: overview](/webchat/v3/overview)
+- [Webchat: endpoint configuration](/webchat/v3/configuration)
+- [Webchat: embedding](/webchat/v3/embedding/hosted-script)

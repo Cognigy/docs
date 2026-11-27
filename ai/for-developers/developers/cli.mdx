@@ -1,0 +1,182 @@
+---
+title: CLI
+description: "Manage Cognigy Projects from the command line: clone and restore resources, create Snapshots, and deploy AI Agents."
+keywords: ['cli', 'command line', 'cognigy cli', 'clone', 'restore', 'snapshots']
+---
+
+
+The Cognigy CLI is a command-line interface enabling users to manage Projects directly from the command line. For example, with this CLI, you can create Snapshots, manage Locales, and deploy AI Agents efficiently.
+
+To start using the Cognigy CLI, refer to the [Cognigy repository on GitHub](https://github.com/Cognigy/Cognigy-CLI).
+
+You can also explore the Cognigy Help Center, including its [Cognigy CLI](https://support.cognigy.com/hc/en-us/sections/360004745359-Cognigy-CLI) section.
+
+### Examples
+
+The following examples show common CLI commands and the resources they work with.
+
+<AccordionGroup>
+  <Accordion title="Clone a project">
+    Clone a Project or its resources of one type from Cognigy to your local machine.
+
+    ```bash
+    # Clone all Project resources
+    cognigy clone
+    # Clone only Flows
+    cognigy clone --type flows
+    # Clone Flows and Endpoints
+    cognigy clone --type flows endpoints
+    ```
+
+    Supported resource types: `agent` (all Project resources), `flows`, `endpoints`, `lexicons`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Restore a project">
+    Upload a Project or its resources from your local machine to Cognigy.
+
+    ```bash
+    # Restore all Project resources
+    cognigy restore
+    # Restore only Flows
+    cognigy restore --type flows
+    ```
+
+    Supported resource types: `agent` (all Project resources), `flows`, `endpoints`, `lexicons`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Pull and push resources">
+    Download or upload a specific resource by name.
+
+    ```bash
+    # Download a specific Flow by name
+    cognigy pull flows myFlow
+    # Upload a specific Flow by name
+    cognigy push flows myFlow
+    ```
+
+    Supported resource types for:
+    
+    - `pull` — `flows`, `lexicons`, `endpoints`, `extensions`, `locales`, `aiAgents`.
+    - `push` — `flows`, `lexicons`, `endpoints`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Compare local and remote resources">
+    Compare a local resource against its remote version.
+
+    ```bash
+    # Compare a Flow at the resource level
+    cognigy diff flows myFlow
+    # Compare a Flow at the Node level
+    cognigy diff flows myFlow --mode node
+    ```
+
+    Supported resource types: `flows`, `lexicons`, `endpoints`, `aiAgents`.
+  </Accordion>
+
+  <Accordion title="Train a flow">
+    Trigger NLU model training for a Flow.
+
+    ```bash
+    # Train a Flow with the default timeout
+    cognigy train flow myFlow
+    # Train a Flow with a custom timeout in milliseconds
+    cognigy train flow myFlow --timeout 30000
+    ```
+  </Accordion>
+
+  <Accordion title="Create a snapshot or locale">
+    Creates a Snapshot or Locale in the remote Project and imports the new resource to your local Project.
+
+    ```bash
+    # Create a Snapshot with an optional description
+    cognigy create snapshot mySnapshot "Optional description"
+    # Create a Locale
+    cognigy create locale myLocale
+    ```
+  </Accordion>
+
+  <Accordion title="Export and import multilingual flow texts">
+    Export a `content.csv` file with the text fields from Nodes in the Flow across all Locales, or import updated localized content back into a Flow.
+
+    ```bash
+    # Export Flow texts to content.csv
+    cognigy exportcsv flow myFlow
+    # Import updated localized content back into the Flow
+    cognigy importcsv flow myFlow
+    ```
+  </Accordion>
+
+  <Accordion title="Localize a flow">
+    Add or remove localization for multiple Intents and Nodes at once.
+
+    ```bash
+    # Add localization for a Flow from a source locale
+    cognigy localize flow myFlow --localeName de-DE --sourceLocale en-US
+    # Remove localization for a Flow
+    cognigy localize flow myFlow --localeName de-DE --reverse
+    ```
+  </Accordion>
+
+  <Accordion title="Translate a flow">
+    Translate Flow content using a [machine translation provider](/ai/agents/deploy/endpoints/real-time-translation-settings).
+
+    ```bash
+    # Translate a Flow using DeepL
+    cognigy translate flow myFlow --localeName de-DE --fromLanguage en --toLanguage de --translator deepl --apiKey <key>
+    ```
+
+    Supported translation providers: `google`, `microsoft`, `deepl`.
+  </Accordion>
+
+  <Accordion title="Execute a raw API command">
+    Pass a JSON payload directly to the Cognigy REST API client.
+
+    ```bash
+    # Run an API command with a JSON payload
+    cognigy execute <command> -d '{"key": "value"}'
+    # List all available API commands
+    cognigy execute --list
+    ```
+
+    Use `--list` to print all available API commands.
+  </Accordion>
+
+  <Accordion title="Run playbooks">
+    Schedule Playbook runs on Cognigy and poll for results. The output is written to `./playbookRunResults.json`.
+
+    ```bash
+    # Run all Playbooks in the project
+    cognigy run playbooks
+    # Run Playbooks from a specific file
+    cognigy run playbooks ./myPlaybooks.json
+    ```
+
+    Exit codes: `0` — success, `1` — failure, `2` — timeout.
+  </Accordion>
+
+  <Accordion title="Manage AI agent knowledge">
+    Create a Knowledge Store, extract content from source documents, and ingest `.ctxt` files into the store.
+
+    ```bash
+    # Create a Knowledge Store
+    cognigy knowledge-ai create source myStore "My store" --projectId <id> --language en-US
+    # Extract content from a PDF into a .ctxt file
+    cognigy knowledge-ai extract pdf -i ./docs/manual.pdf -o ./output/manual.ctxt
+    # Ingest .ctxt files into the Knowledge Store
+    cognigy knowledge-ai ingest --knowledgeStoreId <id> --input ./output/
+    ```
+
+    Supported extraction types: `text`, `pdf`, `docx`, `csv`, `json`, `jsonl`, `epub`, `srt`, `md`, `cheerio`, `playwright`, `diffbot`, `other`.
+  </Accordion>
+</AccordionGroup>
+
+## Limitations
+
+- For Cognigy 4.100 and earlier, you can download [Snapshots](/ai/agents/deploy/snapshots) up to 100 MB using the Cognigy CLI. In later versions, there's no maximum download size for Snapshots via the CLI.
+- The `push` and `restore` commands can only update resources. To create a resource, use the [Cognigy API](/api-reference/about).
+- CLI commands don't support adding or moving Nodes in the Flow structure. For this purpose, use the [Cognigy API](/api-reference/about).
+
+## More information
+
+- [Cognigy API](/api-reference/about)
+- [Cognigy CLI on GitHub](https://github.com/Cognigy/Cognigy-CLI)

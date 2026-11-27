@@ -1,0 +1,72 @@
+---
+title: Premium models
+keywords: ['llms', 'premium models', 'activate premium models', 'pay-as-you-go', 'pay-as-you-go llm', 'cognigy llm', 'embedding models']
+seo:
+  metatags:
+    description: >-
+      Use premium LLMs and embedding models that NiCE Cognigy provides on a pay-as-you-go basis, without creating a model or entering API credentials.
+---
+
+
+_Premium models_ are large language models (LLMs) and embedding models that NiCE Cognigy provides and bills on a pay-as-you-go basis. You don't need to create a model or enter API credentials.
+
+<Note>
+  Before you can use premium models, note the following:
+
+  - Your organization must have premium models enabled.
+  - An admin must activate each premium model in the Admin Center.
+  - After an admin activates a model, you must add it to each project that should use it.
+
+  To set up premium models for your organization, contact your customer success manager.
+</Note>
+
+## Activate premium models
+
+An admin must activate each premium model in the Admin Center under **Resources > LLMs**. Only users with the admin role can activate or turn off premium models.
+
+To activate a model, follow these steps:
+
+1. In the Admin Center, go to **Resources > LLMs**. The **Premium models** section lists the premium models. Each row shows the model name followed by "(Premium by NiCE Cognigy)", a tag, the provider, and a toggle.
+2. Turn on the toggle for each model you want to use.
+
+    - For a model with the **In Region** tag, the toggle takes effect immediately.
+    - For a model with the **Outside Region** tag, a dialog asks you to confirm that you accept processing data outside your regional boundary. Select the checkbox and click **Accept & enable**. If your organization can't accept this, use your own model instead.
+
+After an admin activates a premium model, you must add it to each project that should use it. For details, see [Apply premium models](#apply-premium-models).
+
+To turn off a premium model, switch off its toggle and click **Disable**. The dialog warns that this affects all projects. The model is no longer available in any project, and any resource that uses it stops working until you assign another model.
+
+If you turn off a model with the **Outside Region** tag, you withdraw your acceptance. To activate the model again, you must accept the processing of data outside your regional boundary again.
+
+## Apply premium models
+
+To apply premium models in a project, add them to the project and then assign them to features.
+
+### Add premium models to a project
+
+1. In the navigation menu of the project, go to **Manage > AI & Voice Providers**.
+2. Go to **Language Models > Models** and click **Add model**.
+3. Open the **Premium model** tab. The table lists the premium models that your admin activated. Each row shows the **Model**, the **Provider**, a **Generative** or **Embedding** tag, and, where applicable, an **Outside Region** tag.
+4. Select the models you want to add. To narrow the list, use the search field, the provider filter, or the tag filter. To add all models, select the checkbox in the table header.
+5. Click **Save changes (N)**, where N is the number of selected models.
+
+After you save, the models appear in **Language Models > Models** with the **Premium** tag.
+
+If your organization has premium models enabled but your admin hasn't activated any, the **Premium model** tab is disabled and shows the message "Premium models are not enabled by your admin." Ask your admin to activate the models in the Admin Center.
+
+To copy the ID of a model, open its actions menu and click **Copy Reference ID**.
+
+### Assign premium models to features
+
+Go to **Language Models > Assignments** and select the premium model next to the feature that should use it. In the assignment list, premium models appear as **Premium LLM**.
+
+### Remove premium models from a project
+
+To remove a premium model from a project, follow these steps:
+
+1. In **Language Models > Models**, open the actions menu of the model and click **Remove from project**.
+2. In the dialog, confirm the removal.
+
+Alternatively, in the **Premium model** tab of **Add model**, clear the model's checkbox, click **Save changes (N)**, and then click **Save and remove**.
+
+You can remove a model even if it's in use. Any resource that uses the model stops working until you assign another model. To use the model again, add it back in the **Premium model** tab of **Add model**.

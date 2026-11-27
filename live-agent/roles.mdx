@@ -1,0 +1,229 @@
+---
+title: Roles
+description: "Learn about Live Agent user roles, including their permissions, responsibilities, and access levels in the system."
+keywords: ['user roles', 'live agent permissions', 'agent', 'supervisor', 'administrator']
+---
+
+In Live Agent, human agents can have three distinct user roles:
+
+- [Agent](#agent)
+- [Supervisor](#supervisor)
+- [Administrator](#administrator)
+
+These roles define the permissions and responsibilities of individuals using the Live Agent system.
+
+## User roles
+
+### Agent
+
+Agents in this role can access inboxes and conversations, assign conversations to other agents or themselves, and resolve conversations. They can access only the inboxes they're part of, participate in conversations within those inboxes, edit their user profile settings, and add personal-level canned responses. Conversation assignment is limited to inbox members.
+
+### Supervisor
+
+Supervisors have unique access to the supervisor dashboard to monitor conversation metrics and can also view the inbox assigned to them.
+
+### Administrator
+
+Administrators have all permissions of a normal agent and access to all Cognigy Live Agent features enabled for your account, including settings. Administrators don't have permission to:
+
+- View the supervisor dashboard. This dashboard is exclusive to the supervisor role.
+- Create and delete users. You can only do this in the [Cognigy Admin Center](/ai/administer/access/admin-center/access-control).
+
+## Permissions
+
+The following tables show single role permissions of agents, supervisors, and administrators.
+
+### Agents
+
+| Actions                                              | Agent | Supervisor | Administrator |
+|------------------------------------------------------|-------|------------|---------------|
+| Create an agent<sup><a href="#footnote1">1</a></sup> | -     | -          | +             |
+| Edit an agent<sup><a href="#footnote1">1</a></sup>   | -     | -          | +             |
+| Delete an agent<sup><a href="#footnote1">1</a></sup> | -     | -          | +             |
+| Assign an agent                                      | +     | +          | +             |
+
+### Teams
+
+| Actions                             | Agent | Supervisor | Administrator |
+|-------------------------------------|-------|------------|---------------|
+| Create a team                       | -     | -          | +             |
+| Assign a team within a conversation | +     | +          | +             |
+| Edit a team                         | -     | -          | +             |
+| Delete a team                       | -     | -          | +             |
+| Allow auto assign for a team        | -     | -          | +             |
+
+### Inboxes
+
+| Actions                                                                           | Agent | Supervisor | Administrator |
+|-----------------------------------------------------------------------------------|-------|------------|---------------|
+| Create an inbox                                                                   | -     | -          | +             |
+| Edit an inbox                                                                     | -     | -          | +             |
+| Delete an inbox                                                                   | -     | -          | +             |
+| Move conversations from one inbox to another<sup><a href="#footnote4">4</a></sup> | +     | +          | +             |
+| Create Agent Copilot bot                                                          | -     | -          | +             |
+| Edit Agent Copilot bot                                                            | -     | -          | +             |
+| Delete Agent Copilot bot                                                          | -     | -          | +             |
+| Add agents to the inbox                                                           | -     | -          | +             |
+| Remove agents from the inbox                                                      | -     | -          | +             |
+| Configure conversation assignment settings                                        | -     | -          | +             |
+| View assigned inboxes                                                             | +     | +          | +             |
+| View all inboxes                                                                  | -     | -          | +             |
+
+### Conversations
+
+| Actions                              | Agent | Supervisor | Administrator |
+|--------------------------------------|-------|------------|---------------|
+| Resolve conversations                | +     | +          | +             |
+| Clear conversation history           | -     | +          | +             |
+| Mute conversation                    | +     | +          | +             |
+| Send transcript                      | +     | +          | +             |
+| Edit user contact profile            | -     | +          | +             |
+| Assign an agent                      | +     | +          | +             |
+| Assign a team                        | +     | +          | +             |
+| Select priority                      | +     | +          | +             |
+| Filter conversations                 | +     | +          | +             |
+| Sort conversations                   | +     | +          | +             |
+| Search for messages in conversations | +     | +          | +             |
+
+### Attachments
+
+| Actions                                                                        | Agent | Supervisor | Administrator |
+|--------------------------------------------------------------------------------|-------|------------|---------------|
+| Send attachments within a conversation                                         | +     | +          | +             |
+| Request attachments within a conversation<sup><a href="#footnote2">2</a></sup> | +     | +          | +             |
+| View attachments                                                               | -     | -          | +             |
+| Sort attachments                                                               | -     | -          | +             |
+| Filter attachments                                                             | -     | -          | +             |
+| Delete attachments                                                             | -     | -          | +             |
+| Download attachments                                                           | -     | -          | +             |
+
+### Audit logs
+
+| Actions         | Agent | Supervisor | Administrator |
+|-----------------|-------|------------|---------------|
+| Read audit logs | -     | -          | +             |
+
+### Automation rules
+
+| Actions                     | Agent | Supervisor | Administrator |
+|-----------------------------|-------|------------|---------------|
+| Add automation rules        | -     | -          | +             |
+| Edit automation rules       | -     | -          | +             |
+| Clone automation rules      | -     | -          | +             |
+| Delete automation rules     | -     | -          | +             |
+| Activate automation rules   | -     | -          | +             |
+| Deactivate automation rules | -     | -          | +             |
+
+### Labels
+
+| Actions                       | Agent | Supervisor | Administrator |
+|-------------------------------|-------|------------|---------------|
+| Create a label                | -     | +          | +             |
+| Edit a label                  | -     | +          | +             |
+| Delete a label                | -     | +          | +             |
+| Add a label to a conversation | +     | +          | +             |
+
+### Skills
+
+| Actions                | Agent | Supervisor | Administrator |
+|------------------------|-------|------------|---------------|
+| Add skills             | -     | +          | +             |
+| Edit skills            | -     | +          | +             |
+| Delete skills          | -     | +          | +             |
+| Add skills to an agent | -     | -          | +             |
+
+### Canned responses
+
+| Actions                                                       | Agent | Supervisor | Administrator |
+|---------------------------------------------------------------|-------|------------|---------------|
+| Create a canned response<sup><a href="#footnote3">3</a></sup> | +     | +          | +             |
+| Use a canned response within a conversation                   | +     | +          | +             |
+| Edit a canned response<sup><a href="#footnote3">3</a></sup>   | +     | +          | +             |
+| Delete a canned response<sup><a href="#footnote3">3</a></sup> | +     | +          | +             |
+| Import canned responses<sup><a href="#footnote3">3</a></sup>  | +     | +          | +             |
+
+### Reports
+
+| Actions                  | Agent | Supervisor | Administrator |
+|--------------------------|-------|------------|---------------|
+| View the overview report | -     | +          | -             |
+| View the inbox report    | -     | +          | +             |
+| View the agent report    | -     | +          | +             |
+| View the label report    | -     | +          | +             |
+| View the team report     | -     | +          | +             |
+| Download reports         | -     | +          | +             |
+
+### Assistants
+
+| Actions                          | Agent | Supervisor | Administrator |
+|----------------------------------|-------|------------|---------------|
+| **Agent Copilot**                |       |            |               |
+| Activate Agent Copilot Workspace | +     | +          | +             |
+| **Agent Copilot bot**            |       |            |               |
+| Edit Agent Copilot bot settings  | +     | +          | +             |
+| Reset session                    | +     | +          | +             |
+
+### Account and profile settings
+
+| Actions                    | Agent | Supervisor | Administrator |
+|----------------------------|-------|------------|---------------|
+| Configure account settings | -     | -          | +             |
+| Configure profile settings | +     | +          | +             |
+
+## Assign roles
+
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+
+You can assign roles to human agents.
+
+To create an agent with certain access rights, follow these steps:
+
+1. Create an agent in [Access control](/ai/administer/access/admin-center/access-control).
+2. Assign one of the following roles to the agent:
+    - `liveAgentAgent`
+    - `liveAgentSupervisor`
+    - `liveAgentAdmin` <br/>If you have an Admin role in Cognigy, you don't need to add the Administrator role for your user because the Cognigy role already includes the right to administer Live Agent.
+3. _(Optional)_ Add any additional roles the agent should have. For example, if you already have a `liveAgentAgent` role, you can add a `liveAgentSupervisor` role to allow access to the overview report.
+4. View the created user in Live Agent. Go to **Settings > Agents** in the Live Agent menu.
+
+To see the roles applied to the agent, the specific agent must log in once to have the roles applied.
+
+## Troubleshooting
+
+### Assigned roles aren't applied
+
+If a human agent already has a specific role in Live Agent, assigned roles may not be applied.
+For example, if you want to assign a user with `Administrator` rights the role of `Supervisor`,
+the new role will only take effect once the user logs out of Cognigy and Live Agent.
+After logging out and logging back in, the new roles should be applied successfully.
+
+## More information
+
+- [Conversations](./conversation/overview)
+- [Account settings](./settings/account-settings)
+
+---
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote1">1</sup> This permission is granted on the Cognigy side.
+</span>
+<br />
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote2">2</sup> By default, human agents can't request files from users. To enable this feature, you need to install the [File Upload](https://github.com/Cognigy/WebchatPlugins/tree/master/plugins/file-upload) plugin in the [Webchat endpoint](/webchat/v3/configuration).
+</span>
+<br />
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote3">3</sup> Users with the Agent role can create canned responses for their own usage, edit, and delete canned responses that they created.
+</span>
+<br />
+
+<span style={{ fontSize: "0.8rem" }}>
+  <sup id="footnote4">4</sup> Users with the `Agent` role can assign conversations to the inboxes they have access to.
+</span>
+<br />

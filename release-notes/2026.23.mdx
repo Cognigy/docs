@@ -1,0 +1,158 @@
+---
+title: "2026.23"
+cover: "2026.23-launch.svg"
+summary: "Introduces the next generation of the platform: the Agentic Experience Studio, next-generation agents, AI Assist, voice-to-voice support, agent tracing, and multivariate testing."
+---
+
+<Danger>
+  The `gpt-4.1-nano` model for the OpenAI provider has been removed because OpenAI no longer supports it. Migrate to a [supported model](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+</Danger>
+
+<Warning>
+  **Deprecations**
+
+  The following models are deprecated. Migrate to the replacement before the removal date:
+
+  - OpenAI `gpt-4.1` and `gpt-4.1-mini`: migrate to `gpt-6-luna`. Removal: January 14, 2027.
+  - OpenAI `gpt-5`, `gpt-5-mini`, and `gpt-5-nano`: migrate to `gpt-5.6-sol`, `gpt-5.6-terra`, and `gpt-5.6-luna`, respectively. Removal: December 11, 2026.
+  - Google Vertex AI `gemini-3.6-flash`: migrate to `gemini-3.8-flash`. Removal: November 19, 2026.
+  - Google Vertex AI `gemini-3.7-flash`: migrate to `gemini-3.8-flash`. Removal: January 28, 2027.
+  - Anthropic `claude-sonnet-4-5`: migrate to `claude-sonnet-5-5`. Removal: November 30, 2026.
+
+ For more information, see [Deprecations and removals](/release-notes/deprecations-and-removals).
+</Warning>
+
+## 2026.23.2
+
+### Cognigy
+
+**Released** November 25, 2026
+
+#### Improvements
+
+- Added support for configuring call recording credentials in the admin center.
+
+## 2026.23.1
+
+### Cognigy
+
+**Released** November 13, 2026
+
+#### Improvements
+
+- Added a warning for SIP realm mismatches in the carrier form in AI & Voice Providers.
+- Improved the accessibility of the tabs in the carrier form in AI & Voice Providers.
+
+#### Bug fixes
+
+- Fixed the issue where deleted speech credentials still appeared in the AI agent voice configuration after removal from AI & Voice Providers.
+
+### Voice
+
+**Released** November 27, 2026
+
+#### Bug fixes
+
+- Fixed the issue preventing the NiCE Business Unit ID from being sent to the NiCE Carrier during voice interactions.
+
+## 2026.23.0
+
+### Cognigy
+
+**Released** November 11, 2026
+
+#### The next generation of Cognigy
+
+Cognigy 2026.23 introduces the next generation of the platform. It combines agentic AI with deterministic flows, so you can use agents where you need flexibility and flows where you need predictability and compliance.
+
+- [Agentic Experience Studio](/ai/getting-started/navigate-the-platform). An agent-centric interface for building, orchestrating, and improving agents. All existing platform capabilities remain available.
+- [Next-generation agents](/ai/agents/overview). An agent architecture in which agents act as the orchestration layer and include a built-in harness. Agents work alongside your flows and flow agents and connect to external agents and systems through open standards.
+- [AI Assist](/ai/platform-features/ai-assist). A built-in agent that guides you through setup, helps you build and debug agents, and applies defaults with governance built in.
+- [Voice-to-voice support](/ai/agents/develop/voice/speech-to-speech). Create real-time voice agents with natural turn-taking. The agents can reason and call tools while they speak.
+- [Agent tracing](/ai/agents/test/interaction-panel/tracing). Inspect each step of an agent turn, including skills, tool calls, LLM calls, and token usage.
+- [Multivariate testing](/ai/agents/test/simulator/simulations). Run simulations side by side with different snapshots, LLMs, agents, or scenarios to compare the results.
+
+#### Features
+
+##### Models Included with Your License
+
+Introduced [included models](/ai/agents/develop/gen-ai-and-llms/providers/included-models): LLMs and embedding models that NiCE Cognigy provides with your license. You can use them without creating a model or entering API credentials, and their usage is included in the conversation price. Included models are available only for installations integrated with NiCE CXone. Contact your customer success manager to enable them for your organization. Models available in your region are on by default, and admins can activate the others in the admin center under Resources > LLMs.
+
+##### Google Gemini 3.8 Flash Support
+
+Added support for the [`gemini-3.8-flash`](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature) model. This model is well suited to agentic workloads that rely on tool calls, structured JSON output, and long-running, multi-step tasks, and its large context window lets it handle long inputs.
+
+#### Improvements
+
+- Returned the NiCE CXone tenant ID (`cxoneTenantId`) and business unit ID (`cxoneBusinessUnitId`) from `GET /new/v2.0/users/me` for organizations linked to NiCE CXone
+- Replaced the free-text TLS Option field with a dropdown (`TLS`, `STARTTLS`, `None`) in [SMTP and Email OAuth2 connections](/ai/agents/develop/node-reference/data/send-smtp-email). Now, you can see the valid options and select one, instead of typing a hidden value and risking a misconfigured email connection
+- Added previous and new values to [Audit Events](/ai/administer/access/admin-center/audit-events) in the Admin Center. When you update a Playbook step assertion, Lexicon keyphrase, Knowledge Source, Project setting, LLM, or LLM configuration, the event JSON now includes a `changes` array with the previous and new value of each changed parameter. Credential-like values are omitted
+- Improved account security by [locking user accounts](/ai/administer/installation/access-to-cognigy-ai#account-lockout) after 5 consecutive failed login attempts by default and emailing users a password reset link to unlock their accounts
+- Added OAuth2 authentication for OpenAI-compatible LLM providers. When creating a connection, you can now choose OAuth2 to connect to providers that use short-lived access tokens instead of static API keys
+
+#### Bug Fixes
+
+- Fixed the issue where deleted or unassigned global LLMs still appeared in Project settings and remained in use
+- Fixed the issue where calling `api.say()` or `api.output()` in a Code Node with a number, for example, `api.say(0)`, sent no visible message
+- Fixed the issue where using Add Localization on a Node created a localization with the original, untranslated text when the translation service returned an error. Now, an error message appears and no localization is created, so you can try again once the translation connection works
+- Fixed the issue where a Say or Question Node wasn't saved when an adaptive card output with email, URL, telephone, or number in the `style` field contained CognigyScript
+- Fixed the issue where Microsoft Azure OpenAI content-filtered requests with streaming on the Responses API were returned as a normal answer instead of a content filter error
+- Fixed the issue where the Retrieve Knowledge Node returned unfiltered results in chunks mode when filters contained CognigyScript expressions or invalid JSON
+- Fixed the issue where importing a Package failed with `Invalid value for field 'fields'` when the Package contained a Connection whose credential had been revoked
+- Fixed the issue where services kept memory for every RPC call that timed out, which made them run out of memory over time
+- Fixed the issue where `mistral-medium-latest` was incorrectly labeled as deprecated in the model picker, despite still being supported by Mistral
+- Fixed the issue where users with only the user manager role saw a blank Access Control page in the admin center and an empty Assigned Projects section on the user details page
+- Fixed the issue where adding a user to a Project they were already a member of caused their Project roles to be ignored, and where adding a Project member with a Management API key returned a `404` error although the member was added
+- Fixed the issue where new SSO users were created with only the base role when the identity provider registered more than one role. Now, all valid roles are assigned
+- Fixed the issue where a user deleted in NiCE CXone was created in Cognigy as an enabled user when Cognigy didn't know the user yet
+- Fixed the issue where the Flow list kept showing the previously selected Project's Flows after switching Projects
+- Fixed the issue where a Flow reached through an Execute Flow or Go To Node on a Snapshot failed with `No LLM Provider configured`, even when an LLM was correctly assigned to the Project
+- Fixed the issue where AI-generated simulation personas started with stray labels such as `role:` or `"role":"user"`
+
+### Cognigy Webchat
+
+**Released** November 11, 2026
+
+#### Improvements
+
+- Added user inactivity detection to Webchat v3: new [Enable User Inactivity](/ai/agents/develop/node-reference/basic/enable-user-inactivity) and [Disable User Inactivity](/ai/agents/develop/node-reference/basic/disable-user-inactivity) Flow Nodes and an endpoint [User Inactivity](/webchat/v3/configuration#user-inactivity) setting let you detect a silent user and, after a configurable timeout, inject configurable text and data input into the current Flow or switch the conversation to a selected Flow, so you can re-prompt or end abandoned conversations. Detection and injection are reported in Cognigy Logs
+
+#### Bug Fixes
+
+- Fixed the issue where minimizing the Demo Webchat in the centered layout hid it until the page was reloaded
+
+### Cognigy Agent Copilot
+
+**Released** November 11, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the first Agent Copilot Whisper message appeared as a user-facing chat message after a handover
+
+### Cognigy Live Agent
+
+**Released** November 11, 2026
+
+#### Bug Fixes
+
+- Fixed audio and video playback from external URLs in conversations 
+
+### Cognigy Insights
+
+**Released** November 11, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where analytics records were not saved when an intent exceeded 255 characters, causing other records saved in the same batch to be lost
+- Fixed the issue where sessions transferred with the Voice Gateway Transfer Node (`SIP REFER`) were counted as 0 handovers. As a result, Insights reports and OData Sessions showed fewer handovers than actually occurred
+- Fixed the issue where Insights showed incorrect Flow execution times. For example, a Flow that took 3 seconds was recorded as taking only a fraction of a second
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

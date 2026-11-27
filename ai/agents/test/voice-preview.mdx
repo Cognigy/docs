@@ -1,0 +1,35 @@
+---
+title: Voice preview
+keywords: ['voice preview', 'tts testing', 'stt testing', 'speech provider']
+description: Use the Voice preview feature to quickly test voice output.
+---
+
+
+The _Voice preview_ feature lets users quickly test their AI Agents' voice output in the [Flow editor](/ai/agents/develop/projects-and-flows/editor) or [Interaction Panel](/ai/agents/test/interaction-panel/overview) without going through the entire [Flow](/ai/agents/develop/projects-and-flows/overview) with a mock call. This feature supports cloud speech-to-text (STT) and text-to-speech (TTS) services. To use Voice preview, enter text or SSML and select the language and voice.
+
+## Restrictions
+
+- Voice preview is available only for flow agents.
+- The Voice preview feature supports only the Google, Microsoft, Amazon AWS, Deepgram, Speechmatics, and ElevenLabs speech providers. When testing a voice Flow through the Interaction Panel, check the STT and TTS settings of the voice Nodes to ensure that one of these providers is specified. If you specify any other provider in the Nodes, the Interaction Panel won't support the voice conversation.
+- To use SSML syntax in the Voice preview, the speech provider must support SSML syntax. For example, ElevenLabs doesn't support SSML. Check your speech provider's documentation to see whether it supports SSML.
+
+## Access STT and TTS providers
+    
+If your environment has network connection restrictions or requires strict security rules, ensure both STT and TTS providers are accessible. Add the IP address ranges of your STT and TTS providers to the firewall's whitelist. This approach ensures the Cognigy server can communicate smoothly with both providers, ensuring the Voice preview feature works as expected.
+
+## Prerequisites
+
+Configure a speech provider in **Manage > AI & Voice Providers > Speech Providers**. For more information, see [Speech and telephony](/ai/administer/access/speech-and-telephony#add-a-speech-provider).
+
+## How to use voice preview
+
+You can access the Voice preview feature in two different ways:
+
+- In the Flow editor, click ![voice-preview](/_assets/icons/black-and-white/voice-preview.svg).
+- In the Interaction Panel, hover over the AI Agent message in the chat and click **Voice Preview** in the interactive tooltip. The Voice preview button appears only for certain output types, including regular text output, fallback text, and text or SSML output from channels that support voice.
+
+## More information
+
+- [Interaction Panel](/ai/agents/test/interaction-panel/overview)
+- [Voice](/voice-gateway/index)
+- [Voice Nodes](/ai/agents/develop/node-reference/voice/overview)

@@ -1,0 +1,75 @@
+---
+title: 8x8
+keywords: ['8x8', '8x8 endpoint']
+description: "Connect your agent to the 8x8 platform using the 8x8 endpoint."
+---
+
+import AiProvidersX88X88Config from '/snippets/ai/providers/8x8/8x8-config.mdx'
+import LegacyGenericEndpointSettings from '/snippets/ai/deploy/endpoint/legacy-generic-endpoint-settings.mdx'
+
+
+<Frame>
+  <img src="/_assets/ai/deploy/endpoint-reference/8x8.svg" alt="8x8 Endpoint logo"/>
+</Frame>
+
+The 8x8 Endpoint enables you to connect your AI Agent to the [8x8 platform](https://www.8x8.com/).
+
+## Prerequisites
+
+- Access to [8x8 platform](https://www.8x8.com/).
+
+## Generic endpoint settings
+
+<LegacyGenericEndpointSettings />
+
+## Additional endpoint settings
+
+You can use the following additional settings to customize the endpoint:
+
+- [NLU connectors](/ai/platform-features/nlu/external/nlu-connectors/overview)
+- [Data protection & analytics](/ai/agents/deploy/endpoints/data-protection-and-analytics)
+- [Transformer functions](/ai/for-developers/transformers/overview)
+- [Real-time translation](/ai/agents/deploy/endpoints/real-time-translation-settings)
+- [File storage](/ai/agents/deploy/endpoints/file-storage)
+- [Session management](/ai/agents/deploy/endpoints/session-management)
+- [Copilot](/agent-copilot/configure/copilot-section)
+
+## Endpoint-specific settings
+
+| Parameter  | Description                                                                                   |
+|------------|-----------------------------------------------------------------------------------------------|
+| Base URL   | The URL of the 8x8 Server.                                                                    |
+| API Key    | The header value required for authenticating API calls to the 8x8 system.                     |
+| 8x8-Tenant | The Tenant ID, the field is mandatory if a customer has multiple tenants in the organization. |
+
+## How to set up
+
+### Configure in the third-party provider
+
+<AiProvidersX88X88Config/>
+
+### Configure in Cognigy
+
+<Accordion title="Configure 8x8 endpoint">
+  1. In the left-side menu of your Project, click **Deploy > Endpoints**.
+  2. On the **Endpoints** page, click **+ New Endpoint**.
+  3. In the **New Endpoint** section, do the following:
+      1. Select the **8x8** Endpoint type.
+      2. Add a unique name.
+      3. Select a relevant Flow from the list.
+  4. Click **Save**.
+  5. In the Endpoint, go to the **8x8 Setup** settings.
+  6. Specify a Base URL, API Key, and 8x8-Tenant that you received from the 8x8 server administrator.
+  7. Copy the URL from the **Endpoint URL** field.
+  8. _(Optional)_ Activate the **Accept Conversation Active Event** setting. When activated, the setting allows the system to accept and process `CONVERSATION UPDATE` events with the state set as `ACTIVE`. These events will be sent to the Flow for further handling. This setting allows accessing the event payload via the [Input object](/ai/agents/test/interaction-panel/overview), which provides relevant information related to the ongoing conversation.
+      - If the toggle is activated, the end user doesn't have to send the first message. The bot will automatically start replying.
+      - If the toggle is not activated, the end user needs to engage in conversation with the bot first in order to receive a reply.
+  9. Click **Save**.
+
+  To check the AI Agent's performance, go to the installation that your server administrator has deployed.
+</Accordion>
+
+## More information
+
+- [Endpoints overview](/ai/agents/deploy/endpoints/overview)
+- [8x8 handover provider](/ai/escalate/handover-reference/8x8)

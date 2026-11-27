@@ -1,0 +1,130 @@
+---
+title: 'Webchat: accessibility settings'
+sidebarTitle: Accessibility settings
+description: "Find the accessibility settings of Webchat in the endpoint and on the embedding web page, including translated screen reader texts, color contrast, and text resizing."
+keywords: ['webchat accessibility settings', 'aria labels', 'screen reader texts', 'color contrast', 'text resizing']
+---
+
+Most settings are available in the Webchat endpoint in Cognigy.AI. Some settings are available only as JSON, either in the **Webchat Custom Settings** field of the endpoint or in the `settings` object of your embedding code. Both JSON locations accept the same keys. For the complete list of settings and their default values, refer to the [Webchat embedding documentation](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md) on GitHub.
+
+## Configure the endpoint
+
+| Setting | Location | Recommendation |
+|---|---|---|
+| **Enable Typing Indicators**, **Display AI Agent Notice** | Endpoint, **Webchat Behavior** | Both are announced to screen readers. Keep the **AI Agent Notice Text** short, because it's read once at the beginning of every conversation. |
+| **Enable Connection Status Indicator** | Endpoint, **Webchat Behavior** | Displays and announces a warning when the connection is lost and announces when it's restored. Translate `network_error` and `connection_restored`. |
+| **Business Hours** and **Maintenance** texts | Endpoint | In the inform and disable modes, users read the message with assistive technologies. Write a complete sentence that tells users what to do instead. |
+| **Enable speech-to-text**, `STTLanguage` | Endpoint, language via JSON | Adds a labeled microphone button. Set the recognition language to the language of the conversation. |
+| **Rating Comment Placeholder Text** | Endpoint, **Chat Options** | Write the placeholder as an instruction. For more information, see [Known limitations](/webchat/v3/accessibility-conformance#known-limitations). |
+| **Attachment Upload** texts | Endpoint, **Attachment Upload**, failure texts via JSON | Upload results and failure reasons are announced. Translate `file_upload_failed`, `file_upload_too_large`, and `file_upload_infected`. |
+
+## Configure settings in JSON
+
+### Translate aria labels and screen reader texts
+
+Webchat has aria labels to give screen readers and other assistive technologies access to non-visible text. By default, the aria label texts are in English. If your Webchat is used in another language, translate the aria labels and the texts that are announced to screen readers. Otherwise, screen reader users hear English control names and announcements in a conversation that is held in their language.
+
+Because these texts aren't visible, a missing translation is easy to overlook in visual testing. Check them with a screen reader. For more information, see [Test accessibility](/webchat/v3/accessibility-testing).
+
+Two groups of settings control these texts:
+
+- `customTranslations` contains texts that are displayed in the Webchat UI. Some of them are also announced to screen readers, for example, the connection-lost message, the delete confirmation, and the file upload failure reasons.
+- `customTranslations.ariaLabels` contains texts that are never displayed. They are available only to screen readers and other assistive technologies, as aria labels of controls, as visually hidden texts, or as live region announcements. They include, for example, the names of icon-only controls such as the launcher, close, and send buttons, the message header texts, the descriptions of image, audio, video, and file messages, the file upload announcements, and the Datepicker labels.
+
+Some of these texts contain placeholders in curly braces, for example, `{name}`, `{time}`, `{fileName}`, and `{count}`. Webchat replaces a placeholder at runtime with the actual value, for example, the name of the agent, the time a message was sent, the name of an uploaded file, or the number of files. Translate only the words around a placeholder and keep the placeholder itself unchanged. For example, the default message header text `{name} said:` becomes `{name} sagt:` in German, and Webchat announces it as `Support chat sagt:`.
+
+Add the translations to the **Webchat Custom Settings** field of the endpoint or to the `settings` object of your embedding code.
+
+<Accordion title="Custom Settings sample">
+
+  ```json
+  {
+    "customTranslations": {
+      "network_error": "Verbindung unterbrochen",
+      "connection_restored": "Verbindung wiederhergestellt.",
+      "ariaLabels": {
+        "openChat": "Chat öffnen",
+        "closeChat": "Chat schließen",
+        "sendMessage": "Nachricht senden",
+        "speechToText": "Spracheingabe",
+        "unreadMessageSingularText": "Eine ungelesene Nachricht im Chat",
+        "unreadMessagePluralText": "ungelesene Nachrichten im Chat",
+        "messageHeader": {
+          "user": "Sie sagten:",
+          "bot": "{name} sagt:",
+          "timestamp": "Um {time}"
+        },
+        "videoContent": {
+          "withTranscriptAndCaptions": "Ein Video mit Transkript und Untertiteln."
+        }
+      }
+    }
+  }
+  ```
+
+</Accordion>
+
+For all aria label keys and their default texts, refer to [Aria Labels](https://github.com/Cognigy/Webchat/blob/main/docs/embedding.md#aria-labels) in the embedding documentation.
+
+### Activate the launcher animation pause button
+
+If you select an **Icon animation** for the Webchat launcher in the endpoint, also activate the pause button. The pause button appears at the edge of the launcher when the user hovers over or focuses the launcher, and is always visible on touch devices. It lets users stop the animation without opening Webchat, as required by WCAG success criterion 2.2.2 for animations that repeat for more than five seconds.
+
+The pause button is disabled by default. The endpoint has no option for it, so you can activate it only in JSON. Add the following to the **Webchat Custom Settings**:
+
+```json
+{
+  "layout": {
+    "enableIconAnimationPauseButton": true
+  }
+}
+```
+
+<Frame>
+  <img src="/_assets/webchat/v3/a11y-launcher-pause-button.png" alt="The round blue Webchat launcher button with a chat bubble icon. A small white circular pause button overlaps its lower right edge." style={{ width: 'auto' }} />
+</Frame>
+
+### Configure focus behavior
+
+The following settings change how keyboard focus moves. They are available only as JSON.
+
+| Setting | Description |
+|---|---|
+| `widgetSettings.enableFocusTrap` | If enabled, elements outside the chat window can't be focused while Webchat is open. Enable it when Webchat covers the page on small screens, so that keyboard users don't move to content they can't see. Keep it disabled when Webchat is displayed next to page content that users still need to reach. |
+| `behavior.focusInputAfterPostback` | If enabled, focus moves to the message input after the user selects a button in a message. If disabled, focus stays at the end of the message. Keep it disabled if your Flows reply with further buttons that the user needs to reach next. |
+| `widgetSettings.enableAutoFocus` | If enabled, focus moves to the first button or control in a new message with buttons, a Gallery, a List, or an audio or video player, but only when focus is already inside the chat log. Test this setting with a screen reader, because unexpected focus changes can disorient users. |
+
+## Keep custom styling accessible
+
+### Maintain color contrast
+
+By default, Webchat adheres to color contrast guidelines, ensuring a clear difference in brightness between a text and its background. If you customize the colors in the **Colors** section on the **Layout** tab in the [endpoint settings](/webchat/v3/configuration#colors) or through [CSS customization](https://github.com/Cognigy/Webchat/blob/main/docs/css-customization.md), ensure that the text and icons remain visible:
+
+- The minimum contrast ratio for normal text is 4.5:1.
+- For large text, UI components, and focus indicators, the contrast ratio must be at least 3:1.
+- If you add a background image to the [Home Screen](/webchat/v3/configuration#home-screen), ensure that the welcome text and the Conversation Starters remain readable, for example, by adding an overlay or gradient.
+
+To verify the contrast, see [Check color contrast](/webchat/v3/accessibility-testing#check-color-contrast).
+
+### Configure text resizing
+
+Webchat supports relative font sizes, so users can adjust the font size in their browser settings. If you customize the font size in your Webchat widget, make sure that both the Webchat CSS customization and the HTML code of your website work properly with relative font sizes:
+
+- Use relative font size units, for example, `em` or `rem` instead of `px`, in the [Webchat CSS customization](https://github.com/Cognigy/Webchat/blob/main/docs/css-customization.md) options.
+- Avoid absolute pixel values in the HTML tag that embeds the Webchat widget, or set `font-size` to `100%`. For more details, refer to the [Webchat v3.25.0 release notes](https://github.com/Cognigy/Webchat/releases/tag/v3.25.0).
+- For readability, avoid body text smaller than 12px.
+
+## Configure the web page that embeds Webchat
+
+The web page that embeds Webchat, not Webchat itself, meets some WCAG success criteria:
+
+- Set the `lang` attribute of the `<html>` element to the language of the conversation (success criterion 3.1.1).
+- Give the page a descriptive title (2.4.2).
+- Place the Webchat launcher in the same position on every page that offers it as a help or contact option (3.2.6).
+
+## More information
+
+- [Webchat: accessible messages](/webchat/v3/accessibility-messages)
+- [Webchat: test accessibility](/webchat/v3/accessibility-testing)
+- [Webchat: endpoint configuration](/webchat/v3/configuration)
+- [Webchat: embedding](/webchat/v3/embedding/hosted-script)

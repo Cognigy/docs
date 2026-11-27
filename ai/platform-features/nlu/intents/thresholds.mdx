@@ -1,0 +1,88 @@
+---
+title: Thresholds
+description: "Set the score boundaries that decide if Cognigy NLU recognizes an intent, asks for reconfirmation, or rejects it. Learn how to configure thresholds."
+keywords: ['cognigy nlu', 'thresholds']
+---
+
+The _thresholds_ feature provides configurable score boundaries
+that determine how the NLU model interprets and classifies user inputs based on their intent.
+This feature enables precise control over intent recognition,
+ensuring the NLU can confidently identify intents, prompt for reconfirmation when needed, or reject unclear inputs.
+
+## Key benefits
+
+- **Improved accuracy**. Adjustable thresholds enhance the reliability of intent mapping by setting clear confidence levels.
+- **Flexible control**. You can fine-tune the system's sensitivity to match specific use cases or performance needs.
+
+## Prerequisites
+
+Before using thresholds, ensure the following:
+
+- You have an active flow in the project.
+- You've defined intents so the NLU can classify user inputs.
+
+## How to use
+
+Explore threshold types, then set them up.
+
+### Explore threshold types
+
+| Type                         | Description                                                                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **Confidence Threshold**     | Intents with a score higher than this threshold are considered confirmed.                                                     |
+| **Reconfirmation Threshold** | Intents with a score higher than the reconfirmation threshold but lower than the confidence threshold require reconfirmation. |
+| Not found threshold          | Intents with a score lower than the reconfirmation threshold aren't considered.                                               |
+
+#### Reconfirmation threshold specifics
+
+The reconfirmation threshold behaves differently depending on whether a [confirmation sentence](/ai/platform-features/nlu/intents/overview#apply-additional-settings) exists in your intent:
+
+- With a confirmation sentence, the reconfirmation threshold triggers the confirmation sentence.
+- Without a confirmation sentence, the reconfirmation threshold confirms the user input.
+
+### Set up thresholds
+
+You can configure thresholds at either the flow or project level. To set them up:
+
+<Tabs>
+  <Tab title="Flow level">
+        1. In the navigation menu, go to **Design > Flows** and open the flow.
+        2. Go to the **Settings** tab, then select **Configuration**.
+        3. Activate **Thresholds**. As soon as you activate it, this setting overrides the threshold values set up at the project level.
+        4. Adjust the handles of the **Intent Threshold** slider:
+            - **Reconfirmation Threshold** (default: 0.2):
+                - Move the handle left to increase reconfirmation prompts.
+                - Move the handle right to reduce reconfirmation prompts.
+            - **Confidence Threshold** (default: 0.4):
+                - Move the handle left to allow lower-confidence matches.
+                - Move the handle right to require higher confidence for matches.
+        5. Click **Save changes**.
+  </Tab>
+  <Tab title="Project level">
+        1. In the navigation menu, go to **Manage > Settings**.
+        2. On the **Settings** page, click **NLU Settings**.
+        3. In the **Thresholds** section, adjust the threshold sliders:
+            - **Reconfirmation Threshold** (default: 0.2):
+                - Move the slider left to increase reconfirmation prompts.
+                - Move the slider right to reduce reconfirmation prompts.
+            - **Confidence Threshold** (default: 0.4):
+                - Move the slider left to allow lower-confidence matches.
+                - Move the slider right to require higher confidence for matches.
+
+    Fine-tune the sliders: move them closer for decisive responses or farther apart for cautious reconfirmation.
+  </Tab>
+</Tabs>
+
+## Example
+
+Imagine a user asks `Can you book a flight?` in the chat with the agent. The NLU model assigns a score to the `BookFlight` intent:
+
+| Score | Threshold range                                                       | Outcome                                                | Agent response                   |
+| ----- | --------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
+| 0.5   | Above confidence threshold (0.4)                                      | The intent is confirmed and the conversation proceeds. | None                             |
+| 0.3   | Between reconfirmation threshold (0.2) and confidence threshold (0.4) | The agent seeks confirmation.                          | `Did you mean to book a flight?` |
+| 0.1   | Below reconfirmation threshold (0.2)                                  | The intent isn't recognized.                           | `I'm not sure what you mean.`    |
+
+## More information
+
+- [Intents](/ai/platform-features/nlu/intents/overview)

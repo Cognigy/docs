@@ -1,0 +1,131 @@
+---
+title: 'Webchat: accessible messages'
+sidebarTitle: Accessible messages
+description: "Label UI elements, write alternative text, use adaptive cards, structure message content, and make plugins, xApps, and Extensions accessible in Webchat."
+keywords: ['webchat accessible messages', 'alt text', 'adaptive cards', 'aria labels', 'plugins', 'xapps', 'extensions']
+---
+
+Label all UI elements that you add to your Webchat in the flow to explain their purpose clearly. Provide users with descriptive labels for each interactive element, including links, text on buttons, and form fields.
+
+For audio and video messages, see [accessible audio and video](/webchat/v3/accessibility-media).
+
+## Images
+
+- Include alternative (alt) text for every image. Describe the purpose of the image, not its appearance. Screen readers announce this text when the message arrives, directly after `An image.` or `An image with download option.`. Without alt text, screen reader users only hear that an image was received.
+- Don't use images that contain text. Titles, subtitles, and button labels in Gallery and List messages and on the Home Screen must be real text, so that users can resize and read them aloud.
+- Avoid animated GIFs that loop for more than five seconds, and never include content that flashes more than three times per second.
+
+<Frame>
+  <img alt="Example alt text configured for an image output" src="/_assets/webchat/v3/image-alt-text.png" style={{ width: 'auto' }} />
+</Frame>
+
+## Links and buttons
+
+- Write link and button texts that make sense on their own, for example, `Open the return form` instead of `Click here`.
+- Buttons that open a URL are announced with `Opens in new tab`. Links that you add to a message text in Markdown don't have this announcement. Add the information to the link text, for example, `Return policy (opens in a new tab)`.
+- Keep button labels short. Two-line labels are supported, but screen readers read every word aloud.
+
+## Adaptive cards
+
+When you use adaptive cards, ensure that each field in [Microsoft adaptive cards](https://adaptivecards.microsoft.com/designer) contains a label with meaningful text and that the text has a hierarchical structure. Add the following parameters to the JSON of the adaptive card:
+
+- `speak`: a short summary for screen readers to announce. Without this parameter, screen readers announce each element, which can be hard to follow.
+- `label`: the name of an input field. Use meaningful text, because placeholder text alone isn't a label.
+- `style` with the value `heading`: marks a text block that introduces a section as a heading. Headings help all users navigate and understand information more quickly, and screen readers announce them differently from regular text.
+- `isRequired`: marks an input field as required.
+- `errorMessage`: the text that identifies the error and suggests a correction when a required field is empty or invalid. Add it to every field that has `isRequired`.
+- `style` with a matching input value, such as `email` or `tel`: shows a matching keyboard on mobile devices.
+
+<Frame>
+  <img src="/_assets/webchat/v3/adaptive-card-labels.png" alt="Adaptive card with labeled form fields and heading hierarchy" style={{ width: 'auto' }} />
+</Frame>
+
+<Accordion title="Adaptive card sample">
+
+  ```json
+  {
+    "type": "AdaptiveCard",
+    "speak": "Form for purchasing the product",
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.6",
+    "body": [
+      {
+        "type": "TextBlock",
+        "size": "Medium",
+        "weight": "Bolder",
+        "text": "Purchase your Product",
+        "style": "heading"
+      },
+      {
+        "type": "Input.Text",
+        "id": "fullName",
+        "label": "Full Name",
+        "placeholder": "Enter your full name",
+        "isRequired": true,
+        "errorMessage": "Enter your full name"
+      },
+      {
+        "type": "Input.Text",
+        "id": "email",
+        "label": "Email Address",
+        "style": "email",
+        "placeholder": "Enter your email address",
+        "isRequired": true,
+        "errorMessage": "Enter an email address, for example, name@example.com"
+      },
+      {
+        "type": "Input.ChoiceSet",
+        "id": "product",
+        "label": "Select Product",
+        "choices": [
+          {
+            "title": "Agent Standard",
+            "value": "Standard"
+          },
+          {
+            "title": "Agent Premium",
+            "value": "Premium"
+          },
+          {
+            "title": "Agent Enterprise",
+            "value": "Enterprise"
+          }
+        ],
+        "placeholder": "Choose a product"
+      },
+      {
+        "type": "Input.Date",
+        "id": "purchaseDate",
+        "label": "Preferred Purchase Date",
+        "placeholder": "Select a date"
+      }
+    ],
+    "actions": [
+      {
+        "type": "Action.Submit",
+        "title": "Submit order"
+      }
+    ]
+  }
+  ```
+</Accordion>
+
+## Structure message content
+
+- Use HTML in text messages for structure, not only for appearance: headings, lists, and tables with header cells. Keep the default HTML sanitization enabled. It removes scripts and event handlers but keeps structural markup.
+- If a passage is in a language other than the language of the conversation, wrap it in an element with a `lang` attribute, for example, `<span lang="fr">Bonjour</span>`.
+- Streamed responses that use Markdown render headings and lists semantically. Instruct your agent to use headings and lists rather than decorative symbols.
+- The title in the Webchat header, for example, the chat title, **Chat options**, or **Previous conversations**, is a heading that receives focus when the screen opens. The Home Screen welcome text is also a heading. Write these texts so that they describe the screen, for example, `Support chat` rather than a slogan.
+
+## Make custom plugins, xApps, and Extensions accessible
+
+Custom code that renders inside or next to Webchat isn't covered by the Accessibility Conformance Report. Make sure that you develop it according to accessibility standards:
+
+- **Webchat plugins** render custom message types in the chat log. Follow the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/) for any widget you build, use native HTML controls, and announce status changes through a live region instead of moving focus. For the patterns that Webchat uses, refer to the [accessibility guide](https://github.com/Cognigy/Webchat/blob/main/docs/accessibility.md) in the Webchat repository.
+- **xApps** open in a modal overlay. The overlay is accessible, but the xApp page itself is your responsibility: provide a page title, headings, labeled form fields, and keyboard-operable controls. For legal or financial submissions, let users review and confirm their input before submitting (success criterion 3.3.4). For more information, see [xApp overlay](/xApps/build/overlay).
+- **Extensions** run in Cognigy.AI and produce messages. If you built a custom node through the [extension](/ai/for-developers/extensions) framework, make sure that it fills the alternative text, label, and transcript fields described on this page.
+
+## More information
+
+- [Webchat: test accessibility](/webchat/v3/accessibility-testing)
+- [xApp overlay](/xApps/build/overlay)

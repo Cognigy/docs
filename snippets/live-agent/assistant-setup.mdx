@@ -1,0 +1,22 @@
+## Set up flows
+
+To provide additional real-time information to your agents, this assistant uses a flow.
+
+To set up an assistant, you need two separate flows:
+
+- The main flow, where the primary logic is defined.
+- A flow where the logic for your assistant is implemented.
+
+During an active Live Agent handover, this flow processes all customer inputs and display the outputs as part of the conversation for the human agent.
+
+The assistant's messages are only shown based on customer inputs received during an active handover after the human agent has initially responded.
+
+<Warning>
+  You don't need to include the Handover to Human Agent node in the assistant's flow, as using it in the main Live Agent flow is enough for the configuration process.
+
+  To provide helpful information to your agents, create intents and use Lookup nodes with Say nodes based on customer inputs.
+
+  <Frame>
+    <img src="/_assets/live-agent/la-agent-assist-flow-example.png" alt="Agent assist flow with Lookup nodes and Say nodes for customer inputs" style={{ width: 'auto' }} />
+  </Frame>
+</Warning>

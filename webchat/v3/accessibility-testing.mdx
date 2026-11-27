@@ -1,0 +1,52 @@
+---
+title: 'Webchat: test accessibility'
+sidebarTitle: Test accessibility
+description: "Test the accessibility of your deployed Webchat with the keyboard, a screen reader, automated scans, color contrast checks, and text resizing."
+keywords: ['webchat accessibility testing', 'screen reader testing', 'axe devtools', 'keyboard testing', 'color contrast checker']
+---
+
+Your colors, texts, Flows, and embedding page change what users experience. Test the deployed Webchat on your own website. The following methods were also used for the Accessibility Conformance Report.
+
+## Test with the keyboard
+
+1. Open your web page and press <kbd>Tab</kbd> until the Webchat launcher is focused. Press <kbd>Enter</kbd>. Focus must move into the chat window.
+2. Press <kbd>Tab</kbd> through the whole chat, send a message, select a Quick Reply, and open and close the Chat Options. Focus must always be visible.
+3. Open a Datepicker, a full-size image, or the delete confirmation and press <kbd>Esc</kbd>. Focus must return to the element you came from.
+4. Close Webchat. Focus must return to the launcher.
+
+## Test with a screen reader
+
+- Use NVDA with Chrome or Firefox on Windows, VoiceOver with Safari on macOS, VoiceOver on iOS, or TalkBack on Android.
+- Check that all control names are in your language, that message headers are announced as `You said` and `{name} said`, and that status messages are announced when a reply arrives, the connection is lost, or an upload finishes.
+- Send every message type that your Flows use and check that the image descriptions, transcripts, and captions match the content you provided.
+
+## Run an automated scan
+
+Install the free [axe DevTools](https://www.deque.com/axe/devtools/) browser extension, open Webchat, and scan each screen: Home Screen, chat with messages, Chat Options, and Previous Conversations. Fix every violation reported within the Webchat container. Automated tools find only part of the issues, so they complement the manual tests.
+
+## Check color contrast
+
+To verify the color contrast in your Webchat, use an online contrast checker, such as the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker). Check the chat background against the AI Agent and user message bubbles, the primary color against its button text, the link text against the bubble, and the Home Screen text against its background.
+
+<Accordion title="Check the contrast ratio in Chrome DevTools">
+
+  1. Open Chrome DevTools by right-clicking on the web page and selecting **Inspect**, or press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd> (Windows, Linux) or <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>I</kbd> (Mac).
+  2. In the **Elements** panel, click the element you want to inspect.
+  3. In the **Styles** panel, find the `color` or `background-color` property and click the color swatch next to the value.
+  4. In the **Contrast Ratio** section of the color picker, check whether the ratio meets the AA standard. A checkmark means pass, and a prohibited symbol means fail.
+  5. Adjust the color in the color picker until the ratio passes. The contrast ratio updates in real time.
+
+  <Frame>
+    <img src="/_assets/webchat/v3/color-contrast.png" alt="Chrome DevTools color picker showing contrast ratio check results" style={{ width: 'auto' }} />
+  </Frame>
+
+</Accordion>
+
+## Test text resizing and reduced motion
+
+- Zoom the browser to 200%. All content and controls must remain usable without horizontal scrolling.
+- Enable **Reduce motion** in your operating system and reload the page. The launcher animation and the typing indicator animation must stop.
+
+## More information
+
+- [Webchat: Accessibility Conformance Report](/webchat/v3/accessibility-conformance)

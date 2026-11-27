@@ -1,0 +1,332 @@
+---
+title: "Simulations"
+keywords: ['simulator', 'simulations', 'multivariate', 'schedule simulations', 'test agents']
+description: "Run, evaluate, and schedule Simulator simulations to test agents with single and multivariate runs."
+---
+
+A _simulation_ runs one or more [scenarios](/ai/agents/test/simulator/scenarios) against an agent or a flow. Each simulation contains simulation runs. You can start a simulation manually or schedule it.
+
+<Frame>
+  <img src="/_assets/ai/test/simulator/multivariate-simulation.webp" alt="Multivariate test report showing the variant summary with a winner badge, the performance comparison table, token usage and latency charts, and the runs table" style={{ width: 'auto' }} />
+</Frame>
+
+## Limitations
+
+- The maximum number of runs per simulation is 150.
+- The maximum number of schedules per scenario is 1.
+- Cognigy deletes simulation results after 90 days.
+- For simulations that use a Snapshot, the Simulator uses the Project Locale, not the Snapshot Locale.
+  - If the Snapshot Locale differs from the Project Locale, and both Locales exist in the Snapshot and in the Project, the Simulator uses the Project Locale.
+  - If the Project Locale was created after the Snapshot was taken, this Locale doesn't exist in the Snapshot, so the Simulator can't use it for the simulation.
+
+## Run a simulation
+
+After creating a scenario, you can start a simulation manually or [schedule regular simulations](#schedule-simulations).
+
+<Note>
+A scenario that Cognigy generated from a flow can run only against a flow. A scenario that Cognigy generated from an agent can run only against an agent. Scenarios that you create manually can run against both. This applies to single and multivariate simulations and to schedules.
+</Note>
+
+Cognigy offers two simulation types:
+
+- **Single** – runs one scenario with one configuration.
+- **Multivariate** – runs 2 to 10 variants in one batch and compares the results. Use variants to compare LLMs, Snapshots, Locales, or targets.
+
+<Tabs>
+<Tab title="Single">
+  To start a single simulation, follow these steps:
+
+  1. In your Project, go to **Test > Simulator > Scenarios**.
+  2. Do one of the following:
+      - Click the **Configure simulation** icon in the row of the scenario.
+      - Click **Configure simulation** in the upper-right corner of the page.
+  3. On the **Configure simulation** page, make sure the **Single** tab is selected.
+  4. Verify the selected scenario or select a different one. In the **Simulation name** field, enter a name for the simulation. The name is required and can have up to 200 characters. The name is shown on the Simulations tab and on the Dashboard.
+  5. In the **Agent settings** section, configure the target of the simulation:
+      - **Target type** – select the agent or flow for the simulation. The list shows agents and flows. To narrow the list, search or filter by **Agents** or **Flows**. If agent targets aren't available in your environment, the list shows only flows.
+      - **Snapshot** – to test a target from a specific version instead of the current one, select a [Snapshot](#schedule-simulations). To use the current version, select **No snapshot**.
+      - **Locale** – select the [Locale](/ai/platform-features/translation-and-localization/localization) that defines the language of the agent and the simulated user. If you also select a Snapshot, see [Limitations](#limitations) for how the Simulator resolves the Locale.
+      - **Simulation LLM** – select the model to manage the simulated conversation.
+  6. In the **Simulation run settings** section, use the **Simulation runs** slider to set how many times the simulation runs. The default value is 10. The minimum value is 1 and the maximum value is 150. Use multiple simulation runs to test conversation variations. To activate mocking for Nodes that have mock code configured, turn on **Mocking**. Mocking is currently available only for the target type Flow.
+  7. _(Optional)_ In the **Advanced** section, configure additional parameters:
+      - **Stop condition** – stop the simulation early. Select **None**, **Stop if pass rate < 30%**, **Stop if pass rate < 50%**, **Stop after 3 consecutive failures**, or **Stop after 5 consecutive failures**.
+      - **Agent output timeout** – set the maximum time the agent has to respond to each user input during the simulation, in milliseconds. The minimum value is 20,000 milliseconds and the maximum value is 200,000 milliseconds. This parameter is available only for the target type Flow.
+      - **Custom data payload** – define a JSON object that is injected into every input message during a simulation. This parameter enables context-aware testing, for example, testing different user types, A/B scenarios, or personalized flows, without changing the flow itself. Examples of custom data payloads:
+        ```json
+        { "userId": "u1001", "role": "admin" }      // different user types
+        { "testGroup": "A", "featureFlag": true }   // A/B testing
+        { "userName": "Emma", "preferredLanguage": "fr" } // personalized greeting
+        ```
+  8. Click **Run simulation**. When the simulation starts, Cognigy opens the simulation overview, where you can view the real-time results.
+
+  <Note>
+    The maximum number of turns isn't a setting of the simulation. You set it in the scenario with the **Max turns** slider. The slider range is 1 to 30, and the default value is 15.
+  </Note>
+</Tab>
+<Tab title="Multivariate">
+  A multivariate simulation runs the same test with several variants. Each variant has its own configuration, so you can compare how different LLMs, Snapshots, Locales, or targets perform.
+
+  To start a multivariate simulation, follow these steps:
+
+  1. In your Project, go to **Test > Simulator > Scenarios**.
+  2. Do one of the following:
+      - Select two or more scenarios and click **Configure simulation**. The selected scenarios become variants.
+      - Click **Configure simulation**. On the page that opens, select the **Multivariate** tab.
+  3. In the **Simulation name** field, enter a name for the test. The name is required. The name is shown on the Simulations tab and on the Dashboard. Example: `GPT-5 Nano vs. Claude Sonnet – Claim Filing`.
+  4. In the **Variants** section, click **Add variant** until you have the variants you need. A multivariate simulation requires 2 to 10 variants. To remove a variant, click the **Remove variant** icon.
+  5. Configure each variant:
+      - **Variant name** – enter a unique name. Example: `Claude Sonnet, German`.
+      - **Scenario** – select the scenario for the variant.
+      - **Target type** – select the agent or flow for the variant. Each variant has its own target, so one simulation can compare an agent with a flow.
+      - **Snapshot**, **Locale** – select the Snapshot and the Locale. To use the current version, select **No snapshot**. If you don't select a Locale, Cognigy uses the primary Locale of the Project.
+      - **Simulation LLM** – select the model to manage the simulated conversation.
+      - **AI Agent LLM** – select the LLM that the agent uses in this variant. For the current version of a flow or an agent, Cognigy fills in this field with the LLM of the agent. For a flow, it does this only if all enabled AI Agent Nodes use the same LLM. If the Nodes use different LLMs, or if you select a Snapshot, select the LLM yourself.
+      - **Simulation runs** – set how many times the variant runs. The default value is 10. The minimum value is 1 and the maximum value is 150.
+      - **Mocking** – turn on mocking for Nodes that have mock code configured. This setting applies to this variant only and is currently available only for the target type Flow.
+      - _(Optional)_ **Advanced** – configure the **Stop condition**, **Agent output timeout**, and **Custom data payload**. These parameters work as described in the **Single** tab, but they apply to this variant only. **Agent output timeout** is available only for the target type Flow.
+  6. Click **Run simulation**. A notification confirms that the test started. Cognigy then opens the **Multivariate test report**.
+
+  The number of conversations that a multivariate simulation produces is the sum of the simulation runs of all variants. For example, 3 variants with 10 runs each produce 30 conversations. Each conversation counts against your simulation quota. If the quota is used up, the simulation doesn't start.
+
+  <Note>
+    Stop conditions apply to each variant separately.
+  </Note>
+
+  To read the results, see the **Multivariate** tab in **3. Evaluate**.
+</Tab>
+</Tabs>
+
+To run simulations through the API, use the [Cognigy Simulator API](/api-reference-simulator/).
+
+## Evaluate results
+
+On the **Simulations** tab, the **Type** column shows whether a simulation is **Single** or **Multivariate**. The results open in a different view for each type.
+
+<Tabs>
+<Tab title="Single">
+  While a simulation runs, the header shows the number of finished runs, for example, `3/10`, and the results update automatically.
+
+  The simulation overview provides the following key metrics:
+
+  | **Metric**            | **Description**                                                                                                                                                                                                                                                                                     |
+  | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Success rate          | Shows the percentage of simulation runs that met all success criteria. A higher success rate indicates better overall performance.                                                                                                                                                                  |
+  | Average sentiment     | Shows the overall sentiment of the simulation runs. Cognigy rates each run as positive, neutral, or negative. If there are more positive runs than negative runs, the result is **Positive**. If there are more negative runs, the result is **Negative**. Otherwise, the result is **Neutral**.          |
+  | Success criteria met  | Shows the percentage of success criteria met across all simulation runs.                                                                                                                                                                                                                            |
+  | Average turns         | Shows the average number of back-and-forth messages (turns) that a simulation run needs to complete. Each turn consists of one user input and one agent response.                                                                                                                                      |
+  | Turn distribution     | Shows the frequency of turn counts within ranges. The horizontal axis shows turn count ranges. The vertical axis shows the frequency for each range.                                                                                                                                       |
+  | LLM metrics           | Shows the average number of input and output tokens per simulation run, and the median latency per turn.                                                                                                                                                                                            |
+  | Simulation results    | Shows how many simulation runs succeeded and failed. A simulation run succeeds if it meets all success criteria. While the simulation runs, the chart also shows runs in progress. If the simulation stopped early, the chart shows the runs that didn't run as skipped.                    |
+  | Success criteria      | Shows how often each success criterion is met across all simulation runs, as the percentage of succeeded and failed runs.                                                                                                                                                                          |
+</Tab>
+<Tab title="Multivariate">
+  Multivariate simulations open in the **Multivariate test report**. The report provides the following information:
+
+  | **Section**                       | **Description**                                                                                                                                                                                                                             |
+  | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Variant summary                   | Shows a summary of each variant. Click a card to filter the page by that variant. The variant with the best overall score has the **Winner** badge.                                                                                         |
+  | Performance comparison – Overview | Shows the success rate, criteria met, average turns, tool calls per run, and sentiment of each variant.                                                                                                                                     |
+  | Performance comparison – Token usage | Shows the average input tokens, average output tokens, and total tokens per run. The values show testing cost, not the cost of the live agent. Cognigy estimates them if the LLM provider doesn't report exact usage.                      |
+  | Performance comparison – Latency  | Shows the P50 latency, P95 latency, and average time to first token of each variant, in milliseconds.                                                                                                                                        |
+
+  Cognigy selects the variant with the best overall score as the winner. The score combines success rate, criteria met, share of passed runs, response speed, and number of turns. Success rate has the greatest weight, and fewer turns and faster responses score higher. Cost and sentiment aren't counted. If two variants have almost the same score, the higher success rate decides, then the number of passed runs, then the response speed. Cognigy shows no winner if no variant has a passed run.
+
+  <Note>
+    A variant that stopped early shows the **Stopped early** badge. Its results come from fewer runs, so don't compare them directly with variants that completed.
+  </Note>
+</Tab>
+</Tabs>
+
+### Review simulation runs
+
+The **Runs** table lists the simulation runs with the following columns: **Name**, **Success**, **Criteria met**, **Sentiment**, and **Turns**. In multivariate simulations, the table also has the **Variant** column. To find failed simulation runs, look for the status `Failed` in the **Success** column. Click a simulation run to open a panel on the right:
+
+- On the **Conversation** tab, view the simulated conversation.
+- On the **Results** tab, view each success criterion with the status `Succeeded` or `Failed`. Hover over the status to see a tooltip that explains why the simulation run met or didn't meet the success criterion.
+
+To filter simulation runs, do one of the following:
+
+- In a single simulation, click the bar or slice that represents the data you want to investigate. The **Runs** table shows the active filters. To remove them, click **Clear all filters**.
+- In a multivariate simulation, click a variant card. To remove the filter, click **Clear filter**.
+
+You can also view the simulated conversation in the [Conversations Explorer](/insights/explorers/conversations). In the Endpoint filters, toggle on **Interaction Panel / Playbooks / Simulations**.
+
+Additionally, you can view key metrics, performance trends, and scheduled simulations across simulations in the [Simulator dashboard](/ai/agents/test/simulator/dashboard).
+
+## Schedule simulations
+
+After you [create a scenario](/ai/agents/test/simulator/scenarios#create-a-scenario), you can schedule simulations to run automatically at a specified frequency.
+
+To schedule a simulation, follow these steps:
+
+1. In your Project, go to **Test > Simulator > Scenarios**.
+2. In the row of the scenario that you want to schedule, click the **Schedule scenario** icon. The **Schedule** panel opens. If the scenario has a schedule, the panel opens on the **Schedule** tab.
+3. Configure the settings on the following tabs in the **Schedule** panel. Then click **Save**.
+
+<AccordionGroup>
+  <Accordion title="On the simulation tab">
+    1. Configure the following:
+        - **Name** – enter a name that reflects the test scenario and focus area. Example: `Menu Exploration – Exotic Dish Focus`. Each time the schedule runs, Cognigy appends the date and time of the run to the name. The full name appears on the **Simulations** tab and the Simulator dashboard.
+        - **Target type** – select the agent or flow for the simulation. The list shows agents and flows. A scenario that Cognigy generated from a flow can run only against a flow. A scenario that Cognigy generated from an agent can run only against an agent.
+        - **Snapshot** – select the Snapshot for the simulation. To use the current version, select **No snapshot**.
+        - **Locale** – select the [Locale](/ai/platform-features/translation-and-localization/localization) that defines the language of the agent and the simulated user.
+        - **LLM** – select the model to manage the simulated conversation.
+        - **Simulation runs** – use the slider to set how many times the simulation runs. The default value is 10. The minimum value is 1 and the maximum value is 150. Use multiple simulation runs to test conversation variations.
+        - **Mocking** – activate mocking for Nodes that have mock code configured. This option isn't available for agent targets.
+    2. _(Optional)_ In the **Advanced** section, configure additional parameters:
+        - **Agent output timeout** – set the maximum time the agent has to respond to each user input during the simulation, in milliseconds. The default value is 20,000 milliseconds. The minimum value is 20,000 milliseconds and the maximum value is 200,000 milliseconds. This option isn't available for agent targets.
+        - **Custom data payload** – define a JSON object. Cognigy injects it into every input message during a simulation. Use this parameter for context-aware testing, for example, to test different user types, A/B scenarios, or personalized flows without changing the flow itself. Examples of custom data payloads:
+          ```jsonc
+          // Different user types
+          { "userId": "u1001", "role": "admin" }
+
+          // A/B testing
+          { "testGroup": "A", "featureFlag": true }
+
+          // Personalized greeting
+          { "userName": "Emma", "preferredLanguage": "fr" }
+          ```
+  </Accordion>
+  <Accordion title="On the schedule tab">
+    1. Toggle on **Activate schedule**.
+    2. Configure the following:
+        - **Frequency** – select one of the following options:
+            - **Daily** (default)
+            - **Every 3 days**
+            - **Weekly**
+            - **Bi-weekly**
+            - **Monthly**
+        - **Time** – select the time when the simulation starts. The default time is 09:00.
+        - **Next scheduled run** – shows the date and time of the next simulation, based on the **Frequency** and **Time** parameters. The date and time use the time zone of the Project.
+        - **Email notifications** – enter the email addresses for notifications about completed scheduled simulations. Press <kbd>Enter</kbd> after each address.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  You can schedule only single simulations. Schedules don't support multivariate simulations or stop conditions.
+</Note>
+
+To schedule a simulation through the API, use the [`POST /simulations/{simulationReference}/schedules`](https://api-trial.cognigy.ai/testing/openapi#post-/simulations/-simulationReference-/schedules) request.
+
+After you save the configuration, a clock icon appears next to the scenario name on the **Scenarios** tab. Hover over the icon to view the date of the next scheduled simulation.
+
+## Example
+
+This example shows how to run simulations with the scenarios from the [Scenarios example](/ai/agents/test/simulator/scenarios#example). We'll work with Sophie, the Restaurant Guide.
+
+<Tabs>
+  <Tab title="Single">
+
+1. Run a simulation for each scenario with the following settings:
+
+    | **Parameter**             | **Value**                                                                                         |
+    |---------------------------|---------------------------------------------------------------------------------------------------|
+    | Snapshot                  | No snapshot                                                                                       |
+    | Flow                      | Main-Dining Concierge                                                                             |
+    | Locale                    | en-US                                                                                             |
+    | Simulation LLM            | Default. Make sure the default model supports Generative AI capabilities such as text completion. |
+    | Simulation runs           | 10                                                                                                |
+
+2. Check the results on the Simulator dashboard. Open each simulation run to review the outcomes. Pay attention to failed runs. For example, look at the simulation for the persona **Maya – The Tourist Planner**.
+
+  | Metric                | Value    | What it means                                              | Action steps                                                                                                                    |
+  | --------------------- | -------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+  | Success rate          | 40%      | 40% of the simulation runs met all success criteria.       | Check the flow for misunderstandings of user requests or missed information.                                                    |
+  | Success criteria met  | 67%      | Simulation runs met 67% of the success criteria in total.  | Review which specific success criteria failed, then adjust the flow logic or refine the success criteria definitions as needed. |
+  | Average sentiment     | Positive | Users show positive feelings.                              | No action is needed.                                                                                                            |
+  | Average turns         | 9        | Average number of exchanges in the simulated conversation. | Track conversation length and ensure each turn effectively advances the conversation.                                           |
+
+
+  </Tab>
+  <Tab title="Multivariate">
+
+    In the single simulation example, the scenario for Maya has the lowest success rate, 40%. You want to know whether another LLM improves the results. Use a multivariate simulation to compare the current LLM of the agent with a candidate LLM.
+
+    1. Use the scenario **Family-Friendly Group Dinner** from the single simulation example.
+    2. In your Project, go to **Test > Simulator > Scenarios**, click **Configure simulation**, and select the **Multivariate** tab.
+    3. In the **Simulation name** field, enter `Sophie – LLM comparison`.
+    4. Add two variants with the following settings:
+
+        | **Parameter**   | **Variant 1**                          | **Variant 2**                        |
+        |-----------------|----------------------------------------|--------------------------------------|
+        | Variant name    | Current LLM                            | Candidate LLM                        |
+        | Scenario        | Family-Friendly Group Dinner           | Family-Friendly Group Dinner         |
+        | Target type     | Flow                                   | Flow                                 |
+        | Snapshot        | No snapshot                            | No snapshot                          |
+        | Flow            | Main-Dining Concierge                  | Main-Dining Concierge                |
+        | Locale          | en-US                                  | en-US                                |
+        | Simulation LLM  | The same LLM in both variants          | The same LLM in both variants        |
+        | AI Agent LLM    | The LLM that the agent currently uses  | The LLM that you want to test        |
+        | Simulation runs | 10                                     | 10                                   |
+
+    5. Click **Run simulation**. The simulation produces 20 conversations, 10 for each variant. They count against your simulation quota.
+    6. In the **Multivariate test report**, compare the variants. For example:
+
+        | Metric               | Current LLM | Candidate LLM | What it means                                                              | Action steps                                                                                                  |
+        |----------------------|-------------|---------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+        | Success rate         | 40%         | 70%           | The candidate LLM met all success criteria in more simulation runs.        | Open the failed runs of the candidate LLM to check which success criteria still fail.                         |
+        | Criteria met         | 67%         | 85%           | The candidate LLM met a larger share of the success criteria.              | Review the criteria that failed in both variants. They may point to a flow problem, not an LLM problem.        |
+        | Average turns        | 9           | 7             | The candidate LLM needs fewer turns to complete the conversation.          | No action is needed.                                                                                          |
+        | Latency P50          | 2,400 ms    | 3,100 ms      | The candidate LLM responds more slowly.                                    | Decide whether the better results justify the slower responses.                                               |
+
+        The candidate LLM has the **Winner** badge. The winner is based on success rate, criteria met, passed runs, response speed, and turns. Cost isn't counted. Before you switch the LLM, check the **Token usage** tab to compare the testing cost of both variants.
+
+  </Tab>
+</Tabs>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Common issues">
+
+    | **Issue**                      | **Description**                                                  | **How to resolve**                                                                                                                 |
+    |--------------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+    | Simulation doesn't run         | The simulation fails to start or shows an error.                 | Ensure all required fields (Flow, Locale, LLM, Number of Simulation Runs) are completed. Check system status on the **Logs** page. |
+    | Inaccurate result              | The output doesn't match the expected behavior or test scenario. | Check your flow version and Snapshot. Use the latest and most relevant setup for testing.                                          |
+    | Agent responses not aligned | The agent gives irrelevant, vague, or incorrect replies.      | Review persona and mission definitions. Ensure the LLM supports the expected output style.                                         |
+
+  </Accordion>
+  <Accordion title="Azure content filter error">
+
+    When you use an Azure OpenAI LLM for simulations, you may receive the following error message:
+ 
+    `The response was filtered due to the prompt triggering Azure's content management policy.`
+
+    This error isn't caused by Cognigy, it occurs because [Azure's content filter](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/content-filter?view=foundry-classic) blocks the LLM prompt, also called system message, according to your subscription's safety policy. The LLM prompt includes your simulation settings, for example, personas, missions, and success criteria.
+
+    **Best practices**
+
+    Azure's content filter blocks any content that it considers unsafe or ambiguous, including LLM prompts. The exact rules, scoring methods, or trigger terms used for the content filter aren't disclosed. However, they include best practices in their [system message documentation](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/system-message?view=foundry-classic&tabs=top-techniques#summary-of-best-practices). The following table shows issues and best practices while configuring the scenario.
+
+    | Issues                                                          | Best practice                                                                        | Examples and recommendations                                                                       |
+    |-----------------------------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+    | The prompt lacks sufficient context.                            | Provide clear context and purpose to guide the model safely.                         | Enter persona description with at least 50 words.                                                  |
+    | References to personal or financial situations.                 | Keep a neutral, business-appropriate tone.                                           | Use `Customer exploring labor options`, instead of `unemployed`.                                   |
+    | Words implying personal finance.                                | Focus on professional skills, goals, and scenarios.                                  | Use `payment upon delivery`, instead of `cash`.                                                    |
+    | Including self-referring instructions in the scenario content. | Use detailed, descriptive personas.                                                  | Use `They are comfortable navigating digital menus`, instead of `They often use this application`. |
+    | Personal framing without professional context.                  | Frame content around business use cases.                                             | Use `A customer seeking assistance...`, instead of `A customer struggling with...`.                |
+
+    **How to resolve**
+    
+    1. Review the simulation's persona, mission, and success criteria. Make sure they comply with [Azure's best practices](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/system-message?view=foundry-classic&tabs=top-techniques#summary-of-best-practices).
+
+    2. Ask your Azure OpenAI administrator to review the content filter settings for the environment you're using.
+
+    **Examples**
+    
+    In the **Persona** parameter, you can influence the context the most. The examples in the following table show how to make sure the LLM prompt includes enough context.
+
+    | <div style={{width: '19rem'}}>Accepted persona</div> | <div style={{width: '19rem'}}>Blocked persona</div> |
+    |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | `A customer who frequently uses online ordering platforms and is comfortable navigating digital menus and checkout processes. They communicate clearly when placing orders and prefer efficient interactions. This customer understands standard workflows, including item selection, delivery info entry, and payment options. They prefer payment at delivery and appreciate straightforward ordering experiences.` | `A cash-preferring customer who is unemployed and needs help with their application.` |
+
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Scenarios](/ai/agents/test/simulator/scenarios)
+- [Simulator dashboard](/ai/agents/test/simulator/dashboard)
+- [Simulation mode](/ai/agents/test/interaction-panel/simulation)
+- [Conversations Explorer](/insights/explorers/conversations)
+- [Contact Profiles](/ai/agents/analyze/contact-profiles)

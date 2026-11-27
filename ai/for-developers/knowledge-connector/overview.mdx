@@ -1,0 +1,39 @@
+---
+title: "Knowledge connector API"
+sidebarTitle: "Overview"
+description: "Use the knowledge connector API to import external knowledge into Cognigy."
+keywords: ['knowledge connector', 'knowledge api', 'knowledge source', 'knowledge chunk']
+---
+
+The _knowledge connector API_ is a toolset for developers to create custom [knowledge connectors](/ai/agents/develop/knowledge-ai/knowledge-connectors) and integrate external knowledge databases into Cognigy. The toolset is intended to be used within the [knowledge connector implementation](https://www.npmjs.com/package/@cognigy/extension-tools#user-content-knowledge-connector). This API provides functions to create, update, and delete [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) and the related [knowledge chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk).
+
+## Use cases
+
+- **Create and update knowledge sources** — detect documents that have been created or changed and import them from cloud-based document repositories, for example, SharePoint or Confluence.
+- **API integration** — automate knowledge imports from REST APIs.
+
+## Knowledge connector API functions
+
+### [`upsertKnowledgeSource`](/ai/for-developers/knowledge-connector/upsertKnowledgeSource)
+
+**Syntax:** `api.upsertKnowledgeSource(params)`
+
+Creates or updates a knowledge source with the specified name, description, source tags, and number of knowledge chunks. Supports knowledge synchronization.
+
+### [`createKnowledgeSource`](/ai/for-developers/knowledge-connector/createKnowledgeSource) (deprecated)
+
+**Syntax:** `api.createKnowledgeSource(params)`
+
+Creates a new knowledge source with the specified name, description, source tags, and number of knowledge chunks.
+
+### [`deleteKnowledgeSource`](/ai/for-developers/knowledge-connector/deleteKnowledgeSource)
+
+**Syntax:** `api.deleteKnowledgeSource(params)`
+
+Deletes a knowledge source.
+
+### [`createKnowledgeChunk`](/ai/for-developers/knowledge-connector/createKnowledgeChunk)
+
+**Syntax:** `api.createKnowledgeChunk(params)`
+
+Creates a knowledge chunk in a knowledge source, containing text content and optional chunk metadata.

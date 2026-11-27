@@ -1,0 +1,33 @@
+---
+title: Basic parser
+keywords: ['basic parser', 'text extraction', 'pdf parsing']
+description: "Use the basic parser to extract and split file content into knowledge chunks."
+---
+import ParserHyperlinkLimitation from '/snippets/ai/knowledge-ai/parser-hyperlink-limitation.mdx'
+
+The _Basic Parser_ is a content parser that Knowledge AI uses to extract content from files more effectively. The basic parser splits the extracted content from a file into [knowledge chunks](/ai/agents/develop/knowledge-ai/knowledge-chunk/knowledge-chunk) based on a fixed token length during the creation of a [knowledge source](/ai/agents/develop/knowledge-ai/knowledge-source/overview). Based on our research, this parsing method works best with the **Top K** value set to 5 in the [Search Extract Output](/ai/agents/develop/node-reference/other-nodes/search-extract-output) node.
+
+## Limitations
+
+<ParserHyperlinkLimitation />
+
+## Supported formats
+
+| Cognigy versions | Formats                  |
+|---------------------|--------------------------|
+| 4.79 or later       | PDF, DOCX, PPTX, and TXT |
+| 4.78 and earlier    | PDF, DOCX, and TXT       |
+
+## Availability
+
+- Available in all installations.
+
+## Set up the basic parser
+
+By default, Knowledge AI uses the [advanced parser](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/advanced-parser) for text extraction. To activate the basic parser, select **Basic** from the **Content Parser** list in the **Document Processing** section in **Manage > Settings > Knowledge AI Settings**.
+
+## More information
+
+- [Text extraction with content parsers](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/overview)
+- [Text extraction with the advanced parser](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/advanced-parser)
+- [Text extraction with Azure AI Document Intelligence](/ai/agents/develop/knowledge-ai/knowledge-source/text-extraction/azure-ai)

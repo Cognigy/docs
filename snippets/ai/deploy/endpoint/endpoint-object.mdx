@@ -1,0 +1,32 @@
+### Endpoint configuration object
+
+<Accordion title="`endpoint` object properties">
+
+    | Property              | Type      | Description                                                                                                             |
+    |-----------------------|-----------|-------------------------------------------------------------------------------------------------------------------------|
+    | `_id`                 | `string`  | The endpoint's reference ID.                                                                                            |
+    | `channel`             | `string`  | The endpoint's [channel](/ai/agents/develop/nodes/channels).                                                            |
+    | `URLToken`            | `string`  | The URL Token, found in the [Input object](/ai/agents/deploy/endpoints/inject-and-notify#how-to-use-inject-and-notify). |
+    | `name`                | `string`  | The endpoint's name.                                                                                                    |
+    | `flowId`              | `string`  | The Reference ID of the specified flow to which the endpoint points.                                                    |
+    | `entrypoint`          | `string`  | The entrypoint of the endpoint.                                                                                         |
+    | `active`              | `boolean` | The flag to activate or deactivate the endpoint.                                                                        |
+    | `nluConnectorId`      | `string`  | ID of the selected NLU connector for the endpoint.                                                                      |
+    | `useAnalytics`        | `boolean` | The flag to collect analytics data for the endpoint.                                                                    |
+    | `storeDataPayload`    | `boolean` | The flag to store data payloads into analytics for the endpoint.                                                        |
+    | `useConversations`    | `boolean` | The flag to collect conversation history for the endpoint.                                                              |
+    | `maskIPAddress`       | `boolean` | The flag to mask sensitive IP addresses in input object and analytics data.                                             |
+    | `maskAnalytics`       | `boolean` | The flag to mask sensitive data in analytics for the endpoint.                                                          |
+    | `maskLogging`         | `boolean` | The flag to mask sensitive data in logs for the endpoint.                                                               |
+    | `useContactProfiles`  | `boolean` | The flag to use contact profiles for the endpoint.                                                                      |
+    | `useDashbotAnalytics` | `boolean` | The flag to use Dashbot for collecting analytics data.                                                                  |
+    | `dashbotApikey`       | `string`  | The API key of the Dashbot bot for analytics collection.                                                                |
+    | `dashbotPlatform`     | `string`  | The selected platform of the Dashbot bot for analytics collection.                                                      |
+    | `settings`            | `object`  | Optional endpoint-specific settings. For example, Facebook Page token.                                                  |
+    | `handoverSettings`    | `object`  | Settings to configure a handover provider.                                                                              |
+    | `createdAt`           | `number`  | Unix timestamp when the endpoint was created.                                                                           |
+    | `lastChanged`         | `number`  | Unix timestamp when the endpoint was last modified.                                                                     |
+    | `createdBy`           | `string`  | Email of the user who created the endpoint.                                                                             |
+    | `lastChangedBy`       | `string`  | Email of the user who last modified the endpoint.                                                                       |
+
+</Accordion>

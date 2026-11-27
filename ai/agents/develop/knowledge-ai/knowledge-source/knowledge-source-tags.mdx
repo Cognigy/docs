@@ -1,0 +1,303 @@
+---
+title: Knowledge source tags
+keywords: ['knowledge source tags', 'source tags', 'knowledge search', 'knowledge ai', 'search accuracy']
+description: "Use knowledge source tags to guide knowledge search to relevant knowledge sources."
+---
+
+
+_Knowledge source tags_, also known as source tags, are labels that you can add to your [knowledge sources](/ai/agents/develop/knowledge-ai/knowledge-source/overview) to improve how your agents reply to your customers. With source tags, Knowledge AI's search engine can focus on specific knowledge sources and provide agents with targeted results.
+
+Source tags have the following benefits:
+
+- **Increased search accuracy**. Source tags direct the search engine to specific knowledge sources, ensuring that only the most relevant results are included, which is useful with a large number of knowledge sources.
+- **Flexible tag filtering**. Using `AND` and `OR` operators for source tags refines searches and improves results.
+- **Faster search performance**. Limiting the queried knowledge sources speeds up knowledge queries.
+- **Enhanced content organization**. Categorizing knowledge sources improves information management and retrieval.
+
+## Prerequisites
+
+- You have created a [knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store).
+- You have created a [knowledge source](/ai/agents/develop/knowledge-ai/knowledge-source/overview).
+
+## Limitations
+
+- You can add up to 50 source tags per knowledge source.
+- You can add up to 5 source tags per [Search Extract Output node](/ai/agents/develop/node-reference/other-nodes/search-extract-output).
+
+## Naming guidelines
+
+- Use only lowercase and alphanumeric (a-z, 0-9) characters, underscores, and hyphens.
+- You can include [CognigyScript](/ai/platform-features/cognigyscript) in source tag names. In this case, make sure the CognigyScript input is lowercase with the `.toLowerCase()` method, for example, `{{input.text.toLowerCase()}}`. Using CognigyScript as a source tag name allows your agent to filter knowledge sources dynamically according to the user input.
+
+## Working with source tags
+
+To configure source tags, you need to first add them to a knowledge source in **Design > Knowledge** or directly to the [CTXT file](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt). Then, you need to add the source tag to the [Search Extract Output node](/ai/agents/develop/knowledge-ai/knowledge-search-and-extraction/search-extract-output) in the [flow editor](/ai/agents/develop/projects-and-flows/editor#exploring-the-flow-editor). You can test the knowledge query results in the [interaction panel](/ai/agents/test/interaction-panel/overview).
+
+## Examples
+
+To reproduce the results presented later in this section, follow these steps:
+
+1. Create a new knowledge store.
+2. Upload the following files as knowledge sources:
+    - [CTXT](https://docscognigyassets.blob.core.windows.net/assets/cognigy-voice-copilot-endpoint-sample.ctxt) — the source tags are already in the CTXT file.
+    - [DOCX](https://docscognigyassets.blob.core.windows.net/assets/cognigy-voice-gateway-endpoint-sample.docx) — add the following source tags: `endpoint`, `webchat`, and `text-based`.
+    - [PDF](https://docscognigyassets.blob.core.windows.net/assets/cognigy-webchat-v3-endpoint-sample.pdf) — add the following source tags: `endpoint`, `voice`, and `voice-gateway`.
+    
+    After uploading the files, the knowledge sources have the following source tags:
+
+    | Knowledge sources | Source tags in                 |
+    |-------------------|--------------------------------|
+    | CTXT              | endpoint, voice, copilot       |
+    | DOCX              | endpoint, voice, voice-gateway |
+    | PDF               | endpoint, webchat, text-based  |
+
+3. Navigate to the flow and add the Search Extract Output node. Test the following examples to retrieve information based on the source tags you add to the Search Extract Output node. To track how the output changes with different source tag combinations, use the input `Could you share a list of native endpoints for Cognigy?` for each knowledge source in the interaction panel. To check the output results in the interaction panel, use the `input.knowledgeSearch.topK` input object in **INFO > Input**.
+
+### Example 1
+
+Source tags in the Search Extract Output node: `endpoint`
+
+| Operator | Expected result |
+|----------|-----------------|
+| AND      | All files       |
+| OR       | All files       |
+
+Top-3 Key Results for:
+
+<Accordion title="Both operators">
+
+  ```json
+  "knowledgeSearch": {
+    "topK": [
+      {
+        "text": "Cognigy Voice Copilot endpoint Cognigy Voice Copilot endpoint is a native endpoint designed for voice-based applications within Cognigy. The endpoint manages audio stream transcriptions and integrates seamlessly with Agent Copilot flows. This endpoint splits the audio into user and agent inputs, ensuring accurate updates to the Agent Copilot workspace.",
+        "distance": 0.85143244,
+        "sourceMetaData": {
+          "sourceName": "cognigy-voice-copilot-endpoint.ctxt",
+          "sourceType": "ctxt",
+          "title": "Cognigy Voice Copilot endpoint",
+          "url": "https://www.cognigy.com"
+        },
+        "chunkMetaData": {
+          "image": "https://docs.cognigy.com/_assets/ai/deploy/endpoint-reference/voice-copilot.png",
+          "url": "https://docs.cognigy.com/ai/deploy/endpoint-reference/voice-copilot/"
+        }
+      },
+      {
+        "text": "Cognigy Webchat v3 endpoint is a native endpoint within the Cognigy platform designed to integrate agents directly into your website. This connection allows for seamless interaction between users and agents via the Webchat v3 interface.",
+        "distance": 0.85023737,
+        "sourceMetaData": {
+          "sourceName": "cognigy-webchat-v3-endpoint.pdf",
+          "sourceType": "pdf"
+        },
+        "chunkMetaData": {
+          "firstPage": "1",
+          "lastPage": "1"
+        }
+      },
+      {
+        "text": " Cognigy Voice Gateway endpoint Cognigy Voice Gateway endpoint is a native endpoint within the Cognigy platform that enables agents to interact with users through voice communication. This native or first-party integration connects agents to contact centers or phone numbers, allowing users to speak with the agents instead of writing.",
+        "distance": 0.84896475,
+        "sourceMetaData": {
+          "sourceName": "cognigy-voice-gateway-endpoint.docx",
+          "sourceType": "docx"
+        },
+        "chunkMetaData": {
+          "firstPage": "1",
+          "lastPage": "1"
+        }
+      }
+    ]
+  }
+  ```
+</Accordion>
+
+### Example 2
+
+Source tags in the Search Extract Output node: `endpoint`, `voice`
+
+| Operator | Expected result |
+|----------|-----------------|
+| AND      | CTXT and PDF    |
+| OR       | All files       |
+
+
+Top-3 Key Results for:
+
+<AccordionGroup>
+  <Accordion title="AND">
+
+    ```json
+      "knowledgeSearch": {
+        "topK": [
+          {
+            "text": "Cognigy Voice Copilot endpoint Cognigy Voice Copilot endpoint is a native endpoint designed for voice-based applications within Cognigy. The endpoint manages audio stream transcriptions and integrates seamlessly with Agent Copilot flows. This endpoint splits the audio into user and agent inputs, ensuring accurate updates to the Agent Copilot workspace.",
+            "distance": 0.85143244,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-copilot-endpoint.ctxt",
+              "sourceType": "ctxt",
+              "title": "Cognigy Voice Copilot endpoint",
+              "url": "https://www.cognigy.com"
+            },
+            "chunkMetaData": {
+              "image": "https://docs.cognigy.com/_assets/ai/deploy/endpoint-reference/voice-copilot.png",
+              "url": "https://docs.cognigy.com/ai/deploy/endpoint-reference/voice-copilot/"
+            }
+          },
+          {
+            "text": " Cognigy Voice Gateway endpoint Cognigy Voice Gateway endpoint is a native endpoint within the Cognigy platform that enables agents to interact with users through voice communication. This native or first-party integration connects agents to contact centers or phone numbers, allowing users to speak with the agents instead of writing.",
+            "distance": 0.84896475,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-gateway-endpoint.docx",
+              "sourceType": "docx"
+            },
+            "chunkMetaData": {
+              "firstPage": "1",
+              "lastPage": "1"
+            }
+          },
+          {
+            "text": "Key Features - Automatic Transcription Handling: Receives and processes transcriptions, identifying user and session IDs for precise session management. - Native Integration: As a native endpoint, it is built directly into the Cognigy platform, offering smooth functionality and compatibility with supported handover providers.",
+            "distance": 0.8258752,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-copilot-endpoint.ctxt",
+              "sourceType": "ctxt",
+              "title": "Cognigy Voice Copilot endpoint",
+              "url": "https://www.cognigy.com"
+            },
+            "chunkMetaData": {
+              "url": "https://docs.cognigy.com/ai/deploy/endpoint-reference/voice-copilot/"
+            }
+          }
+        ]
+      }
+    ```
+  </Accordion>
+
+  <Accordion title="OR">
+
+    ```json
+      "knowledgeSearch": {
+        "topK": [
+          {
+            "text": "Cognigy Voice Copilot endpoint Cognigy Voice Copilot endpoint is a native endpoint designed for voice-based applications within Cognigy. The endpoint manages audio stream transcriptions and integrates seamlessly with Agent Copilot flows. This endpoint splits the audio into user and agent inputs, ensuring accurate updates to the Agent Copilot workspace.",
+            "distance": 0.85143244,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-copilot-endpoint.ctxt",
+              "sourceType": "ctxt",
+              "title": "Cognigy Voice Copilot endpoint",
+              "url": "https://www.cognigy.com"
+            },
+            "chunkMetaData": {
+              "image": "https://docs.cognigy.com/_assets/ai/deploy/endpoint-reference/voice-copilot.png",
+              "url": "https://docs.cognigy.com/ai/deploy/endpoint-reference/voice-copilot/"
+            }
+          },
+          {
+            "text": "Cognigy Webchat v3 endpoint is a native endpoint within the Cognigy platform designed to integrate agents directly into your website. This connection allows for seamless interaction between users and agents via the Webchat v3 interface.",
+            "distance": 0.85023737,
+            "sourceMetaData": {
+              "sourceName": "cognigy-webchat-v3-endpoint.pdf",
+              "sourceType": "pdf"
+            },
+            "chunkMetaData": {
+              "firstPage": "1",
+              "lastPage": "1"
+            }
+          },
+          {
+            "text": " Cognigy Voice Gateway endpoint Cognigy Voice Gateway endpoint is a native endpoint within the Cognigy platform that enables agents to interact with users through voice communication. This native or first-party integration connects agents to contact centers or phone numbers, allowing users to speak with the agents instead of writing.",
+            "distance": 0.84896475,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-gateway-endpoint.docx",
+              "sourceType": "docx"
+            },
+            "chunkMetaData": {
+              "firstPage": "1",
+              "lastPage": "1"
+            }
+          }
+        ]
+      }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Example 3
+    
+Source tags in the Search Extract Output node: `voice`, `text-based`
+
+| Operator | Expected result           |
+|----------|---------------------------|
+| AND      | No knowledge chunks found |
+| OR       | All knowledge chunks      |
+
+
+Top-3 Key Results for:
+
+<AccordionGroup>
+  <Accordion title="AND">
+
+    ```json
+    "knowledgeSearch": {
+      "topK": []
+    }
+    ```       
+  </Accordion>
+
+  <Accordion title="OR">
+
+    ```json
+      "knowledgeSearch": {
+        "topK": [
+          {
+            "text": "Cognigy Webchat v3 endpoint is a native endpoint within the Cognigy platform designed to integrate agents directly into your website. This connection allows for seamless interaction between users and agents via the Webchat v3 interface.",
+            "distance": 0.8642316,
+            "sourceMetaData": {
+              "sourceName": "cognigy-webchat-v3-endpoint.pdf",
+              "sourceType": "pdf"
+            },
+            "chunkMetaData": {
+              "firstPage": "1",
+              "lastPage": "1"
+            }
+          },
+          {
+            "text": " Cognigy Voice Gateway endpoint Cognigy Voice Gateway endpoint is a native endpoint within the Cognigy platform that enables agents to interact with users through voice communication. This native or first-party integration connects agents to contact centers or phone numbers, allowing users to speak with the agents instead of writing.",
+            "distance": 0.85569,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-gateway-endpoint.docx",
+              "sourceType": "docx"
+            },
+            "chunkMetaData": {
+              "firstPage": "1",
+              "lastPage": "1"
+            }
+          },
+          {
+            "text": "Cognigy Voice Copilot endpoint Cognigy Voice Copilot endpoint is a native endpoint designed for voice-based applications within Cognigy. The endpoint manages audio stream transcriptions and integrates seamlessly with Agent Copilot flows. This endpoint splits the audio into user and agent inputs, ensuring accurate updates to the Agent Copilot workspace.",
+            "distance": 0.8550185,
+            "sourceMetaData": {
+              "sourceName": "cognigy-voice-copilot-endpoint.ctxt",
+              "sourceType": "ctxt",
+              "title": "Cognigy Voice Copilot endpoint",
+              "url": "https://www.cognigy.com"
+            },
+            "chunkMetaData": {
+              "image": "https://docs.cognigy.com/_assets/ai/deploy/endpoint-reference/voice-copilot.png",
+              "url": "https://docs.cognigy.com/ai/deploy/endpoint-reference/voice-copilot/"
+            }
+          }
+        ]
+      }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Knowledge source](/ai/agents/develop/knowledge-ai/knowledge-source/overview)
+- [Knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store)
+- [CTXT file](/ai/agents/develop/knowledge-ai/knowledge-source/text-formats/ctxt)
+- [Search Extract Output node](/ai/agents/develop/node-reference/other-nodes/search-extract-output)
+- [Interaction panel](/ai/agents/test/interaction-panel/overview)

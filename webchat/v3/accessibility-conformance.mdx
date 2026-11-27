@@ -1,0 +1,65 @@
+---
+title: 'Webchat: Accessibility Conformance Report'
+sidebarTitle: Conformance report (VPAT)
+description: "Find the Webchat Accessibility Conformance Report (VPAT), the scope and methods of the evaluation, known limitations with workarounds, and how to report accessibility issues."
+keywords: ['vpat', 'accessibility conformance report', 'wcag 2.2', 'known limitations', 'webchat accessibility contact']
+---
+
+The conformance of Webchat is documented in an Accessibility Conformance Report based on the Voluntary Product Accessibility Template (VPAT) version 2.5, WCAG edition. The report covers WCAG 2.0, 2.1, and 2.2 at Level A and Level AA.
+
+- [Accessibility Conformance Report for Webchat v3.53.0](https://trust.cognigy.com/resources?s=u6qfz4bco8q8hfir4yo757&name=ni-ce-cognigy-webchat-vpat-october-2026) in the Cognigy Trust Center.
+- [Webchat release notes](https://github.com/Cognigy/Webchat/releases). Accessibility improvements are listed under the **Accessibility** heading of each release.
+
+## Scope and evaluation methods
+
+The report covers 28 screens, flows, and message types of Webchat, from the launcher button and the Privacy Notice to every message type, including adaptive cards, audio and video players, Gallery and List messages, Datepickers, Quick Replies, streamed Markdown, and xApp buttons. The evaluation combined the following methods:
+
+- Manual assessment with Chrome 153 on Windows 11, including exclusive use of the keyboard.
+- Automated testing with the axe DevTools browser extension, axe-core version 4.13.0.
+- Assistive technologies: NVDA 2026.1.1 with Chrome 153 on Windows 11, and VoiceOver with Safari 27 on macOS 27.
+
+Webchat is released independently of the Cognigy.AI platform. The version in the report title is the Webchat package version against which the content was verified.
+
+## Known limitations
+
+The report rates two success criteria as `Partially Supports`. For both, a workaround is available.
+
+| Success criterion | Limitation | Workaround |
+|---|---|---|
+| 3.3.2 Labels or Instructions | The comment field in the Chat Options rating section doesn't have a persistent visible label. It relies on placeholder text, which disappears when the user starts typing. The placeholder text is also the accessible name of the field, so screen reader users hear it when the field receives focus.<br /><br /><img src="/_assets/webchat/v3/a11y-rating-comment-field.png" alt="The Chat options screen in Webchat with the heading 'Please rate your chat experience', thumbs up and thumbs down buttons, a comment field showing the placeholder 'Type something here...', and a disabled Send feedback button." width="320" /> | In the endpoint, under **Chat Options** > **Conversation Rating**, set the **Rating Comment Placeholder Text** to an instruction, for example, `Tell us what worked and what didn't`. Keep the **Rating Title Text** descriptive. |
+| 3.1.2 Language of Parts | When messages are translated at runtime, for example, through a Cognigy translation provider, the message content doesn't include a `lang` attribute, and there is currently no setting to add it. Screen readers use the language of the embedding page. | Set the `lang` attribute of the embedding page to the language of the conversation. If parts of a message are in another language, wrap them in an element with a `lang` attribute in the message HTML. |
+
+## Third-party content
+
+Embedded YouTube content is a third-party element. YouTube determines its accessibility.
+
+## Review accessibility responsibilities
+
+The report explains for each WCAG success criterion how Webchat supports it. For many criteria, conformance of your deployed Webchat also depends on your configuration and content. The following table summarizes these criteria.
+
+| Success criterion | Provided by Webchat | Your responsibility | Read more |
+|---|---|---|---|
+| 1.1.1 Non-text Content | Renders alternative text, names all controls, hides decorative icons. | Provide alternative text for every image. | [Images](/webchat/v3/accessibility-messages#images) |
+| 1.2.1 to 1.2.5 Time-based Media | Transcript download, captions, media descriptions. | Provide transcripts and `.vtt` captions. Provide audio-described video where needed. | [Audio](/webchat/v3/accessibility-media#audio)<br />[Video](/webchat/v3/accessibility-media#video) |
+| 1.3.1 Info and Relationships | Semantic structure for messages, lists, dialogs, and headings. | Use structural HTML and heading styles in messages and adaptive cards. | [Structure message content](/webchat/v3/accessibility-messages#structure-message-content)<br />[Adaptive cards](/webchat/v3/accessibility-messages#adaptive-cards) |
+| 1.3.5 Identify Input Purpose | Webchat's own interface doesn't ask for personal data. | Adaptive card fields can't be autofilled by browsers. To collect personal data, such as a name or an email address, use an xApp. | [xApp overlay](/xApps/build/overlay) |
+| 1.4.3 Contrast (Minimum), 1.4.11 Non-text Contrast | Default colors meet both ratios. | Check custom colors and Home Screen backgrounds. | [Maintain color contrast](/webchat/v3/accessibility-settings#maintain-color-contrast) |
+| 1.4.5 Images of Text | No images of text in Webchat. | Don't send images that contain text. | [Images](/webchat/v3/accessibility-messages#images) |
+| 2.2.2 Pause, Stop, Hide | Pause button for the launcher animation, reduced motion support. | Enable the pause button when you use an icon animation. Don't send looping GIFs. | [Activate the launcher animation pause button](/webchat/v3/accessibility-settings#activate-the-launcher-animation-pause-button)<br />[Images](/webchat/v3/accessibility-messages#images) |
+| 2.3.1 Three Flashes or Below Threshold | No flashing content. | Don't send flashing images or videos. | [Images](/webchat/v3/accessibility-messages#images) |
+| 2.4.2 Page Titled, 3.1.1 Language of Page | Not applicable to Webchat. | Set the title and `lang` attribute of the embedding page. | [Configure the web page that embeds Webchat](/webchat/v3/accessibility-settings#configure-the-web-page-that-embeds-webchat) |
+| 2.4.4 Link Purpose (In Context) | Named links and buttons, `Opens in new tab` announcement on buttons. | Write meaningful link and button texts. | [Links and buttons](/webchat/v3/accessibility-messages#links-and-buttons) |
+| 2.4.6 Headings and Labels | Screen titles and the Home Screen welcome text are exposed as headings. | Write descriptive chat and screen titles. | [Structure message content](/webchat/v3/accessibility-messages#structure-message-content) |
+| 3.1.2 Language of Parts | Partially supported. See [Known limitations](/webchat/v3/accessibility-conformance#known-limitations). | Translate aria labels. Add `lang` attributes to passages in other languages. | [Translate aria labels and screen reader texts](/webchat/v3/accessibility-settings#translate-aria-labels-and-screen-reader-texts)<br />[Known limitations](#known-limitations) |
+| 3.2.6 Consistent Help | Not applicable to Webchat. | Place the launcher consistently across your pages. | [Configure the web page that embeds Webchat](/webchat/v3/accessibility-settings#configure-the-web-page-that-embeds-webchat) |
+| 3.3.1 to 3.3.4 Input Assistance | Delete actions require confirmation. Input errors are shown as text. | Provide labels, error messages, and confirmation in adaptive cards and xApps. | [Adaptive cards](/webchat/v3/accessibility-messages#adaptive-cards)<br />[Make custom plugins, xApps, and Extensions accessible](/webchat/v3/accessibility-messages#make-custom-plugins-xapps-and-extensions-accessible) |
+| 3.3.8 Accessible Authentication (Minimum) | No authentication in Webchat. | Don't require cognitive function tests in authentication that you build into Flows or xApps. | [Make custom plugins, xApps, and Extensions accessible](/webchat/v3/accessibility-messages#make-custom-plugins-xapps-and-extensions-accessible) |
+
+## Contact
+
+For questions about the accessibility of Webchat, or to report an accessibility issue, create a ticket with [Cognigy Support](https://support.cognigy.com/) or open an issue in the [Webchat repository](https://github.com/Cognigy/Webchat/issues) on GitHub.
+
+## More information
+
+- [Webchat: test accessibility](/webchat/v3/accessibility-testing)
+- [xApp overlay](/xApps/build/overlay)

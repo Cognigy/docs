@@ -1,0 +1,158 @@
+---
+title: System prompt
+keywords: ['system prompt', 'custom system prompt', 'prompt variables', 'CognigyScript', 'Advanced tab', 'agent editor', 'Experimental']
+description: View the system prompt that the model receives on every turn, or replace it with your own prompt and variables.
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+The _system prompt_ provides the full prompt that the model receives on every turn, enabling you to inspect it or replace it with your own. You manage it in the **System prompt** section of the **Advanced** tab in the agent editor. The **Advanced** tab is for experienced builders, and the **System prompt** section is marked **Experimental**.
+
+Hooks, the other **Advanced** tab section, runs a Flow before each message. See [Hooks](/ai/agents/develop/hooks).
+
+Key advantages include:
+
+- **Visibility.** See exactly what the model receives, including the estimated token count.
+- **Control.** Replace the generated prompt with your own, and insert agent data and CognigyScript with variables.
+
+## Prerequisites
+
+Before using the system prompt, ensure the following:
+
+1. You have an agent.
+
+## Restrictions
+
+- The system prompt is **Experimental** and not intended for production use.
+- The system prompt can't be empty and can be at most 32 KB (32,768 bytes). Characters outside basic ASCII count as more than one byte.
+- If the prompt can't be built, for example because it renders empty, exceeds 256 KiB, or its CognigyScript can't be evaluated in time, that model call uses the default prompt instead.
+
+## How to use
+
+### View the system prompt
+
+By default, the system prompt is generated from the agent's configuration: name, job, persona and communication style, description, instructions, tools, knowledge context, skills, handover, voice rules, the Contact Profile, and guardrails. It also contains fixed instructions, including how to read the current time and not to disclose tools or skills.
+
+Handover data, voice call rules, and the Contact Profile are added automatically during the conversation. The current time isn't part of the system prompt. It is appended to the latest user message as `[Current time: <RFC 3339 timestamp>, <weekday> (<timezone>)]`, and the default prompt explains how to read it. A custom prompt keeps the time on the user message, but includes the explanation only if you keep that text.
+
+Each model call sends the system prompt first, then the conversation history, then the latest user message. Turn context from a [pre-Turn Flow](/ai/agents/develop/hooks) and the current time are added to the user message, not to the system prompt, so they reach the model whatever your custom prompt contains. Tools and skills are sent to the model as callable tools, separately from the prompt text.
+
+To view the system prompt:
+
+1. Open the agent and select the **Advanced** tab.
+2. In the **System prompt** section, read the read-only preview.
+3. Under **Prompt view**, select a view:
+   - **Edit** (default): the template, with its variables.
+   - **Preview**: the prompt as the model receives it.
+4. To copy the view on screen, select the copy icon. To see more of it, select the expand icon.
+
+The card shows the size of the prompt, for example `14812 characters` and `~3704 tokens`. The token count is an estimate: the number of characters divided by 4, rounded up. It's a minimum, because CognigyScript and the live sections are filled in during the conversation and aren't counted. Switching views doesn't send a new request.
+
+### Customize the system prompt
+
+Customizing replaces the generated prompt with your own text. The custom prompt becomes the source of truth instead of the agent's configuration.
+
+Your custom prompt starts as a copy of the default prompt. Its variables keep following the agent's settings, but its fixed text doesn't. For example, if you add knowledge to the agent after you customize, your prompt has no knowledge instructions. To pick up such changes, edit the text, or reset to the default prompt and customize again.
+
+<Warning>
+  Editing the system prompt can break tools, skills, knowledge, and guardrails, and can make the agent behave unsafely. A custom prompt contains tools, skills, knowledge text, and guardrails only if the template includes their variables. Tools and skills stay callable even if the prompt text doesn't mention them.
+</Warning>
+
+To customize the system prompt:
+
+1. In the **System prompt** section of the **Advanced** tab, select **Customize**.
+2. In the **Customize the system prompt?** dialog, select **I understand the risk**.
+3. Select **Continue**. A full-screen editor opens with the generated default prompt as the starting text.
+4. Edit the text. The row with the **Edit** and **Preview** tabs shows the size of the rendered prompt in characters and estimated tokens. The counts update shortly after you stop typing. Use the **Edit** and **Preview** tabs to move between writing and checking.
+5. Select **Save changes**. The notification **System prompt saved.** appears.
+6. To leave the editor, select **Back to Advanced**. If you opened the editor from the **Configuration** tab, the button reads **Back to Configuration**.
+
+After you save, the card shows a **Custom** badge next to **Experimental**, and **Edit** replaces **Customize**. The **Configuration** tab shows the banner **A custom system prompt is active**, with a **View or edit system prompt** link. A field whose variable the custom prompt doesn't include shows an **Ignored** badge, for example the agent's name without `[[agent.name]]`. The persona shows **Partly ignored** when only one of its two variables is missing. Hover over the badge to see which variable is missing.
+
+In **Preview**, the editor shows the prompt as the model receives it:
+
+- Contact Profile, handover, Flow context, and input variables are empty.
+- Live sections are marked where they go.
+- CognigyScript in double curly braces isn't evaluated. A marker shows where each expression or snippet runs. Hover over the marker to see the whole script.
+- Unknown variables are left out of the prompt and listed in the preview.
+
+The editor rejects an empty prompt with **The system prompt cannot be empty.** It rejects a prompt over 32 KB with **The system prompt is too long. It can be at most 32 KB.**
+
+If a guardrail switch is on but the custom prompt has neither `[[agent.guardrails]]` nor that guardrail's own variable, the **Guardrails** tab warns that the switch has no effect. See [Guardrails](/ai/agents/develop/guardrails).
+
+### Insert variables
+
+In the editor, type `[[` or select **Insert a variable or snippet** in the editor's top corner to open the variables menu. The menu has a **Variables** tab and a **Snippets** tab. To open it on the **Snippets** tab, press Ctrl+Space. The hint under the editor reads **Use [[ ]] for agent values and {{ }} for CognigyScript.**
+
+Snippets are CognigyScript and run during the conversation. In an agent's prompt, the input contains only the text, data, channel, endpoint type, entrypoint, user ID, session ID, URL token, and IP address. Snippets that read other input values, such as Intent, Intent Score, or the slot snippets, render empty.
+
+The system prompt supports two syntaxes.
+
+Square brackets (`[[ ]]`) insert agent data, filled from the agent's settings:
+
+| Variable | Inserts |
+|---|---|
+| `[[agent.name]]` | The agent's name. |
+| `[[agent.job]]` | The job. |
+| `[[agent.description]]` | The description. |
+| `[[agent.instructions]]` | The instructions. |
+| `[[agent.tools]]` | The tools section. See [Tools](/ai/agents/develop/tools). |
+| `[[agent.skills]]` | The skills. See [Skills](/ai/agents/develop/skills). |
+| `[[agent.knowledgeContext]]` | The knowledge context. See [Knowledge](/ai/agents/develop/knowledge). |
+| `[[agent.guardrails]]` | The guardrails. See [Guardrails](/ai/agents/develop/guardrails). |
+| `[[agent.guardrails.<switch>]]` | One guardrail, while its switch is on. The switch names are `avoidHarmfulContent`, `avoidUngroundedContent`, `avoidCopyrightInfringements`, and `preventJailbreakAndManipulation`. |
+| `[[persona.name]]` | The persona's name in the builder. It isn't the agent's name. |
+| `[[persona.personality]]` | The personality. See [Brand persona](/ai/agents/develop/brand-persona). |
+| `[[persona.communicationStyle]]` | The communication style. |
+| `[[conversation.liveSections]]` | The live sections. See [Live sections](#live-sections). |
+| `[[agent.tools.<id>]]` and `[[agent.skills.<id>]]` | One tool or one skill, where `<id>` is its reference ID. Add `.name` or `.description` for one field, or `.parameters` for a tool's parameter list. |
+| `[[profile.<field>]]` | A Contact Profile field. Only fields the agent is allowed to use are available, and nested paths such as `[[profile.address.city]]` stay empty. Each value is flattened to one line and capped at 500 characters. See [Contact profiles](/ai/agents/analyze/contact-profiles). |
+| `[[handover.<name>]]` | A value a Flow handed over. Each value is flattened to one line and capped at 500 characters. Values that the Flow marks as internal stay empty. |
+
+Double curly braces (`{{ }}`) are for CognigyScript only. They are evaluated before every model call, for example `{{context.orderId}}` or `{{ci.text}}`. An expression that returns an error renders empty.
+
+Keep these rules in mind:
+
+- Flow context and input values don't work in square brackets. `[[context.x]]` and `[[input.x]]` stay empty. Use CognigyScript instead.
+- Agent data inserted into the prompt is never evaluated as CognigyScript.
+- Double curly braces don't insert agent data. `{{agent.name}}` inserts nothing. Use `[[agent.name]]`.
+- `{{profile.<field>}}` reads the whole Contact Profile, while `[[profile.<field>]]` inserts only the fields the agent is allowed to use. With Contact Profiles off, both are empty.
+- An expression can change `context` for the expressions after it in the same prompt, but the change isn't saved to the conversation.
+
+#### Live sections
+
+Handover data, voice call rules, and the Contact Profile are added during the conversation. `[[conversation.liveSections]]` marks where they go. If the template has no such variable, they are appended at the end, and the editor shows an info note. Only the first occurrence is filled. Live sections don't count toward the 256 KiB limit on the rendered prompt. For voice rules, see [Voice](/ai/agents/develop/voice-configuration).
+
+Keep `[[conversation.liveSections]]` above `[[agent.guardrails]]`, as in the default prompt. The guardrail against manipulation covers only the text above it, and the Contact Profile and handover data come from the conversation.
+
+### Reset to the default prompt
+
+<Warning>
+  Resetting deletes your custom prompt. Copy it first if you need it. The next time you customize, you must acknowledge the risk again.
+</Warning>
+
+1. In the **System prompt** section, select the ⋮ menu.
+2. Select **Reset to default prompt**.
+3. In the **Reset to the default prompt?** dialog, select **Copy my text** if you want to keep a copy.
+4. Select **Reset**. To keep the custom prompt, select **Cancel**.
+
+The notification **The agent now uses the default prompt.** appears.
+
+## Test a custom prompt
+
+1. In the editor, select **Preview** to check the prompt with the agent's current settings. Contact Profile, handover, Flow context, and input values are empty there, and CognigyScript isn't evaluated. Fix any unknown variables that the preview lists.
+2. Chat with the agent in the Interaction Panel. A turn that used the custom prompt shows a **Custom** badge. To see the prompt that was sent and whether it fell back to the default prompt, open the LLM call's system prompt details. See [Tracing](/ai/agents/test/interaction-panel/tracing#system-prompt-details).
+3. Open the [Logs](/ai/agents/test/logs) page. Cognigy logs an entry when the prompt has unknown variables, when it uses agent data in double curly braces, and when a model call used the default prompt because the custom prompt was empty, over 256 KiB, or couldn't be built.
+
+## More information
+
+- [Hooks](/ai/agents/develop/hooks)
+- [Guardrails](/ai/agents/develop/guardrails)
+- [Skills](/ai/agents/develop/skills)
+- [Tools](/ai/agents/develop/tools)
+- [Brand persona](/ai/agents/develop/brand-persona)
+- [Knowledge](/ai/agents/develop/knowledge)
+- [Voice](/ai/agents/develop/voice-configuration)
+- [Contact profiles](/ai/agents/analyze/contact-profiles)

@@ -1,0 +1,317 @@
+---
+title: Tools
+keywords: ['agent tools', 'tool call', 'mcp', 'knowledge tool', 'http request tool', 'send email', 'agent builder']
+description: Tools let an agent act. Add tools so the agent can call an API, search knowledge, send an email, or route the conversation to a Flow.
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+In Agent Builder, a _tool_ is an action that an agent can run. Without tools, an agent can only talk. With tools, it can look up an order, search a Knowledge Store, or send a confirmation email.
+
+The agent decides when to call a tool. You describe what each tool does and when to use it. The model then chooses based on the conversation.
+
+## Concepts
+
+A tool is a project-level resource. You create it once and attach it to one or more agents, or bundle it in a [skill](/ai/agents/develop/skills).
+
+A tool includes:
+
+- **Name**. Identifies the tool.
+- **Description**. Tells the agent when to call the tool.
+- **Parameters**. Values that the tool needs to run, such as a URL or an order number. For each parameter, you decide whether the agent fills it in or you set it yourself.
+
+### How a tool call works
+
+1. The agent decides that a tool is needed. It collects the values that the tool needs.
+2. What happens depends on the tool type. For example, Cognigy sends an HTTP request, routes the conversation to a Flow, or calls a Model Context Protocol (MCP) server.
+3. The result goes back to the agent as text.
+4. The agent uses the result to decide what to say or do next.
+
+If a tool fails, the agent receives an error message and can continue.
+
+### Tools compared with skills
+
+| Aspect | Tool | Skill |
+|--------|------|-------|
+| What it is | A single action, such as an HTTP request or an email. | A focused behavior with instructions. It can bundle tools. |
+| Visibility | When the tool is attached and enabled. | When the agent activates the skill. |
+| Reuse | You can attach one tool to many agents. | You can attach one skill to many agents. |
+
+A tool that you attach only to a skill stays hidden until the agent activates that skill. After that, the tool stays available for the rest of the session. For more information, see [Skills](/ai/agents/develop/skills).
+
+## Tool types
+
+In Agent Builder, you can use the following tool types:
+
+<CardGroup cols={2}>
+  <Card title="System tools">
+    Tools that Cognigy provides: **HTTP Request**, **Knowledge Search**, **Send Email**, and **Route to Flow**.
+  </Card>
+  <Card title="Voice tools">
+    Tools that change how an agent behaves on a voice call: **Hang up**, **Transfer call**, and **Play audio**.
+  </Card>
+  <Card title="MCP tools">
+    Tools that you import from a remote [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server.
+  </Card>
+</CardGroup>
+
+## Limitations and restrictions
+
+### Restrictions
+
+- The tool name is required. It must have 1 to 200 characters and can't contain these characters: `\ / : * ? " < > | ¥`.
+- The tool description is required.
+- Tool calls in one turn run one after another, not in parallel.
+- HTTP Request tools send the payload as JSON only. Other body formats, such as form data or XML, aren't supported.
+- Send Email tools send plain text only. Markdown and HTML appear in the email as written.
+- You can't create MCP tools directly. Import them from an MCP server.
+- Cognigy doesn't import MCP tools whose schema uses `$ref`, `$dynamicRef`, `$recursiveRef`, `$defs`, or `definitions`. Cognigy imports all other tools and shows the reason next to each tool that it can't import.
+
+### Limitations
+
+- A turn has a limit on tool rounds. When the limit is reached, the agent can't call more tools and must answer.
+- You can set the timeout for an MCP server with the API only. The timeout is 1 to 30 seconds. The default value is 12 seconds.
+- Cognigy tries to send an email up to 3 times. Other tools aren't retried.
+
+## Working with tools
+
+<Tabs>
+  <Tab title="GUI">
+
+    ### Find your tools
+
+    1. In your Project, go to **Design** > **Agent** and select an agent.
+    2. Open the **Tools** tab.
+
+    The **Tools on this agent** list shows the name, type, skill, and status of each tool. The **Skill** column shows **Direct** for tools that you attach to the agent. For other tools, it shows the number of skills that use the tool.
+
+    - To search, enter a name or a word from the description in the **Search tools** field.
+    - To filter, click **Filter** and select **All**, **System**, **Voice**, or **Custom**. Each option shows the number of tools.
+    - To sort, click the **Tool** column.
+    - To change the page size, select 10, 20, 30, or 50 rows per page. The default is 10.
+
+    ### Add a tool
+
+    1. On the **Tools** tab, click **Add Tool**.
+    2. In the **Add to this agent** window, select a tab: **System Tools** or **Voice Tools**. The **Custom Tools** tab isn't covered here.
+    3. Select a tool. The **Create New Tool** form opens.
+    4. Enter the **Name** and the **Description**. Both are required.
+    5. Configure the parameters. For the settings of each type, see [Configure tools](#configure-tools). For more information about parameters, see [Parameters](#parameters).
+    6. Click **Save**. You can save only when the form is valid.
+
+    If you leave the form with unsaved changes, Cognigy asks whether you want to discard them.
+
+    ### Edit a tool
+
+    Open the **More options** menu of the tool and click **Edit**.
+
+    ### Clone, disable, or delete a tool
+
+    Open the **More options** menu of a tool and select an action:
+
+    - **Clone** creates a copy of the tool.
+    - **Disable** keeps the tool attached and configured but hides it from the agent. Select **Enable** to turn it on again. The setting applies to this agent only.
+    - **Delete** removes the tool from the project. It also removes the tool from every agent and skill that uses it. You can't undo this action.
+
+  </Tab>
+  <Tab title="API">
+
+    You can list, view, create, edit, and delete tools with the Cognigy API. You can also attach tools to an agent with the `toolReferenceIds` field of the agent, and bundle them in a skill with the `bundledTools` field of the skill.
+
+    To list tools, you can filter by name. You can also list only the tools that are available to one agent. You can sort the list by `name`, `lastChangedAt`, or `createdAt`, and request up to 100 tools at a time.
+
+    You can't create MCP tools through the tools endpoint. Create an MCP server and import its tools instead.
+
+  </Tab>
+</Tabs>
+
+## Parameters
+
+Most parameters have a switch with two filling modes:
+
+- **AI filled**. The agent provides the value on every call.
+- **User defined**. You set the value, and the agent doesn't see it. Use this mode for fixed values and for Connections, so that the model can't see credentials.
+
+Some parameters have no switch and a fixed mode. For example, a Connection parameter is always **User defined**.
+
+To add your own parameter, click **Add** in **Additional Parameters**. Enter a name, a description, a type, and the filling mode.
+
+The parameter type defines which control you see:
+
+| Type | Control and rules |
+|------|-------------------|
+| Text | A single-line text field. |
+| Select | A list of options. |
+| JSON | A multi-line field. The value must be valid JSON. |
+| Key-value pair | A list of keys and values. Each row needs a key. |
+| Number | A number field. The value can't be negative. |
+| Boolean | A list with the values `true` and `false`. You must select one. |
+| Text array | A list of text values. |
+| Connection | A [Connection](/ai/platform-features/connections) that stores credentials. |
+
+In a **User defined** value, you can insert a value that the agent provides with the placeholder `<<parameterName>>`. For example, if the agent provides the parameter `city`, the value `https://api.example.com/weather/<<city>>` becomes `https://api.example.com/weather/Paris` when the agent provides `Paris`.
+
+## Configure tools
+
+<AccordionGroup>
+<Accordion title="HTTP request">
+  Sends an HTTP request to an external URL and returns the response.
+
+  | Parameter | Set by | Description |
+  |-----------|--------|-------------|
+  | Method | You | `GET`, `POST`, `PUT`, `DELETE`, `PATCH`, `HEAD`, or `OPTIONS`. The default value is `GET`. The agent can't change the method. |
+  | Url | Agent | The full URL, including the scheme, for example, `https://api.example.com/orders`. |
+  | Headers | You | Key-value pairs. The default value is empty. |
+  | Payload | You | Key-value pairs that Cognigy sends as JSON for `POST`, `PUT`, and `PATCH` requests. Cognigy adds the `Content-Type: application/json` header if it's missing. |
+  | Auth | You | An optional Connection of the type Custom Header for HTTP Requests or OAuth 2.0 client credentials. The Connection header replaces a header with the same name in **Headers**. To create a Connection, click **Create connection** next to the list. |
+
+  The result contains the `status`, `statusText`, `headers`, and `data` of the response. `data` is parsed JSON, or text if the body isn't JSON. If the request fails, the agent receives an error that starts with the method and URL.
+</Accordion>
+
+<Accordion title="Knowledge search">
+  Searches the Knowledge Stores of the project for passages that are relevant to a query.
+
+  | Parameter | Set by | Description |
+  |-----------|--------|-------------|
+  | Query | Agent | The search text. Required. |
+  | Top K | You | The number of results. The default value is `5`. |
+  | Limit to knowledge stores | You | The Knowledge Stores to search. If you leave it empty, the tool searches all Knowledge Stores. |
+  | Language | You | The language of the search. The default value is `en-US`. |
+
+  Each result contains the text of the passage, a distance value, and the metadata of the source and the chunk. For more information about knowledge for agents, see [Knowledge](/ai/agents/develop/knowledge).
+</Accordion>
+
+<Accordion title="Send email">
+  Sends an email with a subject and message that the agent provides. You set the recipient, Cc, Bcc, and priority.
+
+  | Parameter | Set by | Description |
+  |-----------|--------|-------------|
+  | Recipient | You | One or more addresses, separated by commas. Required. |
+  | Cc, Bcc | You | Optional addresses, separated by commas. |
+  | Priority | You | `high`, `normal`, or `low`. The default value is `normal`. |
+  | Subject | Agent | A single line without control characters. Required. |
+  | Message | Agent | Plain text. Required. |
+
+  The tool is available only if your environment can send email. Cognigy tries to send the email up to 3 times. The result contains the status `sent` or `failed`, the message ID, and the number of attempts. If the email fails, the agent receives only a general error category.
+</Accordion>
+
+<Accordion title="Route to flow">
+  Routes the conversation to a Flow of your project. Use it for scripted processes, such as a payment, a form, or an identity check. Routing ends the agent turn, and the agent can't call other tools in the same turn.
+
+  | Parameter | Set by | Description |
+  |-----------|--------|-------------|
+  | Select flow | You | The Flow to route the conversation to. The Flow must be in the same project. Required. |
+  | Handoff message | Agent | The message that the agent sends to the user before the Flow takes over. |
+  | Flow start message | You | An optional text that the Flow receives as its first input. If you leave it empty, the Flow waits for the user. |
+  | History mode | You | How much of the conversation the Flow receives: none (default), last turn, an AI-generated summary, or the full conversation. |
+
+  You can also use the tool on voice calls.
+
+  To see this tool in the **Add to this agent** window, turn on **Enable Route to Flow tool** in **Manage** > **Settings** > **Agent Settings**. The setting is off by default.
+</Accordion>
+
+<Accordion title="Voice tools">
+  Voice tools change how the agent behaves during a voice call. They let the agent override the voice defaults mid-call. The defaults themselves live in Voice Studio. The agent doesn't call them like other tools. They're available only on the voice channel.
+
+  - **Hang up**. In **AllowedReasons**, select the reasons that allow the agent to end the call: `caller_said_goodbye`, `task_complete`, `caller_declined_further_help`, or `cannot_help`. All four are on by default. Keep at least one reason selected. In **Farewell**, either the agent fills in the farewell message, or you set a fixed one.
+  - **Transfer call**. Enter the **SipUri** of the transfer destination. Without a SIP URI, the agent can't transfer calls. In **TimeoutSeconds**, set the timeout in seconds. The default value is 30. In **MediaPath**, select the media path: `fullMedia` (default), `partialMedia`, or `noMedia`.
+  - **Play audio**. In **AudioClips**, add at least one named audio clip. Each clip needs a public `http` or `https` address. In **Intro** and **Outro**, you can add an optional sentence before and after all clips.
+</Accordion>
+
+<Accordion title="MCP tool">
+  An MCP server gives your agents a set of tools. You connect the server once, and then import its tools.
+
+  1. On the **Tools** tab, open the **MCP Server** sub-tab and click **Connect a server**. If you already have a server, click **Connect MCP server**.
+  2. Enter the following:
+     - **Server name**. Required. For example, `GitHub`.
+     - **Server URL**. Required. It must start with `http` or `https` and can have up to 2048 characters, for example, `https://my-mcp-server.com/mcp`.
+     - **Authentication**. Select **None**, **OAuth 2.0**, or **Custom Header**. For the last two, select a **Connection**.
+  3. Select **I trust this server**. Cognigy doesn't verify MCP servers.
+  4. Click **Connect server**. Cognigy registers the server and opens **Edit MCP server**.
+  5. In the **Discovered tools** list, select the tools to import. You can search for tools, and use **Select all** and **Deselect all**. Cognigy labels each tool **New**, **Changed**, or **No longer offered**.
+  6. Click **Save changes**. Cognigy imports the selected tools.
+
+  To compare your tools with the server, click **Check for updates**. The server list shows the status of each server: **Out of sync**, **Couldn't reach**, **Refused**, or **Couldn't check**.
+
+  You can edit the name, description, and parameters of an imported tool.
+
+  <Warning>
+  If the server no longer offers a tool and you save a selection without it, Cognigy removes the tool from the project. Cognigy also removes it from every agent and skill that uses it. If you delete a server, Cognigy deletes all of its imported tools. You can't undo these actions.
+  </Warning>
+</Accordion>
+</AccordionGroup>
+
+## Writing a good tool description
+
+The agent relies on the description to decide whether to call the tool. State what the tool does, when the agent should call it, and what it returns. Also say when the agent shouldn't use it. For a Knowledge Search tool, name the subject area, for example, appliances instead of everything.
+
+If you add more than one tool of the same type, make each description distinct. Vague or overlapping descriptions can cause an agent to call the wrong tool.
+
+If two tools on one agent have the same name, the **Tools** tab shows the **Duplicate name** badge. Rename one of them so that the agent can tell them apart.
+
+## Controlling when tools run
+
+You control when the agent can use a tool in the following ways:
+
+- **Add or delete the tool**. The agent can use only the tools that you add to it or to one of its skills.
+- **Disable the tool**. A disabled tool stays attached but is hidden from the agent. This applies to tools that you attach directly and to tools in skills.
+- **Bundle the tool in a skill**. The tool becomes available only after the agent activates the skill.
+- **Write the description**. The description guides the agent on when to call the tool and when not to.
+
+## Examples
+
+<AccordionGroup>
+<Accordion title="Check an order status with an HTTP request tool">
+  | Field | Value |
+  |-------|-------|
+  | Name | `check-order-status` |
+  | Description | Use this tool to look up the status of an order. Call it when the customer asks where their order is. It returns the status and the expected delivery date. Don't use it for returns. |
+  | Method | `GET` |
+  | URL | The agent fills in this value, for example, `https://api.example.com/orders/12345`. |
+  | Auth | A Connection that stores the API key. |
+</Accordion>
+
+<Accordion title="Reschedule a delivery with an HTTP request tool">
+  | Field | Value |
+  |-------|-------|
+  | Name | `reschedule-delivery` |
+  | Description | Books a new delivery date and time window for a verified Acme Express shipment through On Demand Delivery. This tool changes the booking. Call it only when both of the following are true: (1) In your previous message, you asked the customer to confirm a specific date and window from Get Delivery Options. (2) The latest message of the customer clearly says yes. If the customer only names a date, don't call this tool. First ask for confirmation and wait. Returns `ok`, `newDeliveryDate`, `window`, `confirmationId`, and `notes`. If `ok` is false, `availableDates` lists the valid dates. |
+  | Method | `POST` |
+  | URL | `https://api.example.com/acme/reschedule` |
+  | Payload | Key-value pairs: `date` = `<<date>>`, `waybill` = `<<waybill>>`, `window` = `<<window>>`. |
+  | Additional parameter `waybill` | The 10-digit Acme waybill number of the verified shipment, digits only. The agent fills in this value. |
+  | Additional parameter `date` | The delivery date that the customer confirmed, in `YYYY-MM-DD` format, taken from Get Delivery Options. The agent fills in this value. |
+  | Additional parameter `window` | The delivery time window that the customer confirmed, for example, `09:00-18:00`, taken from Get Delivery Options. The agent fills in this value. |
+
+  Get Delivery Options is another tool of this example agent. It isn't a built-in tool.
+</Accordion>
+
+<Accordion title="Answer return questions with a knowledge search tool">
+  | Field | Value |
+  |-------|-------|
+  | Name | `search-returns-policy` |
+  | Description | Use this tool to answer questions about returns and refunds. Call it before you answer a returns question. |
+  | Limit to knowledge stores | The Knowledge Store that contains your returns policy. |
+  | Top K | `5` |
+</Accordion>
+
+<Accordion title="Send a confirmation email with a send email tool">
+  | Field | Value |
+  |-------|-------|
+  | Name | `send-confirmation-email` |
+  | Description | Use this tool after the customer confirms a change. It sends a short confirmation email to the support team. |
+  | Recipient | `support@example.com` |
+  | Priority | `normal` |
+  | Subject, Message | The agent fills these in. |
+</Accordion>
+</AccordionGroup>
+
+## More information
+
+- [Skills](/ai/agents/develop/skills)
+- [Knowledge](/ai/agents/develop/knowledge)
+- [Brand persona](/ai/agents/develop/brand-persona)
+- [Guardrails](/ai/agents/develop/guardrails)
+- [Connections](/ai/platform-features/connections)

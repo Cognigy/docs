@@ -1,0 +1,321 @@
+---
+title: Transformers
+sidebarTitle: Overview
+description: "Use endpoint transformers to manipulate data between flows and endpoints, convert payloads, and create custom integrations."
+keywords: ['transformers', 'transformer', 'endpoint transformers', 'data manipulation', 'flow execution', 'inject and notify api', 'custom endpoints', 'http requests in transformers', 'session storage in transformers']
+---
+
+
+import TransformersHttpLibrary from '/snippets/ai/for-developers/transformers-http-library.mdx'
+
+<TransformersHttpLibrary />
+
+_Endpoint transformers_ are functions that convert the text and data sent between the [endpoint](/ai/agents/deploy/endpoints/overview) and the [flow](/ai/agents/develop/projects-and-flows/overview) as well as through the [inject and notify API requests](/ai/agents/deploy/endpoints/inject-and-notify). These functions allow you to manipulate the data from the user input, the flow output, and third-party API services.
+
+Transformers fully support TypeScript and JavaScript, including [npm modules](#npm-modules).
+
+You can use transformers to:
+
+- Convert request payloads from an endpoint before sending them to a flow, for example, to encrypt data.
+- Convert the flow output before sending it to an endpoint.
+- Translate messages from the user into the flow language.
+- Customize the default and custom endpoint interfaces.
+- Convert a channel output to be compatible with another channel. For example, convert a [Webchat output](/ai/agents/deploy/endpoint-reference/webchat) into a [WhatsApp-compatible output](/ai/agents/deploy/endpoint-reference/whatsapp).
+- Create [custom endpoints](#create-a-custom-endpoint) for additional integrations and handle webhook events from the custom endpoints.
+
+Depending on the [type of the endpoint](#endpoint-types) in which you use the transformers, they might work differently.
+
+To learn more about endpoint transformers, watch this webinar:
+
+<iframe
+  width="701"
+  height="438"
+  src="https://www.youtube.com/embed/DfMr8RspF9c"
+  title="Cognigy Sessions: Endpoint transformers"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
+
+## Restrictions
+
+- You can't send HTTP requests from endpoint transformers to other endpoints.
+- Endpoint transformers operate only on data exchanged between the endpoint and the flow. They don't modify the prompt or response of an LLM Prompt node or AI Agent node.
+
+## Limitations
+
+- You can only send one HTTP request per execution from a transformer.
+- HTTP requests from transformer functions have a 5-second timeout. When the request times out, flow execution throws an error and logs it. You can change or remove the timeout:
+    - For SaaS installations, contact [Cognigy technical support](/help/get-help).
+    - For on-premises installations, change the timeout by setting it in milliseconds in `TRANSFORMER_FUNCTION_EXECUTION_TIMEOUT_MS` or remove it by setting `FEATURE_DISABLE_TRANSFORMER_HTTP_TIMEOUT` to `true`.
+
+## Endpoint types
+
+There are three different types of endpoints based on the underlying technology.
+
+<Tabs>
+  <Tab title="REST-based endpoints">
+
+    REST-based endpoints receive messages from the user and send a single reply. For these endpoints, you can add more than one Say node in the flow, but all the outputs are processed only after the flow execution has finished. The outputs are concatenated into one message and then sent to the user. The REST-based endpoints are:
+
+    - [Alexa (deprecated)](/release-notes/deprecations-and-removals)
+    - [Dialogflow (deprecated)](/release-notes/deprecations-and-removals)
+    - Twilio
+    - Twilio SMS
+    - Microsoft Teams
+    - Userlike
+    - REST
+    - NiCE CXone AAH
+
+  </Tab>
+  <Tab title="Webhook-based endpoints">
+
+    Webhook-based endpoints receive user messages and reply after each input. For these endpoints, you can process each output after the user input. The webhook-based endpoints are:
+
+    - Facebook (Meta) Messenger
+    - Slack
+    - Microsoft Bot Framework
+    - Sunshine Conversations
+    - LINE
+    - RingCentral Engage
+    - Intercom
+    - WhatsApp
+    - Webhook
+
+  </Tab>
+  <Tab title="Socket-based endpoints">
+
+    Socket-based endpoints receive messages from the user and can reply after each input. For these endpoints, you can process each output after the user input. The socket-based endpoints are:
+
+    - Webchat
+    - Socket
+
+  </Tab>
+</Tabs>
+
+## Transformer functions
+
+The transformer function determines the transformer you use in the [endpoint settings](/ai/agents/deploy/endpoints/overview). The following table provides an overview of the transformer functions:
+
+| Transformer function    | Transformer                                                                                      | Description                                                                                                                                                                                                                                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| handleInput             | [Input transformer](/ai/for-developers/transformers/input-transformer)                           | Executes when a user input is sent to an endpoint, before the flow is executed. The return value is sent to the flow.                                                                                                                                                                                              |
+| handleOutput            | [Output transformer](/ai/for-developers/transformers/output-transformer)                         | Executes when a flow sends an output to an endpoint. For webhook- and socket-based endpoints, the return value of each output is sent to the user. For REST-based endpoints, the return value is stored and can be sent to the user after the flow execution has finished with the execution finished transformer. |
+| handleExecutionFinished | [Execution finished transformer](/ai/for-developers/transformers/execution-finished-transformer) | Executes when the flow execution has finished. The return value is sent to the user. In this case, all outputs are concatenated and sent to the user. Applies only to REST-based endpoints in which you use an output transformer.                                                                                 |
+| handleNotify            | [Notify transformer](/ai/for-developers/transformers/notify-transformer)                         | Executes when you use the [notify API request](/ai/agents/deploy/endpoints/inject-and-notify). The return value is sent directly to the user.                                                                                                                                                                      |
+| handleInject            | [Inject transformer](/ai/for-developers/transformers/inject-transformer)                         | Executes when you use the [inject API request](/ai/agents/deploy/endpoints/inject-and-notify). The return value is sent to the flow.                                                                                                                                                                               |
+
+## Working with transformers
+
+<Tabs>
+  <Tab title="GUI">
+
+    You can configure the transformer functions on the **Advanced** tab of the endpoint settings, in the **Transformer functions** section. Activate the transformer functions you want to use individually under **Transformer settings** and provide the corresponding code in the **JavaScript / TypeScript code** editor under **Transformers**.
+
+  </Tab>
+  <Tab title="API">
+
+    You can configure transformer settings using the [Cognigy API](/api-reference/endpoints/create-an-endpoint).
+
+  </Tab>
+  <Tab title="CLI">
+
+    You can configure the transformer functions locally and deploy them with the [Cognigy CLI](https://github.com/Cognigy/Cognigy-CLI). To do this, follow these steps:
+
+    1. In **Deploy > Endpoints**, select an endpoint and, on the **Advanced** tab, activate the [transformer functions](#transformer-settings) you want to use.
+    2. [Clone your agent](https://github.com/Cognigy/Cognigy-CLI?tab=readme-ov-file#command-clone) to your local machine.
+    3. Make the changes to the transformer functions in the `transformers.ts` file in your endpoint's folder, for example, `<root-directory>/agent/endpoints/Webchat/transformer.ts`, where Webchat is the name of your endpoint.
+    4. [Restore the agent](https://github.com/Cognigy/Cognigy-CLI?tab=readme-ov-file#command-restore) to Cognigy.
+
+  </Tab>
+</Tabs>
+
+### Transformer settings
+
+| Parameter                                        | Type   | Description                                                                                                                                                                                |
+| ------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Stop execution on transformer function error** | Toggle | If activated, the message or event is dropped when a transformer function throws an error. If deactivated, the error is logged and processing continues without the transformer's changes. |
+| **Activate input transformer**                   | Toggle | Activates the input transformer function.                                                                                                                                                  |
+| **Activate output transformer**                  | Toggle | Activates the output transformer function.                                                                                                                                                 |
+| **Activate execution finished transformer**      | Toggle | Activates the execution finished transformer function.                                                                                                                                     |
+| **Activate notify transformer**                  | Toggle | Activates the notify transformer function.                                                                                                                                                 |
+| **Activate inject transformer**                  | Toggle | Activates the inject transformer function.                                                                                                                                                 |
+| **JavaScript / TypeScript code**                 | Code   | Includes the code for each transformer function. By default, includes one instance of each transformer function.                                                                           |
+
+### Available JavaScript modules
+
+#### npm modules
+
+The following npm modules are available for use in a transformer:
+
+- `uuid` — for generating UUIDs.
+- `crypto` — for encrypting data.
+- `_` (Lodash) — for manipulating arrays, objects, and strings.
+- `moment` — for manipulating dates and times.
+- `xmljs` — for manipulating XML data.
+
+#### Text cleaner class
+
+Transformers can use the `getTextCleaner` function to retrieve an instance of the [text cleaner](/ai/platform-features/nlu/text-cleaner) class, which allows you to preprocess user input.
+
+### Modify the user ID in transformers
+
+Endpoint transformers can modify the [user ID](/ai/agents/analyze/user-and-session-identification). If a transformer changes the user ID, Cognigy uses the updated value consistently throughout the entire processing pipeline, including:
+
+- Flow execution
+- Notify API requests
+- xApps
+- Live Follow
+- Logs
+
+To avoid exposing personally identifiable information, for example, phone numbers or email addresses, and to support GDPR compliance, hash the user ID.
+
+When implementing user ID transformation:
+
+- Use a deterministic method: the same input must always produce the same output.
+- Use simple string prefixing, such as `"hashed_" + userId`, only for testing or development. Prefixing doesn't provide real security. In production, use a cryptographic hash function, such as SHA-256.
+
+<Accordion title="Example: hashing the user ID (SHA-256)">
+
+    ```javascript id="9k2lpx"
+    const crypto = require("crypto");
+
+    function hashUserId(userId) {
+        return crypto
+            .createHash("sha256")
+            .update(userId)
+            .digest("hex");
+    }
+
+    handleInput: async ({ payload }) => {
+        return {
+            userId: hashUserId(payload.userId),
+            sessionId: payload.sessionId,
+            text: payload.text,
+            data: payload.data
+        };
+    };
+    ```
+</Accordion>
+
+### Send HTTP requests
+
+You can send HTTP requests to external services from a transformer. All transformer functions can access the `httpRequest` module. Call the module as a function that takes a single configuration object as argument. You can use the following formats for the configuration object:
+
+<Tabs>
+  <Tab title="Axios">
+
+  The configuration object follows the format described in the [Axios Request Config documentation](https://axios-http.com/docs/req_config). For example:
+
+  ```js
+  handleInput: async ({ payload }) => {
+    const result = await httpRequest({
+      url: "<url>",
+      method: "POST",
+      data: {
+        userId: payload.userId,
+        text: payload.text
+      }
+    });
+
+    console.log(JSON.stringify(result)); // Registers results on the Logs page
+    return {
+      userId: payload.userId,
+      sessionId: payload.sessionId,
+      text: payload.text,
+      data: payload.data
+    };
+  },
+  ```
+
+  </Tab>
+  <Tab title="request-promise (deprecated)">
+    <Warning>
+      The `request-promise` library is deprecated. Review your transformer code to ensure it's compatible with the `axios` library.
+    </Warning>
+
+    The configuration object follows the format described in the [npm module documentation](https://www.npmjs.com/package/request-promise). For example:
+
+    ```js
+    handleInput: async ({ payload }) => {
+      const result = await httpRequest({
+        uri: "<uri>",
+        method: "POST",
+        body: {},
+        json: true,
+      });
+
+      console.log(JSON.stringify(result)); // Registers results on the Logs page
+
+      return {
+        userId: payload.userId,
+        sessionId: payload.sessionId,
+        text: payload.text,
+        data: payload.data
+      };
+    },
+    ```
+  </Tab>
+</Tabs>
+
+### Session storage
+
+The session storage is a JSON object available to all transformer functions that persists throughout a session. You can use the session storage to store variables for later use in other transformer functions or to store the conversation state. To access the stored data, use the `getSessionStorage` function inside the transformer functions. The `getSessionStorage` function takes the `userId` and `sessionId` as arguments and returns a promise. The returned promise resolves with the `sessionStorage` object, which can be manipulated as a regular object.
+
+#### Limitations
+
+- Session storages are limited to the scope of an endpoint. You can't access a session storage from transformer functions across endpoints.
+- Session storages don't support mutating complex objects, such as arrays, directly. Mutate them locally, then reassign them to the session storage object, as in [the following example](#example).
+
+#### Example
+
+Here is an example of session storage usage:
+
+```js
+const handleOutput: async ({ userId, sessionId }) => {
+    const sessionStorage = await getSessionStorage(userId, sessionId);
+
+    sessionStorage.test = "test";
+
+    // Mutating complex objects
+    // Instead of changing the objects directly inside sessionStorage,
+    // change them locally and then assign them to the sessionStorage
+    let tempArr = sessionStorage.arr || [];
+    tempArr.push(1);
+    tempArr.push(2);
+    sessionStorage.arr = tempArr;
+}
+```
+
+### Stop transformer execution
+
+Every transformer function expects a certain return value that is further processed in an endpoint or flow. In certain cases, you might want to stop the execution completely, for example, if the output from a flow is forwarded to another platform. To stop the transformer execution, set the transformer function to return a falsy value, such as `null` or `void`.
+
+### Error handling in transformers
+
+By default, transformers log errors on the [Logs](/ai/agents/test/logs) page and continue with the flow execution. This means that if an error occurs during the transformer execution, including [timeout](#limitations), the user input is still processed.
+
+If the transformer is essential to the pipeline, for example, when building a custom endpoint integration, you might want to prevent the flow execution after an error in the transformer execution. To do this, activate the **Stop execution on transformer function error** setting in the [transformer settings](#transformer-settings).
+
+Transformer error log entries include `traceId` and `sessionId` in their metadata when these values are available. You can use them to search the [Logs](/ai/agents/test/logs) page and correlate a failed transformer execution with a specific request and session.
+
+<Warning>
+  - When an error occurs during the transformer execution, the logs list the line number where the error occurred. The line number might be incorrect because the logs don't account for lines used for interfaces and comments.
+  - Errors caused by a return value validation error don't show a line number in the logs.
+</Warning>
+
+### Log transformer events
+
+With the following methods, you can log transformer events on the [Logs](/ai/agents/test/logs) page:
+
+- `console.log` — as a `debug` log entry.
+- `console.info` — as an `info` log entry.
+- `console.error` — as an `error` log entry.
+
+### Create a custom endpoint
+
+With transformers, you can create an integration with a custom endpoint that Cognigy doesn't support by default. To create a custom endpoint, you need to know the endpoint type of the channel. Then, you can use a transformer to call the custom endpoint service.
+
+## Transformer examples
+
+You can find examples of various transformers in the [Cognigy GitHub repository](https://github.com/Cognigy/TransformersSamples).

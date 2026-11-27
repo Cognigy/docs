@@ -1,0 +1,117 @@
+---
+title: "2026.21"
+---
+
+<Danger>
+  The Trusted Extensions feature and the legacy Extension runtime (`service-execution`) have been removed. All Extensions now run in the [new Extension runtime](/ai/for-developers/extensions#extension-runtime), which was called Cognigy Serverless during its rollout in Q2 and Q3 of 2026.
+</Danger>
+
+<Warning>
+  Packages created in Cognigy 2026.21.0 or later aren't fully compatible with earlier versions. Importing Packages with Connections from Cognigy 2026.21.0 to earlier versions might cause errors. Import the Package without Connections and set them up manually in the target Project.
+</Warning>
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.21.3
+
+### Cognigy
+
+**Released** October 29, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where running an Endpoint that used a Snapshot created in Cognigy 2026.21 or earlier overwrote the Connection values in the Project with the Snapshot's values
+
+## 2026.21.2
+
+### Cognigy
+
+**Released** October 28, 2026
+
+#### Improvements
+
+- Improved service security and stability
+
+## 2026.21.1
+
+### Cognigy
+
+**Released** October 16, 2026
+
+#### Bug Fixes
+
+- Fixed the issue in the LLM Prompt and AI Agent Nodes where uploading images through Webchat failed with `Failed to download image` when the Process Images toggle was activated and OpenAI and Microsoft Azure OpenAI models were configured
+
+### Cognigy Voice Gateway and Cognigy Live Agent
+
+**Released** October 28, 2026
+
+#### Improvements
+
+- Improved service security and stability
+
+## 2026.21.0
+
+### Cognigy
+
+**Released** October 12, 2026
+
+#### Features
+
+##### New Models by Mistral AI
+
+Added support for [Mistral AI's](/ai/agents/develop/gen-ai-and-llms/providers/mistral) `ministral-14b-latest`, `ministral-8b-latest`, and `ministral-3b-latest`. These models are compact and offer a strong performance-to-cost ratio. Use `ministral-3b-latest` for fast, lightweight tasks and `ministral-14b-latest` when you need higher accuracy at a low cost.
+
+#### Improvements
+
+- Added the A2A Agent Node as a child Node of the [LLM Prompt Node](/ai/agents/develop/node-reference/service/llm-prompt#a2a-agent), making it easier to use A2A capabilities within LLM-based workflows
+- Added `API Key` to the Performed By column and filter on the [Audit Events](/ai/administer/access/admin-center/audit-events) page to make changes made through the Cognigy API easier to track
+
+#### Bug Fixes
+
+- Fixed the issue where the Progress Message field in the Call A2A Agent, Call MCP Tool, and Execute Workflow Tool Nodes had no effect except on A2A Server Endpoints. Now, the field is removed from these Nodes, and the Call MCP Tool and Execute Workflow Tool Nodes no longer send status updates to A2A clients
+- Fixed the issue where restoring a Snapshot broke messaging in conversations handed over to a human agent because the handover provider received a new ID. Now, the provider keeps the same ID during restore
+- Fixed the issue where OData Analytics requests were rejected with `429 Too Many Requests` during normal reporting use
+- Fixed the issue where follow-up requests after an AI Agent tool call to Google Gen AI models, such as `gemini-3.5-flash`, contained the tool-call ID instead of the tool name
+- Fixed the issue in streamed OpenAI and Azure OpenAI Responses API answers containing two text messages separated by a tool call. The response no longer repeats the first sentence or drops the first word of the second message
+- Fixed the issue where calls to the Gemini 2.5 model family failed with `Value is not a valid number: NaN` when the model returned an empty answer
+- Fixed the issue where API requests were slower because the permissions cache wasn't used after a version mismatch between services, so permissions were recomputed on every request
+- Fixed the issue for on-premises installations where `service-api` logged many `A cacheClient.get call has errored` error messages. The system loaded the data from the database instead of the cache, so a login or permission check could take longer. Now, the system reads user data from the cache correctly, and the error messages no longer appear
+
+### Cognigy Voice Gateway
+
+**Released** October 12, 2026
+
+#### Bug Fixes
+
+- Fixed the issue where the Click To Call widget intermittently failed to render when initialized on the same page as Webchat
+- Fixed the issue where inbound SIPREC calls ended right after being answered when the Flow responded too early
+
+### Cognigy Agent Copilot
+
+**Released** October 12, 2026
+
+#### Improvements
+
+- Added the End Session On Handover Close toggle and the Session TTL On Handover Close field to the [Copilot section](/agent-copilot/configure/copilot-section#parameters) of the Endpoint settings. This improvement lets human agents trigger follow-up actions in the Agent Copilot Flow after resolving a conversation without keeping it open
+- Added the Enable Branding toggle to the [Copilot section](/agent-copilot/configure/copilot-section#parameters) of the Endpoint settings. This toggle lets you remove the `Powered by Cognigy.AI` branding to better align the Agent Copilot workspace with your organization's branding
+
+### Cognigy Live Agent
+
+**Released** October 12, 2026
+
+#### Improvements
+
+- Improved service stability and performance
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

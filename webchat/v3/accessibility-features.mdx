@@ -1,0 +1,59 @@
+---
+title: 'Webchat: built-in accessibility features'
+sidebarTitle: Built-in features
+description: "See the accessibility features that Webchat provides without additional configuration: keyboard operation, screen reader support, and visual presentation."
+keywords: ['webchat keyboard navigation', 'screen reader support', 'wcag 2.2', 'focus indicator', 'reduce motion']
+---
+
+The following features are available in Webchat without additional configuration.
+
+## Keyboard operation
+
+End users can operate all Webchat functionality with the keyboard only. Webchat doesn't use character key shortcuts, and keyboard focus is never trapped except in modal dialogs, which you can always close with <kbd>Esc</kbd>.
+
+| Element | Keys | Behavior |
+|---|---|---|
+| Webchat launcher button | <kbd>Enter</kbd> or <kbd>Space</kbd> | Opens Webchat. Focus moves into the chat window. When you close Webchat, focus returns to the launcher button. |
+| Chat window | <kbd>Tab</kbd>, <kbd>Shift</kbd> + <kbd>Tab</kbd> | Moves through the header buttons, the chat log, the buttons in messages, and the message input area in reading order. |
+| Chat log | <kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>Page Up</kbd>, <kbd>Page Down</kbd> | When the chat log overflows, it becomes a focusable, scrollable region so that keyboard users can read earlier messages. |
+| Message input | <kbd>Enter</kbd>, <kbd>Shift</kbd> + <kbd>Enter</kbd> | <kbd>Enter</kbd> sends the message. <kbd>Shift</kbd> + <kbd>Enter</kbd> adds a line break. |
+| Persistent menu | <kbd>Enter</kbd> on the menu button | Expands a list of menu buttons below the input. The menu button announces its expanded state. Selecting an item returns focus to the message input. |
+| Quick Replies and buttons | <kbd>Tab</kbd>, <kbd>Enter</kbd> | Each option is a native button. Screen readers announce the position, for example, `2 of 3`. |
+| Gallery | <kbd>Tab</kbd> to the arrow and pagination buttons | You can change slides with buttons. Swiping and dragging are additional options, never the only way. |
+| Datepicker | Arrow keys, <kbd>Enter</kbd>, <kbd>Esc</kbd> | Opens as a dialog. Arrow keys move through the calendar, <kbd>Enter</kbd> selects a date, and <kbd>Esc</kbd> closes the dialog and returns focus to the button that opened it. |
+| Dialogs | <kbd>Esc</kbd> | The delete confirmation, the full-size image viewer, the Datepicker, and the xApp overlay are modal dialogs. Focus stays inside the dialog, <kbd>Esc</kbd> closes it, and focus returns to the element that opened it. |
+| Audio player | <kbd>Tab</kbd>, <kbd>Space</kbd>, arrow keys | Provides play and pause, a progress slider that announces the remaining time, volume, and a ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) menu with **Download transcript** and **Playback speed**. |
+
+<Frame>
+  <img src="/_assets/webchat/v3/a11y-keyboard-focus.png" alt="An agent message in Webchat reading 'How would you like to receive your order?' with two Quick Reply buttons, 'Home delivery' and 'Pick up in store'. The second button has a visible blue focus ring." style={{ width: 'auto' }} />
+</Frame>
+
+Every focusable element in Webchat has a visible focus indicator.
+
+## Screen reader support
+
+The Webchat widget works with screen readers as follows:
+
+- All interactive elements have an accessible name. The names are available in English by default and you can translate them. For more information, see [Translate aria labels and screen reader texts](/webchat/v3/accessibility-settings#translate-aria-labels-and-screen-reader-texts).
+- Every message is announced with the sender and the time, using the texts `You said:`, `{name} said:`, and `At {time}`.
+- Images, audio, video, and file attachments are announced with a short description of the message type, for example, `A video with transcript and captions` or `An image with download option`. For images, the alternative text that you provide in the node is announced right after this description and is also used as the `alt` attribute of the image. For more information, see [Create accessible content](/webchat/v3/accessibility-messages).
+- Status changes are announced without moving focus: the number of unread messages on the closed launcher, the teaser message, the typing indicator, the agent notice at the beginning of a conversation, lost and restored connection, file upload results including the failure reason, and the result of deleting conversations.
+- Screens that aren't visible, such as the Home Screen while a chat is open, are hidden from assistive technologies.
+- The xApp overlay is a labeled modal dialog.
+
+## Visual presentation
+
+Webchat includes the following visual configurations:
+
+- The default colors meet the minimum contrast ratio of 4.5:1 for text and 3:1 for UI components and focus indicators. Text on the primary color automatically switches between light and dark to keep the contrast.
+- Font sizes are relative, so users can resize text up to 200% in their browser without loss of content or functionality.
+- Content reflows at a width of 320 CSS pixels without horizontal scrolling.
+- Pointer targets are at least 24 by 24 CSS pixels.
+- Focused elements are never hidden behind the header or an overlay.
+- The launcher animation, the typing indicator, the text-to-speech toggle, and the xApp overlay respect the **Reduce motion** setting of the operating system.
+- No audio plays automatically. Text-to-speech is inactive until the user or the endpoint configuration enables it.
+
+## More information
+
+- [Webchat: accessibility settings](/webchat/v3/accessibility-settings)
+- [Webchat: supported browsers](/webchat/v3/supported-browsers)

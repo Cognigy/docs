@@ -1,0 +1,27 @@
+---
+title: Architecture
+description: Explore the Live Agent system architecture, including its Ruby on Rails backend, Vue.js frontend, Kubernetes services, and WebSocket support.
+
+---
+
+import MaintenanceMode from '/snippets/live-agent/maintenance-mode.mdx'
+
+<MaintenanceMode />
+
+<Frame>
+ <img src="/_assets/live-agent/LA-diagram.svg" alt="Live Agent architecture" style={{ width: 'auto' }} />
+</Frame>
+
+Live Agent is composed of a Ruby on Rails application that serves a Vue.js frontend along with an API
+for performing actions such as CRUD operations and WebSockets.
+
+Live Agent has the following set of services running:
+
+- Required to run in a Kubernetes cluster
+    - Live Agent web servers (API & UI)
+    - Live Agent workers (Sidekiq)
+- External/internal services
+    - PostgreSQL database as persistent storage
+    - Redis database for caching and performance
+    - Email service (SMTP servers)
+    - Storage solution: NFS server with (AWS, Azure) or optional integration with External Object Storage (S3, Azure Storage, GCS)

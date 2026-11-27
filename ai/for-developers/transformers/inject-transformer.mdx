@@ -1,0 +1,67 @@
+---
+title: Inject transformer
+seo:
+  metatags:
+    description: >-
+      The inject transformer converts the webhook payload from an external
+      service before you call an inject API request, which sends the data to the
+      flow.
+keywords: ['inject transformer', 'webhook payload', 'inject api', 'data transformation']
+---
+
+import EndpointObject from '/snippets/ai/deploy/endpoint/endpoint-object.mdx'
+import ReturnValueRuleSet from '/snippets/ai/deploy/endpoint/return-value-rule-set.mdx'
+import TransformersHttpLibrary from '/snippets/ai/for-developers/transformers-http-library.mdx'
+
+<TransformersHttpLibrary />
+
+The _inject transformer_ converts the webhook payload from an external service before you call an [inject API request](/ai/agents/deploy/endpoints/inject-and-notify), which sends the data to the flow. With the inject transformer, you don't need a service that translates the webhook payload of the external service into the correct format for the inject API request. You can handle this conversion in the inject transformer by parsing the payload to return only the necessary values.
+
+You can configure the inject transformer in the `handleInject` function in the [endpoint settings or via CLI](/ai/for-developers/transformers/overview#working-with-transformers).
+
+## Restrictions
+
+- The inject transformer is supported only for webhook- and socket-based endpoints.
+<ReturnValueRuleSet />
+
+## Transformer function arguments
+
+The following table shows an overview of the function arguments:
+
+| Argument | Description                                                                  |
+|----------|------------------------------------------------------------------------------|
+| endpoint | The configuration object for the [endpoint](#endpoint-configuration-object). |
+| request  | The Express request object with a JSON-parsed body.                          |
+| response | The Express response object.                                                 |
+
+<EndpointObject />
+
+## Return values
+
+The inject transformer returns a valid user ID, session ID, text, and data. These return values need to match the format of the payload of the endpoint you're using. The payload format is specific to the endpoint type you use, for example, Facebook (Meta) Messenger. Read the documentation of the [specific endpoint](/ai/agents/deploy/endpoint-reference/overview) to know how to format the payload.
+
+If the inject transformer returns a falsy value, the output is discarded and not sent to the inject API request.
+
+Here is an example of the correct return format for a webhook-based endpoint:
+
+```js
+handleInject: async ({ endpoint, request, response }) => {
+    const webhookPayload = request.body;
+    
+    // Parse the webhook payload and extract necessary data
+    const userId = webhookPayload.user.id;
+    const sessionId = webhookPayload.session.id;
+    const text = webhookPayload.message.text;
+    const data = {
+        source: webhookPayload.source,
+        timestamp: webhookPayload.timestamp
+    };
+    
+    return {
+        userId,
+        sessionId,
+        text,
+        data
+    };
+}
+```

@@ -1,0 +1,173 @@
+---
+title: "2026.24 (Latest)"
+summary: "Introduces premium models, new OpenAI and Azure OpenAI models, and the experimental Personal Agent Protocol (Poppy) endpoint. This release also removes Nuance as a TTS and STT vendor."
+---
+
+import FunctionsAvailability from '/snippets/ai/functions-availability.mdx'
+
+<Danger>
+  Nuance as a TTS and STT vendor in Cognigy Voice has been removed. Switch to a supported TTS and STT vendor. For more information, see Deprecations and removals.
+</Danger>
+
+<Warning>
+  **Deprecations**
+
+  The following models and API methods are deprecated. Migrate to the replacement before the removal date:
+
+  - OpenAI `gpt-4o`, `gpt-4o-mini`, `gpt-5.1`, and `gpt-5.4-nano`: migrate to `gpt-6-sol` or `gpt-6-luna`. Removal: January 14, 2027, or April 1, 2027, depending on the model.
+  - Azure OpenAI `gpt-4o` (version 2024-05-13), `gpt-5`, `gpt-5-nano`, and `gpt-5-mini`: migrate to a more recent model. Removal: from January 14, 2027, to July 13, 2027, depending on the model.
+  - Conversations API `GET /v2.0/conversations`, `GET /v2.0/conversations/{sessionId}`, and `DELETE /v2.0/conversations/{sessionId}`: migrate to the replacement methods. Removal: June 11, 2027.
+
+  For more information, see [Deprecations and removals](/release-notes/deprecations-and-removals).
+</Warning>
+
+<FunctionsAvailability />
+
+<Tip>
+  Help us improve our product documentation on `docs.cognigy.com` by sharing your thoughts in a [quick survey](https://forms.office.com/e/xnqneVasp2). Your feedback shapes the future of our content!
+</Tip>
+
+## 2026.24.1
+
+### Cognigy
+
+**Released** November 25, 2026
+
+#### Improvements
+
+- Added support for configuring call recording credentials in the admin center.
+
+#### Bug Fixes
+
+- Fixed the issue where the model configured for a speech provider, such as ElevenLabs, was ignored during voice calls. The agent now uses the configured model for text-to-speech instead of remaining silent.
+
+### Voice
+
+**Released** November 27, 2026
+
+#### Bug Fixes
+
+- Fixed the issue preventing the NiCE Business Unit ID from being sent to the NiCE Carrier during voice interactions.
+
+## 2026.24.0
+
+### Cognigy
+
+**Released** November 24, 2026
+
+#### Features
+
+##### Premium models
+
+Introduced [premium models](/ai/agents/develop/gen-ai-and-llms/providers/premium-models): LLMs and embedding models that NiCE Cognigy provides and bills on a pay-as-you-go basis, so you don't need to create a model or enter API credentials. To set up premium models for your organization, contact your customer success manager.
+
+##### New OpenAI and Azure OpenAI models
+
+Introduced the `gpt-6.2-sol` and `gpt-6.1-terra` models for the [OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/openai) and [Azure OpenAI](/ai/agents/develop/gen-ai-and-llms/providers/microsoft-azure-openai) providers. With these models, your agents get faster, more cost-efficient responses for everyday customer requests. For more information, see [Model support by feature](/ai/agents/develop/gen-ai-and-llms/model-support-by-feature).
+
+##### Personal Agent Protocol (Poppy) endpoint
+
+Introduced the experimental [Personal Agent Protocol (Poppy) endpoint](/ai/agents/deploy/endpoint-reference/personal-agent-protocol). The endpoint makes a flow or an agent reachable for Personal Agents, which are AI assistants that act on behalf of your customers. Cognigy generates the discovery document (`poppy.json`), runs the conversations, and verifies access tokens.
+
+Optionally, your customers can sign in at your own authorization server. In the Account access section on the Advanced tab, set the OAuth issuer and choose whether to turn on Sign-in disabled or Require sign-in.
+
+The Personal Agent Protocol endpoint is experimental and isn't recommended for production use.
+
+#### Improvements
+
+- Changed the [interaction panel trace](/ai/agents/test/interaction-panel/tracing) to show the pre-turn flow with a Hook badge, the flow name in the row label, and a link that opens the flow in the flow editor.
+- Redesigned the [knowledge store](/ai/agents/develop/knowledge-ai/knowledge-store) cards as compact, fixed-height cards that show the number of knowledge sources as a badge next to the store name.
+- Added Open Skill, Open Tool, and Open Knowledge links to the span details of [agent traces](/ai/agents/test/interaction-panel/tracing), so you can jump straight to the executed skill, tool, or knowledge settings. This includes an Open Tool link on the Tool result span of an Execute Flow tool in the Tracing tab of the interaction panel, and in the tracing details of an Execute tool flow tool call.
+- Changed the [A2A server endpoint](/ai/agents/deploy/endpoint-reference/a2a-server) to show the Agent Card URL first, with a copy button, and moved the Agent Card and A2A Skills configuration from the Advanced tab to the Setup tab.
+- Changed flow node [tracing](/ai/agents/test/interaction-panel/tracing) in the interaction panel to show in execution order. Every flow node, such as Set Session Config, Say, Flow Agent, LLM Extract, LLM Prompt, and HTTP Request, appears as a node row with the events it produced indented beneath it, in both the full tracing view and the inline trace summary.
+- Allowed execute tool flows and pre-turn flows to run on their own in the interaction panel, with the tool's default arguments. In this case, the interaction panel shows the answer of the Tool Result node as a reply and ends pre-turn flows quietly.
+- Changed the `schedule-followup` tool to take a delay such as `2h`, so callbacks counted from now are booked at the right time.
+- Changed models provided by NiCE to show as [Included LLM](/ai/agents/develop/gen-ai-and-llms/providers/included-models) or [Premium LLM](/ai/agents/develop/gen-ai-and-llms/providers/premium-models), with their provider and model type, instead of their internal configuration name. This applies in AI & Voice Providers, such as Models, Assignments, Add model > Premium model, and the Reassign dialog, in the model dropdown of the LLM Prompt node, in the Simulator, and in the knowledge store create form. In the agent model selector, premium models were also labeled Included. They now show as Premium LLM with a Premium tag, and every included or premium model shows its provider and model type underneath.
+- Updated the [Inject and Notify](/ai/agents/deploy/endpoints/inject-and-notify) and CXone Knowledge Hub REST API endpoints to honor the `Accept` header, such as JSON, HAL+JSON, XML, and CSV, and documented it on all endpoints that already supported it.
+- Made `api.executeCognigyNLU` available in extensions.
+- Preserved MIME types and file extensions for the file manager's private URLs.
+- Added OAuth access token authentication to the [Sunshine Conversations endpoint](/ai/agents/deploy/endpoint-reference/sunshine-conversations), as an alternative to the app key ID and secret. The token is stored in a Sunshine Conversations OAuth connection. Changed Notify and Inject output for Sunshine Conversations endpoints set to API version v2 to be sent through the v2 Conversations API, to the user's most recent conversation. Check any Notify payloads and output transformers written for v1.1.
+- Added notifications to the [task menu](/ai/agents/develop/projects-and-flows/projects#task-menu) when other users mention you in [collaborative editing](/ai/agents/develop/projects-and-flows/collab-editing) discussions.
+- Added the CA Certificate parameter to the [HTTP Request node](/ai/agents/develop/node-reference/service/http-request). It trusts a private or self-signed certificate authority for a request while Transport Layer Security (TLS) verification stays on. On environments where the platform operator sets `ALLOW_SELF_SIGNED_HTTP_REQUESTS` to `false`, Allow Insecure SSL isn't available and is ignored in existing nodes.
+
+#### Bug Fixes
+
+- Fixed the issue where links to the old LLM and Lexicon pages opened the legacy pages instead of AI & Voice Providers and the new Lexicons page. This affected links in LLM fallback emails, in Lexicon search results, and from the AI assistant.
+- Fixed the issue where the interaction panel agent picker didn't show newly created, renamed, deleted, or imported agents until a hard page refresh or up to 5 minutes later.
+- Fixed the issue where the Configure embedding model button on the Knowledge page opened the legacy Large Language Models page instead of the LLM assignments in AI & Voice Providers.
+- Fixed the issue where the agents list showed only the first 100 agents of a project.
+- Fixed the issue where project members past the first 25 showed as raw IDs in the Created by and Last edited by fields of an agent, and where the endpoints, knowledge stores, and NLU connectors lists showed a user ID instead of the user's name in the Last edited field for projects with more than 25 members.
+- Fixed the issue where a Flow Agent node or LLM Prompt node with Claude on Anthropic or AWS Bedrock failed with `does not support assistant message prefill` or returned an empty answer when it ran right after a Say node.
+- Fixed the issue where the Edit Node panel in the flow editor briefly showed the previous locale's values and an Add Localization button after switching the locale. Clicking the button on a node that was already localized led to an error.
+- Fixed the issue where the interaction panel kept waiting up to 130 seconds for a reply after a pre-turn flow had already failed, instead of reporting the failure right away.
+- Fixed the issue where clearing a required field in the edit sidebar of a flow node and saving left the field empty and showed no validation error. This happened both with the Save button and when navigating away and choosing to save.
+- Fixed the issue where the HTTP Request node reported success when the response was too big to store in the context. It now reports a 413 error and stores the error with its status code. It also stops the flow when the Abort on error option is on.
+- Fixed the issue where the large language model dropdown in flow nodes such as LLM Prompt loaded slowly, timed out, or didn't load in projects or organizations with a very large number of LLMs or under load.
+- Fixed the issue where creating, restoring, or importing a snapshot or package could hang when the project contained an extension with a very large number of files.
+- Fixed the issue where importing a package or snapshot with re-identified connections, for example with the Import as a copy option, left Webchat v3 push notification OAuth2 connections and NICE CXone AAH connections on endpoints pointing at the original connection.
+- Fixed the issue where resetting the context of a session through the REST API failed with a 504 timeout when the session had been inactive for more than 10 minutes.
+- Fixed the issue where remote extensions could be installed directly through the API even when `FEATURE_DISABLE_MARKETPLACE` is set on the UI.
+- Fixed the issue where pasting a copied tool or lookup case onto the + button beside a Flow Agent node or Lookup node failed with `Error while pasting Chart Node`.
+- Fixed the issue where LLM Prompt and Search Extract Output nodes failed with an in-platform LLM labeled Included when Top P or Stop Sequences were set.
+- Fixed the issue where adding a translated locale to a Question, Optional Question, or Regex Slot Filler node also machine-translated its regular expression. This could insert spaces and break the expression.
+- Fixed the issue where the node editor closed as if the node had been saved when the save was rejected, for example because a field exceeded its maximum length. The changes of the user were discarded without an error.
+- Fixed the issue where files sent as inline bytes to an A2A server endpoint weren't stored and didn't reach the flow.
+- Fixed the issue where `GET /v2.0/projects/{id}/graph` returned the extension name instead of the connection type in `properties.type` for connections.
+- Fixed the issue where endpoint input sanitization HTML-encoded the text of the user on every channel with the Enable Input Sanitization option on. For example, `a < b & c` reached the flow as `a &lt; b &amp; c`. The flow now receives the text as typed, with only HTML tags removed.
+- Fixed the issue where the handover provider dialog had no accessible name.
+- Fixed the issue where focus wasn't returned to the create handover provider button when the dialog closed.
+- Fixed the issue where reading the project settings always triggered an unnecessary settings update, which could cause conversation timeouts (`composeFullSettings` RPC error) when the update was slow. The update now runs only for projects with settings in the old format.
+
+### Cognigy Voice Gateway
+
+**Released** November 24, 2026
+
+#### Improvements
+
+- Improved the transcript confidence for ElevenLabs speech-to-text (STT). Previously, the confidence was always `1.0`. It is now calculated from the word-level log probabilities. In our tests, the values ranged from about 0.15 to 0.56, which is a different scale than for other STT vendors, such as Azure. If your flows compare the transcript confidence against a threshold, adjust the threshold for ElevenLabs.
+- Documented [synthesizer options](/voice-gateway/references/verbs/say#synthesizer-options) for all TTS vendors. Synthesizer options let you pass settings to the speech provider, such as the speaking rate, the voice style, or text normalization, in the `synthesizer.options` parameter.
+- Removed `seed`, `apply_text_normalization`, and `apply_language_text_normalization` from the list of unsupported ElevenLabs parameters for [TTS streaming](/ai/agents/develop/voice/tts-streaming). You can now specify them in Extra Options.
+- Made [ElevenLabs](/voice-gateway/references/tts-and-stt-vendors#elevenlabs) available as an STT vendor without a feature flag. You no longer need to contact support or set `FEATURE_ENABLE_ELEVENLABS_STT_VENDOR` to use it.
+- Added support for the Scribe v3 Live STT model for [ElevenLabs](/voice-gateway/references/tts-and-stt-vendors#elevenlabs). For new ElevenLabs speech services with STT enabled, Scribe v3 Live is preselected. Existing speech services keep their stored model, for example, Scribe v2 Realtime.
+
+### Cognigy Live Agent
+
+**Released** November 24, 2026
+
+#### Improvements
+
+- Enabled access to Cognigy attachments after the download link expires.
+- Documented that Live Agent [inbox creation](/live-agent/getting-started/live-agent-setup/live-agent-setup-inbox) fails when the Cognigy project name contains special characters, because the inbox name comes from the project name.
+
+### Cognigy AI Ops Center
+
+#### Bug Fixes
+
+- Fixed the AI Ops Center alert to count only failed HTTP Request node calls, preventing false alerts during normal traffic growth.
+
+### Cognigy Insights
+
+**Released** November 24, 2026
+
+#### Improvements
+
+- Improved attachment loading in Conversations Explorer. Expired links now trigger a retry or display an unavailable message instead of loading indefinitely.
+
+#### Bug Fixes
+
+- Fixed the issue where data sent after a Deactivate Profile or Delete Profile node with Keep analytics records, mask personal data was stored without masking.
+- Fixed the issue where API updates to analytics stored rating comments and custom fields in plain text for sessions with personal data masked by a Deactivate Profile or Delete Profile node.
+- Fixed the issue where Run Analysis in the Conversation Analyzer reported `All conversations in this selection are already analyzed` when counting the selected conversations failed or timed out. Now, the failure is shown as an error.
+- Fixed the issue that caused repeated failures in the conversation analytics service when the history of a conversation exceeded the maximum message size of the message broker.
+- Fixed the issue where OData requests using an API key without OData read access were rejected without generating an audit log entry.
+- Fixed the issue where Mask and Keep Analytics masked only the last 24 hours of the analytics data of a contact in PostgreSQL.
+
+### Infrastructure
+
+#### Version Compatibility Matrix
+
+The version compatibility matrix was updated for the following Cognigy products:
+
+- [Cognigy, Insights, and Agent Copilot](/ai/administer/installation/version-compatibility-matrix)
+- [Cognigy Live Agent](/live-agent/installation/deployment/version-compatibility-matrix)
+- [Cognigy Voice Gateway](/voice-gateway/installation/version-compatibility-matrix)

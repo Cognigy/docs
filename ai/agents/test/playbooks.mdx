@@ -1,0 +1,124 @@
+---
+title: Playbooks
+sidebarTitle: Overview
+keywords: ['playbooks', 'testing', 'flow testing', 'assertions', 'test automation', 'conversation scripts']
+seo:
+  metatags:
+    description: >-
+      Cognigy Playbooks are conversation scripts that you can run
+      automatically to test your Flows.
+---
+
+_Playbooks_ are conversation scripts that you can run automatically to test your flows. When running a playbook, you can set the flow, locale, and snapshot you want to test.
+
+Playbooks include:
+
+- **Steps**: simulate a user input and can include an input text and input data.
+- [Assertions](/ai/agents/test/assertions): check the agent's responses and different aspects of the flow for each step against a defined value. You can also use the **Check for absence** option. The assertion then checks that the defined value is missing.
+
+<Accordion title="Assertion types">
+  | Type                   | Description                                                | API value       |
+  |------------------------|------------------------------------------------------------|-----------------|
+  | Text assertion         | Checks the text content of the agent's response.           | `assertText`    |
+  | Data assertion         | Checks the data the agent sent.                            | `assertData`    |
+  | State assertion        | Checks the current state of the flow.                      | `assertState`   |
+  | Context assertion      | Checks the current data in the context object of the flow. | `assertContext` |
+  | Slot assertion         | Checks if a specific slot has been recognized.             | `assertSlot`    |
+  | Intent assertion       | Checks if a specific intent has been recognized.           | `assertIntent`  |
+
+</Accordion>
+
+## Limitations
+
+- You can run up to 10 playbooks simultaneously. You can change this limit for on-premises installations by specifying the `MAX_CONCURRENT_PLAYBOOK_EXECUTIONS` variable in the `values.yaml` file.
+- A playbook can contain up to 50 steps.
+
+## Restrictions
+
+- Playbooks don't allow dots `(.)` in JSON keys. Referencing subkeys like `user.name` can cause runs to be hidden or [snapshots](/ai/agents/deploy/snapshots) to fail. Instead, validate the full JSON object:
+
+   <CodeGroup>
+    ```json Valid Example title
+    {
+       "user": {
+           "name": "John"
+       }
+    }
+    ```
+    ```json Invalid Example title
+    {
+        "user.name": "John"
+    }
+    ```
+   </CodeGroup>
+
+## Working with playbooks
+
+<Tabs>
+  <Tab title="GUI">
+
+        In **Advanced > Playbooks**, you can create, rename, run, and delete playbooks. You can also export them as a package:
+
+        - To create a playbook, click **Create playbook**.
+        - To open the playbook editor, select a playbook from the list.
+        - For other actions, use the row menu: **Rename**, **Export as package**, **Show runs**, **Run playbook**, and **Delete**.
+        - To find a playbook, use **Search playbooks**.
+
+        Playbook runs are [tasks](/ai/agents/develop/projects-and-flows/projects#task-menu) and take place in the background. The results are available on the **Runs** tab in the playbook editor.
+
+        You can also run a playbook and view the results from the [interaction panel](/ai/agents/test/interaction-panel/overview), as well as create playbooks from a conversation with the agent.
+
+        **Playbook editor**
+
+        In the **Editor** tab, configure the following settings for all steps:
+
+        | Setting              | Description                                                                                                                                                                                                                  |
+        |----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Timeout per step     | The maximum time to wait for each step to finish, in milliseconds. Enter a whole number of 1 or more. If a step takes longer than the timeout, the run results show an error. The default timeout is 2000 ms.        |
+        | On error             | Select what happens when a step fails: **Continue** to the next step or **Stop** the run.                                                                                                                                    |
+
+        For each step, enter **Input text** and **Input data** to send to the agent. **Input data** must be a JSON object. To check the agent's response, click **Add assertion**. To add a step, click **Create step**. To reorder steps, drag them by the handle.
+
+        **Run a Playbook**
+
+        To run a playbook, select **Run playbook** from the row menu or from the playbook editor. In the **Run playbook** dialog, set the following options:
+
+        - **Snapshot**: Select **No Snapshot** or one of the project's snapshots.
+        - **Flow**: Select the flow to test.
+        - **Locale**: Select the locale to test.
+
+        Then click **Run**. Only one run of a playbook can be active at a time.
+
+        **Runs tab**
+
+        On the **Runs** tab in the playbook editor, you can view the results of the playbook runs. By default, the list shows your own runs. Use the following filters to narrow the list:
+
+        - **Creator**: **Me** or **All**.
+        - **Status**: **All**, **Passed**, or **Failed**.
+
+        To see the results, click a run in the list. The pane on the right shows the snapshot, flow, and locale of the run. For each step, it shows the input and the number of successful assertions. To focus on failed checks, use **Show failed assertions only**. For each assertion, the pane shows the expected value and, for failed checks, the actual value. It also shows whether you used **Check for absence**, **Use fuzzy search**, or **Use partial comparison**.
+
+        **Interaction panel**
+
+        To run a playbook in the interaction panel, click **Advanced mode**. On the **Test** tab, select **Playbooks** as the mode ![playbook](/_assets/icons/black-and-white/playbooks-interaction-panel.svg). Then select and run a playbook. A playbook can run only against a flow. You can hover over the assertion checks for more details.
+
+        To create playbooks from a conversation, follow these steps:
+
+        1. Chat with the agent on the ![chat](/_assets/icons/black-and-white/chat-interaction-panel.svg) tab.
+        2. Click ![menu](/_assets/icons/black-and-white/vertical-ellipsis.svg) in the interaction panel header and select **Create playbook** or **Create playbook with assertions**.
+
+        Cognigy creates a playbook with one step for each user message. With **Create playbook with assertions**, it also adds text and data assertions for each agent response. Cognigy then opens the playbook editor. There, you can add assertions and more steps.
+  </Tab>
+  <Tab title="CLI">
+        You can run playbooks using the [Cognigy CLI](https://github.com/Cognigy/Cognigy-CLI?tab=readme-ov-file#command-run). Schedule multiple playbook runs simultaneously using the `run` command.
+  </Tab>
+  <Tab title="API">
+        You can create, edit, and delete playbooks using the [Cognigy API](https://api-trial.cognigy.ai/openapi#tag--Playbooks-v2.0) as well as run playbooks.
+  </Tab>
+</Tabs>
+
+## Examples
+
+The following video provides examples of how to create and run a playbook using the interaction panel.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/juB7Wy4Anvc?si=7lMt55YSMdqdaP2i&amp;start=44" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="centered-iframe"></iframe>

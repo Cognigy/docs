@@ -1,0 +1,80 @@
+---
+title: "Voice"
+sidebarTitle: "Overview"
+keywords: ['voice', 'voice agents', 'speech to speech', 'speech-to-speech', 'tts', 'stt', 'telephony', 'voice tools', 'click to call']
+description: "Learn how to build voice agents in Cognigy: add voice tools, set up telephony, or use speech to speech."
+---
+
+_Voice_ lets your agents talk to callers over the phone. You create an agent, set how it speaks and listens, and connect it to a phone number. Cognigy handles speech recognition, conversation, and speech synthesis during the call.
+
+## Get started
+
+<Steps>
+  <Step title="Check your setup">
+    Review what voice supports and check that your project is ready:
+
+    <CardGroup cols={2}>
+      <Card title="Explore technical specifications" icon="file-text" href="/ai/agents/develop/voice/technical-specifications">
+        Review the supported protocols, audio codecs, trunk routing, speech providers, call recording, and call quality tools.
+      </Card>
+      <Card title="Configure speech and telephony" icon="user-cog" href="/ai/administer/access/speech-and-telephony">
+        Ask your administrator to configure the speech providers and telephony connections for your project.
+      </Card>
+    </CardGroup>
+  </Step>
+  <Step title="Choose how to build your voice agent">
+    Decide whether to use agents or flows. Select a tab to see the voice features for each.
+
+    <Tabs>
+      <Tab title="Agents" icon="bot">
+        The following features are available only for agents:
+
+        <CardGroup cols={2}>
+          <Card title="Voice studio" icon="sliders-horizontal" href="/ai/agents/develop/voice-configuration#voice-studio">
+            Set the speech providers, voice, greeting, turn taking, and listening options for an agent. Not available when speech to speech is on.
+          </Card>
+          <Card title="Voice tools" icon="wrench" href="/ai/agents/develop/voice-configuration#voice-tools">
+            Let an agent hang up, transfer, or play audio during a call.
+          </Card>
+          <Card title="Speech to speech" icon="audio-lines" href="/ai/agents/develop/voice/speech-to-speech">
+            Experimental. Run a real-time voice model for natural conversation, backed by your existing agent. Replaces the text-to-speech and speech-to-text settings.
+          </Card>
+        </CardGroup>
+      </Tab>
+      <Tab title="Flows" icon="workflow">
+        The following features are available only for flows:
+
+        <CardGroup cols={2}>
+          <Card title="Voice nodes" icon="network" href="/ai/agents/develop/node-reference/voice/voice-gateway/overview">
+            Build call logic with voice nodes, for example, to set session parameters, collect keypad input, play audio, or transfer the call.
+          </Card>
+        </CardGroup>
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+## Try additional features
+
+The following features work with agents and flows:
+
+<CardGroup cols={2}>
+  <Card title="Outbound calls" icon="phone-outgoing" href="/ai/agents/develop/voice/outbound-calls">
+    Start calls from Cognigy to a phone number or another system, and track call statuses through webhooks and call events.
+  </Card>
+  <Card title="TTS streaming" icon="bolt" href="/ai/agents/develop/voice/tts-streaming">
+    Play synthesized speech as it's generated to reduce response latency.
+  </Card>
+  <Card title="Click To Call" icon="mouse-pointer-click" href="/click-to-call/overview">
+    Embed a voice widget in your website so that customers can speak directly with agents.
+  </Card>
+  <Card title="Voice endpoint" icon="radio-tower" href="/ai/agents/deploy/endpoint-reference/voice-gateway">
+    Connect an agent to your contact center or other phone numbers with the Voice endpoint.
+  </Card>
+</CardGroup>
+
+## More information
+
+- [Agents](/ai/agents/overview)
+- [Flows](/ai/agents/develop/projects-and-flows/overview)
+- [Tools](/ai/agents/develop/tools)

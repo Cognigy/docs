@@ -1,0 +1,82 @@
+---
+title: Logs
+keywords: ['logs', 'debugging', 'test', 'agents']
+description: Cognigy Logs are system records that contain information about input and output messages that agents receive and send.
+---
+
+_Logs_ are system records that contain information about input and output messages that agents receive and send. Use logs to debug workflows. Logs show if and where errors occur.
+
+<Frame>
+  <img src="/_assets/ai/test/logs.webp" alt="Cognigy Logs page with the Live logging switch, the time range, the level filters, the search fields, and a list of log entries" style={{ width: 'auto' }} />
+</Frame>
+
+You can track logs in real time or load the log history to review outputs that occurred in the past.
+
+## Limitations
+
+- Cognigy retains log entries for up to 24 hours. On-premises administrators can change the retention period.
+- By default, the Logs page shows the logs of the last hour. To show earlier logs, change the **Time range**. The options are 1, 6, and 12 hours.
+- To view all retained logs, use the [GET Log Entries](/api-reference-logs/logs-v21/get-log-entries) API method. The method returns 25 entries per request by default. To get more, use the `limit` parameter and the pagination cursors.
+
+## Log entries
+
+The log list shows the following columns:
+
+| Column        | Description                                                              |
+|---------------|--------------------------------------------------------------------------|
+| **Timestamp** | The date and time of the log entry. The format is `YYYY-MM-DD HH:mm:ss`. |
+| **Level**     | The log level of the entry. See the following table.                     |
+| **Message**   | Describes the event of the log entry.                                    |
+
+The log level is one of the following:
+
+| Level   | Description                                                                |
+|---------|----------------------------------------------------------------------------|
+| `info`  | Contains general information about the normal operation of a Flow.         |
+| `warn`  | Contains warnings.                                                         |
+| `error` | Contains information about errors that occur during Flow execution.        |
+| `debug` | Contains detailed information about Flow execution for debugging purposes. |
+
+To view more information about a log entry, click it. The **Log entry details** dialog shows the user ID, the Flow, the level, the trace ID, and the metadata. The collapsed **Related in this session** section lists the log entries from the same session. To copy the entry, click **Copy JSON**.
+
+## Working with logs
+
+### View logs
+
+<Tabs>
+  <Tab title="GUI">
+
+    <Note>
+      The log list uses virtualization to improve browser performance. Your browser loads only the log entries visible on your screen. As a result, you can't copy more lines than are visible.
+    </Note>
+
+    In **Test → Logs**, view and filter Project logs. You can also search them by user ID and Flow name.
+
+    To configure the log entries displayed in the log list, use the following settings:
+
+    | Setting                                     | Function                                                                                                                                                           |
+    |---------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | **Live logging**                            | Shows log entries as soon as they are available. This setting is activated by default. The status shows whether the log list is live, paused, or reconnecting. |
+    | **Time range**                              | Defines how far back the log list goes: 1, 6, or 12 hours. The default value is 1 hour.                                                                            |
+    | **Info**, **Warning**, **Error**, **Debug** | Shows log entries of the selected levels. Each level shows its number of log entries. All levels are activated by default. If you clear all levels, the list shows log entries of all levels.                                         |
+    | **Search by user ID**                       | Shows only the log entries of one user.                                                                                                                            |
+    | **Search by flow name**                     | Shows only the log entries of one Flow. Select the Flow from the list. The default value is **Any flow**.                                                          |
+
+    To show the level and search settings, click **Show more filters**. To restore the default values, click **Reset filters**. The footer shows how many log entries are loaded.
+  </Tab>
+  <Tab title="API">
+    You can view the logs of a Project with the [Cognigy Logs API](/api-reference-logs/).
+  </Tab>
+</Tabs>
+
+### Write logs
+
+Use a [Code Node](/ai/for-developers/code/overview) to write logs with [api.log](/ai/for-developers/code/api-functions#api-log):
+
+```javascript
+api.log("info", "This is an informational log message.");
+api.log("error", "An error occurred during execution.");
+api.log("debug", "Detailed debug information.");
+```
+
+The recorded logs are available as described in [View logs](#view-logs).

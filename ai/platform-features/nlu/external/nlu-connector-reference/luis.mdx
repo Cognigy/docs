@@ -1,0 +1,39 @@
+---
+title: Microsoft LUIS
+description: "Connect Cognigy to Microsoft LUIS with the Microsoft LUIS NLU connector and use its language understanding results to power your agents."
+keywords: ['microsoft luis', 'external nlu', 'microsoft luis nlu connector']
+---
+
+import AiEmpowerNluNluConnectors from '/snippets/ai/empower/nlu/nlu-connectors.mdx'
+
+The Microsoft LUIS NLU connector enables integration with [Microsoft LUIS](https://www.luis.ai/) to use its language understanding results for powering agents in Cognigy.
+
+## Prerequisites
+
+- Access to Microsoft LUIS.
+
+## Configuration on the NLU provider side
+
+1. Set up a new LUIS app in the **Microsoft LUIS portal**, define intents, add entities, and train the model.
+2. Go to **Manage > Azure Resources** in your LUIS app to find the required parameters:
+    - **Location**. The Azure region where the LUIS service is hosted, for example, `westus2`.
+    - **Subscription Key**. The primary or secondary key.
+    - **App ID**. The ID of your LUIS app. Find it in **Manage > Settings**.
+3. Ensure the app is published in **production mode** for external services, such as Cognigy, to access it.
+
+## Configuration on the Cognigy side
+
+1. In Cognigy, go to **Advanced > NLU Connectors**, click **Create NLU connector**, and select the LUIS connector type.
+2. Fill in the placeholders in the URL with the parameters you found in LUIS:
+
+   ```txt
+   https://{location}.api.cognitive.microsoft.com/luis/v2.0/apps/{appId}?subscription-key={subscriptionKey}&q=
+   ```
+3. Paste this URL into the **Authentication URL** field.
+
+<AiEmpowerNluNluConnectors/>
+
+## More information
+
+- [NLU connector reference](/ai/platform-features/nlu/external/nlu-connector-reference/all-nlu-connectors)
+- [Cognigy Help Center: Microsoft LUIS](https://support.cognigy.com/hc/en-us/articles/360017517319-Microsoft-LUIS-External-NLU)

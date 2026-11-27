@@ -1,0 +1,28 @@
+---
+title: User inactivity
+sidebarTitle: User inactivity
+keywords: ['user inactivity', 'inactivity detection', 'silent user', 'timeout', 'webchat v3', 'handover']
+seo:
+  metatags:
+    description: "The user inactivity feature detects when an end user stops responding and lets your agent re-prompt the user, route the conversation, or close it."
+---
+
+The _user inactivity_ feature detects when an end user stops responding during a conversation. When the user stays silent for longer than a timeout you define, Cognigy sends an input to the flow so that your agent can react, for example, by asking whether the user is still there or by ending the conversation.
+
+## Key benefits
+
+- **Better user experience**. Re-prompts users who step away or lose track of the conversation instead of leaving them without a response.
+- **Efficient resource use**. Ends abandoned conversations and frees human agents from stalled handovers.
+- **Flexible handling**. Lets you send a message, run custom logic, or switch to another flow when a user goes silent.
+
+## How it works
+
+You can implement user inactivity in the following ways:
+
+- [Webchat v3](/webchat/v3/configuration#user-inactivity) — detects when the user goes silent after the agent asks a question in chat conversations. You activate the feature in the Webchat v3 endpoint and control the timeout in the flow with the [Enable User Inactivity](/ai/agents/develop/node-reference/basic/enable-user-inactivity) and [Disable User Inactivity](/ai/agents/develop/node-reference/basic/disable-user-inactivity) nodes.
+- [Handover to Human Agent node or tool](/ai/escalate/handover-features/user-inactivity-detection) — detects when the user goes silent while waiting in the queue or talking to a human agent. You control the timeout in the flow with the [Set Handover Inactivity](/ai/agents/develop/node-reference/service/set-handover-inactivity) node and can close the handover automatically.
+
+## More information
+
+- [Webchat v3: endpoint configuration](/webchat/v3/configuration)
+- [Handover providers](/ai/escalate/handover-reference/overview)

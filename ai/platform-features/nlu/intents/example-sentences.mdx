@@ -1,0 +1,57 @@
+---
+title: Intent example sentences
+description: "Add example sentences that show how users might express an intent to train Cognigy NLU. Learn best practices for writing and managing them."
+sidebarTitle: Example sentences
+keywords: ['cognigy nlu', 'intents', 'intent example sentences']
+---
+
+_Intent example sentences_ are phrases that show how users might express their intentions to the agent. A diverse set of example sentences enables the agent to recognize a larger variety of user inputs. By associating these examples with specific intents, the agent can better understand and respond to user needs. These sentences help ensure the NLU model is well-trained and ready for human-AI interactions.
+
+## Limitations
+
+- You can add up to 2,000 example sentences per intent.
+- The minimum number of example sentences is five. If you attempt to train an intent with fewer than five example sentences, a [red indicator](/ai/platform-features/nlu/intents/intent-analyzer#explore-intent-analyzer) will appear once the build completes.
+
+## Manage example sentences
+
+<AccordionGroup>
+  <Accordion title="Create example sentences">
+    <Tabs>
+      <Tab title="Manually">
+      
+                To create an example sentence, go to **Advanced > NLU**, select the flow, and open the intent on the **Intents** tab.
+                Enter the example sentence and press <kbd>Enter</kbd> or <kbd>Tab</kbd>.
+      
+      </Tab>
+      <Tab title="Automatically (generative AI)">
+      
+             To use generative AI for creating intent example sentences, read [Large language models (LLMs)](/ai/agents/develop/gen-ai-and-llms/llms).
+      
+      </Tab>
+    </Tabs>
+  </Accordion>
+  <Accordion title="Delete example sentences">
+
+    To delete example sentences, hover over a sentence and click ![delete sentence](/_assets/icons/black-and-white/recycle-bin.svg).
+  
+  </Accordion>
+</AccordionGroup>
+
+### Recommended number of example sentences
+
+For optimal performance, use five to 100 example sentences.
+With this range, you can provide the agent with enough data to recognize the intent and avoid overcomplicating the model with unnecessary examples.
+
+If you don't meet the minimum of five example sentences or exceed the recommended maximum of 100, Cognigy shows a warning icon prompting you to adjust the number of sentences. 
+
+### Tips for writing effective example sentences
+
+- **Avoid punctuation marks**. Keep the sentences simple and without punctuation. Using punctuation marks in example sentences, such as commas and question marks, can reduce recognition accuracy.
+- **Avoid repetition**. Don't write similar sentences like `I want to order Pizza` and `I want to order Pasta`. Instead, use [lexicons](/ai/platform-features/nlu/slots/user-defined/lexicon) to group similar terms and attach them to your flow. This way, you can create a more general sentence like `I want to order food`, which will automatically recognize `Pizza` and `Pasta` as food-related items.
+- **Use natural language instead of placeholders**. Avoid placeholder variables like `LEX_SLOT_123` and limit uppercase usage, for example, don't write `FOOD` in all caps unless it's an abbreviation. 
+- **Ensure uniqueness**. Make sure your example sentences are different from each other. If they're too similar, the agent may struggle to differentiate intents, which could cause incorrect results or frequently trigger confirmation sentences.
+
+## More information
+
+- [NLU overview](/ai/platform-features/nlu/overview)
+- [Annotations](/ai/platform-features/nlu/intents/annotations)

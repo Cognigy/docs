@@ -1,0 +1,112 @@
+---
+title: "Brand persona"
+sidebarTitle: "Brand persona"
+keywords: ['brand persona', 'agent persona', 'speaking style']
+description: "Define the shared voice, tone, and speaking style your agents use, separate from what each agent does."
+---
+
+import AiBeta from '/snippets/ai/beta.mdx'
+
+<AiBeta/>
+
+A _brand persona_ defines the voice your agents share, separate from what any single agent does.
+
+A brand persona answers one question: how should any agent sound while it works? You create it once and attach it to one or more agents.
+
+## Limitations
+
+- You can select only one brand persona per agent.
+- The **Name** can have up to 200 characters. It must be unique in the Project. It can't contain these characters: `\ / : * ? " < > | ¥`.
+- The **Description** can have up to 1,000 characters. The form doesn't show a counter. If the text is too long, Cognigy shows an error after you save the brand persona.
+- The **Speaking style instructions** can have up to 1,000 characters. The form shows a counter.
+- A custom brand logo can be up to 1 MB. Supported formats are PNG, JPG, GIF, WebP, and SVG. Cognigy checks the size only when you save the brand persona.
+
+## Concepts
+
+| Concept | Description |
+| ------- | ----------- |
+| Brand persona | A standalone object that defines how any agent sounds while it works: background framing, tone, level of detail, and formality. You create and edit it on its own screen, then attach it to one or more agents. |
+| Instructions | The agent's **Instructions** field. It defines the task: what to do, what to ask first, and any hard limits. |
+| Speaking style | The part of the brand persona that sets tone, level of detail, and formality. You set it with sliders or with custom instructions. |
+
+## How to use
+
+<Steps>
+  <Step title="Open an agent">
+    In the navigation menu, go to **Design** > **Agent**. Click an existing agent, or click **Add Agent**.
+  </Step>
+  <Step title="Open the persona list">
+    On the **Configuration** tab, find the **Brand persona** section below **Instructions**. This section is required. Click the arrow on the brand persona card to open the persona list. Each row has a pencil icon to edit and a trash icon to delete. A check mark shows the selected persona.
+  </Step>
+  <Step title="Create or edit a brand persona">
+    To create a brand persona, click **Add brand persona** at the bottom of the list. To edit one, click the pencil icon next to it.
+  </Step>
+  <Step title="Fill in the fields">
+    Fill in the following fields. For character and size limits, see [Limitations](#limitations).
+
+    - **Name** - the display name of the brand persona. The name identifies the persona in the list. Agents don't use it. An agent's own name is the **Agent name** field on the **Configuration** tab. For example, `Acme Express`.
+    - **Brand logo** - the visual mark that appears wherever the persona is referenced. Select one of five preset logos. To upload your own image, click **Upload custom avatar**. Use PNG, JPG, GIF, WebP, or SVG, up to 1 MB.
+    - **Description** - who the agent speaks for: the company, its values, and what it can rely on. For example, `Customer-facing voice for [Company]'s online electronics store. Knowledgeable about electronics, never condescending to non-technical customers.`
+  </Step>
+  <Step title="Set the speaking style">
+    You can set the **Speaking style** in two ways. The **Custom speaking style** toggle switches between them. You can use only one mode at a time.
+
+    <Tabs>
+      <Tab title="Use the sliders">
+        1. Make sure **Custom speaking style** is turned off. A newly created brand persona starts at **Balanced** and **Professional**.
+        2. Adjust the **Response completeness** slider to one of four levels: **Concise**, **Balanced**, **Detailed**, or **Comprehensive**.
+            - For a chat widget, choose **Concise**.
+            - If you reuse the persona for email replies, choose **Detailed** or **Comprehensive**.
+        3. Adjust the **Formality level** slider to one of four levels: **Casual**, **Friendly**, **Professional**, or **Formal**.
+            - For a consumer retail brand, choose **Friendly**.
+            - For business-to-business (B2B) or regulated content, choose **Formal**.
+      </Tab>
+      <Tab title="Write your instructions">
+        1. Turn on **Custom speaking style**. The **Speaking style instructions** field replaces the sliders.
+        2. In the **Speaking style instructions** field, describe tone, level of detail, and formality in up to 1,000 characters. For example, `Speak in short and warm sentences.` This field is required in this mode.
+
+        <Tip>
+          Custom instructions give you more control than the sliders but less structure. Describe the tone the way you would brief a support colleague, not as a list of adjectives. For example, "Short, warm sentences; no exclamation points; say 'we' rather than 'the company.'" gives the model more to work with than "friendly."
+        </Tip>
+      </Tab>
+    </Tabs>
+
+    Click **Save changes**.
+  </Step>
+</Steps>
+
+## Example
+
+<Accordion title="Acme Express">
+  **Name**
+
+  `Acme Express`
+
+  **Description**
+
+  ```txt
+  You speak on behalf of Acme Express, the international express delivery company. You help customers with shipments, delivery options, and service points. You rely only on Acme systems and published Acme information, and you say so plainly when you don't know something.
+  ```
+
+  **Speaking style instructions**
+
+  ```txt
+  Tone: professional, calm, reassuring. Friendly, never casual: no slang, jokes, or emojis. Confident and factual; don't hedge or overpromise unless an Acme system confirms it. If something goes wrong, acknowledge once, briefly, then move to the solution.
+
+  Style: lead with the answer, then detail. Plain words, one idea per sentence. Use Acme terms consistently (waybill, service point, Scheduled Delivery). Give exact values: dates as "18 August 2025", times as "09:00–18:00", IDs as given. End each turn with one next step or one question.
+
+  Chat: short paragraphs; lists only for options. Voice: no lists, at most two sentences per turn, spell out IDs, say dates and times in words.
+
+  Language: same tone in every language; use the formal address (Dutch "u", Spanish "usted").
+
+  Never guess, estimate prices, or invent policies. Never blame the customer or other teams. No sales language in service conversations.
+  ```
+</Accordion>
+
+## What's next?
+
+- For phone calls, see [Voice](/ai/agents/develop/voice-configuration).
+- To improve an agent's answers, see [Knowledge](/ai/agents/develop/knowledge).
+- To give an agent specific tasks, see [Skills](/ai/agents/develop/skills).
+- To extend what an agent can do, see [Tools](/ai/agents/develop/tools).
+- For safety and data privacy, see [Guardrails](/ai/agents/develop/guardrails).
